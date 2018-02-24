@@ -13,18 +13,6 @@ cMeshManager::~cMeshManager()
 
 void cMeshManager::Load()
 {
-    GetMesh("Banshee", "Unit/Banshee", "Banshee.x");
-    GetMesh("BattleCruiser", "Unit/BattleCruiser", "BattleCruiser.x");
-    GetMesh("Ghost", "Unit/Ghost", "Ghost.x");
-    GetMesh("Hellion", "Unit/Hellion", "Hellion.x");
-    GetMesh("Marauder", "Unit/Marauder", "Marauder.x");
-    GetMesh("Marine", "Unit/Marine", "Marine.x");
-    GetMesh("Medivac", "Unit/Medivac", "Medivac.x");
-    GetMesh("Raven", "Unit/Raven", "Raven.x");
-    GetMesh("Reaper", "Unit/Reaper", "Reaper.x");
-    GetMesh("SCV", "Unit/SCV", "SCV.x");
-    GetMesh("SiegeTank", "Unit/SiegeTank", "SiegeTank.x");
-    GetMesh("Thor", "Unit/Thor", "Thor.x");
 }
 
 cSkinnedMesh* cMeshManager::GetMesh(string szKey)

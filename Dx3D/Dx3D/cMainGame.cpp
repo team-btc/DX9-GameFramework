@@ -28,8 +28,6 @@ void cMainGame::Setup()
 {
     srand((int)time(NULL));
 
-    g_pMeshManager->Load();
-
     Vector3 dir(1.0f, -1.0f, 0.0f);
     D3DXVec3Normalize(&dir, &dir);
     XColor c = WHITE;
@@ -37,8 +35,6 @@ void cMainGame::Setup()
 
     g_pDevice->SetLight(0, &stLight);
     g_pDevice->LightEnable(0, true);
-
-    Matrix4 matW, matS, matR, matT;
 
     m_pCamera = new cCamera;
     m_pCamera->Setup();
@@ -56,15 +52,15 @@ void cMainGame::Update()
 void cMainGame::Render()
 {
     g_pDevice->Clear(NULL,
-                        NULL,
-                        D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-                        D3DCOLOR_XRGB(47, 121, 112),
-                        1.0f, 0);
+                     NULL,
+                     D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+                     D3DCOLOR_XRGB(47, 121, 112),
+                     1.0f,
+                     0);
 
     g_pDevice->BeginScene();
-    g_pScnManager->Render();
 
-    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    g_pScnManager->Render();
 
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);
@@ -72,6 +68,4 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
 }

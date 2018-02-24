@@ -74,7 +74,7 @@ void cSkinnedMesh::Load(string szDirPath, string szFilepath)
     string fullpath = szDirPath + "\\" + szFilepath;
     cAllocateHierarchy alloc;
     alloc.SetDirectory(szDirPath);
-    D3DXLoadMeshHierarchyFromX(fullpath.c_str(),
+    D3DXLoadMeshHierarchyFromXA(fullpath.c_str(),
                                D3DXMESH_MANAGED,
                                g_pDevice,
                                &alloc,

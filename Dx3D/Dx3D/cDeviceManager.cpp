@@ -18,9 +18,12 @@ cDeviceManager::cDeviceManager()
 
     D3DPRESENT_PARAMETERS stD3DPP;
     ZeroMemory(&stD3DPP, sizeof(D3DPRESENT_PARAMETERS));
+    stD3DPP.Windowed = false;
     stD3DPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    stD3DPP.Windowed = true;
-    stD3DPP.BackBufferFormat = D3DFMT_UNKNOWN;      // 픽셀 포맷 p79
+    stD3DPP.hDeviceWindow = g_hWnd;
+    stD3DPP.BackBufferFormat = D3DFMT_X8R8G8B8;     // 픽셀 포맷 p79
+    stD3DPP.BackBufferWidth = W_WIDTH;
+    stD3DPP.BackBufferHeight = W_HEIGHT;
     stD3DPP.EnableAutoDepthStencil = true;          // 깊이 버퍼 자동 관리
     stD3DPP.AutoDepthStencilFormat = D3DFMT_D16;    // 깊이 버퍼 p82
 
@@ -30,6 +33,8 @@ cDeviceManager::cDeviceManager()
                                       nVertexProcessing,
                                       &stD3DPP,
                                       &m_pD3DDevice);
+
+
 }
 
 

@@ -27,11 +27,11 @@ void cTextureManager::AddTexture(string key, string fileName, bool saveImageInfo
     if (m_mapTexture[key] == NULL)
     {
         if (saveImageInfo)
-            hr = D3DXCreateTextureFromFileEx(g_pDevice, fileName.c_str(), D3DX_DEFAULT_NONPOW2,
+            hr = D3DXCreateTextureFromFileExA(g_pDevice, fileName.c_str(), D3DX_DEFAULT_NONPOW2,
                                         D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED,
                                         D3DX_FILTER_NONE, D3DX_DEFAULT, 0, &m_mapImageInfo[key], NULL, &m_mapTexture[key]);
         else
-            hr = D3DXCreateTextureFromFile(g_pDevice, fileName.c_str(), &m_mapTexture[key]);
+            hr = D3DXCreateTextureFromFileA(g_pDevice, fileName.c_str(), &m_mapTexture[key]);
     }
 }
 

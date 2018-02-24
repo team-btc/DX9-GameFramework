@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -148,31 +148,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Asciitok.h" />
     <ClInclude Include="cAllocateHierarchy.h" />
-    <ClInclude Include="cAseCharacter.h" />
-    <ClInclude Include="cAseLoader.h" />
-    <ClInclude Include="cAStar.h" />
     <ClInclude Include="cAutoReleasePool.h" />
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacterController.h" />
     <ClInclude Include="cDeviceManager.h" />
     <ClInclude Include="cFontManager.h" />
-    <ClInclude Include="cFrame.h" />
     <ClInclude Include="cGameNode.h" />
     <ClInclude Include="cGroup.h" />
     <ClInclude Include="cHeightMap.h" />
-    <ClInclude Include="cHPDraw.h" />
     <ClInclude Include="cKeyManager.h" />
     <ClInclude Include="cLogManager.h" />
     <ClInclude Include="cMainGame.h" />
     <ClInclude Include="cMtlTex.h" />
-    <ClInclude Include="cNode.h" />
     <ClInclude Include="cObject.h" />
     <ClInclude Include="cObjectManager.h" />
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
-    <ClInclude Include="cPicking.h" />
     <ClInclude Include="cProjectile.h" />
     <ClInclude Include="cRay.h" />
     <ClInclude Include="cSceneManager.h" />
@@ -183,9 +175,7 @@
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimerManager.h" />
     <ClInclude Include="cUIButton.h" />
-    <ClInclude Include="cUIDraw.h" />
     <ClInclude Include="cUIImageView.h" />
-    <ClInclude Include="cUIMenu.h" />
     <ClInclude Include="cUIObject.h" />
     <ClInclude Include="cUITextView.h" />
     <ClInclude Include="D3DUtility.h" />
@@ -199,28 +189,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cAllocateHierarchy.cpp" />
-    <ClCompile Include="cAseCharacter.cpp" />
-    <ClCompile Include="cAseLoader.cpp" />
-    <ClCompile Include="cAStar.cpp" />
     <ClCompile Include="cAutoReleasePool.cpp" />
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacterController.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
-    <ClCompile Include="cFrame.cpp" />
     <ClCompile Include="cGroup.cpp" />
     <ClCompile Include="cHeightMap.cpp" />
-    <ClCompile Include="cHPDraw.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
     <ClCompile Include="cLogManager.cpp" />
     <ClCompile Include="cMainGame.cpp" />
     <ClCompile Include="cMtlTex.cpp" />
-    <ClCompile Include="cNode.cpp" />
     <ClCompile Include="cObject.cpp" />
     <ClCompile Include="cObjectManager.cpp" />
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
-    <ClCompile Include="cPicking.cpp" />
     <ClCompile Include="cProjectile.cpp" />
     <ClCompile Include="cRay.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
@@ -231,9 +214,7 @@
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimerManager.cpp" />
     <ClCompile Include="cUIButton.cpp" />
-    <ClCompile Include="cUIDraw.cpp" />
     <ClCompile Include="cUIImageView.cpp" />
-    <ClCompile Include="cUIMenu.cpp" />
     <ClCompile Include="cUIObject.cpp" />
     <ClCompile Include="cUITextView.cpp" />
     <ClCompile Include="D3DUtility.cpp" />

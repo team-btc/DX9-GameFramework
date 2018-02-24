@@ -26,9 +26,9 @@ void cTimerManager::Render()
 {
     RECT rt = { 0, 0, W_WIDTH, W_HEIGHT };
     ST_TIME_INFO info = g_pTimerManager->GetTimeInfo();
-    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawText(NULL, info.szFPS.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
+    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szFPS.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
     rt.top = 15;
-    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawText(NULL, info.szWorldTime.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
+    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szWorldTime.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
 }
 
 ST_TIME_INFO cTimerManager::GetTimeInfo()

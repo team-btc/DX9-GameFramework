@@ -30,11 +30,5 @@ public:
     void Update(Vector3* pTarget = NULL);
 
     Matrix4 GetViewProjMatrix() { return m_matView * m_matProj; }
-
-    void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    float GetRotX() { return m_fRotX; }
-    float GetRotY() { return m_fRotY; }
-    void SetRotY(float y) { m_fRotY = y; }
-    Vector3 GetLookVector();
 };
 

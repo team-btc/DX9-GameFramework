@@ -20,9 +20,6 @@
     <Filter Include="1. 클래스 파일\4. 캐릭터 클래스">
       <UniqueIdentifier>{9fea0203-4103-472b-9842-ea7f03b46e08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터">
-      <UniqueIdentifier>{66d6830f-e47e-49d6-9b58-bdab3a1e0900}</UniqueIdentifier>
-    </Filter>
     <Filter Include="1. 클래스 파일\5. 맵 클래스">
       <UniqueIdentifier>{ccc21bc4-51d4-47b6-825b-fa8c1702da3f}</UniqueIdentifier>
     </Filter>
@@ -31,9 +28,6 @@
     </Filter>
     <Filter Include="1. 클래스 파일\5. 맵 클래스\OBJ맵">
       <UniqueIdentifier>{3e6d6b5f-2bba-465d-af3b-4c60bd647f07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="1. 클래스 파일\5. 맵 클래스\에이스타">
-      <UniqueIdentifier>{5d362c0f-7da4-47a8-9724-dd5cd1f7d185}</UniqueIdentifier>
     </Filter>
     <Filter Include="1. 클래스 파일\6. UI 클래스">
       <UniqueIdentifier>{fda5c276-8c96-4907-8501-28f884e3614e}</UniqueIdentifier>
@@ -108,29 +102,8 @@
     <ClInclude Include="cObjMap.h">
       <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
     </ClInclude>
-    <ClInclude Include="Asciitok.h">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseCharacter.h">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseLoader.h">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClInclude>
-    <ClInclude Include="cFrame.h">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClInclude>
     <ClInclude Include="cRay.h">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cPicking.h">
-      <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cAStar.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\에이스타</Filter>
-    </ClInclude>
-    <ClInclude Include="cNode.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\에이스타</Filter>
     </ClInclude>
     <ClInclude Include="DefineMacro.h">
       <Filter>3. 헤더 파일</Filter>
@@ -141,12 +114,6 @@
     <ClInclude Include="cUIObject.h">
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
     </ClInclude>
-    <ClInclude Include="cHPDraw.h">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cUIDraw.h">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClInclude>
     <ClInclude Include="cUIImageView.h">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClInclude>
@@ -154,9 +121,6 @@
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClInclude>
     <ClInclude Include="cUIButton.h">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cUIMenu.h">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClInclude>
     <ClInclude Include="cSceneManager.h">
@@ -245,35 +209,11 @@
     <ClCompile Include="cObjMap.cpp">
       <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
     </ClCompile>
-    <ClCompile Include="cAseCharacter.cpp">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClCompile>
-    <ClCompile Include="cAseLoader.cpp">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClCompile>
-    <ClCompile Include="cFrame.cpp">
-      <Filter>1. 클래스 파일\4. 캐릭터 클래스\ASE 캐릭터</Filter>
-    </ClCompile>
     <ClCompile Include="cRay.cpp">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
     </ClCompile>
-    <ClCompile Include="cPicking.cpp">
-      <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cAStar.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\에이스타</Filter>
-    </ClCompile>
-    <ClCompile Include="cNode.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\에이스타</Filter>
-    </ClCompile>
     <ClCompile Include="cUIObject.cpp">
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cHPDraw.cpp">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cUIDraw.cpp">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClCompile>
     <ClCompile Include="cUIImageView.cpp">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
@@ -282,9 +222,6 @@
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClCompile>
     <ClCompile Include="cUIButton.cpp">
-      <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cUIMenu.cpp">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
     </ClCompile>
     <ClCompile Include="cSceneManager.cpp">
