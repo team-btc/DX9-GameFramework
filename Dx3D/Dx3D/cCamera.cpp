@@ -3,7 +3,7 @@
 
 
 cCamera::cCamera()
-    : m_fDistance(3)
+    : m_fDistance(200)
     , m_vEye(0, LOOKAT_POS, -m_fDistance)
     , m_vLookAt(0, LOOKAT_POS, 0)
     , m_vUp(0, 1, 0)
@@ -48,9 +48,6 @@ void cCamera::Setup(bool focus)
 
 void cCamera::Update(Vector3* pTarget)
 {
-    m_fRotY += m_ptPrevMouse.x * 0.1f;
-    m_fRotX += m_ptPrevMouse.y * 0.1f;
-
     // x축 회전은 -90 ~ 90 으로 고정
     if (m_fRotX < -LIMITED_ROT + D3DX_16F_EPSILON)
     {

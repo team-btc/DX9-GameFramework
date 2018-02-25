@@ -95,4 +95,5 @@ using MATERIAL          = D3DXMATERIAL;
 using LPMATERIAL        = LPD3DXMATERIAL;
 using LPSPRITE          = LPD3DXSPRITE;
 using IMAGE_INFO        = D3DXIMAGE_INFO;
+using LPEFFECT          = LPD3DXEFFECT;
 #pragma endregion

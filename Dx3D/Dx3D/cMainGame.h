@@ -7,6 +7,11 @@ class cMainGame
 private:
     cCamera*                m_pCamera;
 
+    LPEFFECT                m_pEffect;
+    LPMESH                  m_pMesh;
+    LPTEXTURE9              m_pDiffuseMap;
+    LPTEXTURE9              m_pSpecularMap;
+
 public:
     cMainGame();
     ~cMainGame();

@@ -146,7 +146,7 @@ void cHeightMap::Load(IN char* szFilePath, IN Matrix4* pMat/*= NULL*/)
     MATERIAL9 stMtl = WHITE_MTRL;
     m_pMtlTex->SetMtl(stMtl);
     g_pTextureManager->AddTexture("Terrain", "HeightMapData/terrain.jpg");
-    m_pMtlTex->SetTexture(*g_pTextureManager->GetTexture("Terrain"));
+    m_pMtlTex->SetTexture(g_pTextureManager->GetTexture("Terrain"));
 }
 
 bool cHeightMap::GetHeight(IN const float& x, OUT float& y, IN const float& z)

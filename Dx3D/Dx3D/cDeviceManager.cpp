@@ -18,7 +18,7 @@ cDeviceManager::cDeviceManager()
 
     D3DPRESENT_PARAMETERS stD3DPP;
     ZeroMemory(&stD3DPP, sizeof(D3DPRESENT_PARAMETERS));
-    stD3DPP.Windowed = false;
+    stD3DPP.Windowed = true;
     stD3DPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
     stD3DPP.hDeviceWindow = g_hWnd;
     stD3DPP.BackBufferFormat = D3DFMT_X8R8G8B8;     // ÇÈ¼¿ Æ÷¸Ë p79

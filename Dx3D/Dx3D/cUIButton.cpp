@@ -17,13 +17,13 @@ void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelected)
     D3DXIMAGE_INFO stImageInfo;
 
     g_pTextureManager->AddTexture(sNormal, sNormal);
-    m_aTexture[E_NORMAL] = *g_pTextureManager->GetTexture(sNormal);
+    m_aTexture[E_NORMAL] = g_pTextureManager->GetTexture(sNormal);
 
     g_pTextureManager->AddTexture(sMouseOver, sMouseOver);
-    m_aTexture[E_MOUSEOVER] = *g_pTextureManager->GetTexture(sMouseOver);
+    m_aTexture[E_MOUSEOVER] = g_pTextureManager->GetTexture(sMouseOver);
 
     g_pTextureManager->AddTexture(sSelected, sSelected, true);
-    m_aTexture[E_SELECTED] = *g_pTextureManager->GetTexture(sSelected, &stImageInfo);
+    m_aTexture[E_SELECTED] = g_pTextureManager->GetTexture(sSelected, &stImageInfo);
 
     // 이미지 사이즈 셋팅
     m_stSize.x = (float)stImageInfo.Width;

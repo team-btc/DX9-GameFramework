@@ -168,6 +168,9 @@
     <ClInclude Include="cTimerManager.h">
       <Filter>1. 클래스 파일\2. 매니져\4. 유틸리티 매니저</Filter>
     </ClInclude>
+    <ClInclude Include="cShaderManager.h">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCamera.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="cTimerManager.cpp">
       <Filter>1. 클래스 파일\2. 매니져\4. 유틸리티 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cShaderManager.cpp">
+      <Filter>2. 소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

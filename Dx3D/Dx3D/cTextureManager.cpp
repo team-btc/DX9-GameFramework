@@ -35,13 +35,9 @@ void cTextureManager::AddTexture(string key, string fileName, bool saveImageInfo
     }
 }
 
-LPTEXTURE9* cTextureManager::GetTexture(string key, OUT IMAGE_INFO* pImageInfo)
+LPTEXTURE9 cTextureManager::GetTexture(string key, OUT IMAGE_INFO* pImageInfo)
 {
-    map<string, LPTEXTURE9>::iterator iter;
-    LPTEXTURE9* ret = NULL;
-
-    iter = m_mapTexture.find(key);
-
+    auto iter = m_mapTexture.find(key);
     if (iter != m_mapTexture.end())
     {
         if (pImageInfo)
@@ -53,8 +49,10 @@ LPTEXTURE9* cTextureManager::GetTexture(string key, OUT IMAGE_INFO* pImageInfo)
                 *pImageInfo = iter2->second;
         }
 
-        return &iter->second;
+        return iter->second;
     }
-
-    return ret;
+    else
+    {
+        return NULL;
+    }
 }

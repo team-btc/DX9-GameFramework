@@ -312,7 +312,7 @@ void cSkinnedMesh::Render(LPFRAME pFrame)
             g_pDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
             string key = pBoneMesh->pMaterials[i].pTextureFilename;
             g_pDevice->SetMaterial(&pBoneMesh->pMaterials[i].MatD3D);
-            g_pDevice->SetTexture(0, *g_pTextureManager->GetTexture(key));
+            g_pDevice->SetTexture(0, g_pTextureManager->GetTexture(key));
             g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
             pBoneMesh->pWorkMesh->DrawSubset(i);
             g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, false);

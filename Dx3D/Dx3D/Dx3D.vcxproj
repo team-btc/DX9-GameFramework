@@ -168,6 +168,7 @@
     <ClInclude Include="cProjectile.h" />
     <ClInclude Include="cRay.h" />
     <ClInclude Include="cSceneManager.h" />
+    <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cSkinnedMesh.h" />
     <ClInclude Include="cMeshManager.h" />
     <ClInclude Include="cSoundManager.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="cProjectile.cpp" />
     <ClCompile Include="cRay.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
+    <ClCompile Include="cShaderManager.cpp" />
     <ClCompile Include="cSkinnedMesh.cpp" />
     <ClCompile Include="cMeshManager.cpp" />
     <ClCompile Include="cSoundManager.cpp" />

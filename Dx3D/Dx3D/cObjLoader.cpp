@@ -273,8 +273,8 @@ void cObjLoader::LoadMtlLib(char* szFilePath)
             sprintf_s(szFullPath, "obj/%s", szTexturePath);
 
             g_pTextureManager->AddTexture(szTexturePath, szFullPath);
-            LPTEXTURE9* lpTexture = g_pTextureManager->GetTexture(szTexturePath);
-            m_mapMtlTex[sMtlName]->SetTexture(*lpTexture);
+            LPTEXTURE9 lpTexture = g_pTextureManager->GetTexture(szTexturePath);
+            m_mapMtlTex[sMtlName]->SetTexture(lpTexture);
         }
     }
 

@@ -14,6 +14,6 @@ public:
     void Destroy();
 
     void AddTexture(string key, string fileName, bool saveImageInfo = false);
-    LPTEXTURE9* GetTexture(string key, OUT IMAGE_INFO* pImageInfo = NULL);
+    LPTEXTURE9 GetTexture(string key, OUT IMAGE_INFO* pImageInfo = NULL);
 };
 
