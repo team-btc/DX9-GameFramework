@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "cAutoReleasePool.h"
-#include "cObject.h"
 
 
 cAutoReleasePool::cAutoReleasePool()
@@ -13,7 +12,7 @@ cAutoReleasePool::~cAutoReleasePool()
 {
 }
 
-void cAutoReleasePool::AddObject(cObject* pObject)
+void cAutoReleasePool::AddObject(iObject* pObject)
 {
     m_lstObject.push_back(pObject);
 }
@@ -22,12 +21,7 @@ void cAutoReleasePool::Drain()
 {
     for each (auto p in m_lstObject)
     {
-        int count = p->GetRefCount();
-
-        for (int i = 0; i < count; ++i)
-        {
-            SAFE_RELEASE(p);
-        }
+        while (p->Release());
     }
 
     m_lstObject.clear();

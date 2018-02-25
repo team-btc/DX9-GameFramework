@@ -1,36 +1,35 @@
 ﻿#pragma once
-
+#include "iSceneObject.h"
 #define g_pScnManager cSceneManager::GetInstance()
 
-class cGameNode;
 class cSceneManager
 {
     SINGLETON(cSceneManager);
-private:
-    map<string, cGameNode*>                   m_scnList;
-    map<string, cGameNode*>::iterator         m_scnIter;
 
-    static cGameNode*        m_pCurrScene;
-    string                  m_szNextScene = "";
-    string                  m_szPrevScene = "";
+private:
+    map<string, iSceneObject*>                   m_scnList;
+
+    static      iSceneObject*    m_pCurrScene;
+    string      m_szNextScene = "";
+    string      m_szPrevScene = "";
 
 public:
 #pragma region CRUD
     //  CREATE
-    cGameNode* AddScene(string ScnName, cGameNode* Scene);
+    HRESULT AddScene(IN string szName, IN iSceneObject* pScene);
     //  READ
-    cGameNode* FindScene(string ScnName);
+    HRESULT FindScene(IN string szName, OUT iSceneObject* pScene);
     //  UPDATE
-    void NextScene();
-    void ChangeScene(string ScnName);
-    void Update(float dt);
-    void Render();
+    HRESULT NextScene();
+    HRESULT ChangeScene(IN string szName);
+    HRESULT Update();
+    HRESULT Render();
     //  DELETE
-    void ReleaseAll();
+    HRESULT Destroy();
 #pragma endregion
 
-    string  GetNextScene() { return m_szNextScene; }
-    void    SetNextScene(string Scene) { m_szNextScene = Scene; }
-    string  GetPrevScene() { return m_szPrevScene; }
-    void    SetPrevScene(string Scene) { m_szPrevScene = Scene; }
+    HRESULT GetNextScene(OUT string& szName, OUT iSceneObject* pScene = NULL);
+    HRESULT SetNextScene(IN const string szName);
+    HRESULT GetPrevScene(OUT string& szName, OUT iSceneObject* pScene = NULL);
+    HRESULT SetPrevScene(IN const string szName);
 };

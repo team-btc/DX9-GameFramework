@@ -1,6 +1,5 @@
 #pragma once
-
-class cObject;
+#include "iObject.h"
 
 #define g_pAutoReleasePool cAutoReleasePool::GetInstance()
 
@@ -9,9 +8,9 @@ class cAutoReleasePool
     SINGLETON(cAutoReleasePool);
 
 private:
-    list<cObject*> m_lstObject;
+    list<iObject*> m_lstObject;
 
 public:
-    void AddObject(cObject* pObject);
+    void AddObject(iObject* pObject);
     void Drain();
 };

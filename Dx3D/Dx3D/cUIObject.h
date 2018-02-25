@@ -23,7 +23,6 @@ protected:
     SYNTHESIZE(Vector2, m_stSize, Size);
     SYNTHESIZE(bool, m_isDebugRender, DebugRender);
     SYNTHESIZE(int, m_nTag, Tag);
-    SYNTHESIZE(string, m_szName, Name);
     SYNTHESIZE(RECT, m_rtBody, RectBody);
 
 public:

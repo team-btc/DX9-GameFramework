@@ -1,8 +1,7 @@
 ﻿#include "stdafx.h"
 #include "cSceneManager.h"
-#include "cGameNode.h"
 
-cGameNode* cSceneManager::m_pCurrScene = NULL;
+iSceneObject* cSceneManager::m_pCurrScene = NULL;
 
 cSceneManager::cSceneManager()
 {
@@ -14,85 +13,140 @@ cSceneManager::~cSceneManager()
 
 }
 
-cGameNode* cSceneManager::AddScene(string ScnName, cGameNode * Scene)
+HRESULT cSceneManager::AddScene(IN string szName, IN iSceneObject* pScene)
 {
-    if (Scene) 
-        m_scnList.insert(make_pair(ScnName, Scene));
-    return Scene;
+    HRESULT hr = S_OK;
+    if (pScene)
+    {
+        pScene->SetName(szName);
+        m_scnList.insert(make_pair(szName, pScene));
+        hr = S_OK;
+    }
+    else
+    {
+        hr = E_FAIL;
+    }
+
+    return hr;
 }
 
-cGameNode * cSceneManager::FindScene(string ScnName)
+HRESULT cSceneManager::FindScene(IN string szName, OUT iSceneObject* pScene)
 {
-    return m_scnList.find(ScnName)->second;
+    HRESULT hr = S_OK;
+    auto iter = m_scnList.find(szName);
+    if (iter != m_scnList.end())
+    {
+        pScene = iter->second;
+        hr = S_OK;
+    }
+    else
+    {
+        pScene = NULL;
+        hr = E_FAIL;
+    }
+
+    return hr;
 }
 
-void cSceneManager::NextScene()
+HRESULT cSceneManager::NextScene()
 {
+    HRESULT hr = S_OK;
     if (m_szNextScene != "")
     {
         ChangeScene(m_szNextScene);
         m_szNextScene = "";
+        hr = S_OK;
     }
+    else
+    {
+        hr = E_FAIL;
+    }
+
+    return hr;
 }
 
-void cSceneManager::ChangeScene(string ScnName)
+HRESULT cSceneManager::ChangeScene(IN string szName)
 {
-    if (m_szPrevScene == "")
+    HRESULT hr = S_OK;
+    if (szName != "")
     {
-        m_szPrevScene = ScnName;
+        m_szPrevScene = szName;
+        auto iter = m_scnList.find(szName);
+
+        if (iter == m_scnList.end())
+        {
+            g_pLogManager->WriteLog(EL_WARNING, "Scene change failed : Not found");
+            hr = E_FAIL;
+        }
+
+        if (iter->second == m_pCurrScene)
+        {
+            g_pLogManager->WriteLog(EL_WARNING, "Scene change failed : Target is current scene");
+            hr = E_ABORT;
+        }
+
+        if (m_pCurrScene != NULL)
+        {
+            m_pCurrScene->GetName(m_szPrevScene);
+            g_pLogManager->WriteLog(EL_INFO, "Scene release : " + m_szPrevScene);
+            m_pCurrScene->Release();
+            hr = S_OK;
+        }
+
+        m_pCurrScene = iter->second;
+        hr = m_pCurrScene->Start();
     }
-    m_scnIter = m_scnList.find(ScnName);
+    else
+    {
+        hr = E_INVALIDARG;
+    }
 
-    if (m_scnIter == m_scnList.end())
-        g_pLogManager->WriteLog(EL_WARNING, "Scene change failed : Not found");
+    return hr;
+}
 
-    if (m_scnIter->second == m_pCurrScene)
-        g_pLogManager->WriteLog(EL_WARNING, "Scene change failed : Target is current scene");
-
+HRESULT cSceneManager::Update()
+{
     if (m_pCurrScene != NULL)
     {
-        m_szPrevScene = m_pCurrScene->GetTagName();
-        g_pLogManager->WriteLog(EL_INFO, "Scene release : " + m_szPrevScene);
-        m_pCurrScene->Destroy();
+        return m_pCurrScene->Update();
     }
-
-    m_pCurrScene = m_scnIter->second;
-    m_pCurrScene->Start();
+    else
+    {
+        return E_FAIL;
+    }
 }
 
-void cSceneManager::Update(float dt)
+HRESULT cSceneManager::Render()
 {
     if (m_pCurrScene != NULL)
     {
-        m_pCurrScene->Update(dt);
+        return m_pCurrScene->Render();
     }
-}
-
-void cSceneManager::Render()
-{
-    if (m_pCurrScene != NULL)
+    else
     {
-        m_pCurrScene->Render();
+        return E_FAIL;
     }
 }
 
-void cSceneManager::ReleaseAll()
+HRESULT cSceneManager::Destroy()
 {
-    m_scnIter = m_scnList.begin();
-    for (; m_scnIter != m_scnList.end();)
+    HRESULT hr = S_OK;
+    auto iter = m_scnList.begin();
+    for (; iter != m_scnList.end();)
     {
         // 삭제
-        if (m_scnIter->second != NULL)
+        if (iter->second != NULL)
         {
-            m_scnIter->second->Destroy();
-            SAFE_DELETE(m_scnIter->second);
-            m_scnIter = m_scnList.erase(m_scnIter);
+            iter->second->Release();
+            iter = m_scnList.erase(iter);
         }
         else
         {
-            ++m_scnIter;
+            ++iter;
         }
     }
 
     m_scnList.clear();
+
+    return hr;
 }

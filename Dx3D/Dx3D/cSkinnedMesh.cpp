@@ -87,10 +87,12 @@ void cSkinnedMesh::Load(string szDirPath, string szFilepath)
     g_pLogManager->WriteLog(EL_INFO, "SkinnedMesh Imported : " + fullpath);
 }
 
-void cSkinnedMesh::Destroy()
+HRESULT cSkinnedMesh::Destroy()
 {
     cAllocateHierarchy alloc;
     D3DXFrameDestroy(m_pRoot, &alloc);
+
+    return S_OK;
 }
 
 void cSkinnedMesh::SetupBoneMatrixPtrs(LPFRAME pFrame)

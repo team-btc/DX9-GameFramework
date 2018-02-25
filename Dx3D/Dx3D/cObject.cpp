@@ -6,7 +6,6 @@ cObject::cObject()
     : m_nRefCount(1)
 {
     g_pObjectManager->AddObject(this);
-    //g_pAutoReleasePool->AddObject(this);
 }
 
 
@@ -18,15 +17,55 @@ cObject::~cObject()
         assert(false && "릴리즈를 사용해서 객체를 해제하세요");
 }
 
-void cObject::AddRef()
+HRESULT cObject::QueryInterface(REFIID riid, void** ppvObject)
 {
-    ++m_nRefCount;
+    return E_NOTIMPL;
 }
 
-void cObject::Release()
+ULONG cObject::AddRef()
+{
+    return ++m_nRefCount;
+}
+
+ULONG cObject::Release()
 {
     --m_nRefCount;
-
     if (m_nRefCount <= 0)
+    {
         delete this;
+    }
+
+    return m_nRefCount;
+}
+
+HRESULT cObject::GetName(string& name)
+{
+    if (name != "")
+    {
+        m_szName = name;
+        return E_INVALIDARG;
+    }
+    else
+    {
+        m_szName = name;
+        return S_OK;
+    }
+}
+
+HRESULT cObject::SetName(const string name)
+{
+    if (name != "")
+    {
+        m_szName = name;
+        return S_OK;
+    }
+    else
+    {
+        return E_INVALIDARG;
+    }
+}
+
+HRESULT cObject::Destroy()
+{
+    return E_NOTIMPL;
 }

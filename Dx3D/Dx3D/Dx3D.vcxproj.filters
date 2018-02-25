@@ -23,12 +23,6 @@
     <Filter Include="1. 클래스 파일\5. 맵 클래스">
       <UniqueIdentifier>{ccc21bc4-51d4-47b6-825b-fa8c1702da3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="1. 클래스 파일\5. 맵 클래스\하이트맵">
-      <UniqueIdentifier>{0bb4c94b-927a-4779-becb-201ffe545aaa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="1. 클래스 파일\5. 맵 클래스\OBJ맵">
-      <UniqueIdentifier>{3e6d6b5f-2bba-465d-af3b-4c60bd647f07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="1. 클래스 파일\6. UI 클래스">
       <UniqueIdentifier>{fda5c276-8c96-4907-8501-28f884e3614e}</UniqueIdentifier>
     </Filter>
@@ -51,6 +45,9 @@
     </Filter>
     <Filter Include="1. 클래스 파일\2. 매니져\4. 유틸리티 매니저">
       <UniqueIdentifier>{d2fadee6-8e7e-497c-a8c1-61865e913120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. 인터페이스">
+      <UniqueIdentifier>{bc63bbc4-60e0-4613-ad84-fb644de3a424}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,21 +84,6 @@
     <ClInclude Include="cObject.h">
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
     </ClInclude>
-    <ClInclude Include="iMap.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cHeightMap.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\하이트맵</Filter>
-    </ClInclude>
-    <ClInclude Include="cGroup.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
-    </ClInclude>
-    <ClInclude Include="cObjLoader.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
-    </ClInclude>
-    <ClInclude Include="cObjMap.h">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
-    </ClInclude>
     <ClInclude Include="cRay.h">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
     </ClInclude>
@@ -125,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="cSceneManager.h">
       <Filter>1. 클래스 파일\2. 매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="cGameNode.h">
-      <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
     </ClInclude>
     <ClInclude Include="cSoundObject.h">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -169,7 +148,37 @@
       <Filter>1. 클래스 파일\2. 매니져\4. 유틸리티 매니저</Filter>
     </ClInclude>
     <ClInclude Include="cShaderManager.h">
-      <Filter>3. 헤더 파일</Filter>
+      <Filter>1. 클래스 파일\2. 매니져\3. 리소스 매니저</Filter>
+    </ClInclude>
+    <ClInclude Include="iCamera.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iGameObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iMap.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iCharacterObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iUIObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iProjectileObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="iSceneObject.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="cGameObject.h">
+      <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
+    </ClInclude>
+    <ClInclude Include="cBroadcastManager.h">
+      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -199,18 +208,6 @@
     </ClCompile>
     <ClCompile Include="cObject.cpp">
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cHeightMap.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\하이트맵</Filter>
-    </ClCompile>
-    <ClCompile Include="cGroup.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
-    </ClCompile>
-    <ClCompile Include="cObjLoader.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
-    </ClCompile>
-    <ClCompile Include="cObjMap.cpp">
-      <Filter>1. 클래스 파일\5. 맵 클래스\OBJ맵</Filter>
     </ClCompile>
     <ClCompile Include="cRay.cpp">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -270,7 +267,13 @@
       <Filter>1. 클래스 파일\2. 매니져\4. 유틸리티 매니저</Filter>
     </ClCompile>
     <ClCompile Include="cShaderManager.cpp">
-      <Filter>2. 소스 파일</Filter>
+      <Filter>1. 클래스 파일\2. 매니져\3. 리소스 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cGameObject.cpp">
+      <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
+    </ClCompile>
+    <ClCompile Include="cBroadcastManager.cpp">
+      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@ public:
     cSkinnedMesh(string szKey, string szDirectory, string szFilepath);
     ~cSkinnedMesh();
 
-    void Destroy();
+    virtual HRESULT Destroy() override;
 
     void Update();
     void Render(LPFRAME pFrame = NULL);
