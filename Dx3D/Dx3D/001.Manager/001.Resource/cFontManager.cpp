@@ -19,9 +19,35 @@ LPFONT cFontManager::GetFont(eFontType e)
         {
             case cFontManager::E_ALERT:
             {
-                AddFontResource(L"UI/umberto.ttf");
-                D3DXCreateFont(g_pDevice, 75, 0, FW_DONTCARE, 1, false, DEFAULT_CHARSET,
-                               OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, false, L"umberto", &m_mapFont[e]);
+                AddFontResource(_TEXT("UI/umberto.ttf"));
+                D3DXCreateFont(g_pDevice,
+                    75,
+                    0,
+                    FW_DONTCARE,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("umberto"),
+                    &m_mapFont[e]);
+                break;
+            }
+            case cFontManager::E_DEBUG:
+            {
+                D3DXCreateFont(g_pDevice,
+                    75,
+                    0,
+                    FW_DONTCARE,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("Consolas"),
+                    &m_mapFont[e]);
                 break;
             }
             case cFontManager::E_NORMAL:
@@ -30,9 +56,19 @@ LPFONT cFontManager::GetFont(eFontType e)
                 break;
             case cFontManager::E_QUEST:
             {
-                AddFontResource(L"UI/umberto.ttf");
-                D3DXCreateFont(g_pDevice, 25, 0, FW_DONTCARE, 1, false, DEFAULT_CHARSET,
-                               OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, false, L"umberto", &m_mapFont[e]);
+                AddFontResource(_TEXT("UI/umberto.ttf"));
+                D3DXCreateFont(g_pDevice,
+                    25,
+                    0,
+                    FW_DONTCARE,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("umberto"),
+                    &m_mapFont[e]);
                 break;
             }
         }
@@ -43,7 +79,7 @@ LPFONT cFontManager::GetFont(eFontType e)
 
 void cFontManager::Destory()
 {
-    RemoveFontResource(L"umberto");
+    RemoveFontResource(_TEXT("umberto"));
 
     for each (auto p in m_mapFont)
         SAFE_RELEASE(p.second);

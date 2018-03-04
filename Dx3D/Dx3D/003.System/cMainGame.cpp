@@ -97,21 +97,8 @@ void cMainGame::Render()
     g_pDevice->BeginScene();
 
     g_pScnManager->Render();
+    g_pTimerManager->Render();
 
-    for (int i = 0; i < NUM_TEST * NUM_TEST; ++i)
-    {
-        bool result = true;
-        if (m_pFrustum)
-        {
-            m_pFrustum->IsInFrustum(result, m_vecSkinnedMesh[i]->GetBoundingSphere());
-        }
-
-        if (result)
-        {
-            m_vecSkinnedMesh[i]->UpdateAndRender();
-        }
-    }
-    
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);
 }

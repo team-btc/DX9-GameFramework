@@ -77,7 +77,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.Object;$(ProjectDir)003.System;$(ProjectDir)004.ExtLib;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,87 +148,87 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="cAllocateHierarchy.h" />
-    <ClInclude Include="cAutoReleasePool.h" />
-    <ClInclude Include="cBroadcastManager.h" />
-    <ClInclude Include="cCamera.h" />
-    <ClInclude Include="cCharacterController.h" />
-    <ClInclude Include="cDeviceManager.h" />
-    <ClInclude Include="cEventManager.h" />
-    <ClInclude Include="cFontManager.h" />
-    <ClInclude Include="cFrustum.h" />
-    <ClInclude Include="cGameObject.h" />
-    <ClInclude Include="iObserver.h" />
-    <ClInclude Include="iSceneObject.h" />
-    <ClInclude Include="cKeyManager.h" />
-    <ClInclude Include="cLogManager.h" />
-    <ClInclude Include="cMainGame.h" />
-    <ClInclude Include="cMtlTex.h" />
-    <ClInclude Include="cObject.h" />
-    <ClInclude Include="cObjectManager.h" />
-    <ClInclude Include="cProjectile.h" />
-    <ClInclude Include="cRay.h" />
-    <ClInclude Include="cSceneManager.h" />
-    <ClInclude Include="cShaderManager.h" />
-    <ClInclude Include="cSkinnedMesh.h" />
-    <ClInclude Include="cMeshManager.h" />
-    <ClInclude Include="cSoundManager.h" />
-    <ClInclude Include="cSoundObject.h" />
-    <ClInclude Include="cTextureManager.h" />
-    <ClInclude Include="cTimerManager.h" />
-    <ClInclude Include="cUIButton.h" />
-    <ClInclude Include="cUIImageView.h" />
-    <ClInclude Include="cUIObject.h" />
-    <ClInclude Include="cUITextView.h" />
-    <ClInclude Include="D3DUtility.h" />
-    <ClInclude Include="DataStructure.h" />
-    <ClInclude Include="DefineMacro.h" />
+    <ClInclude Include="000.Interface\DataStructure.h" />
+    <ClInclude Include="000.Interface\DefineMacro.h" />
+    <ClInclude Include="000.Interface\iCamera.h" />
+    <ClInclude Include="000.Interface\iCharacterObject.h" />
+    <ClInclude Include="000.Interface\iGameObject.h" />
+    <ClInclude Include="000.Interface\iMap.h" />
+    <ClInclude Include="000.Interface\iObject.h" />
+    <ClInclude Include="000.Interface\iObserver.h" />
+    <ClInclude Include="000.Interface\iProjectileObject.h" />
+    <ClInclude Include="000.Interface\iSceneObject.h" />
+    <ClInclude Include="000.Interface\iUIObject.h" />
+    <ClInclude Include="001.Manager\000.System\cBroadcastManager.h" />
+    <ClInclude Include="001.Manager\000.System\cDeviceManager.h" />
+    <ClInclude Include="001.Manager\000.System\cEventManager.h" />
+    <ClInclude Include="001.Manager\000.System\cKeyManager.h" />
+    <ClInclude Include="001.Manager\000.System\cLogManager.h" />
+    <ClInclude Include="001.Manager\000.System\cSceneManager.h" />
+    <ClInclude Include="001.Manager\000.System\cTimerManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cFontManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cMeshManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cObjectManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cShaderManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cSoundManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cTextureManager.h" />
+    <ClInclude Include="002.Object\cFrustum.h" />
+    <ClInclude Include="002.Object\cGameObject.h" />
+    <ClInclude Include="002.Object\cMtlTex.h" />
+    <ClInclude Include="002.Object\cObject.h" />
+    <ClInclude Include="002.Object\cProjectile.h" />
+    <ClInclude Include="002.Object\cRay.h" />
+    <ClInclude Include="002.Object\cSkinnedMesh.h" />
+    <ClInclude Include="002.Object\cSoundObject.h" />
+    <ClInclude Include="003.System\cAllocateHierarchy.h" />
+    <ClInclude Include="003.System\cAutoReleasePool.h" />
+    <ClInclude Include="003.System\cCamera.h" />
+    <ClInclude Include="003.System\cCharacterController.h" />
+    <ClInclude Include="003.System\cUIButton.h" />
+    <ClInclude Include="003.System\cUIImageView.h" />
+    <ClInclude Include="003.System\cUIObject.h" />
+    <ClInclude Include="003.System\cUITextView.h" />
+    <ClInclude Include="003.System\D3DUtility.h" />
+    <ClInclude Include="004.ExtLib\json.hpp" />
+    <ClInclude Include="Assets\MultiAnimation.hpp" />
+    <ClInclude Include="003.System\cMainGame.h" />
     <ClInclude Include="Dx3D.h" />
-    <ClInclude Include="iCamera.h" />
-    <ClInclude Include="iCharacterObject.h" />
-    <ClInclude Include="iGameObject.h" />
-    <ClInclude Include="iObject.h" />
-    <ClInclude Include="iProjectileObject.h" />
-    <ClInclude Include="iUIObject.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="MultiAnimation.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="iMap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cAllocateHierarchy.cpp" />
-    <ClCompile Include="cAutoReleasePool.cpp" />
-    <ClCompile Include="cBroadcastManager.cpp" />
-    <ClCompile Include="cCamera.cpp" />
-    <ClCompile Include="cCharacterController.cpp" />
-    <ClCompile Include="cDeviceManager.cpp" />
-    <ClCompile Include="cEventManager.cpp" />
-    <ClCompile Include="cFontManager.cpp" />
-    <ClCompile Include="cFrustum.cpp" />
-    <ClCompile Include="cGameObject.cpp" />
-    <ClCompile Include="cKeyManager.cpp" />
-    <ClCompile Include="cLogManager.cpp" />
-    <ClCompile Include="cMainGame.cpp" />
-    <ClCompile Include="cMtlTex.cpp" />
-    <ClCompile Include="cObject.cpp" />
-    <ClCompile Include="cObjectManager.cpp" />
-    <ClCompile Include="cProjectile.cpp" />
-    <ClCompile Include="cRay.cpp" />
-    <ClCompile Include="cSceneManager.cpp" />
-    <ClCompile Include="cShaderManager.cpp" />
-    <ClCompile Include="cSkinnedMesh.cpp" />
-    <ClCompile Include="cMeshManager.cpp" />
-    <ClCompile Include="cSoundManager.cpp" />
-    <ClCompile Include="cSoundObject.cpp" />
-    <ClCompile Include="cTextureManager.cpp" />
-    <ClCompile Include="cTimerManager.cpp" />
-    <ClCompile Include="cUIButton.cpp" />
-    <ClCompile Include="cUIImageView.cpp" />
-    <ClCompile Include="cUIObject.cpp" />
-    <ClCompile Include="cUITextView.cpp" />
-    <ClCompile Include="D3DUtility.cpp" />
+    <ClCompile Include="001.Manager\000.System\cBroadcastManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cEventManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cKeyManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cLogManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cSceneManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cTimerManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cFontManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cMeshManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cObjectManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cShaderManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cSoundManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cTextureManager.cpp" />
+    <ClCompile Include="002.Object\cFrustum.cpp" />
+    <ClCompile Include="002.Object\cGameObject.cpp" />
+    <ClCompile Include="002.Object\cMtlTex.cpp" />
+    <ClCompile Include="002.Object\cObject.cpp" />
+    <ClCompile Include="002.Object\cProjectile.cpp" />
+    <ClCompile Include="002.Object\cRay.cpp" />
+    <ClCompile Include="002.Object\cSkinnedMesh.cpp" />
+    <ClCompile Include="002.Object\cSoundObject.cpp" />
+    <ClCompile Include="003.System\cAllocateHierarchy.cpp" />
+    <ClCompile Include="003.System\cAutoReleasePool.cpp" />
+    <ClCompile Include="003.System\cCamera.cpp" />
+    <ClCompile Include="003.System\cCharacterController.cpp" />
+    <ClCompile Include="003.System\cUIButton.cpp" />
+    <ClCompile Include="003.System\cUIImageView.cpp" />
+    <ClCompile Include="003.System\cUIObject.cpp" />
+    <ClCompile Include="003.System\cUITextView.cpp" />
+    <ClCompile Include="003.System\D3DUtility.cpp" />
+    <ClCompile Include="003.System\cMainGame.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -245,9 +245,12 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MultiAnimation.vsh">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
+    <None Include="fmod64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\MultiAnimation.vsh">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
