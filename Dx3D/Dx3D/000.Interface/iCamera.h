@@ -5,7 +5,6 @@
 interface iCamera : public iGameObject
 {
 protected:
-    iGameObject*    m_pTargetObject;
     float           m_fFov;
 
 public:

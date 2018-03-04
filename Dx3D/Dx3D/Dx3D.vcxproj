@@ -192,6 +192,7 @@
     <ClInclude Include="004.ExtLib\json.hpp" />
     <ClInclude Include="Assets\MultiAnimation.hpp" />
     <ClInclude Include="003.System\cMainGame.h" />
+    <ClInclude Include="cLightManager.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="003.System\cUITextView.cpp" />
     <ClCompile Include="003.System\D3DUtility.cpp" />
     <ClCompile Include="003.System\cMainGame.cpp" />
+    <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
