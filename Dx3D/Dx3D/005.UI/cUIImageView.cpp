@@ -24,7 +24,7 @@ void cUIImageView::Render(LPSPRITE pSprite)
 
         pSprite->SetTransform(&m_matWorld);
         pSprite->Draw(m_pTexture, NULL, &Vector3(0, 0, 0),
-                      &Vector3(0, 0, 0), m_dwColor);
+            &Vector3(0, 0, 0), m_dwColor);
 
         pSprite->End();
     }
@@ -32,8 +32,8 @@ void cUIImageView::Render(LPSPRITE pSprite)
     cUIObject::Render(pSprite);	// 부모의 렌더 호출
 }
 
-void cUIImageView::SetScale(int width, int height)
+void cUIImageView::SetScale(float width, float height)
 {
-    m_matWorld._11 = (float)width / m_stSize.x;
-    m_matWorld._22 = (float)height / m_stSize.y;
+    m_matWorld._11 = width / m_stSize.x;
+    m_matWorld._22 = height / m_stSize.y;
 }

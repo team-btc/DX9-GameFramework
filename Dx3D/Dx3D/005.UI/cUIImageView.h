@@ -13,6 +13,6 @@ public:
     virtual ~cUIImageView();
 
     virtual void Render(LPSPRITE pSprite) override;
-    void SetScale(int width, int height);
+    void SetScale(float width, float height);
 };
 

@@ -31,6 +31,11 @@ HRESULT cCamera::Setup()
     return S_OK;
 }
 
+ULONG cCamera::Release()
+{
+    return cObject::Release();
+}
+
 void cCamera::Update(Vector3* pTarget)
 {
     // x축 회전은 -90 ~ 90 으로 고정

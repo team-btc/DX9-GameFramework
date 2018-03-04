@@ -3,23 +3,21 @@
 
 
 cUIButton::cUIButton()
-{
-}
+{}
 
 
 cUIButton::~cUIButton()
-{
-}
+{}
 
 void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelected)
 {
     // 텍스쳐를 매니져에 추가 하고 텍스쳐 배열에 셋팅
     D3DXIMAGE_INFO stImageInfo;
 
-    g_pTextureManager->AddTexture(sNormal, sNormal);
+    g_pTextureManager->AddTexture(sNormal, sNormal, true);
     m_aTexture[E_NORMAL] = g_pTextureManager->GetTexture(sNormal);
 
-    g_pTextureManager->AddTexture(sMouseOver, sMouseOver);
+    g_pTextureManager->AddTexture(sMouseOver, sMouseOver, true);
     m_aTexture[E_MOUSEOVER] = g_pTextureManager->GetTexture(sMouseOver);
 
     g_pTextureManager->AddTexture(sSelected, sSelected, true);
@@ -28,22 +26,46 @@ void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelected)
     // 이미지 사이즈 셋팅
     m_stSize.x = (float)stImageInfo.Width;
     m_stSize.y = (float)stImageInfo.Height;
+
+    m_isDebugRender = true;
+}
+
+void cUIButton::SetScale(float width, float height)
+{
+    m_matWorld._11 = width / m_stSize.x;
+    m_matWorld._22 = height / m_stSize.y;
+}
+
+void cUIButton::SetSize(Vector2 size)
+{
+    SetScale(size.x, size.y);
+    //SetRect(&m_rtBody, (int)m_matWorld._41, (int)m_matWorld._42, (int)(m_matWorld._41 + size.x), (int)(m_matWorld._42 + size.y));
 }
 
 void cUIButton::Update()
 {
     cUIObject::UpdateWorldTM();
 
+    //RECT rc;	// 버튼 영역 렉트
+    //SetRect(&rc,
+    //        (int)m_matWorld._41,
+    //        (int)m_matWorld._42,
+    //        (int)(m_matWorld._41 + m_stSize.x),
+    //        (int)(m_matWorld._42 + m_stSize.y));
+
     RECT rc;	// 버튼 영역 렉트
     SetRect(&rc,
-            (int)m_matWorld._41,
-            (int)m_matWorld._42,
-            (int)(m_matWorld._41 + m_stSize.x),
-            (int)(m_matWorld._42 + m_stSize.y));
+        (int)m_matWorld._41,
+        (int)m_matWorld._42,
+        (int)(m_matWorld._41 + (m_stSize.x * m_matWorld._11)),
+        (int)(m_matWorld._42 + m_stSize.y * m_matWorld._22));
+
 
     //POINT ptCurrMouse;
     //GetCursorPos(&ptCurrMouse);               // 운영체제에서의 마우스 좌표
     //ScreenToClient(g_hWnd, &ptCurrMouse);     // 현재 프로그램에서의 좌표로 계산
+
+    //POINT pos = g_ptMouse;
 
     if (PtInRect(&rc, g_ptMouse))   // 버튼 위에 커서가 있는 경우
     {
@@ -62,6 +84,7 @@ void cUIButton::Update()
                 // 눌렀다 땜
                 if (m_pButton)
                 {
+                    int num = 0;
                     m_pButton->OnClick(this);
                     m_pButton->OnRelease(this);
                 }
@@ -105,7 +128,7 @@ void cUIButton::Render(LPD3DXSPRITE pSprite)
     if (m_aTexture[m_eButtonState])
     {
         pSprite->Draw(m_aTexture[m_eButtonState], &rc, &D3DXVECTOR3(0, 0, 0),
-                      &D3DXVECTOR3(0, 0, 0), D3DCOLOR_XRGB(255, 255, 255));
+            &D3DXVECTOR3(0, 0, 0), D3DCOLOR_XRGB(255, 255, 255));
     }
 
     pSprite->End();

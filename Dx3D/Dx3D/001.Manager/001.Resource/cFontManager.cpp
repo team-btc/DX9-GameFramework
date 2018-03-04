@@ -37,7 +37,7 @@ LPFONT cFontManager::GetFont(eFontType e)
             case cFontManager::E_DEBUG:
             {
                 D3DXCreateFont(g_pDevice,
-                    75,
+                    15,
                     0,
                     FW_DONTCARE,
                     1,

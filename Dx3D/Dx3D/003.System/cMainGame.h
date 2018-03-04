@@ -1,25 +1,10 @@
 #pragma once
-#include "cFrustum.h"
-
-#define NUM_TEST 3
-
-class cCamera;
+#include "cCamera.h"
 
 class cMainGame
 {
 private:
-    cCamera*                m_pCamera;
-
-    LPEFFECT                m_pEffect;
-    LPMESH                  m_pMesh;
-    LPTEXTURE9              m_pDiffuseMap;
-    LPTEXTURE9              m_pSpecularMap;
-
-    cFrustum*               m_pFrustum;
-
-    vector<cSkinnedMesh*>	m_vecSkinnedMesh;
-
-    ST_NEWS*                m_pCurrNews;
+    cCamera*    m_pCamera;
 
 public:
     cMainGame();

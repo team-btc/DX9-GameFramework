@@ -1,15 +1,6 @@
 #pragma once
 #include "cObject.h"
 
-struct ST_SIZE
-{
-    float fWidth;
-    float fHeight;
-
-    ST_SIZE() : fWidth(0.0f), fHeight(0.0f) {}
-    ST_SIZE(float w, float h) : fWidth(w), fHeight(h) {}
-};
-
 class cUIObject : public cObject
 {
 protected:
@@ -20,9 +11,11 @@ protected:
 
     SYNTHESIZE(Vector3, m_vLocalPos, LocalPos);
     SYNTHESIZE(cUIObject*, m_pParent, Parent);
-    SYNTHESIZE(Vector2, m_stSize, Size);
+    //SYNTHESIZE(Vector2, m_stSize, Size);
+    Vector2					m_stSize;
     SYNTHESIZE(bool, m_isDebugRender, DebugRender);
     SYNTHESIZE(int, m_nTag, Tag);
+    //SYNTHESIZE(string, m_szName, Name);
     SYNTHESIZE(RECT, m_rtBody, RectBody);
 
 public:
@@ -34,7 +27,10 @@ public:
     virtual void UpdateChildren();
     virtual void Render(LPSPRITE pSprite);
     virtual void AddChild(cUIObject* pChild);
+    virtual void SetSize(Vector2 size);
+    virtual Vector2 GetSize() const;
     virtual cUIObject* GetChildByTag(int tag);
+    virtual cUIObject* GetChildByName(string strChildName);
     virtual cUIObject* IsClicked(POINT point, bool isTransform);
 };
 

@@ -4,11 +4,6 @@
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
-    , m_pEffect(NULL)
-    , m_pMesh(NULL)
-    , m_pDiffuseMap(NULL)
-    , m_pSpecularMap(NULL)
-    , m_pFrustum(NULL)
 {
     g_pLogManager->Setup("\\Log\\");
     g_pKeyManager->Setup();
@@ -18,12 +13,6 @@ cMainGame::cMainGame()
 
 cMainGame::~cMainGame()
 {
-    SAFE_RELEASE(m_pMesh);
-    SAFE_RELEASE(m_pEffect);
-    SAFE_RELEASE(m_pFrustum);
-
-    SAFE_RELEASE(m_pCamera);
-
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destory();
     g_pTextureManager->Destroy();
@@ -42,22 +31,9 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    Vector3 dir(1.0f, -1.0f, 0.0f);
-    D3DXVec3Normalize(&dir, &dir);
-    XColor c = WHITE;
-    LIGHT9 stLight = InitDirectional(&dir, &c);
-
-    hr = g_pMeshManager->LoadBasicMesh();
-
-    hr = g_pDevice->SetLight(0, &stLight);
-    hr = g_pDevice->LightEnable(0, false);
-    hr = g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-
     m_pCamera = new cCamera;
-    m_pCamera->Setup();
-
-    m_pFrustum = new cFrustum;
-    hr = m_pFrustum->Setup();
+    hr = m_pCamera->Setup();
+    g_pAutoReleasePool->AddObject(m_pCamera);
 }
 
 void cMainGame::Update()

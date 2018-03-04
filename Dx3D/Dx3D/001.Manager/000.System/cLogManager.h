@@ -10,6 +10,7 @@ enum LOG_LEVEL
 class cLogManager
 {
     SINGLETON(cLogManager);
+
 private:
     string m_szLogPath;
     string m_szLogFilename;

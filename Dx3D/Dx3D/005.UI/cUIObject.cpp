@@ -12,9 +12,18 @@ cUIObject::cUIObject()
     D3DXMatrixIdentity(&m_matWorld);
 }
 
-
 cUIObject::~cUIObject()
 {
+    cout << m_szName << endl;
+    cout << this << endl;
+
+    if (!m_vecChild.empty())
+    {
+        for (int i = 0; i < m_vecChild.size(); i++)
+        {
+            SAFE_RELEASE(m_vecChild[i]);
+        }
+    }
 }
 
 void cUIObject::Update()
@@ -85,6 +94,16 @@ void cUIObject::AddChild(cUIObject* pChild)
     m_vecChild.push_back(pChild);	// 자식 벡터에 추가
 }
 
+void cUIObject::SetSize(Vector2 size)
+{
+    m_stSize = size;
+}
+
+Vector2 cUIObject::GetSize() const
+{
+    return m_stSize;
+}
+
 cUIObject* cUIObject::GetChildByTag(int tag)
 {
     if (m_nTag == tag)	// 찾고 있는 tag 값이 현재 UI 인 경우
@@ -95,6 +114,34 @@ cUIObject* cUIObject::GetChildByTag(int tag)
         cUIObject* pChild = p->GetChildByTag(tag);
         if (pChild)
             return pChild;
+    }
+
+    return NULL;
+}
+
+cUIObject * cUIObject::GetChildByName(string strChildName)
+{
+    if (strChildName.empty() || strChildName[0] == NULL)
+    {
+        return NULL;
+    }
+
+    if (m_szName == strChildName)
+    {
+        return this;
+    }
+    else
+    {
+        if (!m_vecChild.empty())
+        {
+            for each(auto p in m_vecChild)
+            {
+                if (p->m_szName == strChildName)
+                {
+                    return p;
+                }
+            }
+        }
     }
 
     return NULL;

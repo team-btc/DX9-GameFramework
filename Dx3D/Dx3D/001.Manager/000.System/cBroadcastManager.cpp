@@ -72,7 +72,7 @@ HRESULT cBroadcastManager::UpdateNews(OUT bool& isNew, OUT IN ST_NEWS** pNews, I
 
 HRESULT cBroadcastManager::Destroy()
 {
-    HRESULT hr;
+    HRESULT hr = S_OK;
     for (auto iter = m_mapChannel.begin(); iter != m_mapChannel.end(); iter++)
     {
         hr = iter->second->Destroy();

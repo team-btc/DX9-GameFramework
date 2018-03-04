@@ -107,3 +107,12 @@ using LPMESHDATA        = LPD3DXMESHDATA;
 using LPBONECOMBINATION = LPD3DXBONECOMBINATION;
 using LPSKININFO        = LPD3DXSKININFO;
 #pragma endregion
+
+#pragma region PREDEFINED_COLOR
+#define WHITE   XColor(1.0f, 1.0f, 1.0f, 1.0f)
+#define BLACK   XColor(0.0f, 0.0f, 0.0f, 1.0f)
+#define RED     XColor(1.0f, 0.0f, 0.0f, 1.0f)
+#define GREEN   XColor(0.0f, 1.0f, 0.0f, 1.0f)
+#define BLUE    XColor(0.0f, 0.0f, 1.0f, 1.0f)
+#define YELLOW  XColor(1.0f, 1.0f, 0.0f, 1.0f)
+#pragma endregion

@@ -40,16 +40,14 @@ struct ST_TIME_INFO
 class cTimerManager
 {
     SINGLETON(cTimerManager);
-    //  VARS
+
 private:
     cTimer*     m_pTimer;
     float       m_fDeltaTime;
 public:
 
-    //  FUNCS
 private:
 public:
-#pragma region TIMER
     void Update(float lock);
     void Render();
 
@@ -57,5 +55,4 @@ public:
     float GetWorldTime() const { return m_pTimer->GetWorldTime(); }
     float GetDeltaTime() const { return /*60.0f / m_pTimer->GetFPS()*/m_fDeltaTime; }
     ST_TIME_INFO GetTimeInfo();
-#pragma endregion
 };

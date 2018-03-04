@@ -1,5 +1,4 @@
 #pragma once
-
 #pragma region VERTEX
 struct ST_PC_VERTEX
 {
@@ -14,8 +13,8 @@ struct ST_PC_VERTEX
 
 struct ST_PT_VERTEX
 {
-    Vector3         p;
-    Vector2         t;
+    Vector3     p;
+    Vector2     t;
 
     static const int FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 
@@ -57,13 +56,21 @@ struct ST_RHWC_VERTEX
     ST_RHWC_VERTEX(Vector4 _p, Color _c) : p(_p), c(_c) {}
 };
 
-using VertexPC = ST_PC_VERTEX;
-using VertexPN = ST_PN_VERTEX;
-using VertexPT = ST_PT_VERTEX;
-using VertexPNT = ST_PNT_VERTEX;
-using VertexRHWC = ST_RHWC_VERTEX;
+using VertexPC      = ST_PC_VERTEX;
+using VertexPN      = ST_PN_VERTEX;
+using VertexPT      = ST_PT_VERTEX;
+using VertexPNT     = ST_PNT_VERTEX;
+using VertexRHWC    = ST_RHWC_VERTEX;
 #pragma endregion
 
+struct ST_SIZE
+{
+    float       w;
+    float       h;
+
+    ST_SIZE() : w(0.0f), h(0.0f) {}
+    ST_SIZE(float _w, float _h) : w(_w), h(_h) {}
+};
 
 struct ST_BONE : public D3DXFRAME
 {
@@ -72,13 +79,13 @@ struct ST_BONE : public D3DXFRAME
 
 struct ST_BONE_MESH : public D3DXMESHCONTAINER
 {
-    vector<LPDIRECT3DTEXTURE9> vecTexture;
-    vector<D3DMATERIAL9>		vecMaterial;
+    vector<LPTEXTURE9>          vecTexture;
+    vector<D3DMATERIAL9>        vecMaterial;
 
-    LPMESH              pWorkingMesh;           // 작업메쉬
-    LPMESH              pOrigMesh;              // 원본 메쉬 CloneMeshFVF로 복사
-    Matrix4**           ppBoneMatrixPtrs;       // 이 메쉬에 영향을 주는 프레임'들'의 월드매트릭스 포인터 배열
-    Matrix4*            pBoneOffsetMatrices;    // 원본 메쉬를 로컬스페이스로 보내는 매트릭스들.
+    LPMESH              pWorkingMesh;
+    LPMESH              pOrigMesh;
+    Matrix4**           ppBoneMatrixPtrs;
+    Matrix4*            pBoneOffsetMatrices;
 
     DWORD               dwNumPaletteEntries;
     DWORD               dwMaxNumFaceInfls;
@@ -91,15 +98,15 @@ struct ST_BOUNDING_SPHERE
     Vector3     p;
     float       d;
 
-    ST_BOUNDING_SPHERE() { p = Vector3(0, 0, 0); d = 0.0f; }
-    ST_BOUNDING_SPHERE(Vector3 _p, float _d) { p = _p, d = _d; }
+    ST_BOUNDING_SPHERE() : p(0, 0, 0), d(0.0f) {}
+    ST_BOUNDING_SPHERE(Vector3 _p, float _d) : p(_p), d(_d) {}
 };
 
 
-typedef struct ST_SPHERE
+struct ST_SPHERE
 {
     bool        isPicked;
     float       fRadius;
     Vector3     vCenter;
     bool        isRender;
-} tagSphere;
+};

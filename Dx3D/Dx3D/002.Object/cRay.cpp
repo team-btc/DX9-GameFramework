@@ -54,7 +54,7 @@ cRay cRay::RayAtWorldSpace(int x, int y)
     return ray;
 }
 
-bool cRay::IsPicked(tagSphere* pSphere)
+bool cRay::IsPicked(ST_SPHERE* pSphere)
 {
     assert(m_eRaySpace == E_WORLD && "레이가 월드 공간으로 변환이 되지 않았습니다.");
 

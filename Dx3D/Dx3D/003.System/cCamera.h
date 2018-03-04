@@ -26,6 +26,7 @@ public:
     ~cCamera();
 
     HRESULT Setup();
+    virtual ULONG Release() override;
 
     void Update(Vector3* pTarget = NULL);
 

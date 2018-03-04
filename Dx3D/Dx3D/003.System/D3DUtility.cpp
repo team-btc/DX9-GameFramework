@@ -15,15 +15,6 @@ namespace D3DUTILITY
         return mtrl;
     }
 
-    void ComputeNormal(Vector3* out, Vector3* p0, Vector3* p1, Vector3* p2)
-    {
-        Vector3 v01 = *p1 - *p0;
-        Vector3 v02 = *p2 - *p0;
-
-        D3DXVec3Cross(out, &v01, &v02);
-        D3DXVec3Normalize(out, out);
-    }
-
     LIGHT9 InitDirectional(Vector3* dir, XColor* c)
     {
         LIGHT9 stLight;
