@@ -1,4 +1,7 @@
 #pragma once
+#include "cFrustum.h"
+
+#define NUM_TEST 3
 
 class cCamera;
 
@@ -12,6 +15,12 @@ private:
     LPTEXTURE9              m_pDiffuseMap;
     LPTEXTURE9              m_pSpecularMap;
 
+    cFrustum*               m_pFrustum;
+
+    vector<cSkinnedMesh*>	m_vecSkinnedMesh;
+
+    ST_NEWS*                m_pCurrNews;
+
 public:
     cMainGame();
     ~cMainGame();
@@ -22,4 +31,3 @@ public:
 
     void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
-

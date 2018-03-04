@@ -154,8 +154,11 @@
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacterController.h" />
     <ClInclude Include="cDeviceManager.h" />
+    <ClInclude Include="cEventManager.h" />
     <ClInclude Include="cFontManager.h" />
+    <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cGameObject.h" />
+    <ClInclude Include="iObserver.h" />
     <ClInclude Include="iSceneObject.h" />
     <ClInclude Include="cKeyManager.h" />
     <ClInclude Include="cLogManager.h" />
@@ -187,6 +190,8 @@
     <ClInclude Include="iObject.h" />
     <ClInclude Include="iProjectileObject.h" />
     <ClInclude Include="iUIObject.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="MultiAnimation.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -199,7 +204,9 @@
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacterController.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
+    <ClCompile Include="cEventManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
+    <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cGameObject.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
     <ClCompile Include="cLogManager.cpp" />
@@ -236,6 +243,11 @@
   <ItemGroup>
     <Image Include="Dx3D.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MultiAnimation.vsh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

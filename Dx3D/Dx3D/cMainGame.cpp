@@ -8,6 +8,7 @@ cMainGame::cMainGame()
     , m_pMesh(NULL)
     , m_pDiffuseMap(NULL)
     , m_pSpecularMap(NULL)
+    , m_pFrustum(NULL)
 {
     g_pLogManager->Setup("\\Log\\");
     g_pKeyManager->Setup();
@@ -19,13 +20,18 @@ cMainGame::~cMainGame()
 {
     SAFE_RELEASE(m_pMesh);
     SAFE_RELEASE(m_pEffect);
+    SAFE_RELEASE(m_pFrustum);
 
-    SAFE_DELETE(m_pCamera);
+    SAFE_RELEASE(m_pCamera);
 
+    //  CUSTOM RESOURCE 해제
     g_pFontManager->Destory();
     g_pTextureManager->Destroy();
     g_pMeshManager->Destroy();
+    g_pShaderManager->Destroy();
 
+    //  SYSTEM RESOURCE 해제
+    g_pBroadcastManager->Destroy();
     g_pAutoReleasePool->Drain();
     g_pObjectManager->Destory();
     g_pDeviceManager->Destroy();
@@ -33,6 +39,7 @@ cMainGame::~cMainGame()
 
 void cMainGame::Setup()
 {
+    HRESULT hr;
     srand((int)time(NULL));
 
     Vector3 dir(1.0f, -1.0f, 0.0f);
@@ -40,32 +47,17 @@ void cMainGame::Setup()
     XColor c = WHITE;
     LIGHT9 stLight = InitDirectional(&dir, &c);
 
-    g_pDevice->SetLight(0, &stLight);
-    g_pDevice->LightEnable(0, false);
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
+    hr = g_pMeshManager->LoadBasicMesh();
+
+    hr = g_pDevice->SetLight(0, &stLight);
+    hr = g_pDevice->LightEnable(0, false);
+    hr = g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
 
     m_pCamera = new cCamera;
     m_pCamera->Setup();
 
-    if (FAILED(D3DXLoadMeshFromXA("./Shader/Model/Sphere.x",
-                                  D3DXMESH_SYSTEMMEM,
-                                  g_pDevice,
-                                  NULL,
-                                  NULL,
-                                  NULL,
-                                  NULL,
-                                  &m_pMesh)))
-    {
-        OutputDebugStringA("모델 로딩 실패: ");
-    };
-
-    g_pShaderManager->AddEffect("specular-mapping", "./Shader/FX/SpecularMapping.fx");
-    m_pEffect = g_pShaderManager->GetEffect("specular-mapping");
-
-    g_pTextureManager->AddTexture("diffuse-map", "./Shader/Texture/Fieldstone_DM.tga");
-    g_pTextureManager->AddTexture("specular-map", "./Shader/Texture/Fieldstone_SM.tga");
-    m_pDiffuseMap = g_pTextureManager->GetTexture("diffuse-map");
-    m_pSpecularMap = g_pTextureManager->GetTexture("specular-map");
+    m_pFrustum = new cFrustum;
+    hr = m_pFrustum->Setup();
 }
 
 void cMainGame::Update()
@@ -75,23 +67,21 @@ void cMainGame::Update()
         m_pCamera->Update();
     }
 
-    Matrix4 matWorld, matView, matProjection;
-    Vector4 gWorldLightPosition(500.0f, 500.0f, -500.0f, 1.0f);
-    Vector4 gWorldCameraPosition(0.0f, 0.0f, -200.0f, 1.0f);
+    if (g_pKeyManager->isOnceKeyDown('Q'))
+    {
+    }
 
-    D3DXMatrixIdentity(&matWorld);
-    g_pDevice->GetTransform(D3DTS_VIEW, &matView);
-    g_pDevice->GetTransform(D3DTS_PROJECTION, &matProjection);
-    m_pEffect->SetMatrix("gWorldMatrix", &matWorld);
-    m_pEffect->SetMatrix("gViewMatrix", &matView);
-    m_pEffect->SetMatrix("gProjectionMatrix", &matProjection);
-    m_pEffect->SetVector("gWorldCameraPosition", &gWorldCameraPosition);
-    m_pEffect->SetVector("gWorldLightPosition", &gWorldLightPosition);
+    if (g_pKeyManager->isOnceKeyDown('W'))
+    {
+    }
 
-    Vector4 gLightColor(0.7f, 0.7f, 1.0f, 1.0f);
-    m_pEffect->SetVector("gLightColor", &gLightColor);
-    m_pEffect->SetTexture("DiffuseMap_Tex", m_pDiffuseMap);
-    m_pEffect->SetTexture("SpecularMap_Tex", m_pSpecularMap);
+    if (g_pKeyManager->isOnceKeyDown('E'))
+    {
+    }
+
+    if (g_pKeyManager->isOnceKeyDown('R'))
+    {
+    }
 }
 
 
@@ -108,22 +98,19 @@ void cMainGame::Render()
 
     g_pScnManager->Render();
 
-    UINT numPasses = 0;
-    m_pEffect->Begin(&numPasses, NULL);
+    for (int i = 0; i < NUM_TEST * NUM_TEST; ++i)
     {
-        for (UINT i = 0; i < numPasses; ++i)
+        bool result = true;
+        if (m_pFrustum)
         {
-            m_pEffect->BeginPass(i);
-            {
-                if (m_pMesh)
-                {
-                    m_pMesh->DrawSubset(0);
-                }
-            }
-            m_pEffect->EndPass();
+            m_pFrustum->IsInFrustum(result, m_vecSkinnedMesh[i]->GetBoundingSphere());
+        }
+
+        if (result)
+        {
+            m_vecSkinnedMesh[i]->UpdateAndRender();
         }
     }
-    m_pEffect->End();
     
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);

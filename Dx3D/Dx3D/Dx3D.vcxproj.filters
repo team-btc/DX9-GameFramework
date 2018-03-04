@@ -49,6 +49,15 @@
     <Filter Include="0. 인터페이스">
       <UniqueIdentifier>{bc63bbc4-60e0-4613-ad84-fb644de3a424}</UniqueIdentifier>
     </Filter>
+    <Filter Include="4. 셰이더">
+      <UniqueIdentifier>{aa4e7f93-f9f4-4edf-8606-a07e0e5e0d37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1. 클래스 파일\2. 매니져\0. 시스템 매니저">
+      <UniqueIdentifier>{27f61ec4-1cf1-4d00-b625-04fdbfdd68e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. 외부 라이브러리">
+      <UniqueIdentifier>{c002071e-69d6-427e-9834-8761659ccaf4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -62,9 +71,6 @@
     </ClInclude>
     <ClInclude Include="cCharacterController.h">
       <Filter>1. 클래스 파일\4. 캐릭터 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cDeviceManager.h">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClInclude>
     <ClInclude Include="cMainGame.h">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -104,9 +110,6 @@
     </ClInclude>
     <ClInclude Include="cUIButton.h">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="cSceneManager.h">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClInclude>
     <ClInclude Include="cSoundObject.h">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -177,8 +180,29 @@
     <ClInclude Include="cGameObject.h">
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
     </ClInclude>
+    <ClInclude Include="MultiAnimation.hpp">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cSceneManager.h">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClInclude>
     <ClInclude Include="cBroadcastManager.h">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClInclude>
+    <ClInclude Include="cDeviceManager.h">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClInclude>
+    <ClInclude Include="cEventManager.h">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClInclude>
+    <ClInclude Include="cFrustum.h">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="iObserver.h">
+      <Filter>0. 인터페이스</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>5. 외부 라이브러리</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -187,9 +211,6 @@
     </ClCompile>
     <ClCompile Include="cCharacterController.cpp">
       <Filter>1. 클래스 파일\4. 캐릭터 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cDeviceManager.cpp">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClCompile>
     <ClCompile Include="cMainGame.cpp">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -223,9 +244,6 @@
     </ClCompile>
     <ClCompile Include="cUIButton.cpp">
       <Filter>1. 클래스 파일\6. UI 클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="cSceneManager.cpp">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClCompile>
     <ClCompile Include="cSoundObject.cpp">
       <Filter>1. 클래스 파일\1. 기본 클래스</Filter>
@@ -273,7 +291,19 @@
       <Filter>1. 클래스 파일\3. 오브젝트 클래스</Filter>
     </ClCompile>
     <ClCompile Include="cBroadcastManager.cpp">
-      <Filter>1. 클래스 파일\2. 매니져</Filter>
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cDeviceManager.cpp">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cSceneManager.cpp">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cEventManager.cpp">
+      <Filter>1. 클래스 파일\2. 매니져\0. 시스템 매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="cFrustum.cpp">
+      <Filter>2. 소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,5 +318,10 @@
     <Image Include="Dx3D.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MultiAnimation.vsh">
+      <Filter>4. 셰이더</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
