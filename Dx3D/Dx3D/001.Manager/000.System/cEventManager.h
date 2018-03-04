@@ -1,11 +1,12 @@
 #pragma once
+#include "iSingletonManager.h"
 
 #define g_pEventManager cEventManager::GetInstance()
 
 class cEvent;
 class cEventElem;
 
-class cEventManager
+class cEventManager : public iSingletonManager
 {
     SINGLETON(cEventManager);
 
@@ -18,11 +19,11 @@ public:
     //  Event 데이터 전체를 메모리에 로드.
     HRESULT Load(int nMapId);
 
-    //  Event 발생 체크.
-    HRESULT Update();
-
-    //  EventManager 해제
-    HRESULT Destroy();
+    // iSingletonManager을(를) 통해 상속됨
+    virtual HRESULT Setup() override;
+    virtual HRESULT Update() override;
+    virtual HRESULT Render() override;
+    virtual HRESULT Destroy() override;
 };
 
 class cEvent

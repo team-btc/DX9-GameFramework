@@ -30,7 +30,9 @@ public:
     HRESULT Destroy();
 };
 
-class cBroadcastManager
+#include "iSingletonManager.h"
+
+class cBroadcastManager : public iSingletonManager
 {
     SINGLETON(cBroadcastManager);
 
@@ -45,6 +47,11 @@ public:
     호출자의 news가 업데이트 되어야 한다면 isNew = true 아니면 false
     isNew가 true라면 pNews에 최신 news를 세팅 */
     HRESULT UpdateNews(OUT bool& isNew, OUT IN ST_NEWS** pNews, IN string szChannel, IN string szViewer);
-    HRESULT Destroy();
+
+    // iSingletonManager을(를) 통해 상속됨
+    virtual HRESULT Setup() override;
+    virtual HRESULT Update() override;
+    virtual HRESULT Render() override;
+    virtual HRESULT Destroy() override;
 };
 

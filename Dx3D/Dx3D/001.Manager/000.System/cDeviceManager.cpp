@@ -4,6 +4,16 @@
 
 cDeviceManager::cDeviceManager()
 {
+}
+
+
+cDeviceManager::~cDeviceManager()
+{
+}
+
+HRESULT cDeviceManager::Setup()
+{
+    HRESULT hr = S_OK;
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 
     D3DCAPS9 stCaps;		// 장치에 대한 정보를 얻어옴
@@ -27,23 +37,31 @@ cDeviceManager::cDeviceManager()
     stD3DPP.EnableAutoDepthStencil = true;          // 깊이 버퍼 자동 관리
     stD3DPP.AutoDepthStencilFormat = D3DFMT_D16;    // 깊이 버퍼 p82
 
-    HRESULT hr = m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
-                                      D3DDEVTYPE_HAL,
-                                      g_hWnd,
-                                      nVertexProcessing,
-                                      &stD3DPP,
-                                      &m_pD3DDevice);
+    hr = m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+        D3DDEVTYPE_HAL,
+        g_hWnd,
+        nVertexProcessing,
+        &stD3DPP,
+        &m_pD3DDevice);
 
-
+    return hr;
 }
 
-
-cDeviceManager::~cDeviceManager()
+HRESULT cDeviceManager::Update()
 {
+    HRESULT hr = E_NOTIMPL;
+    return hr;
 }
 
-void cDeviceManager::Destroy()
+HRESULT cDeviceManager::Render()
 {
+    HRESULT hr = E_NOTIMPL;
+    return hr;
+}
+
+HRESULT cDeviceManager::Destroy()
+{
+    HRESULT hr = S_OK;
     SAFE_RELEASE(m_pD3D);
 
     if (m_pD3DDevice)
@@ -51,4 +69,6 @@ void cDeviceManager::Destroy()
         ULONG ul = m_pD3DDevice->Release();
         assert(ul == 0 && "디바이스를 이용해서 생성한 객체 중 소멸되지 않은 객체가 있음!");
     }
+
+    return hr;
 }

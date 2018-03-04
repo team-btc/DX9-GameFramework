@@ -11,11 +11,32 @@ cLogManager::~cLogManager()
 
 }
 
+HRESULT cLogManager::Setup()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLogManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLogManager::Render()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLogManager::Destroy()
+{
+    return E_NOTIMPL;
+}
+
 void cLogManager::CreateLogDir()
 {
     if (CreateDirectoryA(m_szLogPath.c_str(), NULL) ||
         ERROR_ALREADY_EXISTS == GetLastError())
     {
+#ifdef _DEBUG
         // CopyFile(...)
         cout << "SUC" << endl;
     }
@@ -24,6 +45,7 @@ void cLogManager::CreateLogDir()
         // Failed to create directory.
         cout << "FAILED" << endl;
     }
+#endif // _DEBUG
 }
 
 string cLogManager::GetTimeString()

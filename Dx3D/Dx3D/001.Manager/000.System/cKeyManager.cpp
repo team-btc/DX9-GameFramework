@@ -11,13 +11,30 @@ cKeyManager::~cKeyManager()
 
 }
 
-void cKeyManager::Setup()
+HRESULT cKeyManager::Setup()
 {
     for (int i = 0; i < KEYMAX; i++)
     {
         m_bitKeyUp.set(i, false);
         m_bitKeyDown.set(i, true);
     }
+
+    return S_OK;
+}
+
+HRESULT cKeyManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cKeyManager::Render()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cKeyManager::Destroy()
+{
+    return E_NOTIMPL;
 }
 
 bool cKeyManager::isOnceKeyDown(int key)
@@ -27,6 +44,7 @@ bool cKeyManager::isOnceKeyDown(int key)
         if (!m_bitKeyDown[key])
         {
             m_bitKeyDown.set(key, true);
+
             return true;
         }
     }
@@ -49,6 +67,7 @@ bool cKeyManager::isOnceKeyUp(int key)
         if (m_bitKeyUp[key])
         {
             m_bitKeyUp.set(key, false);
+
             return true;
         }
     }

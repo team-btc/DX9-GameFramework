@@ -8,7 +8,7 @@
 cUILayer::cUILayer()
     : m_pSprite(NULL)
     , m_stLayerSize(0, 0)
-    , m_vPosition(D3DXVECTOR3(0, 0, 0))
+    , m_vPosition(Vector3(0, 0, 0))
     , m_textureBackground(NULL)
     , m_fRatioX(0.0f)
     , m_fRatioY(0.0f)
@@ -210,13 +210,13 @@ HRESULT cUILayer::FindUIObject(OUT cUIObject ** pObject, IN string strObjectName
 }
 #pragma endregion
 
-HRESULT cUILayer::SetPosition(IN D3DXVECTOR3 vPosition)
+HRESULT cUILayer::SetPosition(IN Vector3 vPosition)
 {
     m_vPosition = vPosition;
     return S_OK;
 }
 
-HRESULT cUILayer::GetPosition(OUT D3DXVECTOR3& vPosition)
+HRESULT cUILayer::GetPosition(OUT Vector3& vPosition)
 {
     vPosition = m_vPosition;
     return S_OK;
@@ -228,7 +228,7 @@ HRESULT cUILayer::GetLayerRect(OUT RECT& rtLayer)
     return E_NOTIMPL;
 }
 
-HRESULT cUILayer::SetBackGroundColor(IN D3DCOLOR colorARGB)
+HRESULT cUILayer::SetBackGroundColor(IN Color colorARGB)
 {
     m_colorBackground = colorARGB;
     return S_OK;
@@ -246,19 +246,19 @@ HRESULT cUILayer::SetActive(IN bool isActiveState)
     return S_OK;
 }
 
-HRESULT cUILayer::GetWorldMatrix(OUT D3DXMATRIXA16 matWorld)
+HRESULT cUILayer::GetWorldMatrix(OUT Matrix4 matWorld)
 {
     return E_NOTIMPL;
 }
 
-HRESULT cUILayer::SetWorldMatrix(IN D3DXMATRIXA16 matWorld)
+HRESULT cUILayer::SetWorldMatrix(IN Matrix4 matWorld)
 {
     return E_NOTIMPL;
 }
 
 //1)이름, 2)위치, 3)사이즈, 4)백그라운드 표시 = false, 5)백그라운드 컬러 = 0, 6)백그라운드 텍스쳐 ="")) 
 //입력된 값을 통해 레이어를 설정한다.	
-HRESULT cUILayer::SetLayer(IN string strLayerName, IN D3DXVECTOR3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN D3DCOLOR colerBackGround, IN string strTextureName)
+HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN Color colerBackGround, IN string strTextureName)
 {
     HRESULT hr;
 
@@ -273,7 +273,7 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN D3DXVECTOR3 vPosition, IN 
 
     if (m_pParent)
     {
-        D3DXVECTOR3 vParentPos, vMyPos = vPosition;
+        Vector3 vParentPos, vMyPos = vPosition;
         hr = m_pParent->GetPosition(vParentPos);
         vMyPos += vParentPos;
         hr = SetPosition(vMyPos);
@@ -364,28 +364,28 @@ HRESULT cUILayer::RenderGuideLine()
     // 수정하기
     float top10persent = top + (10.0f * m_stLayerSize.h / 100.0f);
 
-    D3DCOLOR color = D3DCOLOR_XRGB(0, 0, 0);
+    Color color = D3DCOLOR_XRGB(0, 0, 0);
 
-    vector<ST_RHWC_VERTEX> vecVertex;
+    vector<VertexRHWC> vecVertex;
     vecVertex.reserve(10);
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, top, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, top, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, top, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, bottom, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, bottom, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, bottom, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, bottom, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, top, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, top10persent, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, top10persent, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, top10persent, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, top10persent, 0, 1), color));
 
-    g_pDevice->SetFVF(ST_RHWC_VERTEX::FVF);
-    g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 5, &vecVertex[0], sizeof(ST_RHWC_VERTEX));
+    g_pDevice->SetFVF(VertexRHWC::FVF);
+    g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 5, &vecVertex[0], sizeof(VertexRHWC));
 
 
     return S_OK;
@@ -400,22 +400,22 @@ HRESULT cUILayer::RenderVertexBackground()
     float right = left + m_stLayerSize.w;
     float bottom = top + m_stLayerSize.h;
 
-    vector<ST_RHWC_VERTEX> vecVertex;
+    vector<VertexRHWC> vecVertex;
     vecVertex.reserve(6);
 
     D3DXCOLOR color = m_colorBackground;
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, bottom, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, top, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, top, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(left, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(left, bottom, 0, 1), color));
 
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, top, 0, 1), color));
-    vecVertex.push_back(ST_RHWC_VERTEX(D3DXVECTOR4(right, bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4(right, bottom, 0, 1), color));
 
-    g_pDevice->SetFVF(ST_RHWC_VERTEX::FVF);
-    g_pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, &vecVertex[0], sizeof(ST_RHWC_VERTEX));
+    g_pDevice->SetFVF(VertexRHWC::FVF);
+    g_pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, &vecVertex[0], sizeof(VertexRHWC));
 
     return E_NOTIMPL;
 }
@@ -433,15 +433,15 @@ HRESULT cUILayer::RenderTextureBackground()
         (int)m_stBackgroundTextureSize.h);
 
     // 이미지 크기와 상관 없이 레이어 크기에 맞게 조정
-    D3DXMATRIXA16 matScale, matWorld;
+    Matrix4 matScale, matWorld;
     D3DXMatrixScaling(&matScale, m_fRatioX, m_fRatioY, 1.0f);
     matWorld = matScale * m_matWorld;
 
     m_pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
     m_pSprite->SetTransform(&matWorld);
-    m_pSprite->Draw(m_textureBackground, &rc, &D3DXVECTOR3(0, 0, 0),
-        &D3DXVECTOR3(0, 0, 0), m_colorBackground);
+    m_pSprite->Draw(m_textureBackground, &rc, &Vector3(0, 0, 0),
+        &Vector3(0, 0, 0), m_colorBackground);
 
     m_pSprite->End();
     return S_OK;

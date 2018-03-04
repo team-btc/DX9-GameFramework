@@ -5,14 +5,18 @@
 cMainGame::cMainGame()
     : m_pCamera(NULL)
 {
+    SetCursorPos(W_WIDTH / 2, W_HEIGHT / 2);
+    HRESULT hr = S_OK;
     g_pLogManager->Setup("\\Log\\");
     g_pKeyManager->Setup();
-    SetCursorPos(W_WIDTH / 2, W_HEIGHT / 2);
+    hr = g_pDeviceManager->Setup();
+    hr = g_pMaterialManager->Setup();
 }
 
 
 cMainGame::~cMainGame()
 {
+    HRESULT hr = S_OK;
     //  CUSTOM RESOURCE 해제
     g_pFontManager->Destory();
     g_pTextureManager->Destroy();
@@ -20,10 +24,15 @@ cMainGame::~cMainGame()
     g_pShaderManager->Destroy();
 
     //  SYSTEM RESOURCE 해제
-    g_pBroadcastManager->Destroy();
     g_pAutoReleasePool->Drain();
+    g_pBroadcastManager->Destroy();
     g_pObjectManager->Destory();
-    g_pDeviceManager->Destroy();
+    hr = g_pDeviceManager->Destroy();
+
+    if (hr != S_OK)
+    {
+        assert(false && _TEXT("매니저 Destroy에 실패했음."));
+    }
 }
 
 void cMainGame::Setup()

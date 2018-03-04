@@ -3,13 +3,50 @@
 
 cTimerManager::cTimerManager()
 {
-    m_pTimer = new cTimer;
     m_fDeltaTime = 0.0f;
 }
 
 cTimerManager::~cTimerManager()
 {
+}
+
+HRESULT cTimerManager::Setup()
+{
+    HRESULT hr = S_OK;
+    m_pTimer = new cTimer;
+    if (m_pTimer)
+    {
+        hr = S_OK;
+    }
+    else
+    {
+        hr = E_OUTOFMEMORY;
+    }
+
+    return hr;
+}
+
+HRESULT cTimerManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cTimerManager::Render()
+{
+    RECT rt = { 0, 0, W_WIDTH, W_HEIGHT };
+    ST_TIME_INFO info = g_pTimerManager->GetTimeInfo();
+    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szFPS.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
+    rt.top = 15;
+    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szWorldTime.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
+
+    return S_OK;
+}
+
+HRESULT cTimerManager::Destroy()
+{
     SAFE_DELETE(m_pTimer);
+
+    return S_OK;
 }
 
 void cTimerManager::Update(float lock)
@@ -22,15 +59,6 @@ void cTimerManager::Update(float lock)
     }
 }
 
-void cTimerManager::Render()
-{
-    RECT rt = { 0, 0, W_WIDTH, W_HEIGHT };
-    ST_TIME_INFO info = g_pTimerManager->GetTimeInfo();
-    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szFPS.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
-    rt.top = 15;
-    g_pFontManager->GetFont(cFontManager::E_DEBUG)->DrawTextA(NULL, info.szWorldTime.c_str(), -1, &rt, DT_LEFT | DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 0));
-}
-
 ST_TIME_INFO cTimerManager::GetTimeInfo()
 {
     ST_TIME_INFO info;
@@ -38,7 +66,6 @@ ST_TIME_INFO cTimerManager::GetTimeInfo()
     info.szWorldTime = "WORLD TIME : " + to_string(GetWorldTime());
     return info;
 }
-
 
 cTimer::cTimer()
 {

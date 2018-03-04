@@ -13,6 +13,58 @@ cSceneManager::~cSceneManager()
 
 }
 
+HRESULT cSceneManager::Setup()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cSceneManager::Update()
+{
+    if (m_pCurrScene != NULL)
+    {
+        return m_pCurrScene->Update();
+    }
+    else
+    {
+        return E_FAIL;
+    }
+}
+
+HRESULT cSceneManager::Render()
+{
+    if (m_pCurrScene != NULL)
+    {
+        return m_pCurrScene->Render();
+    }
+    else
+    {
+        return E_FAIL;
+    }
+}
+
+HRESULT cSceneManager::Destroy()
+{
+    HRESULT hr = S_OK;
+    auto iter = m_scnList.begin();
+    for (; iter != m_scnList.end();)
+    {
+        // 삭제
+        if (iter->second != NULL)
+        {
+            iter->second->Release();
+            iter = m_scnList.erase(iter);
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+
+    m_scnList.clear();
+
+    return hr;
+}
+
 HRESULT cSceneManager::AddScene(IN string szName, IN iSceneObject* pScene)
 {
     HRESULT hr = S_OK;
@@ -100,53 +152,6 @@ HRESULT cSceneManager::ChangeScene(IN string szName)
     {
         hr = E_INVALIDARG;
     }
-
-    return hr;
-}
-
-HRESULT cSceneManager::Update()
-{
-    if (m_pCurrScene != NULL)
-    {
-        return m_pCurrScene->Update();
-    }
-    else
-    {
-        return E_FAIL;
-    }
-}
-
-HRESULT cSceneManager::Render()
-{
-    if (m_pCurrScene != NULL)
-    {
-        return m_pCurrScene->Render();
-    }
-    else
-    {
-        return E_FAIL;
-    }
-}
-
-HRESULT cSceneManager::Destroy()
-{
-    HRESULT hr = S_OK;
-    auto iter = m_scnList.begin();
-    for (; iter != m_scnList.end();)
-    {
-        // 삭제
-        if (iter->second != NULL)
-        {
-            iter->second->Release();
-            iter = m_scnList.erase(iter);
-        }
-        else
-        {
-            ++iter;
-        }
-    }
-
-    m_scnList.clear();
 
     return hr;
 }

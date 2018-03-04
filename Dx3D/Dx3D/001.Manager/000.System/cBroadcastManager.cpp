@@ -6,9 +6,30 @@ cBroadcastManager::cBroadcastManager()
 {
 }
 
-
 cBroadcastManager::~cBroadcastManager()
 {
+}
+HRESULT cBroadcastManager::Setup()
+{
+    HRESULT hr = E_NOTIMPL;
+    return hr;
+}
+
+HRESULT cBroadcastManager::Update()
+{
+    HRESULT hr = E_NOTIMPL;
+    return hr;
+}
+
+HRESULT cBroadcastManager::Destroy()
+{
+    HRESULT hr = S_OK;
+    for (auto iter = m_mapChannel.begin(); iter != m_mapChannel.end(); iter++)
+    {
+        hr = iter->second->Destroy();
+    }
+
+    return hr;
 }
 
 HRESULT cBroadcastManager::AddChannel(IN string szChannel)
@@ -70,14 +91,12 @@ HRESULT cBroadcastManager::UpdateNews(OUT bool& isNew, OUT IN ST_NEWS** pNews, I
     return hr;
 }
 
-HRESULT cBroadcastManager::Destroy()
-{
-    HRESULT hr = S_OK;
-    for (auto iter = m_mapChannel.begin(); iter != m_mapChannel.end(); iter++)
-    {
-        hr = iter->second->Destroy();
-    }
 
+
+
+HRESULT cBroadcastManager::Render()
+{
+    HRESULT hr = E_NOTIMPL;
     return hr;
 }
 

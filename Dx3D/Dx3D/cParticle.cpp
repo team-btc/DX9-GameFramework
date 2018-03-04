@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "cParticle.h"
-#include "d3dUtility.h"
 
 
 cParticle::cParticle()

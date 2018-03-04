@@ -12,6 +12,27 @@ cEventManager::~cEventManager()
 {
 }
 
+
+HRESULT cEventManager::Setup()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cEventManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cEventManager::Render()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cEventManager::Destroy()
+{
+    return E_NOTIMPL;
+}
+
 HRESULT cEventManager::Load(int nMapId)
 {
     HRESULT hr = S_OK;

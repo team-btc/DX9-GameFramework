@@ -108,21 +108,6 @@
     <ClInclude Include="003.System\cMainGame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="003.System\cUIButton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.System\cUIImageView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.System\cUIObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.System\cUITextView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.System\D3DUtility.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="004.ExtLib\json.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -196,6 +181,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="000.Define-Macros\InlineMacro.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="000.Interface\iSingletonManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -284,21 +275,6 @@
     <ClCompile Include="003.System\cMainGame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="003.System\cUIButton.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.System\cUIImageView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.System\cUIObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.System\cUITextView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.System\D3DUtility.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="001.Manager\001.Resource\cLightManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -330,6 +306,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="005.UI\cUITextView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

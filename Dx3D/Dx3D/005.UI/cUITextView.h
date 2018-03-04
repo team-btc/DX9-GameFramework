@@ -1,7 +1,6 @@
 #pragma once
 #include "cUIObject.h"
 
-
 class cUITextView : public cUIObject
 {
 private:
@@ -16,4 +15,3 @@ public:
 
     virtual void Render(LPSPRITE pSprite) override;
 };
-

@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "iSingletonManager.h"
 #include <mmsystem.h>
 #pragma comment (lib, "winmm.lib")
 
@@ -37,22 +37,28 @@ struct ST_TIME_INFO
     string szWorldTime;
 };
 
-class cTimerManager
+class cTimerManager : public iSingletonManager
 {
     SINGLETON(cTimerManager);
 
 private:
     cTimer*     m_pTimer;
     float       m_fDeltaTime;
+
 public:
 
 private:
 public:
     void Update(float lock);
-    void Render();
 
     float GetElapsedTime() const { return m_pTimer->GetElpasedTime(); }
     float GetWorldTime() const { return m_pTimer->GetWorldTime(); }
     float GetDeltaTime() const { return /*60.0f / m_pTimer->GetFPS()*/m_fDeltaTime; }
     ST_TIME_INFO GetTimeInfo();
+
+    // iSingletonManager을(를) 통해 상속됨
+    virtual HRESULT Setup() override;
+    virtual HRESULT Update() override;
+    virtual HRESULT Render() override;
+    virtual HRESULT Destroy() override;
 };
