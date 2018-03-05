@@ -15,7 +15,7 @@ public:
 
     //  CRUD
     HRESULT AddEffect(string key, string filepath);
-    HRESULT GetEffect(LPEFFECT* effect, string key);
+    LPEFFECT GetEffect(string key);
     HRESULT DelEffect(string key);
 };
 

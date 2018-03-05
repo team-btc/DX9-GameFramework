@@ -197,7 +197,7 @@ HRESULT cUILayer::FindUIObject(OUT cUIObject ** pObject, IN string strObjectName
         return E_INVALIDARG;
     }
 
-    if (m_pUIobjectRoot->CompareName(strObjectName))
+    if (m_pUIobjectRoot->GetName() == strObjectName)
     {
         *pObject = m_pUIobjectRoot;
     }

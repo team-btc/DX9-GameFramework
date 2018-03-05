@@ -1,8 +1,9 @@
 #pragma once
+#include "iSingletonManager.h"
 
 #define g_pFontManager cFontManager::GetInstance()
 
-class cFontManager
+class cFontManager : public iSingletonManager
 {
     SINGLETON(cFontManager);
 
@@ -17,9 +18,14 @@ public:
     };
 
 private:
-    map<eFontType, LPFONT>	m_mapFont;
+    map<eFontType, LPFONTDX>	m_mapFont;
 
 public:
-    LPFONT GetFont(eFontType e);
-    void Destory();
+    // iSingletonManager을(를) 통해 상속됨
+    virtual HRESULT Setup() override;
+    virtual HRESULT Update() override;
+    virtual HRESULT Render() override;
+    virtual HRESULT Destroy() override;
+
+    LPFONTDX GetFont(eFontType e);
 };

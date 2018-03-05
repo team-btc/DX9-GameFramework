@@ -23,13 +23,16 @@ public:
     virtual HRESULT Render() override;
     virtual HRESULT Detroy() override;
 
-    virtual HRESULT GetScale(Vector3& scale) override;
-    virtual HRESULT SetScale(const Vector3 scale) override;
-    virtual HRESULT GetRotation(Vector3& rotation) override;
-    virtual HRESULT SetRotation(const Vector3 rotation) override;
-    virtual HRESULT GetPosition(Vector3& position) override;
-    virtual HRESULT SetPosition(const Vector3 position) override;
-    virtual HRESULT IsActive(bool& active) override;
-    virtual HRESULT Activate() override;
-    virtual HRESULT Deactivate() override;
+    virtual Vector3 GetScale() override;
+    virtual void SetScale(const Vector3 scale) override;
+
+    virtual Vector3 GetRotation() override;
+    virtual void SetRotation(const Vector3 rotation) override;
+
+    virtual Vector3 GetPosition() override;
+    virtual void SetPosition(const Vector3 position) override;
+
+    virtual bool IsActive() override;
+    virtual void Activate() override;
+    virtual void Deactivate() override;
 };

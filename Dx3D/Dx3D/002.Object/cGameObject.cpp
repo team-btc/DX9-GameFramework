@@ -68,84 +68,58 @@ HRESULT cGameObject::Detroy()
     return S_OK;
 }
 
-HRESULT cGameObject::GetScale(Vector3& scale)
+Vector3 cGameObject::GetScale()
 {
-    scale = m_vScale;
-
-    return S_OK;
+    return m_vScale;
 }
 
-HRESULT cGameObject::SetScale(const Vector3 scale)
+void cGameObject::SetScale(const Vector3 scale)
 {
     m_vScale = scale;
-
-    return S_OK;
 }
 
-HRESULT cGameObject::GetRotation(Vector3& rotation)
+Vector3 cGameObject::GetRotation()
 {
-    rotation = m_vRotation;
-
-    return S_OK;
+    return m_vRotation;
 }
 
-HRESULT cGameObject::SetRotation(const Vector3 rotation)
+void cGameObject::SetRotation(const Vector3 rotation)
 {
     m_vRotation = rotation;
-
-    return S_OK;
 }
 
-HRESULT cGameObject::GetPosition(Vector3& position)
+Vector3 cGameObject::GetPosition()
 {
-    position = m_vPosition;
-
-    return S_OK;
+    return m_vPosition;
 }
 
-HRESULT cGameObject::SetPosition(const Vector3 position)
+void cGameObject::SetPosition(const Vector3 position)
 {
     if (position.x > 0 &&
         position.y > 0 &&
         position.z > 0)
     {
         m_vPosition = position;
-
-        return S_OK;
     }
     else
     {
-        return E_INVALIDARG;
+#ifdef _DEBUG
+        cout << "INVALID POSITION" << endl;
+#endif
     }
 }
 
-HRESULT cGameObject::IsActive(bool& active)
+bool cGameObject::IsActive()
 {
-    active = m_bActive;
-
-    return S_OK;
+    return m_bActive;
 }
 
-HRESULT cGameObject::Activate()
+void cGameObject::Activate()
 {
-    HRESULT hr = S_OK;
-    if (m_bActive)
-    {
-        hr = E_ABORT;
-    }
     m_bActive = true;
-
-    return hr;
 }
 
-HRESULT cGameObject::Deactivate()
+void cGameObject::Deactivate()
 {
-    HRESULT hr = S_OK;
-    if (!m_bActive)
-    {
-        hr = E_ABORT;
-    }
     m_bActive = false;
-
-    return hr;
 }

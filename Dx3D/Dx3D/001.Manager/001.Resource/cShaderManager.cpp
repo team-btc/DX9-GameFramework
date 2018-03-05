@@ -74,28 +74,15 @@ HRESULT cShaderManager::AddEffect(string key, string filepath)
     return hr;
 }
 
-HRESULT cShaderManager::GetEffect(LPEFFECT* effect, string key)
+LPEFFECT cShaderManager::GetEffect(string key)
 {
-    HRESULT hr;
     auto iter = m_mapEffect.find(key);
     if (iter != m_mapEffect.end())
     {
-        effect = &iter->second;
-        hr = S_OK;
-    }
-    else
-    {
-        if (effect)
-        {
-            hr = E_INVALIDARG;
-        }
-        else
-        {
-            hr = E_ABORT;
-        }
+        return iter->second;
     }
 
-    return hr;
+    return NULL;
 }
 
 HRESULT cShaderManager::DelEffect(string key)

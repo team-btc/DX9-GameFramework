@@ -10,7 +10,36 @@ cFontManager::~cFontManager()
 {
 }
 
-LPFONT cFontManager::GetFont(eFontType e)
+HRESULT cFontManager::Setup()
+{
+    AddFontResource(_TEXT("UI/umberto.ttf"));
+
+    return S_OK;
+}
+
+HRESULT cFontManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cFontManager::Render()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cFontManager::Destroy()
+{
+    RemoveFontResource(_TEXT("umberto"));
+
+    for each (auto p in m_mapFont)
+        SAFE_RELEASE(p.second);
+
+    m_mapFont.clear();
+
+    return S_OK;
+}
+
+LPFONTDX cFontManager::GetFont(eFontType e)
 {
     // 찾는 폰트가 없는 경우 생성
     if (m_mapFont.find(e) == m_mapFont.end())
@@ -19,7 +48,6 @@ LPFONT cFontManager::GetFont(eFontType e)
         {
             case cFontManager::E_ALERT:
             {
-                AddFontResource(_TEXT("UI/umberto.ttf"));
                 D3DXCreateFont(g_pDevice,
                     75,
                     0,
@@ -56,7 +84,6 @@ LPFONT cFontManager::GetFont(eFontType e)
                 break;
             case cFontManager::E_QUEST:
             {
-                AddFontResource(_TEXT("UI/umberto.ttf"));
                 D3DXCreateFont(g_pDevice,
                     25,
                     0,
@@ -75,14 +102,4 @@ LPFONT cFontManager::GetFont(eFontType e)
     }
 
     return m_mapFont[e];
-}
-
-void cFontManager::Destory()
-{
-    RemoveFontResource(_TEXT("umberto"));
-
-    for each (auto p in m_mapFont)
-        SAFE_RELEASE(p.second);
-
-    m_mapFont.clear();
 }

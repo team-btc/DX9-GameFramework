@@ -91,7 +91,7 @@ using ColorVal          = D3DCOLORVALUE;
 using FRAME             = D3DXFRAME;
 using LPFRAME           = LPD3DXFRAME;
 
-using LPFONT            = LPD3DXFONT;
+using LPFONTDX          = LPD3DXFONT;
 using FONT_DESC         = D3DXFONT_DESC;
 
 using LPANIMCONTROLLER  = LPD3DXANIMATIONCONTROLLER;

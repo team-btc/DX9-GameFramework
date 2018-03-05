@@ -72,13 +72,7 @@
     <ClInclude Include="002.Object\cGameObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="002.Object\cMtlTex.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="002.Object\cObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.Object\cProjectile.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="002.Object\cRay.h">
@@ -100,9 +94,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="003.System\cCamera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.System\cCharacterController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="003.System\cMainGame.h">
@@ -189,6 +180,12 @@
     <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="003.System\cAdo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cDbManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -242,13 +239,7 @@
     <ClCompile Include="002.Object\cGameObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="002.Object\cMtlTex.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="002.Object\cObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="002.Object\cProjectile.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="002.Object\cRay.cpp">
@@ -267,9 +258,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.System\cCamera.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.System\cCharacterController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.System\cMainGame.cpp">
@@ -311,6 +299,12 @@
     <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="003.System\cAdo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cDbManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc">
@@ -328,5 +322,6 @@
   <ItemGroup>
     <None Include="fmod64.dll" />
     <None Include="Assets\MultiAnimation.vsh" />
+    <None Include="PixelShader.fx" />
   </ItemGroup>
 </Project>

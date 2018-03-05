@@ -2,29 +2,29 @@
 #include "CAdo.h"
 
 #pragma region CAdo
-CAdo::CAdo()
+cAdo::cAdo()
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo constructor called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo constructor called");
     m_pConn = NULL;
     m_bIsConnected = FALSE;
     m_pRset = NULL;
     m_hresult = S_OK;
 }
 
-CAdo::~CAdo()
+cAdo::~cAdo()
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo destructor called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo destructor called");
     if (m_bIsConnected)
     {
-        g_pLogManager->WriteLog(EL_INFO, "CAdo has connection. Will close it");
+        g_pLogManager->WriteLog(EL_INFO, "cAdo has connection. Will close it");
         m_pConn->Close();
         CoInitialize(NULL);
     }
 }
 
-BOOL CAdo::Connect(char * szDBServerIP, char * szDBName, char * szUser)
+BOOL cAdo::Connect(char * szDBServerIP, char * szDBName, char * szUser)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::Connect called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::Connect called");
     if (m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB is Already connected");
@@ -69,9 +69,9 @@ BOOL CAdo::Connect(char * szDBServerIP, char * szDBName, char * szUser)
     return TRUE;
 }
 
-BOOL CAdo::Connect(string szDBServerIP, string szDBName, string szUserID, string szUserPW)
+BOOL cAdo::Connect(string szDBServerIP, string szDBName, string szUserID, string szUserPW)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::Connect called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::Connect called");
     if (m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB is Already connected");
@@ -112,9 +112,9 @@ BOOL CAdo::Connect(string szDBServerIP, string szDBName, string szUserID, string
     return TRUE;
 }
 
-BOOL CAdo::Disconnect()
+BOOL cAdo::Disconnect()
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::Disconnect called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::Disconnect called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_ALERT, "DB is Already disconnected");
@@ -130,9 +130,9 @@ BOOL CAdo::Disconnect()
 ////////////////////////////////////////////////////////////////////////////////////
 //Excute 하는방법 (쿼리문을 직접 작성하여 실행)
 // Excute에 실패하면 NULL 리턴, 성공할경우 NULL 이외의 값(Select 의 경우 (_Recordset*) 리턴)
-void * CAdo::SQLExecute(char * szSQL)
+void * cAdo::SQLExecute(char * szSQL)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::SQLExecute called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::SQLExecute called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB DISCONNECTED");
@@ -160,9 +160,9 @@ void * CAdo::SQLExecute(char * szSQL)
 //    SQLInsert("dbo.Test", "1, 'hell world!'"); 처럼 사용하면 됩니다.
 //
 //데이터가 올바르게 저장되면 TRUE 리턴, 저장 실패시 FALSE 리턴
-BOOL CAdo::SQLInsert(char * szTableName, char * szValues)
+BOOL cAdo::SQLInsert(char * szTableName, char * szValues)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::SQLInsert called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::SQLInsert called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB DISCONNECTED");
@@ -192,9 +192,9 @@ BOOL CAdo::SQLInsert(char * szTableName, char * szValues)
     return TRUE;
 }
 
-_RecordsetPtr CAdo::SQLSelect(string szTableName, int id)
+_RecordsetPtr cAdo::SQLSelect(string szTableName, int id)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::SQLSelect called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::SQLSelect called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB DISCONNECTED");
@@ -218,9 +218,9 @@ _RecordsetPtr CAdo::SQLSelect(string szTableName, int id)
     return m_pRset;
 }
 
-_RecordsetPtr CAdo::SQLSelect(string szTableName, string szCondition)
+_RecordsetPtr cAdo::SQLSelect(string szTableName, string szCondition)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::SQLSelect called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::SQLSelect called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB DISCONNECTED");
@@ -252,9 +252,9 @@ _RecordsetPtr CAdo::SQLSelect(string szTableName, string szCondition)
 //    SQLUpdate("dbo.Test", "szString='stupid'", "nNum=2"); 처럼 사용하면 됩니다.
 //
 //데이터가 올바르게 저장되면 TRUE 리턴, 실패시 FALSE 리턴
-BOOL CAdo::SQLUpdate(char * szTableName, char * szSet, char * szWhere)
+BOOL cAdo::SQLUpdate(char * szTableName, char * szSet, char * szWhere)
 {
-    g_pLogManager->WriteLog(EL_INFO, "CAdo::SQLUpdate called");
+    g_pLogManager->WriteLog(EL_INFO, "cAdo::SQLUpdate called");
     if (!m_bIsConnected)
     {
         g_pLogManager->WriteLog(EL_WARNING, "DB DISCONNECTED");
@@ -290,7 +290,7 @@ BOOL CAdo::SQLUpdate(char * szTableName, char * szSet, char * szWhere)
 //    SQLDelete("dbo.Test", "nNum=2"); 처럼 사용하면 됩니다.
 //
 //데이터가 올바르게 삭제되면 TRUE 리턴, 실패시 FALSE 리턴
-BOOL CAdo::SQLDelete(char * szTableName, char * szWhere)
+BOOL cAdo::SQLDelete(char * szTableName, char * szWhere)
 {
     if (!m_bIsConnected)
     {

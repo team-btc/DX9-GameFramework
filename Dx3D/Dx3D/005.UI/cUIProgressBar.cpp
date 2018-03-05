@@ -35,7 +35,7 @@ HRESULT cUIProgressBar::SetCurrentGuage(IN float fCurGuage)
 
 
 // 텍스트 설정
-HRESULT cUIProgressBar::AddText(IN LPFONT pFont, IN DWORD TextFormat, IN D3DCOLOR color)
+HRESULT cUIProgressBar::AddText(IN LPFONTDX pFont, IN DWORD TextFormat, IN D3DCOLOR color)
 {
     cUITextView* pText = new cUITextView;
     pText->SetParent(this);

@@ -37,18 +37,9 @@ ULONG cObject::Release()
     return ul;
 }
 
-HRESULT cObject::GetName(string& name)
+string cObject::GetName()
 {
-    if (name == "")
-    {
-        name = m_szName;
-
-        return S_OK;
-    }
-    else
-    {
-        return E_INVALIDARG;
-    }
+    return m_szName;
 }
 
 HRESULT cObject::SetName(const string name)
@@ -68,16 +59,4 @@ HRESULT cObject::SetName(const string name)
 HRESULT cObject::Destroy()
 {
     return E_NOTIMPL;
-}
-
-bool cObject::CompareName(const string name)
-{
-    if (m_szName == name)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }

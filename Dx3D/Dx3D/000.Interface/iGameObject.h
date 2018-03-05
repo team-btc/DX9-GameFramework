@@ -17,16 +17,16 @@ public:
     virtual HRESULT Render() PURE;
     virtual HRESULT Detroy() PURE;
 
-    virtual HRESULT GetScale(Vector3& scale) PURE;
-    virtual HRESULT SetScale(const Vector3 scale) PURE;
+    virtual Vector3 GetScale() PURE;
+    virtual void SetScale(const Vector3 scale) PURE;
     
-    virtual HRESULT GetRotation(Vector3& rotation) PURE;
-    virtual HRESULT SetRotation(const Vector3 rotation) PURE;
+    virtual Vector3 GetRotation() PURE;
+    virtual void SetRotation(const Vector3 rotation) PURE;
     
-    virtual HRESULT GetPosition(Vector3& position) PURE;
-    virtual HRESULT SetPosition(const Vector3 position) PURE;
+    virtual Vector3 GetPosition() PURE;
+    virtual void SetPosition(const Vector3 position) PURE;
 
-    virtual HRESULT IsActive(bool& active) PURE;
-    virtual HRESULT Activate() PURE;
-    virtual HRESULT Deactivate() PURE;
+    virtual bool IsActive() PURE;
+    virtual void Activate() PURE;
+    virtual void Deactivate() PURE;
 };

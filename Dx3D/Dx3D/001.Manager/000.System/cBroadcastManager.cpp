@@ -67,20 +67,21 @@ HRESULT cBroadcastManager::AddNews(IN string szChannel, IN ST_NEWS* pNews)
     return hr;
 }
 
-HRESULT cBroadcastManager::UpdateNews(OUT bool& isNew, OUT IN ST_NEWS** pNews, IN string szChannel, IN string szViewer)
+HRESULT cBroadcastManager::UpdateNews(OUT bool& isNew, IN ST_NEWS* pNews, IN string szChannel, IN string szViewer)
 {
     HRESULT hr;
     auto iter = m_mapChannel.find(szChannel);
     if (iter != m_mapChannel.end())
     {
-        hr = iter->second->GetNews(pNews, szViewer);
-        if (hr == S_OK)
+        ST_NEWS* pResult = iter->second->GetNews(pNews, szViewer);
+        if (pResult)
         {
             isNew = true;
+            hr = S_OK;
         }
         else
         {
-            isNew = false;
+            hr = E_FAIL;
         }
     }
     else
@@ -109,16 +110,18 @@ HRESULT cBroadChannel::AddNews(IN ST_NEWS* pNews)
     return hr;
 }
 
-HRESULT cBroadChannel::GetNews(OUT ST_NEWS** pNews, IN string szViewer)
+ST_NEWS* cBroadChannel::GetNews(OUT ST_NEWS* pNews, IN string szViewer)
 {
     HRESULT hr;
+    ST_NEWS* pResult = NULL;
     if (!m_pListNews.empty())
     {
         ST_NEWS* pFront = m_pListNews.front();
         if (szViewer == pFront->szTarget &&
-            *pNews != pFront)
+            pNews != pFront)
         {
-            *pNews = pFront;
+            pNews = pFront;
+            pResult = pNews;
             hr = S_OK;
             pFront->nReadCount--;
             if (pFront->nReadCount <= 0)
@@ -136,7 +139,7 @@ HRESULT cBroadChannel::GetNews(OUT ST_NEWS** pNews, IN string szViewer)
         hr = E_ABORT;
     }
 
-    return hr;
+    return pResult;
 }
 
 HRESULT cBroadChannel::Destroy()

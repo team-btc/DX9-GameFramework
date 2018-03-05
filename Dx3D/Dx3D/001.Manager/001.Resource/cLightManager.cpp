@@ -11,6 +11,26 @@ cLightManager::~cLightManager()
 {
 }
 
+HRESULT cLightManager::Setup()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLightManager::Update()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLightManager::Render()
+{
+    return E_NOTIMPL;
+}
+
+HRESULT cLightManager::Destroy()
+{
+    return E_NOTIMPL;
+}
+
 D3DLIGHT9 cLightManager::InitDirectional(Vector3 * dir, XColor * c)
 {
     LIGHT9 stLight;

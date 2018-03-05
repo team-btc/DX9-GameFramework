@@ -11,7 +11,7 @@ public:
     virtual ULONG AddRef() PURE;
     virtual ULONG Release() PURE;
 
-    virtual HRESULT GetName(string& name) PURE;
+    virtual string GetName() PURE;
     virtual HRESULT SetName(const string name) PURE;
 
     virtual HRESULT Destroy() PURE;

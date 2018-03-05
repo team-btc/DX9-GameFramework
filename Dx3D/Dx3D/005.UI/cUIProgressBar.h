@@ -20,7 +20,7 @@ public:
     HRESULT SetMaxGuage(IN float fMaxGuage);        // 포인터로 할지는 의논
     HRESULT SetCurrentGuage(IN float fCurGuage);    // 포인터로 할지는 의논
 
-    HRESULT AddText(IN LPFONT pFont, IN DWORD TextFormat,
+    HRESULT AddText(IN LPFONTDX pFont, IN DWORD TextFormat,
         IN D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));
     HRESULT AddGuageTexture(IN string GuageImgPath,
         IN int nImgType = 0, IN D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));

@@ -5,6 +5,8 @@ class cMainGame
 {
 private:
     cCamera*    m_pCamera;
+    LPMESH      m_pMesh;
+    LPEFFECT    m_pEffect;
 
 public:
     cMainGame();

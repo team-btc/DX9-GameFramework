@@ -26,7 +26,7 @@ public:
     ~cBroadChannel() {}
 
     HRESULT AddNews(IN ST_NEWS* pNews);
-    HRESULT GetNews(OUT ST_NEWS** pNews, IN string szViewer);
+    ST_NEWS* GetNews(IN ST_NEWS* pNews, IN string szViewer);
     HRESULT Destroy();
 };
 
@@ -46,7 +46,7 @@ public:
     /*  pNews에 호출자가 보유한 news를 담아서 호출
     호출자의 news가 업데이트 되어야 한다면 isNew = true 아니면 false
     isNew가 true라면 pNews에 최신 news를 세팅 */
-    HRESULT UpdateNews(OUT bool& isNew, OUT IN ST_NEWS** pNews, IN string szChannel, IN string szViewer);
+    HRESULT UpdateNews(OUT bool& isNew, IN ST_NEWS* pNews, IN string szChannel, IN string szViewer);
 
     // iSingletonManager을(를) 통해 상속됨
     virtual HRESULT Setup() override;

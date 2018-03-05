@@ -4,7 +4,7 @@
 #include <conio.h>
 #include "icrsint.h"
 
-class CAdo
+class cAdo
 {
 private:
     BOOL m_bIsConnected;
@@ -13,8 +13,8 @@ private:
     _RecordsetPtr m_pRset;
 
 public:
-    CAdo();
-    virtual ~CAdo();
+    cAdo();
+    virtual ~cAdo();
 
 #pragma region CONNECT
     BOOL        Connect(char* szDBServerIP, char* szDBName, char* szUser);
