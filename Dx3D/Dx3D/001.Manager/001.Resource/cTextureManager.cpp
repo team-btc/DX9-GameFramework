@@ -27,6 +27,7 @@ void cTextureManager::AddTexture(string szKey, string szFilepath, bool saveImage
     HRESULT hr;
     if (m_mapTexture[szKey] == NULL)
     {
+        LPTEXTURE9 t;
         if (saveImageInfo)
         {
             hr = D3DXCreateTextureFromFileExA(g_pDevice,
@@ -42,14 +43,26 @@ void cTextureManager::AddTexture(string szKey, string szFilepath, bool saveImage
                 0,
                 &m_mapImageInfo[szKey],
                 NULL,
-                (LPTEXTURE9*)m_mapTexture[szKey]);
+                &t);
+
         }
         else
         {
             hr = D3DXCreateTextureFromFileA(g_pDevice,
                 szFilepath.c_str(),
-                (LPTEXTURE9*)m_mapTexture[szKey]);
+                &t);
         }
+
+        if (hr == S_OK)
+        {
+            m_mapTexture[szKey] = t;
+        }
+#ifdef _DEBUG
+        else
+        {
+            cout << "texture load error" << endl;
+        }
+#endif // _DEBUG
     }
 }
 
@@ -58,9 +71,21 @@ void cTextureManager::AddCubeTexture(string szKey, string szFilepath)
     HRESULT hr;
     if (m_mapTexture[szKey] == NULL)
     {
+        LPCUBETEXTURE9 t;
         hr = D3DXCreateCubeTextureFromFileA(g_pDevice,
             szFilepath.c_str(),
-            (LPCUBETEXTURE9*)m_mapTexture[szKey]);
+            &t);
+
+        if (hr == S_OK)
+        {
+            m_mapTexture[szKey] = t;
+        }
+#ifdef _DEBUG
+        else
+        {
+            cout << "cube texture load error" << endl;
+        }
+#endif // _DEBUG
     }
 }
 

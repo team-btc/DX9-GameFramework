@@ -19,7 +19,5 @@ public:
 
 public:
     MATERIAL9 InitMtrl(XColor a, XColor d, XColor s, XColor e, float p);
+    MATERIAL9* GetMaterial(string szKey);
 };
-
-/*
-*/

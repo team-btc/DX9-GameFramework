@@ -46,3 +46,16 @@ MATERIAL9 cMaterialManager::InitMtrl(XColor a, XColor d, XColor s, XColor e, flo
 
     return mtrl;
 }
+
+MATERIAL9* cMaterialManager::GetMaterial(string szKey)
+{
+    auto iter = m_mapMaterial.find(szKey);
+    if (iter != m_mapMaterial.end())
+    {
+        return &iter->second;
+    }
+    else
+    {
+        return NULL;
+    }
+}
