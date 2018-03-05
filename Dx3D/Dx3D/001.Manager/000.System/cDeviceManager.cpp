@@ -36,6 +36,7 @@ HRESULT cDeviceManager::Setup()
     stD3DPP.BackBufferHeight = W_HEIGHT;
     stD3DPP.EnableAutoDepthStencil = true;          // 깊이 버퍼 자동 관리
     stD3DPP.AutoDepthStencilFormat = D3DFMT_D16;    // 깊이 버퍼 p82
+    stD3DPP.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
     hr = m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
         D3DDEVTYPE_HAL,
