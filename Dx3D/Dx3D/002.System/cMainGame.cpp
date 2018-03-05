@@ -4,8 +4,6 @@
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
-    , m_pMesh(NULL)
-    , m_pEffect(NULL)
 {
     SetCursorPos(W_WIDTH / 2, W_HEIGHT / 2);
     HRESULT hr = S_OK;
@@ -21,8 +19,6 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
-    m_pMesh->Release();
-    m_pEffect->Release();
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -51,9 +47,6 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
-    D3DXCreateBox(g_pDevice, 1.0f, 1.0f, 1.0f, &m_pMesh, NULL);
-    g_pShaderManager->AddEffect("red", "PixelShader.fx");
-    m_pEffect = g_pShaderManager->GetEffect("red");
 }
 
 void cMainGame::Update()
@@ -95,11 +88,7 @@ void cMainGame::Render()
     g_pScnManager->Render();
     g_pTimerManager->Render();
 
-    m_pEffect->Begin(0, NULL);
-    m_pEffect->BeginPass(0);
-    m_pMesh->DrawSubset(0);
-    m_pEffect->EndPass();
-    m_pEffect->End();
+    g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
 
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);
