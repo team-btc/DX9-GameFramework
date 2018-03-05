@@ -317,7 +317,7 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
         else
         {
             D3DXIMAGE_INFO imgInfo;
-            m_textureBackground = g_pTextureManager->GetTexture(strTextureName, &imgInfo);
+            m_textureBackground = (LPTEXTURE9)g_pTextureManager->GetTexture(strTextureName, &imgInfo);
             m_stBackgroundTextureSize.w = (float)imgInfo.Width;
             m_stBackgroundTextureSize.h = (float)imgInfo.Height;
 

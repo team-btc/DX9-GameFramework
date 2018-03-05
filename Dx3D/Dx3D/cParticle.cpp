@@ -45,7 +45,7 @@ bool cParticle::init(string texFileName)
     }
 
     g_pTextureManager->AddTexture(texFileName, texFileName, true);
-    m_vTexture = g_pTextureManager->GetTexture(texFileName);
+    m_vTexture = (LPTEXTURE9)g_pTextureManager->GetTexture(texFileName);
 
     // 텍스쳐 로딩 실패 시
     if (!m_vTexture)

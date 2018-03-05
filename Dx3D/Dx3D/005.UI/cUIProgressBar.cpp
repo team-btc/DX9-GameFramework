@@ -70,7 +70,7 @@ HRESULT cUIProgressBar::AddGuageTexture(IN string GuageImgPath, IN int imgType, 
     g_pTextureManager->AddTexture(GuageImgPath, GuageImgPath, true);
 
     D3DXIMAGE_INFO imgInfo;
-    LPTEXTURE9 pTexture = g_pTextureManager->GetTexture(GuageImgPath, &imgInfo);
+    LPTEXTURE9 pTexture = (LPTEXTURE9)g_pTextureManager->GetTexture(GuageImgPath, &imgInfo);
 
     pImgView->SetParent(this);
     pImgView->SetDebugRender(DEBUG_RENDER);
