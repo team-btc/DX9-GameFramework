@@ -150,9 +150,6 @@
     <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cDbManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="002.System\cAdo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -184,6 +181,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="003.Object\cSoundObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Repository\000.Model\cCharacterModel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="001.Manager\000.System\cDbManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -269,9 +275,6 @@
     <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cDbManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="002.System\cAdo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -303,6 +306,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Object\cSoundObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Repository\000.Model\cCharacterModel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Repository\001.Repository\cCharacterRepository.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="001.Manager\000.System\cDbManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
