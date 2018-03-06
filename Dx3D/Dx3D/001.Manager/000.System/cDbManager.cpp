@@ -14,6 +14,7 @@ cDbManager::~cDbManager()
 
 HRESULT cDbManager::Setup()
 {
+    return S_OK;
     m_pDatabase = new cAdo;
 
     if (!m_pDatabase->Connect(".\\SQLEXPRESS", "fire", "guest"))
@@ -38,7 +39,11 @@ HRESULT cDbManager::Render()
 
 HRESULT cDbManager::Destroy()
 {
-    m_pDatabase->Disconnect();
+    return S_OK;
+    if (m_pDatabase)
+    {
+        m_pDatabase->Disconnect();
+    }
 
     return S_OK;
 }

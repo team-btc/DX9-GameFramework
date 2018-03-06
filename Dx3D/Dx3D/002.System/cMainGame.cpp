@@ -47,6 +47,11 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
+
+#pragma region EmitMessageTest
+    m_pGObj1 = new cGameObject;
+    g_pAutoReleasePool->AddObject(m_pGObj1);
+#pragma endregion
 }
 
 void cMainGame::Update()
@@ -58,10 +63,12 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('Q'))
     {
+        m_pGObj1->EmitMessage("deal", 15);
     }
 
     if (g_pKeyManager->isOnceKeyDown('W'))
     {
+        m_pGObj1->EmitMessage("heal", 10);
     }
 
     if (g_pKeyManager->isOnceKeyDown('E'))

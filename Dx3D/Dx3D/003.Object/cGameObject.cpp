@@ -40,6 +40,10 @@ HRESULT cGameObject::Init()
     D3DXMatrixIdentity(&m_matRot);
     D3DXMatrixIdentity(&m_matTrans);
 
+#pragma region EmitMessageTest
+    hp = 100.0f;
+#pragma endregion
+
     return S_OK;
 }
 

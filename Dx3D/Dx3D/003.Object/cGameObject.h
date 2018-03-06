@@ -35,4 +35,44 @@ public:
     virtual bool IsActive() override;
     virtual void Activate() override;
     virtual void Deactivate() override;
+
+#pragma region EmitMessageTest
+private:
+    float hp;
+public:
+    template<typename ... T>
+    bool EmitMessage(string szCommand, const T ... _t);
+
+    void Deal(float dmg) { hp -= dmg; }
+    void Heal(float heal) { hp += heal; }
+#pragma endregion
 };
+
+
+#pragma region EmitMessageTest
+template<typename ... T>
+inline bool cGameObject::EmitMessage(string szCommand, const T ... _t)
+{
+    bool result = true;
+    if (szCommand == "deal")
+    {
+        cout << "CMD : " << szCommand << endl;
+        cout << "HP : " << to_string(hp) << " -> ";
+        Deal((float)_t...);
+        cout << to_string(hp) << endl;
+    }
+    else if (szCommand == "heal")
+    {
+        cout << "CMD : " << szCommand << endl;
+        cout << "HP : " << to_string(hp) << " -> ";
+        Heal((float)_t...);
+        cout << to_string(hp) << endl;
+    }
+    else
+    {
+        result = false;
+    }
+
+    return result;
+}
+#pragma endregion
