@@ -1,7 +1,7 @@
 #pragma once
 #include "iGameObject.h"
 
-class cGameObject : public iGameObject
+class cGameObject : public cObject, public iGameObject
 {
 private:
     Matrix4     m_matScale;

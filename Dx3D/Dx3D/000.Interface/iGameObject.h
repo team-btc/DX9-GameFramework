@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-interface iGameObject : public cObject
+interface iGameObject
 {
 protected:
     Vector3     m_vScale;
