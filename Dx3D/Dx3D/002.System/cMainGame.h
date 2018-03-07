@@ -1,16 +1,11 @@
 #pragma once
 #include "cCamera.h"
 
-#include "cGameObject.h"
-
 class cMainGame
 {
 private:
     cCamera*    m_pCamera;
-
-#pragma region EmitMessageTest
-    cGameObject*    m_pGObj1;
-#pragma endregion
+    LPMESH      m_pMesh;
 
 public:
     cMainGame();

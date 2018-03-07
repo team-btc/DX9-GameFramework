@@ -335,5 +335,6 @@
     <None Include="fmod64.dll" />
     <None Include="Assets\MultiAnimation.vsh" />
     <None Include="PixelShader.fx" />
+    <None Include="BrushShader.fx" />
   </ItemGroup>
 </Project>

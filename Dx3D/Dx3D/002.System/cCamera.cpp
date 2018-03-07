@@ -39,25 +39,25 @@ ULONG cCamera::Release()
 void cCamera::Update(Vector3* pTarget)
 {
     // x축 회전은 -90 ~ 90 으로 고정
-    if (m_fRotX < -LIMITED_ROT + D3DX_16F_EPSILON)
+    if (m_vRotation.x < -LIMITED_ROT + D3DX_16F_EPSILON)
     {
-        m_fRotX = -LIMITED_ROT + D3DX_16F_EPSILON;
+        m_vRotation.x = -LIMITED_ROT + D3DX_16F_EPSILON;
     }
-    else if (m_fRotX > LIMITED_ROT - D3DX_16F_EPSILON)
+    else if (m_vRotation.x > LIMITED_ROT - D3DX_16F_EPSILON)
     {
-        m_fRotX = LIMITED_ROT - D3DX_16F_EPSILON;
+        m_vRotation.x = LIMITED_ROT - D3DX_16F_EPSILON;
     }
 
-    if (m_fRotY >= 360.0f)
+    if (m_vRotation.y >= 360.0f)
     {
-        m_fRotY -= 360.0f;
+        m_vRotation.y -= 360.0f;
     }
     // 뷰 매트릭스 셋팅 - 타겟 == 큐브의 포지션
     m_vEye = Vector3(0, 0, -m_fDistance);
 
     Matrix4 matRotX, matRotY;
-    D3DXMatrixRotationX(&matRotX, D3DXToRadian(m_fRotX));
-    D3DXMatrixRotationY(&matRotY, D3DXToRadian(m_fRotY));
+    D3DXMatrixRotationX(&matRotX, D3DXToRadian(m_vRotation.x));
+    D3DXMatrixRotationY(&matRotY, D3DXToRadian(m_vRotation.y));
 
     D3DXVec3TransformCoord(&m_vEye, &m_vEye, &(matRotX * matRotY));
 

@@ -20,6 +20,8 @@ cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
 
+    m_pMesh->Release();
+
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
     g_pTextureManager->Destroy();
@@ -48,35 +50,64 @@ void cMainGame::Setup()
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
 
-#pragma region EmitMessageTest
-    m_pGObj1 = new cGameObject;
-    g_pAutoReleasePool->AddObject(m_pGObj1);
-#pragma endregion
+    D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
 }
 
 void cMainGame::Update()
 {
-    if (m_pCamera)
+    if (g_pKeyManager->isStayKeyDown('Q'))
     {
-        m_pCamera->Update();
+        float l = m_pCamera->GetLength();
+        l -= 0.1f;
+        m_pCamera->SetLength(l);
     }
 
-    if (g_pKeyManager->isOnceKeyDown('Q'))
+    if (g_pKeyManager->isStayKeyDown('W'))
     {
-        m_pGObj1->EmitMessage("deal", 15);
+        Vector3 r = m_pCamera->GetRotation();
+        r.x -= 1.0f;
+        m_pCamera->SetRotation(r);
     }
 
-    if (g_pKeyManager->isOnceKeyDown('W'))
+    if (g_pKeyManager->isStayKeyDown('E'))
     {
-        m_pGObj1->EmitMessage("heal", 10);
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('E'))
-    {
+        float l = m_pCamera->GetLength();
+        l += 0.1f;
+        m_pCamera->SetLength(l);
     }
 
     if (g_pKeyManager->isOnceKeyDown('R'))
     {
+    }
+
+    if (g_pKeyManager->isStayKeyDown('A'))
+    {
+        Vector3 r = m_pCamera->GetRotation();
+        r.y -= 1.0f;
+        m_pCamera->SetRotation(r);
+    }
+
+    if (g_pKeyManager->isStayKeyDown('S'))
+    {
+        Vector3 r = m_pCamera->GetRotation();
+        r.x += 1.0f;
+        m_pCamera->SetRotation(r);
+    }
+
+    if (g_pKeyManager->isStayKeyDown('D'))
+    {
+        Vector3 r = m_pCamera->GetRotation();
+        r.y += 1.0f;
+        m_pCamera->SetRotation(r);
+    }
+
+    if (g_pKeyManager->isOnceKeyDown('F'))
+    {
+    }
+
+    if (m_pCamera)
+    {
+        m_pCamera->Update();
     }
 }
 
@@ -96,6 +127,11 @@ void cMainGame::Render()
     g_pTimerManager->Render();
 
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
+
+    if (m_pMesh)
+    {
+        m_pMesh->DrawSubset(0);
+    }
 
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);

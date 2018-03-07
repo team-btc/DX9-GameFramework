@@ -40,39 +40,28 @@ public:
 private:
     float hp;
 public:
-    template<typename ... T>
-    bool EmitMessage(string szCommand, const T ... _t);
+    template<typename First, typename ... T>
+    bool EmitMessage(const First szCommand, T ... many);
 
-    void Deal(float dmg) { hp -= dmg; }
-    void Heal(float heal) { hp += heal; }
+    void Deal(const float dmg)
+    {
+        hp -= dmg;
+    }
+
+    void Heal(const float heal) { hp += heal; }
+    void Print(const string szMsg) { cout << szMsg << endl; }
 #pragma endregion
 };
 
 
 #pragma region EmitMessageTest
-template<typename ... T>
-inline bool cGameObject::EmitMessage(string szCommand, const T ... _t)
+template<typename First, typename ... T>
+inline bool cGameObject::EmitMessage(const First szCommand, T ... many)
 {
-    bool result = true;
     if (szCommand == "deal")
     {
-        cout << "CMD : " << szCommand << endl;
-        cout << "HP : " << to_string(hp) << " -> ";
-        Deal((float)_t...);
-        cout << to_string(hp) << endl;
+        Deal(many...);
     }
-    else if (szCommand == "heal")
-    {
-        cout << "CMD : " << szCommand << endl;
-        cout << "HP : " << to_string(hp) << " -> ";
-        Heal((float)_t...);
-        cout << to_string(hp) << endl;
-    }
-    else
-    {
-        result = false;
-    }
-
-    return result;
+    return false;
 }
 #pragma endregion

@@ -60,6 +60,7 @@ HRESULT cShaderManager::AddEffect(string key, string filepath)
                 char* str = new char[size];
                 sprintf_s(str, size, (const char*)ack);
                 OutputDebugStringA(str);
+                MessageBoxA(g_hWnd, str, "Shader Error", MB_OK);
                 delete[] str;
             }
         }
