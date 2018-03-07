@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
+#include "cPlayer.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -13,11 +14,14 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
+    D3DXCreateBox(g_pDevice, 1, 1, 1, &m_pSphere, NULL);
 }
 
 
 cMainGame::~cMainGame()
 {
+    SAFE_RELEASE(m_pSphere);
+
     HRESULT hr = S_OK;
 
     //  CUSTOM RESOURCE ÇØÁ¦
@@ -47,14 +51,21 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
+
+    m_pPlayer = new cPlayer("Ghost", "Assets\\Unit\\Ghost", "Ghost.X");
+    m_pEnermy = new cPlayer("Zelot", "Assets\\Zealot", "Zealot.X");
+    
 }
 
 void cMainGame::Update()
 {
     if (m_pCamera)
     {
-        m_pCamera->Update();
+        m_pCamera->Update(&m_pPlayer->GetPosition());
     }
+
+    m_pPlayer->Update();
+    //m_pEnermy->Update();
 
     if (g_pKeyManager->isOnceKeyDown('Q'))
     {
@@ -62,6 +73,7 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('W'))
     {
+    
     }
 
     if (g_pKeyManager->isOnceKeyDown('E'))
@@ -88,6 +100,11 @@ void cMainGame::Render()
     g_pScnManager->Render();
     g_pTimerManager->Render();
 
+    m_pPlayer->Render();
+    m_pEnermy->Render();
+
+    m_pSphere->DrawSubset(0);
+
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
 
     g_pDevice->EndScene();
@@ -96,4 +113,6 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (m_pCamera)
+        m_pCamera->WndProc(hWnd, message, wParam, lParam);
 }

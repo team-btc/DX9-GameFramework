@@ -18,6 +18,7 @@ private:
     // 객체마다 생성
     LPANIMCONTROLLER            m_pAnimController;
     Vector3                     m_vPosition;
+    Matrix4                     m_matWorld;
 
 private:
     cSkinnedMesh();
@@ -27,7 +28,6 @@ private:
     void Update(ST_BONE* pCurrent, Matrix4* pmatParent);
     void Render(ST_BONE* pBone = NULL);
     void SetupBoneMatrixPtrs(ST_BONE* pBone);
-    void SetAnimationIndex(int nIndex);
     virtual HRESULT Destroy() override;
 
 public:
@@ -42,8 +42,13 @@ public:
         m_vPosition = v;
         m_stBoundingSphere.vCenter = v;
     }
+    void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
+    void SetAnimationIndex(int nIndex, bool isBlend);
+
     ST_SPHERE* GetBoundingSphere()
     {
         return &m_stBoundingSphere;
     }
+    int GetCurPos();
+
 };

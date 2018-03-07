@@ -3,7 +3,7 @@
 
 
 cCamera::cCamera()
-    : m_fDistance(10)
+    : m_fDistance(3)
     , m_vEye(0, LOOKAT_POS, -m_fDistance)
     , m_vLookAt(0, LOOKAT_POS, 0)
     , m_vUp(0, 1, 0)
@@ -76,4 +76,58 @@ void cCamera::Update(Vector3* pTarget)
     Matrix4 matView;
     D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &Vector3(0, 1, 0));
     g_pDevice->SetTransform(D3DTS_VIEW, &matView);
+}
+
+void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_RBUTTONDOWN:
+    {
+        m_ptPrevMouse.x = LOWORD(lParam);
+        m_ptPrevMouse.y = HIWORD(lParam);
+        m_isRButtonDown = true;
+    }
+    break;
+    case WM_RBUTTONUP:
+    {
+        m_isRButtonDown = false;
+    }
+    break;
+    case WM_MOUSEMOVE:
+    {
+        if (m_isRButtonDown)
+        {
+            POINT ptCurrMouse;
+            ptCurrMouse.x = LOWORD(lParam);
+            ptCurrMouse.y = HIWORD(lParam);
+
+            m_fRotY += (ptCurrMouse.x - m_ptPrevMouse.x) / 5.0f;
+            m_fRotX += (ptCurrMouse.y - m_ptPrevMouse.y) / 5.0f;
+
+            // x축 회전은 -90 ~ 90 으로 고정
+            if (m_fRotX < -D3DX_PI * LIMITED_ROT + D3DX_16F_EPSILON)
+                m_fRotX = -D3DX_PI * LIMITED_ROT + D3DX_16F_EPSILON;
+            else if (m_fRotX > D3DX_PI * LIMITED_ROT - D3DX_16F_EPSILON)
+                m_fRotX = D3DX_PI * LIMITED_ROT - D3DX_16F_EPSILON;
+
+            m_ptPrevMouse = ptCurrMouse;
+        }
+    }
+    break;
+    case WM_MOUSEWHEEL:
+    {
+        if (m_fDistance > 2)
+        {
+            m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
+        }
+        else
+        {
+            m_fDistance = 2;
+            if(GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+                m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
+        }
+    }
+    break;
+    }
 }

@@ -198,9 +198,11 @@
     <ClInclude Include="001.Manager\001.Resource\cLightManager.h" />
     <ClInclude Include="001.Manager\000.System\cCameraManager.h" />
     <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h" />
+    <ClInclude Include="003.Object\cCharacterObject.h" />
     <ClInclude Include="cDbManager.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleExplosion.h" />
+    <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -241,9 +243,11 @@
     <ClCompile Include="005.UI\cUIProgressBar.cpp" />
     <ClCompile Include="005.UI\cUITextView.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp" />
+    <ClCompile Include="003.Object\cCharacterObject.cpp" />
     <ClCompile Include="cDbManager.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleExplosion.cpp" />
+    <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -31,5 +31,7 @@ public:
     void Update(Vector3* pTarget = NULL);
 
     Matrix4 GetViewProjMatrix() { return m_matView * m_matProj; }
+
+    void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
 

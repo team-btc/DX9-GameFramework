@@ -11,6 +11,8 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     , m_pEffect(NULL)
     , m_vPosition(0, 0, 0)
 {
+    D3DXMatrixIdentity(&m_matWorld);
+
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey, szFolder, szFilename);
 
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
@@ -43,7 +45,7 @@ cSkinnedMesh::~cSkinnedMesh(void)
 
 void cSkinnedMesh::Load(string szDirectory, string szFilename)
 {
-    m_pEffect = LoadEffect("MultiAnimation.hpp");
+    m_pEffect = LoadEffect("Assets\\MultiAnimation.hpp");
 
     int nPaletteSize = 0;
     m_pEffect->GetInt("MATRIX_PALETTE_SIZE", &nPaletteSize);
@@ -85,14 +87,30 @@ void cSkinnedMesh::UpdateAndRender()
     if (m_pAnimController)
     {
         m_pAnimController->AdvanceTime(g_pTimerManager->GetDeltaTime(), NULL);
+
+        static float fWeight = 0;
+
+        if (fWeight < 1)
+        {
+            fWeight += g_pTimerManager->GetDeltaTime();
+
+            if (fWeight >= 1)
+            {
+                fWeight = 1;
+                m_pAnimController->SetTrackEnable(1, false);
+            }
+            m_pAnimController->SetTrackWeight(0, fWeight);
+            m_pAnimController->SetTrackWeight(1, 1.0f - fWeight);
+        }
     }
 
     if (m_pRootFrame)
     {
-        Matrix4 mat;
-        D3DXMatrixTranslation(&mat, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+        Matrix4 matS, matR, matT,matW;
+        D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+        matW = matT * m_matWorld;
 
-        Update(m_pRootFrame, &mat);
+        Update(m_pRootFrame, &matW);
         Render(m_pRootFrame);
     }
 }
@@ -304,14 +322,48 @@ void cSkinnedMesh::SetupBoneMatrixPtrs(ST_BONE* pBone)
     }
 }
 
-void cSkinnedMesh::SetAnimationIndex(int nIndex)
+void cSkinnedMesh::SetAnimationIndex(int nIndex, bool isBlend)
 {
     if (!m_pAnimController)
         return;
+    LPD3DXANIMATIONSET pNextAnimSet = NULL;
+    m_pAnimController->GetAnimationSet(nIndex, &pNextAnimSet);
+
+    if (isBlend)
+    {
+        LPD3DXANIMATIONSET	pPrevAnimSet = NULL;
+        D3DXTRACK_DESC	stTrackDesc;
+        // 현재 재생중이던 애니메이션 정보 가져오기
+        m_pAnimController->GetTrackAnimationSet(0, &pPrevAnimSet);
+        m_pAnimController->GetTrackDesc(0, &stTrackDesc);
+        // 0번 트랙 -> 1번 트랙
+        m_pAnimController->SetTrackAnimationSet(1, pPrevAnimSet);
+        m_pAnimController->SetTrackDesc(1, &stTrackDesc);
+
+        m_pAnimController->SetTrackWeight(0, 0.0f);
+
+        SAFE_RELEASE(pPrevAnimSet);
+
+       // m_fPassedBlendTime = 0.0f;
+    }
+
+    m_pAnimController->SetTrackAnimationSet(0, pNextAnimSet);
+    m_pAnimController->SetTrackPosition(0, 0.0);
+    SAFE_RELEASE(pNextAnimSet);
+    
+}
+
+int cSkinnedMesh::GetCurPos()
+{
     LPANIMATIONSET pAnimSet = NULL;
-    m_pAnimController->GetAnimationSet(nIndex, &pAnimSet);
-    m_pAnimController->SetTrackAnimationSet(0, pAnimSet);
-    SAFE_RELEASE(pAnimSet);
+    m_pAnimController->GetTrackAnimationSet(0, &pAnimSet);
+
+    D3DXTRACK_DESC desc;
+    m_pAnimController->GetTrackDesc(0, &desc);
+
+    int CurPos = desc.Position / pAnimSet->GetPeriod();
+    cout << CurPos << endl;
+    return CurPos;
 }
 
 HRESULT cSkinnedMesh::Destroy()
