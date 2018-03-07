@@ -19,9 +19,7 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
-
-    m_pMeshLoader->Destroy();
-
+    
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
     g_pTextureManager->Destroy();
@@ -50,12 +48,17 @@ void cMainGame::Setup()
     g_pDevice->SetLight(0, &l);
     g_pDevice->LightEnable(0, true);
 
+    g_pShaderManager->AddEffect("multi-animation", "Assets/MultiAnimation.hpp");
+    g_pMeshManager->LoadSkinnedMesh();
+
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
 
-    m_pMeshLoader = new cObjMeshLoader;
-    hr = m_pMeshLoader->Create(g_pDevice, L"Assets\\WatertowerOBJ\\tanariswatertower.obj");
+    cUnitObject* unit = new cUnitObject;
+    unit->Load("banshee");
+    g_pAutoReleasePool->AddObject(unit);
+    m_vecUnit.push_back(unit);
 }
 
 void cMainGame::Update()
@@ -83,6 +86,11 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('R'))
     {
+        cUnitObject* unit = new cUnitObject;
+        unit->Load("banshee");
+        unit->GetMesh()->SetPosition(Vector3(m_vecUnit.size() * 0.5f, 0, 0));
+        g_pAutoReleasePool->AddObject(unit);
+        m_vecUnit.push_back(unit);
     }
 
     if (g_pKeyManager->isStayKeyDown('A'))
@@ -131,25 +139,15 @@ void cMainGame::Render()
     g_pScnManager->Render();
     g_pTimerManager->Render();
 
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
+    g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
 
-    for (UINT iSubset = 0; iSubset < m_pMeshLoader->GetNumMaterials(); iSubset++)
+    for (auto iter = m_vecUnit.begin(); iter != m_vecUnit.end(); iter++)
     {
-        RenderSubset(iSubset);
+        (*iter)->Render();
     }
 
     g_pDevice->EndScene();
     g_pDevice->Present(0, 0, 0, 0);
-}
-
-void cMainGame::RenderSubset(UINT iSubset)
-{
-    LPMESH pMesh = m_pMeshLoader->GetMesh();
-    Material* pMaterial = m_pMeshLoader->GetMaterial(iSubset);
-
-    g_pDevice->SetTexture(0, pMaterial->pTexture);
-    g_pDevice->SetMaterial(&pMaterial->mMaterial);
-    pMesh->DrawSubset(iSubset);
 }
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

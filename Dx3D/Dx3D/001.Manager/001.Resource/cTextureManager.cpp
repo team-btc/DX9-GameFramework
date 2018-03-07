@@ -44,7 +44,6 @@ void cTextureManager::AddTexture(string szKey, string szFilepath, bool saveImage
                 &m_mapImageInfo[szKey],
                 NULL,
                 &t);
-
         }
         else
         {

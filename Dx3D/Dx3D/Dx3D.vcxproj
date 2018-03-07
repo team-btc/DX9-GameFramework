@@ -208,6 +208,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="003.Object\cUnitObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="001.Manager\000.System\cBroadcastManager.cpp" />
@@ -257,6 +258,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="003.Object\cUnitObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />

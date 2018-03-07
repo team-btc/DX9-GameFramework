@@ -1,12 +1,13 @@
 #pragma once
 #include "cCamera.h"
-#include "cMeshLoader.h"
+#include "cUnitObject.h"
+
 class cMainGame
 {
 private:
     cCamera*    m_pCamera;
-    cObjMeshLoader* m_pMeshLoader;
 
+    vector<cUnitObject*>    m_vecUnit;
 public:
     cMainGame();
     ~cMainGame();
@@ -14,8 +15,6 @@ public:
     void Setup();
     void Update();
     void Render();
-
-    void RenderSubset(UINT i);
 
     void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

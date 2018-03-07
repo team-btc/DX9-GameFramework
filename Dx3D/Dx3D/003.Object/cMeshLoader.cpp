@@ -113,7 +113,6 @@ HRESULT cObjMeshLoader::Create(LPDEVICE9 pd3dDevice, const WCHAR* strFilename)
 
     // Restore the original current directory
     hr = SetCurrentDirectory(wstrOldDir);
-
     // Create the encapsulated mesh
     ID3DXMesh* pMesh = NULL;
     hr = D3DXCreateMesh((DWORD)m_Indices.size() / 3, (DWORD)m_Vertices.size(),
@@ -453,10 +452,13 @@ HRESULT cObjMeshLoader::LoadMaterialsFromMTL(const WCHAR* strFileName)
     WCHAR strCommand[256] = { 0 };
     wifstream InFile(cstrPath);
     if (!InFile)
+    {
+        g_pLogManager->WriteLog(EL_ERROR, "wifstream::open failed - obj loader");
+    }
         //return DXTRACE_ERR( L"wifstream::open", E_FAIL );
 
     // Restore the original current directory
-        SetCurrentDirectory(wstrOldDir);
+    SetCurrentDirectory(wstrOldDir);
 
     Material* pMaterial = NULL;
 

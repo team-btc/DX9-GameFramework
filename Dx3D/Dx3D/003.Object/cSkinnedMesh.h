@@ -17,6 +17,8 @@ private:
 
     // 객체마다 생성
     LPANIMCONTROLLER            m_pAnimController;
+    Vector3                     m_vScale;
+    Vector3                     m_vRotation;
     Vector3                     m_vPosition;
 
 private:
@@ -31,19 +33,18 @@ private:
     virtual HRESULT Destroy() override;
 
 public:
+    cSkinnedMesh(string szKey);
     cSkinnedMesh(string szKey, string szFolder, string szFilename);
     ~cSkinnedMesh(void);
 
     void UpdateAndRender();
 
     void SetRandomTrackPosition();  // 테스트용
-    void SetPosition(Vector3 v)
-    {
-        m_vPosition = v;
-        m_stBoundingSphere.vCenter = v;
-    }
-    ST_SPHERE* GetBoundingSphere()
-    {
-        return &m_stBoundingSphere;
-    }
+    void SetScale(Vector3 v) { m_vScale = v; }
+    void SetRotation(Vector3 v) { m_vRotation = v; }
+    void SetPosition(Vector3 v) { m_vPosition = v; }
+
+    Vector3 GetScale() { return m_vScale; }
+    Vector3 GetRotation() { return m_vRotation; }
+    Vector3 GetPosition() { return m_vPosition; }
 };

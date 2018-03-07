@@ -3,12 +3,40 @@
 #include "cAllocateHierarchy.h"
 
 
+cSkinnedMesh::cSkinnedMesh(string szKey)
+    : m_pRootFrame(NULL)
+    , m_pAnimController(NULL)
+    , m_dwWorkingPaletteSize(0)
+    , m_pmWorkingPalette(NULL)
+    , m_pEffect(NULL)
+    , m_vScale(1, 1, 1)
+    , m_vRotation(0, 0, 0)
+    , m_vPosition(0, 0, 0)
+{
+    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey);
+
+    m_pRootFrame = pSkinnedMesh->m_pRootFrame;
+    m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
+    m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
+    m_pEffect = pSkinnedMesh->m_pEffect;
+    m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
+
+    pSkinnedMesh->m_pAnimController->CloneAnimationController(
+        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
+        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
+        pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
+        pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
+        &m_pAnimController);
+}
+
 cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     : m_pRootFrame(NULL)
     , m_pAnimController(NULL)
     , m_dwWorkingPaletteSize(0)
     , m_pmWorkingPalette(NULL)
     , m_pEffect(NULL)
+    , m_vScale(1, 1, 1)
+    , m_vRotation(0, 0, 0)
     , m_vPosition(0, 0, 0)
 {
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey, szFolder, szFilename);
@@ -33,6 +61,9 @@ cSkinnedMesh::cSkinnedMesh()
     , m_dwWorkingPaletteSize(0)
     , m_pmWorkingPalette(NULL)
     , m_pEffect(NULL)
+    , m_vScale(1, 1, 1)
+    , m_vRotation(0, 0, 0)
+    , m_vPosition(0, 0, 0)
 {
 }
 
@@ -43,7 +74,7 @@ cSkinnedMesh::~cSkinnedMesh(void)
 
 void cSkinnedMesh::Load(string szDirectory, string szFilename)
 {
-    m_pEffect = LoadEffect("MultiAnimation.hpp");
+    m_pEffect = g_pShaderManager->GetEffect("multi-animation");//LoadEffect("MultiAnimation.hpp");
 
     int nPaletteSize = 0;
     m_pEffect->GetInt("MATRIX_PALETTE_SIZE", &nPaletteSize);
@@ -89,10 +120,13 @@ void cSkinnedMesh::UpdateAndRender()
 
     if (m_pRootFrame)
     {
-        Matrix4 mat;
-        D3DXMatrixTranslation(&mat, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+        Matrix4 matW, matS, matR, matT;
+        D3DXMatrixScaling(&matS, m_vScale.x, m_vScale.y, m_vScale.z);
+        D3DXMatrixRotationYawPitchRoll(&matR, m_vRotation.y, m_vRotation.x, m_vRotation.z);
+        D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+        matW = matS * matR * matT;
 
-        Update(m_pRootFrame, &mat);
+        Update(m_pRootFrame, &matW);
         Render(m_pRootFrame);
     }
 }
@@ -163,11 +197,15 @@ void cSkinnedMesh::Render(ST_BONE* pBone /*= NULL*/)
 
             // run through each pass and draw
             m_pEffect->Begin(&uiPasses, 0);
-            for (uiPass = 0; uiPass < uiPasses; ++uiPass)
             {
-                m_pEffect->BeginPass(uiPass);
-                pBoneMesh->pWorkingMesh->DrawSubset(dwAttrib);
-                m_pEffect->EndPass();
+                for (uiPass = 0; uiPass < uiPasses; ++uiPass)
+                {
+                    m_pEffect->BeginPass(uiPass);
+                    {
+                        pBoneMesh->pWorkingMesh->DrawSubset(dwAttrib);
+                    }
+                    m_pEffect->EndPass();
+                }
             }
             m_pEffect->End();
         }
@@ -307,7 +345,10 @@ void cSkinnedMesh::SetupBoneMatrixPtrs(ST_BONE* pBone)
 void cSkinnedMesh::SetAnimationIndex(int nIndex)
 {
     if (!m_pAnimController)
+    {
         return;
+    }
+
     LPANIMATIONSET pAnimSet = NULL;
     m_pAnimController->GetAnimationSet(nIndex, &pAnimSet);
     m_pAnimController->SetTrackAnimationSet(0, pAnimSet);
@@ -319,7 +360,6 @@ HRESULT cSkinnedMesh::Destroy()
     cAllocateHierarchy ah;
     D3DXFrameDestroy((LPFRAME)m_pRootFrame, &ah);
     SAFE_DELETE_ARRAY(m_pmWorkingPalette);
-    SAFE_RELEASE(m_pEffect);
 
     return S_OK;
 }

@@ -35,33 +35,4 @@ public:
     virtual bool IsActive() override;
     virtual void Activate() override;
     virtual void Deactivate() override;
-
-#pragma region EmitMessageTest
-private:
-    float hp;
-public:
-    template<typename First, typename ... T>
-    bool EmitMessage(const First szCommand, T ... many);
-
-    void Deal(const float dmg)
-    {
-        hp -= dmg;
-    }
-
-    void Heal(const float heal) { hp += heal; }
-    void Print(const string szMsg) { cout << szMsg << endl; }
-#pragma endregion
 };
-
-
-#pragma region EmitMessageTest
-template<typename First, typename ... T>
-inline bool cGameObject::EmitMessage(const First szCommand, T ... many)
-{
-    if (szCommand == "deal")
-    {
-        Deal(many...);
-    }
-    return false;
-}
-#pragma endregion
