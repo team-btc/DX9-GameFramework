@@ -21,7 +21,6 @@ cMainGame::~cMainGame()
     HRESULT hr = S_OK;
 
     m_pMeshLoader->Destroy();
-    m_pMesh->Release();
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -55,45 +54,8 @@ void cMainGame::Setup()
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
 
-    D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
-    g_pShaderManager->AddEffect("mesh", ".\\Assets\\Shader\\FX\\MeshFromObj.fx");
-    m_pEffect = g_pShaderManager->GetEffect("mesh");
-
-    m_pMeshLoader = new cMeshLoader;
+    m_pMeshLoader = new cObjMeshLoader;
     hr = m_pMeshLoader->Create(g_pDevice, L"Assets\\WatertowerOBJ\\tanariswatertower.obj");
-
-
-    // Cache the effect handles
-    g_hAmbient = m_pEffect->GetParameterBySemantic(0, "Ambient");
-    g_hDiffuse = m_pEffect->GetParameterBySemantic(0, "Diffuse");
-    g_hSpecular = m_pEffect->GetParameterBySemantic(0, "Specular");
-    g_hOpacity = m_pEffect->GetParameterBySemantic(0, "Opacity");
-    g_hSpecularPower = m_pEffect->GetParameterBySemantic(0, "SpecularPower");
-    g_hLightColor = m_pEffect->GetParameterBySemantic(0, "LightColor");
-    g_hLightPosition = m_pEffect->GetParameterBySemantic(0, "LightPosition");
-    g_hCameraPosition = m_pEffect->GetParameterBySemantic(0, "CameraPosition");
-    g_hTexture = m_pEffect->GetParameterBySemantic(0, "Texture");
-    g_hTime = m_pEffect->GetParameterBySemantic(0, "Time");
-    g_hWorld = m_pEffect->GetParameterBySemantic(0, "World");
-    g_hWorldViewProjection = m_pEffect->GetParameterBySemantic(0, "WorldViewProjection");
-
-    for (UINT i = 0; i < m_pMeshLoader->GetNumMaterials(); i++)
-    {
-        Material* pMaterial = m_pMeshLoader->GetMaterial(i);
-
-        const char* strTechnique = NULL;
-
-        if (pMaterial->pTexture && pMaterial->bSpecular)
-            strTechnique = "TexturedSpecular";
-        else if (pMaterial->pTexture && !pMaterial->bSpecular)
-            strTechnique = "TexturedNoSpecular";
-        else if (!pMaterial->pTexture && pMaterial->bSpecular)
-            strTechnique = "Specular";
-        else if (!pMaterial->pTexture && !pMaterial->bSpecular)
-            strTechnique = "NoSpecular";
-
-        pMaterial->hTechnique = m_pEffect->GetTechniqueByName(strTechnique);
-    }
 }
 
 void cMainGame::Update()
@@ -108,7 +70,7 @@ void cMainGame::Update()
     if (g_pKeyManager->isStayKeyDown('W'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.x -= 1.0f;
+        r.x -= 0.1f;
         m_pCamera->SetRotation(r);
     }
 
@@ -126,21 +88,21 @@ void cMainGame::Update()
     if (g_pKeyManager->isStayKeyDown('A'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.y -= 1.0f;
+        r.y -= 0.1f;
         m_pCamera->SetRotation(r);
     }
 
     if (g_pKeyManager->isStayKeyDown('S'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.x += 1.0f;
+        r.x += 0.1f;
         m_pCamera->SetRotation(r);
     }
 
     if (g_pKeyManager->isStayKeyDown('D'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.y += 1.0f;
+        r.y += 0.1f;
         m_pCamera->SetRotation(r);
     }
 
@@ -171,29 +133,9 @@ void cMainGame::Render()
 
     g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
 
-    Matrix4 mWorld, mView, mProj, mWorldViewProjection;
-    g_pDevice->GetTransform(D3DTS_WORLD, &mWorld);
-    g_pDevice->GetTransform(D3DTS_VIEW, &mView);
-    g_pDevice->GetTransform(D3DTS_PROJECTION, &mProj);
-
-    mWorldViewProjection = mWorld * mView * mProj;
-
-    // Update the effect's variables. 
-    m_pEffect->SetMatrix(g_hWorldViewProjection, &mWorldViewProjection);
-    m_pEffect->SetMatrix(g_hWorld, &mWorld);
-    m_pEffect->SetFloat(g_hTime, g_pTimerManager->GetWorldTime());
-    m_pEffect->SetValue(g_hCameraPosition, m_pCamera->GetEye(), sizeof(D3DXVECTOR3));
-
-    UINT iCurSubset = -1;//(UINT)(INT_PTR)g_SampleUI.GetComboBox(IDC_SUBSET)->GetSelectedData();
-
-    // A subset of -1 was arbitrarily chosen to represent all subsets
-    if (iCurSubset == -1)
+    for (UINT iSubset = 0; iSubset < m_pMeshLoader->GetNumMaterials(); iSubset++)
     {
-        // Iterate through subsets, changing material properties for each
-        for (UINT iSubset = 0; iSubset < m_pMeshLoader->GetNumMaterials(); iSubset++)
-        {
-            RenderSubset(iSubset);
-        }
+        RenderSubset(iSubset);
     }
 
     g_pDevice->EndScene();
@@ -202,39 +144,12 @@ void cMainGame::Render()
 
 void cMainGame::RenderSubset(UINT iSubset)
 {
-    HRESULT hr;
-    UINT iPass, cPasses;
-
-    // Retrieve the ID3DXMesh pointer and current material from the MeshLoader helper
-    ID3DXMesh* pMesh = m_pMeshLoader->GetMesh();
+    LPMESH pMesh = m_pMeshLoader->GetMesh();
     Material* pMaterial = m_pMeshLoader->GetMaterial(iSubset);
 
-    // Set the lighting variables and texture for the current material
-    m_pEffect->SetValue(g_hAmbient, pMaterial->vAmbient, sizeof(D3DXVECTOR3));
-    m_pEffect->SetValue(g_hDiffuse, pMaterial->vDiffuse, sizeof(D3DXVECTOR3));
-    m_pEffect->SetValue(g_hSpecular, pMaterial->vSpecular, sizeof(D3DXVECTOR3));
-    m_pEffect->SetTexture(g_hTexture, pMaterial->pTexture);
-    m_pEffect->SetFloat(g_hOpacity, pMaterial->fAlpha);
-    m_pEffect->SetInt(g_hSpecularPower, pMaterial->nShininess);
-
-    m_pEffect->SetTechnique(pMaterial->hTechnique);
-    m_pEffect->Begin(&cPasses, 0);
-
-    for (iPass = 0; iPass < cPasses; iPass++)
-    {
-        m_pEffect->BeginPass(iPass);
-
-        // The effect interface queues up the changes and performs them 
-        // with the CommitChanges call. You do not need to call CommitChanges if 
-        // you are not setting any parameters between the BeginPass and EndPass.
-        // V( g_pEffect->CommitChanges() );
-
-        // Render the mesh with the applied technique
-        pMesh->DrawSubset(iSubset);
-
-        m_pEffect->EndPass();
-    }
-    m_pEffect->End();
+    g_pDevice->SetTexture(0, pMaterial->pTexture);
+    g_pDevice->SetMaterial(&pMaterial->mMaterial);
+    pMesh->DrawSubset(iSubset);
 }
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
