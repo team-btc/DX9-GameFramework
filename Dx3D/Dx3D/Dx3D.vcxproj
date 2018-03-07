@@ -177,6 +177,7 @@
     <ClInclude Include="001.Manager\001.Resource\cTextureManager.h" />
     <ClInclude Include="003.Object\cFrustum.h" />
     <ClInclude Include="003.Object\cGameObject.h" />
+    <ClInclude Include="003.Object\cMeshLoader.h" />
     <ClInclude Include="003.Object\cObject.h" />
     <ClInclude Include="003.Object\cRay.h" />
     <ClInclude Include="003.Object\cSkinnedMesh.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="001.Manager\001.Resource\cTextureManager.cpp" />
     <ClCompile Include="003.Object\cFrustum.cpp" />
     <ClCompile Include="003.Object\cGameObject.cpp" />
+    <ClCompile Include="003.Object\cMeshLoader.cpp" />
     <ClCompile Include="003.Object\cObject.cpp" />
     <ClCompile Include="003.Object\cRay.cpp" />
     <ClCompile Include="003.Object\cSkinnedMesh.cpp" />

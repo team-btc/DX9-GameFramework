@@ -50,7 +50,8 @@ HRESULT cShaderManager::AddEffect(string key, string filepath)
                                            &ret,
                                            &pError);
 
-        if (!ret && pError)
+        if (ret == NULL &&
+            pError)
         {
             int size = pError->GetBufferSize();
             void *ack = pError->GetBufferPointer();
