@@ -2,6 +2,7 @@
 #include "cMainGame.h"
 #include "cCamera.h"
 #include "cPlayer.h"
+#include "cMonster.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -53,8 +54,13 @@ void cMainGame::Setup()
     g_pAutoReleasePool->AddObject(m_pCamera);
 
     m_pPlayer = new cPlayer("Ghost", "Assets\\Unit\\Ghost", "Ghost.X");
-    m_pEnermy = new cPlayer("Zelot", "Assets\\Zealot", "Zealot.X");
-    
+
+    for (int i = 0; i < 2; i++)
+    {
+        cMonster* m_pEnermy = new cMonster("Zelot", "Assets\\Zealot", "Zealot.X");
+        m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
+        m_vecMonster.push_back(m_pEnermy);
+    } 
 }
 
 void cMainGame::Update()
@@ -65,7 +71,10 @@ void cMainGame::Update()
     }
 
     m_pPlayer->Update();
-    //m_pEnermy->Update();
+    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+    {
+        (*iter)->Update();
+    }
 
     if (g_pKeyManager->isOnceKeyDown('Q'))
     {
@@ -82,6 +91,59 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('R'))
     {
+    }
+
+    if (g_pKeyManager->isOnceKeyDown(VK_LBUTTON))
+    {
+        cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
+        BOOL isHit = false;
+        float fDest;
+
+       /* for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+        {
+            ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)(*iter)->GetSkinnedMesh()->GetRootFrame();
+            D3DXIntersectSubset((*pBoneMesh).pWorkingMesh, NULL, &ray.m_vDir, &ray.m_vDir, &isHit, NULL, NULL, NULL, &fDest, NULL, NULL);
+            if (isHit)
+            {
+                cout << "dd" << endl;
+            }
+        }*/
+        D3DXIntersectSubset(m_pSphere, 0, &ray.m_vDir, &ray.m_vDir, &isHit, 0, 0, 0, &fDest, NULL, NULL);
+        if (isHit)
+        {
+            cout << "dd" << endl;
+        }
+    }
+
+    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
+    {
+        //나와 제일 가까운 몹을 판별하는 문법이 필요하다
+        m_pPlayer->GetSkinnedMesh()->SetAnimationIndex(1);
+
+        cMonster* nearMonster = NULL;
+        float nearDist = 9999;
+        for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+        {
+            if (m_pPlayer->Distance((*iter)->GetPosition()) < nearDist)
+            {
+                nearDist = m_pPlayer->Distance((*iter)->GetPosition());
+                nearMonster = *iter;
+            }
+        }
+
+        if (nearMonster)
+        {
+            m_pPlayer->RayCast(nearMonster);
+            nearMonster->RayCast(m_pPlayer);
+
+            if (m_pPlayer->Distance(nearMonster->GetPosition()) < m_pPlayer->GetSphere().fRadius + nearMonster->GetSphere().fRadius)
+            {
+                m_pPlayer->Attack();
+                m_pPlayer->SetAttack(true);
+            }
+            else
+                m_pPlayer->SetMoveToTarget(true);
+        }
     }
 }
 
@@ -101,7 +163,11 @@ void cMainGame::Render()
     g_pTimerManager->Render();
 
     m_pPlayer->Render();
-    m_pEnermy->Render();
+    
+    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+    {
+        (*iter)->Render();
+    }
 
     m_pSphere->DrawSubset(0);
 

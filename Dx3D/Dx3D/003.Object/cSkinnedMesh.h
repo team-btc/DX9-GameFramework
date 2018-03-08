@@ -20,6 +20,9 @@ private:
     Vector3                     m_vPosition;
     Matrix4                     m_matWorld;
 
+    float						m_fBlendDuration;
+    float						m_fPassedBlendTime;
+
 private:
     cSkinnedMesh();
 
@@ -43,12 +46,14 @@ public:
         m_stBoundingSphere.vCenter = v;
     }
     void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
-    void SetAnimationIndex(int nIndex, bool isBlend);
+    void SetAnimationIndex(int nIndex, bool isBlend = true);
 
     ST_SPHERE* GetBoundingSphere()
     {
         return &m_stBoundingSphere;
     }
     int GetCurPos();
+
+    ST_BONE* GetRootFrame() { return m_pRootFrame; }
 
 };

@@ -200,6 +200,7 @@
     <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
     <ClInclude Include="cDbManager.h" />
+    <ClInclude Include="002.System\cMonster.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleExplosion.h" />
     <ClInclude Include="002.System\cPlayer.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp" />
     <ClCompile Include="003.Object\cCharacterObject.cpp" />
     <ClCompile Include="cDbManager.cpp" />
+    <ClCompile Include="002.System\cMonster.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleExplosion.cpp" />
     <ClCompile Include="002.System\cPlayer.cpp" />

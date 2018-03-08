@@ -15,12 +15,14 @@ public:
     virtual void Render() override;
     virtual void Destroy() override;
 
+    virtual void SetTarget(iCharacterObject* target) override { m_pTarget = target; }
     virtual void SetSkinnedMesh(cSkinnedMesh* Mesh) override { m_pMesh = Mesh; }
     virtual void SetScale(Matrix4 Scale) override { m_MatScale = Scale; }
     virtual void SetRotate(Matrix4 Rotate) override { m_MatRotate = Rotate; }
     virtual void SetTrans(Matrix4 Trans) override { m_MatTrans = Trans; }
     virtual void SetDir(Vector3 dir) override { m_vDir = dir; }
     virtual void SetPosition(Vector3 Pos) override { m_vPosition = Pos; }
+    virtual void SetSphere(ST_SPHERE Sphere) override { m_stSphere = Sphere; };
     virtual void SetRotY(float RotY) override { m_fRotY = RotY; }
     virtual void SetSTR(float STR) override { m_fSTR = STR; }
     virtual void SetDEX(float DEX) override { m_fDEX = DEX; }
@@ -35,13 +37,16 @@ public:
     virtual void SetStatic(bool Static) override { isStatic = Static; }
     virtual void SetActive(bool Active) override { isActive = Active; }
     virtual void SetAlive(bool Alive) override { isAlive = Alive; }
+    virtual void SetMoveToTarget(bool MoveToTarget) { isMoveToTarget = MoveToTarget; }
 
+    virtual iCharacterObject* GetTarget() override { return m_pTarget; }
     virtual cSkinnedMesh* GetSkinnedMesh() override { return m_pMesh; }
     virtual Matrix4 GetScale() override { return m_MatScale; }
     virtual Matrix4 GetRotate() override { return m_MatRotate; }
     virtual Matrix4 GetTrans() override { return m_MatTrans; }
     virtual Vector3 GetDir() override { return m_vDir; }
     virtual Vector3 GetPosition() override { return m_vPosition; }
+    virtual ST_SPHERE GetSphere() override { return m_stSphere; }
     virtual float GetRotY() override { return m_fRotY; }
     virtual float GetSTR() override { return m_fSTR; }
     virtual float GetDEX() override { return m_fDEX; }
@@ -56,6 +61,7 @@ public:
     virtual bool GetStatic() override { return isStatic; }
     virtual bool GetActive() override { return isActive; }
     virtual bool GetAlive() override { return isAlive; }
+    virtual bool GetMoveToTarget() override { return isMoveToTarget; }
 
     virtual bool RayCast(iCharacterObject* Charater) override;
     virtual void Attack() override;
@@ -64,5 +70,6 @@ public:
     virtual void MoveBackword() override;
     virtual void RotateLeft() override;
     virtual void RotateRight() override;
+    virtual float Distance(Vector3 Pos) override;
 };
 

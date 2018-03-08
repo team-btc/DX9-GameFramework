@@ -62,7 +62,7 @@ cSkinnedMesh* cMeshManager::GetMesh(string szKey, string szDirectory, string szF
     }
     else
     {
-        return NULL;
+        return iter->second;
     }
 }
 

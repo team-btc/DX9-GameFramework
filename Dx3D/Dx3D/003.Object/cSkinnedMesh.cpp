@@ -10,6 +10,8 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     , m_pmWorkingPalette(NULL)
     , m_pEffect(NULL)
     , m_vPosition(0, 0, 0)
+    , m_fBlendDuration(0.5f)
+    , m_fPassedBlendTime(0.0f)
 {
     D3DXMatrixIdentity(&m_matWorld);
 
@@ -88,19 +90,22 @@ void cSkinnedMesh::UpdateAndRender()
     {
         m_pAnimController->AdvanceTime(g_pTimerManager->GetDeltaTime(), NULL);
 
-        static float fWeight = 0;
-
-        if (fWeight < 1)
+        if (m_fPassedBlendTime < m_fBlendDuration) // 블렌딩 진행 중
         {
-            fWeight += g_pTimerManager->GetDeltaTime();
+            m_fPassedBlendTime += g_pTimerManager->GetDeltaTime();
 
-            if (fWeight >= 1)
+            if (m_fPassedBlendTime < m_fBlendDuration) // 블렌딩이 끝날 때가 되지 않음
             {
-                fWeight = 1;
+                float fWeight = m_fPassedBlendTime / m_fBlendDuration;
+
+                m_pAnimController->SetTrackWeight(0, fWeight);
+                m_pAnimController->SetTrackWeight(1, 1.0f - fWeight);
+            }
+            else // 블렌딩이 끝날 시점
+            {
+                m_pAnimController->SetTrackWeight(0, 1);
                 m_pAnimController->SetTrackEnable(1, false);
             }
-            m_pAnimController->SetTrackWeight(0, fWeight);
-            m_pAnimController->SetTrackWeight(1, 1.0f - fWeight);
         }
     }
 
@@ -344,11 +349,11 @@ void cSkinnedMesh::SetAnimationIndex(int nIndex, bool isBlend)
 
         SAFE_RELEASE(pPrevAnimSet);
 
-       // m_fPassedBlendTime = 0.0f;
+        m_fPassedBlendTime = 0.0f;
     }
 
     m_pAnimController->SetTrackAnimationSet(0, pNextAnimSet);
-    m_pAnimController->SetTrackPosition(0, 0.0);
+    m_pAnimController->SetTrackPosition(0, 0.0f);
     SAFE_RELEASE(pNextAnimSet);
     
 }

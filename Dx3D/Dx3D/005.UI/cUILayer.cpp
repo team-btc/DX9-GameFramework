@@ -41,6 +41,7 @@ cUILayer::~cUILayer()
 
 HRESULT cUILayer::Setup()
 {
+
     return E_NOTIMPL;
 }
 

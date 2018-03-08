@@ -1,6 +1,7 @@
 #pragma once
 #include "cCamera.h"
 #include "cPlayer.h"
+#include "cMonster.h"
 
 class cMainGame
 {
@@ -8,7 +9,8 @@ private:
     LPMESH      m_pSphere;
     cCamera*    m_pCamera;
     cPlayer*    m_pPlayer;
-    cPlayer*    m_pEnermy;
+
+    vector<cMonster*> m_vecMonster;
 
 public:
     cMainGame();
