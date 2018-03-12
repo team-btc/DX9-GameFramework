@@ -139,18 +139,14 @@ void cMainGame::Render()
 
     if (hr == D3DERR_DEVICELOST)
     {
-#ifdef _DEBUG
         assert(false && "DEVICE LOST");
-#endif // _DEBUG
         //LPDIRECT3DSURFACE9 pSurface9;
         //g_pDevice->GetDepthStencilSurface(&pSurface9);
         //pSurface9->Release();
     }
     else if (hr == D3DERR_DEVICENOTRESET)
     {
-#ifdef _DEBUG
         assert(false && "DEVICE NOT RESET");
-#endif // _DEBUG
         //g_pDeviceManager->Reset();
     }
 }

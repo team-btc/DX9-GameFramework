@@ -86,10 +86,8 @@ HRESULT cDeviceManager::Destroy()
     if (m_pD3DDevice)
     {
         ULONG ul = m_pD3DDevice->Release();
-#ifdef _DEBUG
         string msg = "디바이스를 이용해서 생성한 객체 중 소멸되지 않은 객체가 있음. " + to_string(ul);
         assert(ul == 0 && msg.c_str());
-#endif // _DEBUG
     }
 
     return hr;
