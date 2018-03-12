@@ -44,8 +44,8 @@ void cLogManager::CreateLogDir()
     {
         // Failed to create directory.
         cout << "FAILED" << endl;
-    }
 #endif // _DEBUG
+    }
 }
 
 string cLogManager::GetTimeString()

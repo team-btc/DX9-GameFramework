@@ -114,27 +114,45 @@ void cMainGame::Update()
 
 void cMainGame::Render()
 {
-    g_pDevice->Clear(NULL,
-                     NULL,
-                     D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-                     D3DCOLOR_XRGB(47, 121, 112),
-                     1.0f,
-                     0);
-
-    g_pDevice->BeginScene();
-
-    g_pScnManager->Render();
-    g_pTimerManager->Render();
-
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-
-    if (m_pMesh)
+    HRESULT hr;
+    hr = g_pDevice->TestCooperativeLevel();
+    if (SUCCEEDED(hr))
     {
-        m_pMesh->DrawSubset(0);
+        hr = g_pDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+            D3DCOLOR_XRGB(47, 121, 112), 1.0f, 0);
+
+        hr = g_pDevice->BeginScene();
+
+        hr = g_pScnManager->Render();
+        hr = g_pTimerManager->Render();
+
+        hr = g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
+
+        if (m_pMesh)
+        {
+            hr = m_pMesh->DrawSubset(0);
+        }
+
+        hr = g_pDevice->EndScene();
+        hr = g_pDevice->Present(0, 0, 0, 0);
     }
 
-    g_pDevice->EndScene();
-    g_pDevice->Present(0, 0, 0, 0);
+    if (hr == D3DERR_DEVICELOST)
+    {
+#ifdef _DEBUG
+        assert(false && "DEVICE LOST");
+#endif // _DEBUG
+        //LPDIRECT3DSURFACE9 pSurface9;
+        //g_pDevice->GetDepthStencilSurface(&pSurface9);
+        //pSurface9->Release();
+    }
+    else if (hr == D3DERR_DEVICENOTRESET)
+    {
+#ifdef _DEBUG
+        assert(false && "DEVICE NOT RESET");
+#endif // _DEBUG
+        //g_pDeviceManager->Reset();
+    }
 }
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
