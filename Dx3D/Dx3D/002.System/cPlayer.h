@@ -3,7 +3,11 @@
 
 class cPlayer : public cCharacterObject
 {
-public :
+private:
+
+    Vector3 DestPoint;
+
+    bool isMoveToPoint;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
@@ -14,5 +18,10 @@ public:
     void Update();
     void Render();
     void Destroy();
+
+    void SetMoveToPoint(bool MoveToPoint) { isMoveToPoint = MoveToPoint; }
+    void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
+
+    bool GetMoveToPoint() { return isMoveToPoint; }
 };
 

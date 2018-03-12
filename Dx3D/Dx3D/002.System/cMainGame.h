@@ -3,12 +3,15 @@
 #include "cPlayer.h"
 #include "cMonster.h"
 
+class cSkinnedMesh;
+
 class cMainGame
 {
 private:
     LPMESH      m_pSphere;
     cCamera*    m_pCamera;
     cPlayer*    m_pPlayer;
+    LPMESH   m_pTerain;
 
     vector<cMonster*> m_vecMonster;
 

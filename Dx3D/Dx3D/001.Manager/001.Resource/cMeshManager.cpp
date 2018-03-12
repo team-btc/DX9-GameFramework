@@ -30,7 +30,15 @@ HRESULT cMeshManager::LoadBasicMesh()
 
 LPMESH* cMeshManager::GetBasicMesh(string szKey)
 {
-    return nullptr;
+    auto iter = m_mapBasicMesh.find(szKey);
+    if (iter != m_mapBasicMesh.end())
+    {
+        return iter->second;
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 void cMeshManager::LoadSkinnedMesh()

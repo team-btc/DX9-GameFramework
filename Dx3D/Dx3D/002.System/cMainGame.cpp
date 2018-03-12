@@ -15,13 +15,16 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
-    D3DXCreateBox(g_pDevice, 1, 1, 1, &m_pSphere, NULL);
+    g_pMeshManager->LoadBasicMesh();
+    D3DXCreateSphere(g_pDevice, 1, 10, 10, &m_pSphere, NULL);
+    D3DXLoadMeshFromX(L"Assets\\HeightMapData\\Plane.X", D3DXMESH_MANAGED, g_pDevice, NULL, NULL, NULL, NULL, &m_pTerain);
 }
 
 
 cMainGame::~cMainGame()
 {
     SAFE_RELEASE(m_pSphere);
+    SAFE_RELEASE(m_pTerain);
 
     HRESULT hr = S_OK;
 
@@ -54,11 +57,15 @@ void cMainGame::Setup()
     g_pAutoReleasePool->AddObject(m_pCamera);
 
     m_pPlayer = new cPlayer("Ghost", "Assets\\Unit\\Ghost", "Ghost.X");
+    m_pPlayer->SetHP(100);
+    m_pPlayer->SetATK(100);
 
     for (int i = 0; i < 2; i++)
     {
         cMonster* m_pEnermy = new cMonster("Zelot", "Assets\\Zealot", "Zealot.X");
         m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
+        m_pEnermy->SetHP(100);
+        m_pEnermy->SetATK(5);
         m_vecMonster.push_back(m_pEnermy);
     } 
 }
@@ -76,73 +83,47 @@ void cMainGame::Update()
         (*iter)->Update();
     }
 
-    if (g_pKeyManager->isOnceKeyDown('Q'))
-    {
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('W'))
-    {
-    
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('E'))
-    {
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('R'))
-    {
-    }
-
-    if (g_pKeyManager->isOnceKeyDown(VK_LBUTTON))
+    if (g_pKeyManager->isOnceKeyDown(VK_LBUTTON) && !m_pPlayer->GetAttak())
     {
         cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
         BOOL isHit = false;
-        float fDest;
+        float _dist = 0.0f;
 
-       /* for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
-        {
-            ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)(*iter)->GetSkinnedMesh()->GetRootFrame();
-            D3DXIntersectSubset((*pBoneMesh).pWorkingMesh, NULL, &ray.m_vDir, &ray.m_vDir, &isHit, NULL, NULL, NULL, &fDest, NULL, NULL);
-            if (isHit)
-            {
-                cout << "dd" << endl;
-            }
-        }*/
-        D3DXIntersectSubset(m_pSphere, 0, &ray.m_vDir, &ray.m_vDir, &isHit, 0, 0, 0, &fDest, NULL, NULL);
+        //맵이동
+        D3DXIntersectSubset(m_pTerain, 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
         if (isHit)
         {
-            cout << "dd" << endl;
+            if (!m_pPlayer->GetRun())
+                m_pPlayer->RunAnim();
+            Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
+            m_pPlayer->SetAttack(false);
+            m_pPlayer->SetMoveToTarget(false);
+            m_pPlayer->SetMoveToPoint(true);
+            m_pPlayer->SetDestPoint(_Dest);
         }
-    }
-
-    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
-    {
-        //나와 제일 가까운 몹을 판별하는 문법이 필요하다
-        m_pPlayer->GetSkinnedMesh()->SetAnimationIndex(1);
-
-        cMonster* nearMonster = NULL;
-        float nearDist = 9999;
+      
+      
+        //메쉬 공격
         for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
         {
-            if (m_pPlayer->Distance((*iter)->GetPosition()) < nearDist)
+            if (ray.IsPicked(&(*iter)->GetSphere()))
             {
-                nearDist = m_pPlayer->Distance((*iter)->GetPosition());
-                nearMonster = *iter;
+                if(!m_pPlayer->GetRun())
+                    m_pPlayer->RunAnim();
+                m_pPlayer->SetMoveToPoint(false);
+                m_pPlayer->SetMoveToTarget(true);
+                m_pPlayer->RayCast((*iter));
             }
         }
+        
+    }
 
-        if (nearMonster)
+    // 타켓만 정해준다.
+    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
+    {
+        if (m_vecMonster.size() > 0)
         {
-            m_pPlayer->RayCast(nearMonster);
-            nearMonster->RayCast(m_pPlayer);
-
-            if (m_pPlayer->Distance(nearMonster->GetPosition()) < m_pPlayer->GetSphere().fRadius + nearMonster->GetSphere().fRadius)
-            {
-                m_pPlayer->Attack();
-                m_pPlayer->SetAttack(true);
-            }
-            else
-                m_pPlayer->SetMoveToTarget(true);
+            m_pPlayer->NearestSearch(m_vecMonster);
         }
     }
 }
@@ -162,6 +143,13 @@ void cMainGame::Render()
     g_pScnManager->Render();
     g_pTimerManager->Render();
 
+    Matrix4 matS;
+    D3DXMatrixScaling(&matS, 0.1f, 0.1f, 0.1f);
+    g_pDevice->SetTransform(D3DTS_WORLD, &matS);
+    m_pTerain->DrawSubset(0);
+
+    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
     m_pPlayer->Render();
     
     for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
@@ -169,7 +157,11 @@ void cMainGame::Render()
         (*iter)->Render();
     }
 
+    Matrix4 mat;
+    D3DXMatrixIdentity(&mat);
+    g_pDevice->SetTransform(D3DTS_WORLD, &mat);
     m_pSphere->DrawSubset(0);
+    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
 

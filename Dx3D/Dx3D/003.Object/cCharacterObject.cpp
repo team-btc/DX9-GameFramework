@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "cCharacterObject.h"
 #include "cSkinnedMesh.h"
+#include "cMonster.h"
 
 
 cCharacterObject::cCharacterObject()
 {
+   m_pTarget = NULL;
+   m_pMesh = NULL;
+   m_pUILayer = NULL;
    D3DXMatrixIdentity(&m_MatScale);
    D3DXMatrixIdentity(&m_MatRotate);
    D3DXMatrixIdentity(&m_MatTrans);
@@ -15,6 +19,7 @@ cCharacterObject::cCharacterObject()
    m_stSphere.isPicked = false;
    m_stSphere.isRender = false;
    m_stSphere.vCenter = Vector3(0, 0, 0);
+   m_pPikingMesh = NULL;
 
    m_fSTR =0;
    m_fDEX =0;
@@ -27,9 +32,12 @@ cCharacterObject::cCharacterObject()
    m_eState = END_STATE;
 
    isAttack = false;
+   isRun = false;
+   isIdle = false;
+   isHeal = false;
    isStatic = false;
    isActive = false;
-   isAlive = false;
+   isAlive = true;
    isMoveToTarget = false;
 }
 
@@ -60,14 +68,57 @@ bool cCharacterObject::RayCast(iCharacterObject * Charater)
     return false;
 }
 
-void cCharacterObject::Attack()
+void cCharacterObject::Action(string Command, string value)
 {
+    if (Command == "Attack")
+    {
+        int ATK = atoi(value.c_str());
+        Attack(ATK);
+    }
+    else if (Command == "Heal")
+    {
+        int Value = atoi(value.c_str());
+        Heal(Value);
+    }
+}
+
+void cCharacterObject::Attack(int ATK)
+{
+    m_pTarget->SetHP(m_pTarget->GetHP() - ATK);
+}
+
+void cCharacterObject::Heal(int Value)
+{
+    m_fHP += Value;
+}
+
+void cCharacterObject::AttackAnim()
+{
+    FalseAnim();
+    isAttack = true;
     m_pMesh->SetAnimationIndex(2);
 }
 
-void cCharacterObject::Idle()
+void cCharacterObject::RunAnim()
 {
+    FalseAnim();
+    isRun = true;
+    m_pMesh->SetAnimationIndex(1);
+}
+
+void cCharacterObject::IdleAnim()
+{
+    FalseAnim();
+    isIdle = true;
     m_pMesh->SetAnimationIndex(0);
+}
+
+void cCharacterObject::FalseAnim()
+{
+   isAttack = false;
+   isRun = false;
+   isIdle = false;
+   isHeal = false;
 }
 
 void cCharacterObject::MoveForword()
@@ -100,6 +151,19 @@ void cCharacterObject::RotateRight()
 {
     m_fRotY += 0.01f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+}
+
+void cCharacterObject::NearestSearch(vector<cMonster*> _vec)
+{
+    float nearDist = 9999;
+    for (auto iter = _vec.begin(); iter != _vec.end(); iter++)
+    {
+        if (Distance((*iter)->GetPosition()) < nearDist)
+        {
+            nearDist = Distance((*iter)->GetPosition());
+            RayCast(*iter);
+        }
+    }
 }
 
 float cCharacterObject::Distance(Vector3 Pos)

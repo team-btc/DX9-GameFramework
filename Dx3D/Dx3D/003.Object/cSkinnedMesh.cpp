@@ -367,7 +367,7 @@ int cSkinnedMesh::GetCurPos()
     m_pAnimController->GetTrackDesc(0, &desc);
 
     int CurPos = desc.Position / pAnimSet->GetPeriod();
-    cout << CurPos << endl;
+
     return CurPos;
 }
 

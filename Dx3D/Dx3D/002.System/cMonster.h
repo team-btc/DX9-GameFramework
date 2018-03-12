@@ -5,7 +5,6 @@ class cMonster : public cCharacterObject
 {
 private:
 
-
 public:
     cMonster(string szKey, string szFolder, string szFilename);
     cMonster();
