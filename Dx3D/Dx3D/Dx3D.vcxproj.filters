@@ -180,6 +180,15 @@
     <ClInclude Include="cBroadcastManager.h">
       <Filter>1. 클래스 파일\2. 매니져</Filter>
     </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cMapDataManager.h">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>3. 헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCamera.cpp">
@@ -274,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="cBroadcastManager.cpp">
       <Filter>1. 클래스 파일\2. 매니져</Filter>
+    </ClCompile>
+    <ClCompile Include="cMapDataManager.cpp">
+      <Filter>2. 소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
