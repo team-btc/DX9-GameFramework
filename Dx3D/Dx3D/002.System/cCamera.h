@@ -1,7 +1,7 @@
 #pragma once
 #include "cGameObject.h"
 
-#define LOOKAT_POS 128.0f
+#define LOOKAT_POS 1.0f
 #define LIMITED_ROT 0.49f
 
 class cCamera : public cGameObject

@@ -11,7 +11,7 @@ cCamera::cCamera()
     , m_fRotY(90.0f / 180.0f * D3DX_PI)
     , m_isRButtonDown(false)
     , m_isFocus(false)
-    , m_vPosition(0, 0, 256)
+    , m_vPosition(128, 128, 256)
 {
 }
 
