@@ -192,6 +192,24 @@
     <ClInclude Include="001.Manager\000.System\cDbManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="002.System\cMapLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="001.Manager\000.System\cMapManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cMapLoad.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="002.Shader\cTextureShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="002.Shader\cWaveShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="002.Shader\cSkyBoxShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -315,6 +333,24 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\000.System\cDbManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.System\cMapLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="001.Manager\000.System\cMapManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cMapLoad.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.Shader\cTextureShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.Shader\cWaveShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.Shader\cSkyBoxShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

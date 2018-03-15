@@ -110,3 +110,38 @@ struct ST_SPHERE
     Vector3     vCenter;
     bool        isRender;
 };
+
+struct ST_MAP
+{
+    // 지형 매쉬
+    LPMESH              pTerrainMesh;
+
+    // 텍스쳐 밀도 PNG
+    LPTEXTURE9          pTextureMap;
+
+    // 텍스쳐
+    LPTEXTURE9          pTerTexture1;
+    float               fTex1Density;
+    LPTEXTURE9          pTerTexture2;
+    float               fTex2Density;
+    LPTEXTURE9          pTerTexture3;
+    float               fTex3Density;
+
+    // 물
+    LPMESH              pWaterMesh;
+    LPTEXTURE9          pWaterTexture;
+    bool                isEnableWater;
+    float               fWaterDensity;
+    float               fWaterHeight;
+    float               fWaterUVSpeed;
+    float               fWaterWaveHeight;
+    float               fWaterHeightSpeed;
+    float               fWaterfrequency;
+    float               fWaterTransparent;
+
+    // 하늘
+    LPCUBETEXTURE9      pSkyTexture;
+
+    ST_MAP() : pTerrainMesh(NULL), pTerTexture1(NULL), pTerTexture2(NULL), pTerTexture3(NULL),
+        pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL) {}
+};

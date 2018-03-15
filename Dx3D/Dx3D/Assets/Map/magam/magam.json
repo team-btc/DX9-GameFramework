@@ -1,0 +1,31 @@
+{
+    "skybox": {
+        "key": "DeepNight.dds"
+    },
+    "texture": {
+        "tex1": {
+            "density": 100.0,
+            "key": "Lava.jpg"
+        },
+        "tex2": {
+            "density": 10.0,
+            "key": "Grass.jpg"
+        },
+        "tex3": {
+            "density": 10.0,
+            "key": "Stone.jpg"
+        }
+    },
+    "water": {
+        "density": 59.0001525878906,
+        "enable": true,
+        "file_name": "magma.jpg",
+        "file_path": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Shader\\Texture",
+        "frequency": 7.0,
+        "height": -1.0,
+        "heightspeed": 0.5,
+        "transparent": 0.300000011920929,
+        "uvspeed": 0.0,
+        "waveheight": 0.200000002980232
+    }
+}

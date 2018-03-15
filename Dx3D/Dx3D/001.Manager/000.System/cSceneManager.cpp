@@ -15,6 +15,15 @@ cSceneManager::~cSceneManager()
 
 HRESULT cSceneManager::Setup()
 {
+    if (m_pCurrScene != NULL)
+    {
+        return m_pCurrScene->Start();
+    }
+    else
+    {
+        return E_FAIL;
+    }
+
     return E_NOTIMPL;
 }
 

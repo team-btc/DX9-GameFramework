@@ -118,3 +118,11 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define BLUE    XColor(0.0f, 0.0f, 1.0f, 1.0f)
 #define YELLOW  XColor(1.0f, 1.0f, 0.0f, 1.0f)
 #pragma endregion
+
+#pragma region PREDEFINED_PATH
+#define MAP_PATH "Assets/Map/"
+#define TERRAIN_PATH "Assets/Texture/"
+#define WATER_PATH "Assets/Texture/"
+#define SKY_PATH "Assets/Texture/"
+#define SHADER_PATH "Assets/Shader/"
+#pragma endregion

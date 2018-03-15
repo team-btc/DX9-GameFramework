@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
+#include "cMapLoad.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -13,6 +14,11 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
+
+    cMapLoad* map = new cMapLoad; // ->이걸 딜리트 안해줘서 오류남
+
+    g_pScnManager->AddScene("map", map);
+    g_pScnManager->ChangeScene("map");
 }
 
 
@@ -21,6 +27,8 @@ cMainGame::~cMainGame()
     HRESULT hr = S_OK;
 
     m_pMesh->Release();
+
+    g_pScnManager->Destroy();
 
     //  CUSTOM RESOURCE 해제
     g_pFontManager->Destroy();
@@ -32,6 +40,7 @@ cMainGame::~cMainGame()
     g_pAutoReleasePool->Drain();
     g_pBroadcastManager->Destroy();
     g_pObjectManager->Destory();
+    g_pMapManager->Destroy();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
 
@@ -51,64 +60,18 @@ void cMainGame::Setup()
     g_pAutoReleasePool->AddObject(m_pCamera);
 
     D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
+
+    g_pScnManager->Setup();
 }
 
 void cMainGame::Update()
 {
-    if (g_pKeyManager->isStayKeyDown('Q'))
-    {
-        float l = m_pCamera->GetLength();
-        l -= 0.1f;
-        m_pCamera->SetLength(l);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('W'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.x -= 1.0f;
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('E'))
-    {
-        float l = m_pCamera->GetLength();
-        l += 0.1f;
-        m_pCamera->SetLength(l);
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('R'))
-    {
-    }
-
-    if (g_pKeyManager->isStayKeyDown('A'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.y -= 1.0f;
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('S'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.x += 1.0f;
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('D'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.y += 1.0f;
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('F'))
-    {
-    }
-
     if (m_pCamera)
     {
         m_pCamera->Update();
     }
+
+    g_pScnManager->Update();
 }
 
 
@@ -132,6 +95,8 @@ void cMainGame::Render()
         {
             hr = m_pMesh->DrawSubset(0);
         }
+
+        g_pScnManager->Render();
 
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);

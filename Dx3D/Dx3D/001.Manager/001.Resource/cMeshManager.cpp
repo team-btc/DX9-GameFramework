@@ -28,9 +28,34 @@ HRESULT cMeshManager::LoadBasicMesh()
     return S_OK;
 }
 
+// 맵 매쉬 로드
+void cMeshManager::LoadMapMesh(string szKey)
+{
+    LPMESH* mesh = new LPMESH;
+    string szPath = MAP_PATH + szKey + "/" + szKey + ".x";
+    D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+    m_mapBasicMesh.insert(make_pair(szKey, mesh));
+}
+
+// 물 매쉬 로드
+void cMeshManager::LoadWaterMesh(string szKey, string szFolderName)
+{
+    LPMESH* mesh = new LPMESH;
+    string szPath = MAP_PATH + szFolderName + "/" + szKey + ".x";
+    D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+    m_mapBasicMesh.insert(make_pair(szKey, mesh));
+}
+
 LPMESH* cMeshManager::GetBasicMesh(string szKey)
 {
-    return nullptr;
+    LPMESH* mesh = NULL;
+
+    if (m_mapBasicMesh.find(szKey) != m_mapBasicMesh.end())
+    {
+        mesh = m_mapBasicMesh[szKey];
+    }
+
+    return mesh;
 }
 
 void cMeshManager::LoadSkinnedMesh()
@@ -70,7 +95,7 @@ void cMeshManager::Destroy()
 {
     for (auto iter = m_mapBasicMesh.begin(); iter != m_mapBasicMesh.end();)
     {
-        (*iter->second)->Release();
+        SAFE_RELEASE(*iter->second);
         iter = m_mapBasicMesh.erase(iter);
     }
 

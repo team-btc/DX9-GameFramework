@@ -23,7 +23,7 @@
     <ProjectGuid>{D313F98D-08BC-4A94-B973-B23786AE8D08}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Dx3D</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -177,6 +177,9 @@
     <ClInclude Include="001.Manager\001.Resource\cShaderManager.h" />
     <ClInclude Include="001.Manager\001.Resource\cSoundManager.h" />
     <ClInclude Include="001.Manager\001.Resource\cTextureManager.h" />
+    <ClInclude Include="002.Shader\cSkyBoxShader.h" />
+    <ClInclude Include="002.Shader\cTextureShader.h" />
+    <ClInclude Include="002.Shader\cWaveShader.h" />
     <ClInclude Include="003.Object\cFrustum.h" />
     <ClInclude Include="003.Object\cGameObject.h" />
     <ClInclude Include="003.Object\cObject.h" />
@@ -203,6 +206,9 @@
     <ClInclude Include="003.Repository\000.Model\cCharacterModel.h" />
     <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h" />
     <ClInclude Include="001.Manager\000.System\cDbManager.h" />
+    <ClInclude Include="002.System\cMapLoader.h" />
+    <ClInclude Include="001.Manager\000.System\cMapManager.h" />
+    <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleExplosion.h" />
     <ClInclude Include="Dx3D.h" />
@@ -224,6 +230,9 @@
     <ClCompile Include="001.Manager\001.Resource\cShaderManager.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cSoundManager.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cTextureManager.cpp" />
+    <ClCompile Include="002.Shader\cSkyBoxShader.cpp" />
+    <ClCompile Include="002.Shader\cTextureShader.cpp" />
+    <ClCompile Include="002.Shader\cWaveShader.cpp" />
     <ClCompile Include="003.Object\cFrustum.cpp" />
     <ClCompile Include="003.Object\cGameObject.cpp" />
     <ClCompile Include="003.Object\cObject.cpp" />
@@ -248,6 +257,9 @@
     <ClCompile Include="003.Repository\000.Model\cCharacterModel.cpp" />
     <ClCompile Include="003.Repository\001.Repository\cCharacterRepository.cpp" />
     <ClCompile Include="001.Manager\000.System\cDbManager.cpp" />
+    <ClCompile Include="002.System\cMapLoader.cpp" />
+    <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
+    <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleExplosion.cpp" />
     <ClCompile Include="Dx3D.cpp" />
