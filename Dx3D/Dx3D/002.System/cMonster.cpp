@@ -5,6 +5,7 @@
 
 cMonster::cMonster(string szKey, string szFolder, string szFilename ,string szJsonName)
 {
+    m_eTag = MONSTER;
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename, szJsonName);
     g_pAutoReleasePool->AddObject(m_pMesh);
 
@@ -58,6 +59,7 @@ void cMonster::Update()
     {
         isActive = false;
         m_pTarget->SetTarget(NULL);
+        m_stSphere.fRadius = 0;
         DeadAnim();
     }
 
@@ -79,10 +81,11 @@ void cMonster::Update()
                     isAttack = true;
                 }
 
-              /*  if (m_pMesh->GetCurPos() >= 1)
+                if (m_pMesh->GetCurPos() >= 1)
                 {
+                    m_pMesh->SetDescZeroPos();
                     Action("Attack", "5");
-                }*/
+                }
             }
             else
             {

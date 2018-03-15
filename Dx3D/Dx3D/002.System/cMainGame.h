@@ -15,7 +15,7 @@ private:
     cFrustum*   m_pFrustum;
     LPMESH   m_pTerain;
 
-    vector<cMonster*> m_vecMonster;
+    vector<cMonster*>* m_vecMonster;
 
 public:
     cMainGame();

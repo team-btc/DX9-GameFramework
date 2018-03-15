@@ -5,7 +5,7 @@ class cPlayer : public cCharacterObject
 {
 private:
 
-    vector<cMonster*> m_vecMonster;
+    vector<cMonster*>* m_vecMonster;
 
     Vector3 DestPoint;
 
@@ -24,7 +24,7 @@ public:
 
     void SetMoveToPoint(bool MoveToPoint) { isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
-    void SetVecMonster(vector<cMonster*>* monster) { m_vecMonster = *monster; }
+    void SetVecMonster(vector<cMonster*>* monster) { m_vecMonster = monster; }
 
     bool GetMoveToPoint() { return isMoveToPoint; }
 };

@@ -49,6 +49,7 @@ public:
     }
     void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
     void SetAnimationIndex(int nIndex, bool isBlend = true);
+    void SetDescZeroPos();
 
     json GetJson() { return m_Json; }
     ST_SPHERE* GetBoundingSphere()
@@ -57,6 +58,7 @@ public:
     }
     float GetdescPos();
     int GetCurPos();
+    string GetAnimName();
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }
 

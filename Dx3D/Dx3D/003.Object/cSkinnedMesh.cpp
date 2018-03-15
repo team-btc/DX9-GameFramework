@@ -369,6 +369,14 @@ void cSkinnedMesh::SetAnimationIndex(int nIndex, bool isBlend)
     
 }
 
+void cSkinnedMesh::SetDescZeroPos()
+{
+    D3DXTRACK_DESC desc;
+    m_pAnimController->GetTrackDesc(0, &desc);
+
+    m_pAnimController->SetTrackPosition(0, 0);
+}
+
 float cSkinnedMesh::GetdescPos()
 {
     D3DXTRACK_DESC desc;
@@ -391,6 +399,14 @@ int cSkinnedMesh::GetCurPos()
 
         return CurPos;
     }
+}
+
+string cSkinnedMesh::GetAnimName()
+{
+    LPANIMATIONSET pAnimSet = NULL;
+    m_pAnimController->GetTrackAnimationSet(0, &pAnimSet);
+
+    return (string)pAnimSet->GetName();
 }
 
 HRESULT cSkinnedMesh::Destroy()

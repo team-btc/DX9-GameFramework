@@ -8,6 +8,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     , isMoveToPoint(false)
     , isPoint(false)
 {
+    m_eTag = PLAYER;
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename , szJsonName);
     g_pAutoReleasePool->AddObject(m_pMesh);
 
@@ -33,6 +34,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_vecMonster = new vector<cMonster*>;
     
 }
 
@@ -58,7 +60,7 @@ void cPlayer::Update()
         BOOL isHit = false;
         float _dist = 0.0f;
 
-        //맵이동
+        //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
         D3DXIntersectSubset(*g_pMeshManager->GetBasicMesh("map"), 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
         if (isHit)
         {
@@ -73,7 +75,7 @@ void cPlayer::Update()
 
 
         //메쉬 공격
-        for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+        for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
         {
             if (ray.IsPicked(&(*iter)->GetSphere()))
             {
@@ -90,9 +92,9 @@ void cPlayer::Update()
     // 타켓만 정해준다.
     if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
     {
-        if (m_vecMonster.size() > 0)
+        if ((*m_vecMonster).size() > 0)
         {
-            NearestSearch(m_vecMonster);
+            NearestSearch((*m_vecMonster));
         }
     }
 
@@ -164,15 +166,29 @@ void cPlayer::Update()
 
     if(isAttack)
     {
-        if (isPoint && m_pMesh->GetdescPos() >= m_mapStateInfo["Attack"].mapPosition["attack"])
+        //원하는 위치일때 데미지가 들어간다.
+        if (m_pMesh->GetAnimName() == "Attack")
         {
-            isPoint = false;
-            Action("Attack", "50");// 다시해야함
-            if (m_pTarget)
-                m_pTarget->RayCast(this); // 어그로 주고
+            if (isPoint && m_pMesh->GetdescPos() >= m_mapStateInfo["Attack"].mapPosition["attack"])
+            {
+                isPoint = false;
+                Action("Attack", "10");// 다시해야함
+                if (m_pTarget)
+                    m_pTarget->RayCast(this); // 어그로 주고
+            }
+            if (m_pMesh->GetCurPos() >= 1)
+                IdleAnim();
         }
-        if(m_pMesh->GetCurPos() >= 1)
-            IdleAnim();
+        else 
+        {
+            if (m_pMesh->GetCurPos() >= 1)
+            {
+                Action("Attack", "10");// 다시해야함
+                if (m_pTarget)
+                    m_pTarget->RayCast(this); // 어그로 주고
+                IdleAnim();
+            }
+        }
     }
 
     //마우스 이동

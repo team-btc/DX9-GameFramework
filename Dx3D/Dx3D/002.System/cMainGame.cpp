@@ -65,6 +65,7 @@ void cMainGame::Setup()
 
     m_pPlayer = g_pCharacterManager->GetPlayer();
 
+    m_vecMonster = new vector<cMonster*>;
     for (int i = 0; i < 1; i++)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
@@ -72,10 +73,10 @@ void cMainGame::Setup()
         m_pEnermy->SetActive(true);
         m_pEnermy->SetHP(100);
         m_pEnermy->SetATK(5);
-        m_vecMonster.push_back(m_pEnermy);
+        (*m_vecMonster).push_back(m_pEnermy);
     } 
 
-    m_pPlayer->SetVecMonster(&m_vecMonster);
+    m_pPlayer->SetVecMonster(m_vecMonster);
 }
 
 void cMainGame::Update()
@@ -89,17 +90,17 @@ void cMainGame::Update()
 
     m_pPlayer->Update();
 
-    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
         (*iter)->Update();
     }
 
-    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end();)
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
     {
         if ((*iter)->GetAlive())
             iter++;
         else
-            iter = m_vecMonster.erase(iter);
+            iter = (*m_vecMonster).erase(iter);
     }
 }
 
@@ -125,7 +126,7 @@ void cMainGame::Render()
 
     m_pPlayer->Render();
     
-    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
         bool result = false;
         m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());

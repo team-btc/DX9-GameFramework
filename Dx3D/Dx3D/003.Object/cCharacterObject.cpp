@@ -100,7 +100,19 @@ void cCharacterObject::AttackAnim()
 {
     FalseAnim();
     isAttack = true;
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
+
+    if (m_eTag == PLAYER)
+    {
+        int RandomNum = rand() % 3;
+        if (RandomNum == 0)
+            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
+        else if (RandomNum == 1)
+            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack2")->second.nStateNum);
+        else if (RandomNum == 2)
+            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack3")->second.nStateNum);
+    }
+    else
+        m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
 }
 
 void cCharacterObject::RunAnim()
@@ -167,14 +179,14 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.01f;
+    m_fRotY -= 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     
 }
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.01f;
+    m_fRotY += 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 }
 
