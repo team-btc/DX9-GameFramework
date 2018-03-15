@@ -8,9 +8,9 @@ class cAutoReleasePool
     SINGLETON(cAutoReleasePool);
 
 private:
-    list<iObject*> m_lstObject;
+    list<IUnknown*> m_lstObject;
 
 public:
-    void AddObject(iObject* pObject);
+    void AddObject(IUnknown* pObject);
     void Drain();
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-interface iObject
+interface iObject : public IUnknown
 {
 protected:
     int     m_nRefCount;
@@ -15,4 +15,7 @@ public:
     virtual HRESULT SetName(const string name) PURE;
 
     virtual HRESULT Destroy() PURE;
+
+    // IUnknown을(를) 통해 상속됨
+    virtual HRESULT QueryInterface(REFIID riid, void ** ppvObject) PURE;
 };

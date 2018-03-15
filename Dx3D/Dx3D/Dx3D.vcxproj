@@ -77,16 +77,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x64\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(ProjectDir)005.UI;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(ProjectDir)005.UI;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x64\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

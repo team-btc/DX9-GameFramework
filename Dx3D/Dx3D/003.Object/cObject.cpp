@@ -21,6 +21,11 @@ cObject::~cObject()
     }
 }
 
+HRESULT cObject::QueryInterface(REFIID riid, void ** ppvObject)
+{
+    return E_NOTIMPL;
+}
+
 ULONG cObject::AddRef()
 {
     return ++m_nRefCount;

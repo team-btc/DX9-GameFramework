@@ -58,6 +58,7 @@ cSkinnedMesh* cMeshManager::GetMesh(string szKey, string szDirectory, string szF
         cSkinnedMesh* pNewMesh = new cSkinnedMesh;
         pNewMesh->Load(szDirectory, szFilepath);
         m_mapSkinnedMesh.insert(make_pair(szKey, pNewMesh));
+
         return m_mapSkinnedMesh[szKey];
     }
     else

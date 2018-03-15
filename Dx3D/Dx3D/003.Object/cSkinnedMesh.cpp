@@ -19,12 +19,15 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     m_pEffect = pSkinnedMesh->m_pEffect;
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
 
-    pSkinnedMesh->m_pAnimController->CloneAnimationController(
-        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
-        &m_pAnimController);
+    if (pSkinnedMesh->m_pAnimController)
+    {
+        pSkinnedMesh->m_pAnimController->CloneAnimationController(
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
+            &m_pAnimController);
+    }
 }
 
 cSkinnedMesh::cSkinnedMesh()
@@ -43,7 +46,7 @@ cSkinnedMesh::~cSkinnedMesh(void)
 
 void cSkinnedMesh::Load(string szDirectory, string szFilename)
 {
-    m_pEffect = LoadEffect("MultiAnimation.hpp");
+    m_pEffect = LoadEffect("Assets\\MultiAnimation.hpp");
 
     int nPaletteSize = 0;
     m_pEffect->GetInt("MATRIX_PALETTE_SIZE", &nPaletteSize);
@@ -56,16 +59,24 @@ void cSkinnedMesh::Load(string szDirectory, string szFilename)
     m_stBoundingSphere.fRadius = D3DXVec3Length(&(ah.GetMin() - ah.GetMax()));
 
     string sFullPath(szDirectory);
-    sFullPath += "/" + std::string(szFilename);
+    sFullPath += "\\" + std::string(szFilename);
 
-    D3DXLoadMeshHierarchyFromXA(sFullPath.c_str(),
-                               D3DXMESH_MANAGED,
+    HRESULT hr = D3DXLoadMeshHierarchyFromXA(sFullPath.c_str(),
+                               D3DXMESH_MANAGED | D3DXMESH_32BIT,
                                g_pDevice,
                                &ah,
                                NULL,
                                (LPFRAME*)&m_pRootFrame,
                                &m_pAnimController);
 
+    if (hr == D3DERR_INVALIDCALL)
+    {
+        cout << "invalid" << endl;
+    }
+    else if (hr == E_OUTOFMEMORY)
+    {
+        cout << "out of mem" << endl;
+    }
     if (m_pmWorkingPalette)
         delete[] m_pmWorkingPalette;
 
@@ -235,6 +246,7 @@ LPEFFECT cSkinnedMesh::LoadEffect(string szFilename)
         if (pBuffer)
         {
             OutputDebugStringA((char*)pBuffer->GetBufferPointer());
+            MessageBoxA(g_hWnd, "Load Effect error", "ERROR", MB_OK);
             SAFE_RELEASE(pBuffer);
         }
 

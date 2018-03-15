@@ -20,8 +20,6 @@ cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
 
-    m_pMesh->Release();
-
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
     g_pTextureManager->Destroy();
@@ -50,29 +48,31 @@ void cMainGame::Setup()
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
 
-    D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
+    D3DXCreateBox(g_pDevice, 1, 1, 1, &m_pFloor, NULL);
+    g_pAutoReleasePool->AddObject(m_pFloor);
 }
 
 void cMainGame::Update()
 {
+    float speed = 5.0f;
     if (g_pKeyManager->isStayKeyDown('Q'))
     {
         float l = m_pCamera->GetLength();
-        l -= 0.1f;
+        l -= speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetLength(l);
     }
 
     if (g_pKeyManager->isStayKeyDown('W'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.x -= 1.0f;
+        r.x -= speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetRotation(r);
     }
 
     if (g_pKeyManager->isStayKeyDown('E'))
     {
         float l = m_pCamera->GetLength();
-        l += 0.1f;
+        l += speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetLength(l);
     }
 
@@ -83,21 +83,21 @@ void cMainGame::Update()
     if (g_pKeyManager->isStayKeyDown('A'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.y -= 1.0f;
+        r.y -= speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetRotation(r);
     }
 
     if (g_pKeyManager->isStayKeyDown('S'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.x += 1.0f;
+        r.x += speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetRotation(r);
     }
 
     if (g_pKeyManager->isStayKeyDown('D'))
     {
         Vector3 r = m_pCamera->GetRotation();
-        r.y += 1.0f;
+        r.y += speed * g_pTimerManager->GetDeltaTime();
         m_pCamera->SetRotation(r);
     }
 
@@ -116,7 +116,7 @@ void cMainGame::Render()
 {
     HRESULT hr;
     hr = g_pDevice->TestCooperativeLevel();
-    if (SUCCEEDED(hr))
+    //if (SUCCEEDED(hr))
     {
         hr = g_pDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
             D3DCOLOR_XRGB(47, 121, 112), 1.0f, 0);
@@ -124,31 +124,28 @@ void cMainGame::Render()
         hr = g_pDevice->BeginScene();
 
         hr = g_pScnManager->Render();
+
+        m_pFloor->DrawSubset(0);
+
         hr = g_pTimerManager->Render();
 
-        hr = g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-
-        if (m_pMesh)
-        {
-            hr = m_pMesh->DrawSubset(0);
-        }
 
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);
     }
 
-    if (hr == D3DERR_DEVICELOST)
-    {
-        assert(false && "DEVICE LOST");
-        //LPDIRECT3DSURFACE9 pSurface9;
-        //g_pDevice->GetDepthStencilSurface(&pSurface9);
-        //pSurface9->Release();
-    }
-    else if (hr == D3DERR_DEVICENOTRESET)
-    {
-        assert(false && "DEVICE NOT RESET");
-        //g_pDeviceManager->Reset();
-    }
+    //if (hr == D3DERR_DEVICELOST)
+    //{
+    //    assert(false && "DEVICE LOST");
+    //    //LPDIRECT3DSURFACE9 pSurface9;
+    //    //g_pDevice->GetDepthStencilSurface(&pSurface9);
+    //    //pSurface9->Release();
+    //}
+    //else if (hr == D3DERR_DEVICENOTRESET)
+    //{
+    //    assert(false && "DEVICE NOT RESET");
+    //    //g_pDeviceManager->Reset();
+    //}
 }
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
