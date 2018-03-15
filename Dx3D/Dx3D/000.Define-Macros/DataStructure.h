@@ -110,3 +110,10 @@ struct ST_SPHERE
     Vector3     vCenter;
     bool        isRender;
 };
+
+struct ST_STATE 
+{
+    int nStateNum;
+    string szStateName;
+    map<string, float> mapPosition;
+};

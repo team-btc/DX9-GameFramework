@@ -3,6 +3,7 @@
 #include "cCamera.h"
 #include "cPlayer.h"
 #include "cMonster.h"
+#include "cFrustum.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -16,8 +17,8 @@ cMainGame::cMainGame()
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
     g_pMeshManager->LoadBasicMesh();
+    g_pCharacterManager->Setup();
     D3DXCreateSphere(g_pDevice, 1, 10, 10, &m_pSphere, NULL);
-    D3DXLoadMeshFromX(L"Assets\\HeightMapData\\Plane.X", D3DXMESH_MANAGED, g_pDevice, NULL, NULL, NULL, NULL, &m_pTerain);
 }
 
 
@@ -40,6 +41,8 @@ cMainGame::~cMainGame()
     g_pObjectManager->Destory();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
+    g_pCharacterManager->Destroy();
+    
 
     if (hr != S_OK)
     {
@@ -55,19 +58,24 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
+    
+    m_pFrustum = new cFrustum;
+    g_pAutoReleasePool->AddObject(m_pFrustum);
+    m_pFrustum->Setup();
 
-    m_pPlayer = new cPlayer("Ghost", "Assets\\Unit\\Ghost", "Ghost.X");
-    m_pPlayer->SetHP(100);
-    m_pPlayer->SetATK(100);
+    m_pPlayer = g_pCharacterManager->GetPlayer();
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 1; i++)
     {
-        cMonster* m_pEnermy = new cMonster("Zelot", "Assets\\Zealot", "Zealot.X");
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
         m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
+        m_pEnermy->SetActive(true);
         m_pEnermy->SetHP(100);
         m_pEnermy->SetATK(5);
         m_vecMonster.push_back(m_pEnermy);
     } 
+
+    m_pPlayer->SetVecMonster(&m_vecMonster);
 }
 
 void cMainGame::Update()
@@ -77,54 +85,21 @@ void cMainGame::Update()
         m_pCamera->Update(&m_pPlayer->GetPosition());
     }
 
+    m_pFrustum->Update();
+
     m_pPlayer->Update();
+
     for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
     {
         (*iter)->Update();
     }
 
-    if (g_pKeyManager->isOnceKeyDown(VK_LBUTTON) && !m_pPlayer->GetAttak())
+    for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end();)
     {
-        cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
-        BOOL isHit = false;
-        float _dist = 0.0f;
-
-        //맵이동
-        D3DXIntersectSubset(m_pTerain, 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
-        if (isHit)
-        {
-            if (!m_pPlayer->GetRun())
-                m_pPlayer->RunAnim();
-            Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
-            m_pPlayer->SetAttack(false);
-            m_pPlayer->SetMoveToTarget(false);
-            m_pPlayer->SetMoveToPoint(true);
-            m_pPlayer->SetDestPoint(_Dest);
-        }
-      
-      
-        //메쉬 공격
-        for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
-        {
-            if (ray.IsPicked(&(*iter)->GetSphere()))
-            {
-                if(!m_pPlayer->GetRun())
-                    m_pPlayer->RunAnim();
-                m_pPlayer->SetMoveToPoint(false);
-                m_pPlayer->SetMoveToTarget(true);
-                m_pPlayer->RayCast((*iter));
-            }
-        }
-        
-    }
-
-    // 타켓만 정해준다.
-    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
-    {
-        if (m_vecMonster.size() > 0)
-        {
-            m_pPlayer->NearestSearch(m_vecMonster);
-        }
+        if ((*iter)->GetAlive())
+            iter++;
+        else
+            iter = m_vecMonster.erase(iter);
     }
 }
 
@@ -146,15 +121,16 @@ void cMainGame::Render()
     Matrix4 matS;
     D3DXMatrixScaling(&matS, 0.1f, 0.1f, 0.1f);
     g_pDevice->SetTransform(D3DTS_WORLD, &matS);
-    m_pTerain->DrawSubset(0);
-
-    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    (*g_pMeshManager->GetBasicMesh("map"))->DrawSubset(0);
 
     m_pPlayer->Render();
     
     for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
     {
-        (*iter)->Render();
+        bool result = false;
+        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
+        if (result)
+            (*iter)->Render();
     }
 
     Matrix4 mat;

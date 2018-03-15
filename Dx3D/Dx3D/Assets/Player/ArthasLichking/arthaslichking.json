@@ -1,0 +1,63 @@
+{
+    "Scale": "0.1",
+    "State": [
+        {
+            "Name": "Run",
+            "index": "0"
+        },
+        {
+            "Name": "Roar",
+            "index": "1"
+        },
+        {
+            "Name": "DirReady",
+            "index": "2"
+        },
+        {
+            "Name": "DirChanneling",
+            "index": "3"
+        },
+        {
+            "Name": "DirCast",
+            "index": "4"
+        },
+        {
+            "Name": "Attack3",
+            "index": "5"
+        },
+        {
+            "Name": "Attack2",
+            "index": "6"
+        },
+        {
+            "Name": "TurnRight",
+            "index": "7"
+        },
+        {
+            "Name": "TurnLeft",
+            "index": "8"
+        },
+        {
+            "Name": "Death",
+            "index": "9"
+        },
+        {
+            "Name": "Walk",
+            "index": "10"
+        },
+        {
+            "Name": "Attack",
+            "Position": [
+                {
+                    "Name": "attack",
+                    "Value": "0.517000"
+                }
+            ],
+            "index": "11"
+        },
+        {
+            "Name": "Stand",
+            "index": "12"
+        }
+    ]
+}

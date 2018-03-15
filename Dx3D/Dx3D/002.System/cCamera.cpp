@@ -82,14 +82,14 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-    case WM_RBUTTONDOWN:
+    case WM_LBUTTONDOWN:
     {
         m_ptPrevMouse.x = LOWORD(lParam);
         m_ptPrevMouse.y = HIWORD(lParam);
         m_isRButtonDown = true;
     }
     break;
-    case WM_RBUTTONUP:
+    case WM_LBUTTONUP:
     {
         m_isRButtonDown = false;
     }

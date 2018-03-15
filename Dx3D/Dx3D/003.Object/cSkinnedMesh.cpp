@@ -3,7 +3,7 @@
 #include "cAllocateHierarchy.h"
 
 
-cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
+cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, string szJsonName)
     : m_pRootFrame(NULL)
     , m_pAnimController(NULL)
     , m_dwWorkingPaletteSize(0)
@@ -14,8 +14,17 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     , m_fPassedBlendTime(0.0f)
 {
     D3DXMatrixIdentity(&m_matWorld);
+    D3DXMatrixIdentity(&matS);
 
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey, szFolder, szFilename);
+    m_Json = g_pMeshManager->GetJson(szKey, szFolder, szJsonName);
+
+    
+    string str = m_Json["Scale"];
+    float scale = atof(str.c_str());
+    if(scale>0.0f)
+        D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
+   
 
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
     m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
@@ -23,12 +32,14 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     m_pEffect = pSkinnedMesh->m_pEffect;
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
 
-    pSkinnedMesh->m_pAnimController->CloneAnimationController(
-        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
-        pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
-        &m_pAnimController);
+    if (pSkinnedMesh->m_pAnimController)
+        pSkinnedMesh->m_pAnimController->CloneAnimationController(
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
+            &m_pAnimController);
+
 }
 
 cSkinnedMesh::cSkinnedMesh()
@@ -111,9 +122,9 @@ void cSkinnedMesh::UpdateAndRender()
 
     if (m_pRootFrame)
     {
-        Matrix4 matS, matR, matT,matW;
+        Matrix4 matT,matW;
         D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-        matW = matT * m_matWorld;
+        matW = matS* matT * m_matWorld;
 
         Update(m_pRootFrame, &matW);
         Render(m_pRootFrame);
@@ -358,17 +369,28 @@ void cSkinnedMesh::SetAnimationIndex(int nIndex, bool isBlend)
     
 }
 
-int cSkinnedMesh::GetCurPos()
+float cSkinnedMesh::GetdescPos()
 {
-    LPANIMATIONSET pAnimSet = NULL;
-    m_pAnimController->GetTrackAnimationSet(0, &pAnimSet);
-
     D3DXTRACK_DESC desc;
     m_pAnimController->GetTrackDesc(0, &desc);
 
-    int CurPos = desc.Position / pAnimSet->GetPeriod();
+    return desc.Position;
+}
 
-    return CurPos;
+int cSkinnedMesh::GetCurPos()
+{
+    if (m_pAnimController)
+    {
+        LPANIMATIONSET pAnimSet = NULL;
+        m_pAnimController->GetTrackAnimationSet(0, &pAnimSet);
+
+        D3DXTRACK_DESC desc;
+        m_pAnimController->GetTrackDesc(0, &desc);
+
+        int CurPos = desc.Position / pAnimSet->GetPeriod();
+
+        return CurPos;
+    }
 }
 
 HRESULT cSkinnedMesh::Destroy()

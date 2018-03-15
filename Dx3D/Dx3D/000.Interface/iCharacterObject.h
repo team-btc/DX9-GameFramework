@@ -5,7 +5,7 @@ class cSkinnedMesh;
 class cMonster;
 class cUILayer;
 
-interface iCharacterObject
+interface iCharacterObject :public cObject
 {
 public:
     enum E_TAG { PLAYER = 1, MONSTER, NPC, END_TAG };
@@ -24,6 +24,8 @@ protected:
     float           m_fRotY; // 각도
     LPMESH          m_pPikingMesh; // 가상의 구를 보여줌
     ST_SPHERE       m_stSphere; // 가상의 구 실질적으로 피킹되게끔함
+
+    map<string, ST_STATE>   m_mapStateInfo;
     
     // 스탯
     float           m_fATK;
@@ -51,7 +53,7 @@ public:
     virtual void Setup() PURE;
     virtual void Update() PURE;
     virtual void Render() PURE;
-    virtual void Destroy() PURE;
+    //virtual void Destroy() PURE;
 
     virtual void SetTarget(iCharacterObject* target) PURE;
     virtual void SetSkinnedMesh(cSkinnedMesh* Mesh) PURE;
@@ -127,6 +129,9 @@ public:
     virtual void AttackAnim() PURE;
     virtual void RunAnim() PURE;
     virtual void IdleAnim() PURE;
+    virtual void LeftAnim() PURE;
+    virtual void RightAnim() PURE;
+    virtual void DeadAnim() PURE;
     virtual void FalseAnim() PURE;
 
     //컨트롤러 함수

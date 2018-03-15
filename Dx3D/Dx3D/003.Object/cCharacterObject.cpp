@@ -58,9 +58,9 @@ void cCharacterObject::Render()
 {
 }
 
-void cCharacterObject::Destroy()
-{
-}
+//void cCharacterObject::Destroy()
+//{
+//}
 
 bool cCharacterObject::RayCast(iCharacterObject * Charater)
 {
@@ -84,7 +84,11 @@ void cCharacterObject::Action(string Command, string value)
 
 void cCharacterObject::Attack(int ATK)
 {
-    m_pTarget->SetHP(m_pTarget->GetHP() - ATK);
+    if (m_pTarget)
+    {
+        m_pTarget->SetHP(m_pTarget->GetHP() - ATK);
+        cout << m_pTarget->GetHP() << endl;
+    }
 }
 
 void cCharacterObject::Heal(int Value)
@@ -96,21 +100,41 @@ void cCharacterObject::AttackAnim()
 {
     FalseAnim();
     isAttack = true;
-    m_pMesh->SetAnimationIndex(2);
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
 }
 
 void cCharacterObject::RunAnim()
 {
     FalseAnim();
     isRun = true;
-    m_pMesh->SetAnimationIndex(1);
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Run")->second.nStateNum);
 }
 
 void cCharacterObject::IdleAnim()
 {
     FalseAnim();
     isIdle = true;
-    m_pMesh->SetAnimationIndex(0);
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Stand")->second.nStateNum);
+}
+
+void cCharacterObject::LeftAnim()
+{
+    FalseAnim();
+    isIdle = true;
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnLeft")->second.nStateNum);
+}
+
+void cCharacterObject::RightAnim()
+{
+    FalseAnim();
+    isIdle = true;
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnRight")->second.nStateNum);
+}
+
+void cCharacterObject::DeadAnim()
+{
+    FalseAnim();
+    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Death")->second.nStateNum);
 }
 
 void cCharacterObject::FalseAnim()
@@ -145,6 +169,7 @@ void cCharacterObject::RotateLeft()
 {
     m_fRotY -= 0.01f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+    
 }
 
 void cCharacterObject::RotateRight()

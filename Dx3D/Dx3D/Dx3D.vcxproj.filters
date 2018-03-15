@@ -195,6 +195,9 @@
     <ClInclude Include="002.System\cMonster.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="cCharacterManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -321,6 +324,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="002.System\cMonster.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cCharacterManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

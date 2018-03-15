@@ -15,7 +15,7 @@ public:
     virtual void Setup() override;
     virtual void Update() override;
     virtual void Render() override;
-    virtual void Destroy() override;
+  //  virtual void Destroy() override;
 
     virtual void SetTarget(iCharacterObject* target) override { m_pTarget = target; }
     virtual void SetSkinnedMesh(cSkinnedMesh* Mesh) override { m_pMesh = Mesh; }
@@ -90,6 +90,9 @@ public:
     virtual void AttackAnim() override;
     virtual void RunAnim() override;
     virtual void IdleAnim() override;
+    virtual void LeftAnim() override;
+    virtual void RightAnim() override;
+    virtual void DeadAnim() override;
     virtual void FalseAnim() override;
     
     virtual void MoveForword() override;

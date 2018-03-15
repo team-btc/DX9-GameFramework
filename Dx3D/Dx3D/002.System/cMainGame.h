@@ -4,6 +4,7 @@
 #include "cMonster.h"
 
 class cSkinnedMesh;
+class cFrustum;
 
 class cMainGame
 {
@@ -11,6 +12,7 @@ private:
     LPMESH      m_pSphere;
     cCamera*    m_pCamera;
     cPlayer*    m_pPlayer;
+    cFrustum*   m_pFrustum;
     LPMESH   m_pTerain;
 
     vector<cMonster*> m_vecMonster;

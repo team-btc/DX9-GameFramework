@@ -1,13 +1,33 @@
 #include "stdafx.h"
 #include "cPlayer.h"
 #include "003.Object\cSkinnedMesh.h"
+#include "cMonster.h"
 
-cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
+cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonName)
     :DestPoint(0,0,0)
     , isMoveToPoint(false)
+    , isPoint(false)
 {
-    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
+    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename , szJsonName);
     g_pAutoReleasePool->AddObject(m_pMesh);
+
+    for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
+    {
+        ST_STATE state;
+        string str1 = m_pMesh->GetJson()["State"][i]["index"];
+        state.nStateNum = atoi(str1.c_str());
+        for (int j = 0; j < m_pMesh->GetJson()["State"][i]["Position"].size(); j++)
+        {
+            string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
+            string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
+            float pos = atof(str2.c_str());
+            state.mapPosition.insert(make_pair(str1, pos));
+        }
+        string str = m_pMesh->GetJson()["State"][i]["Name"];
+        m_mapStateInfo.insert(make_pair(str, state));
+    }
+    
+    IdleAnim();
     
     m_stSphere.fRadius = 1.0f;
     m_stSphere.vCenter = m_vPosition;
@@ -31,6 +51,51 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
+
+    if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON) && !isAttack)
+    {
+        cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
+        BOOL isHit = false;
+        float _dist = 0.0f;
+
+        //맵이동
+        D3DXIntersectSubset(*g_pMeshManager->GetBasicMesh("map"), 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
+        if (isHit)
+        {
+            if (!isRun)
+                RunAnim();
+            Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
+            isAttack = false;
+            isMoveToTarget = false;
+            isMoveToPoint = true;
+            DestPoint = _Dest;
+        }
+
+
+        //메쉬 공격
+        for (auto iter = m_vecMonster.begin(); iter != m_vecMonster.end(); iter++)
+        {
+            if (ray.IsPicked(&(*iter)->GetSphere()))
+            {
+                if (!isRun)
+                   RunAnim();
+                isMoveToPoint = false;
+                isMoveToTarget = true;
+                RayCast(*iter);
+            }
+        }
+
+    }
+
+    // 타켓만 정해준다.
+    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
+    {
+        if (m_vecMonster.size() > 0)
+        {
+            NearestSearch(m_vecMonster);
+        }
+    }
+
     if (!isAttack)
     {
         if (g_pKeyManager->isOnceKeyDown('Q'))
@@ -41,7 +106,7 @@ void cPlayer::Update()
 
         if (g_pKeyManager->isOnceKeyDown('W'))
         {
-            m_pMesh->SetAnimationIndex(1);
+            RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('W'))
         {
@@ -49,12 +114,12 @@ void cPlayer::Update()
         }
         if (g_pKeyManager->isOnceKeyUp('W'))
         {
-            m_pMesh->SetAnimationIndex(0);
+            IdleAnim();
         }
 
         if (g_pKeyManager->isOnceKeyDown('S'))
         {
-            m_pMesh->SetAnimationIndex(1);
+            RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('S'))
         {
@@ -62,30 +127,52 @@ void cPlayer::Update()
         }
         if (g_pKeyManager->isOnceKeyUp('S'))
         {
-            m_pMesh->SetAnimationIndex(0);
+            IdleAnim();
         }
 
-        if (g_pKeyManager->isStayKeyDown('A'))
+        if (g_pKeyManager->isOnceKeyDown('A') && !isRun)
+        {
+            LeftAnim();
+        }
+        else if (g_pKeyManager->isStayKeyDown('A'))
         {
             RotateLeft();
         }
-        if (g_pKeyManager->isStayKeyDown('D'))
+        if (g_pKeyManager->isOnceKeyUp('A') && !isRun)
+        {
+            IdleAnim();
+        }
+        if (g_pKeyManager->isOnceKeyDown('D') && !isRun)
+        {
+            RightAnim();
+        }
+        else if (g_pKeyManager->isStayKeyDown('D'))
         {
             RotateRight();
+        }
+        if (g_pKeyManager->isOnceKeyUp('D') && !isRun)
+        {
+            IdleAnim();
         }
     }
 
     if (g_pKeyManager->isOnceKeyDown('1') && !isAttack)
     {
+        isPoint = true;
         AttackAnim();
     }
 
-    if(isAttack && m_pMesh->GetCurPos() >= 1)
+    if(isAttack)
     {
-        Action("Attack", "5");// 다시해야함
-        cout << m_pTarget->GetHP() << endl;
-        m_pTarget->RayCast(this); // 어그로 주고
-        IdleAnim();
+        if (isPoint && m_pMesh->GetdescPos() >= m_mapStateInfo["Attack"].mapPosition["attack"])
+        {
+            isPoint = false;
+            Action("Attack", "50");// 다시해야함
+            if (m_pTarget)
+                m_pTarget->RayCast(this); // 어그로 주고
+        }
+        if(m_pMesh->GetCurPos() >= 1)
+            IdleAnim();
     }
 
     //마우스 이동
@@ -124,6 +211,7 @@ void cPlayer::Update()
         if (Distance < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius )
         {
             isMoveToTarget = false;
+            isPoint = true;
             AttackAnim();
         }
         else
@@ -139,7 +227,8 @@ void cPlayer::Update()
     }
 
     Matrix4 matR,matW;
-    D3DXMatrixRotationY(&matR, D3DX_PI);
+    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
+    D3DXMatrixScaling(&m_MatScale, 5, 5, 5);
     matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
     m_stSphere.vCenter = m_vPosition;
     m_pMesh->SetWorldMatrix(matW);
@@ -150,13 +239,16 @@ void cPlayer::Render()
     m_pMesh->UpdateAndRender();
 
     Matrix4 matR,matT, matW;
-    D3DXMatrixRotationY(&matR, D3DX_PI);
+    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
     D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 0.5f, m_stSphere.vCenter.z);
+    D3DXMatrixScaling(&m_MatScale, 1, 1, 1);
     matW = m_MatScale * m_MatRotate * matR * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
+    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);
+    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
-void cPlayer::Destroy()
-{
-}
+//void cPlayer::Destroy()
+//{
+//}

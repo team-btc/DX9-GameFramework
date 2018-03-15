@@ -1,0 +1,17 @@
+{
+    "Scale": "",
+    "State": [
+        {
+            "Name": "Stand",
+            "index": "0"
+        },
+        {
+            "Name": "Walk",
+            "index": "1"
+        },
+        {
+            "Name": "Attack",
+            "index": "2"
+        }
+    ]
+}

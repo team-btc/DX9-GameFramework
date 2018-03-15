@@ -14,11 +14,13 @@ private:
     Matrix4*                    m_pmWorkingPalette;
     LPEFFECT                    m_pEffect;
     ST_SPHERE                   m_stBoundingSphere;
+    json                        m_Json;
 
     // 객체마다 생성
     LPANIMCONTROLLER            m_pAnimController;
     Vector3                     m_vPosition;
     Matrix4                     m_matWorld;
+    Matrix4                     matS;
 
     float						m_fBlendDuration;
     float						m_fPassedBlendTime;
@@ -34,7 +36,7 @@ private:
     virtual HRESULT Destroy() override;
 
 public:
-    cSkinnedMesh(string szKey, string szFolder, string szFilename);
+    cSkinnedMesh(string szKey, string szFolder, string szFilename, string szJsonName);
     ~cSkinnedMesh(void);
 
     void UpdateAndRender();
@@ -48,10 +50,12 @@ public:
     void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
     void SetAnimationIndex(int nIndex, bool isBlend = true);
 
+    json GetJson() { return m_Json; }
     ST_SPHERE* GetBoundingSphere()
     {
         return &m_stBoundingSphere;
     }
+    float GetdescPos();
     int GetCurPos();
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }
