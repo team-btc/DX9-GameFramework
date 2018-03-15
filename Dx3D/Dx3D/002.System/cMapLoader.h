@@ -4,7 +4,6 @@ class cMapLoader
 {
 private:
 
-
 public:
     cMapLoader();
     ~cMapLoader();

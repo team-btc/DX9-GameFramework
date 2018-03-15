@@ -208,6 +208,7 @@
     <ClInclude Include="001.Manager\000.System\cDbManager.h" />
     <ClInclude Include="002.System\cMapLoader.h" />
     <ClInclude Include="001.Manager\000.System\cMapManager.h" />
+    <ClInclude Include="cGameMap.h" />
     <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleExplosion.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="001.Manager\000.System\cDbManager.cpp" />
     <ClCompile Include="002.System\cMapLoader.cpp" />
     <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
+    <ClCompile Include="cGameMap.cpp" />
     <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleExplosion.cpp" />

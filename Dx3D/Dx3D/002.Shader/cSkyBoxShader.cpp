@@ -7,14 +7,13 @@ cSkyBoxShader::cSkyBoxShader()
 {
     g_pShaderManager->AddEffect("SkyBox", SHADER_PATH + (string)"FX/SkyBox.fx");
     m_pSkyBoxShader = g_pShaderManager->GetEffect("SkyBox");
-    string szPath = SHADER_PATH + (string)"Model/Box.x";
-    D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, &m_pMesh);
+    g_pMeshManager->LoadMesh("Box", SHADER_PATH + (string)"Model/Box.x");
+    m_pMesh = g_pMeshManager->GetBasicMesh("Box");
 }
 
 
 cSkyBoxShader::~cSkyBoxShader()
 {
-    SAFE_RELEASE(m_pMesh);
 }
 
 void cSkyBoxShader::Render(D3DXVECTOR4 vCameraPosition)

@@ -5,13 +5,13 @@
 cCamera::cCamera()
     : m_fDistance(250)
     , m_vEye(0, LOOKAT_POS, -m_fDistance)
-    , m_vLookAt(0, LOOKAT_POS, 0)
+    , m_vLookAt(0, LOOKAT_POS, 256)
     , m_vUp(0, 1, 0)
     , m_fRotX(0.9f)
-    , m_fRotY(0)
+    , m_fRotY(90.0f / 180.0f * D3DX_PI)
     , m_isRButtonDown(false)
     , m_isFocus(false)
-    , m_vPosition(0, 0, 0)
+    , m_vPosition(0, 0, 256)
 {
 }
 
@@ -77,7 +77,7 @@ void cCamera::Update(Vector3* pTarget)
 
     if (g_pKeyManager->isStayKeyDown('I')) 
     {
-        m_fDistance -= 1.0f;
+        m_fDistance -= 5.0f;
 
         if (m_fDistance < 5.0f)
         {
@@ -86,7 +86,7 @@ void cCamera::Update(Vector3* pTarget)
     }
     else if (g_pKeyManager->isStayKeyDown('O'))
     {
-        m_fDistance += 1.0f;
+        m_fDistance += 5.0f;
 
         if (m_fDistance < 5.0f)
         {
@@ -134,7 +134,7 @@ void cCamera::Update(Vector3* pTarget)
             D3DXVec3Normalize(&dirZ, &m_vEye);
             D3DXVec3Cross(&dirX, &m_vEye, &D3DXVECTOR3(0, 1, 0));
             D3DXVec3Cross(&dirZ, &dirX, &D3DXVECTOR3(0, 1, 0));
-            float fMovePower = 0.01f;//m_fDistance * 0.0001f;
+            float fMovePower = 0.1f;//m_fDistance * 0.0001f;
 
             // == 키보드 컨트롤 ======= 
             if (g_pKeyManager->isStayKeyDown('A'))

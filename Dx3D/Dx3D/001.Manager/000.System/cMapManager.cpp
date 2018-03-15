@@ -36,6 +36,18 @@ ST_MAP* cMapManager::GetCurrMapInfo()
     return stMap;
 }
 
+bool cMapManager::IsLoadMapInfo(string szKey)
+{
+    bool isHave = false;
+
+    if (m_mapMapInfo.find(szKey) != m_mapMapInfo.end())
+    {
+        isHave = true;
+    }
+
+    return isHave;
+}
+
 void cMapManager::Destroy()
 {
     // 매니저에 있는 내용들이라 매니저가 디스트로이 될 때 딜리트 됨.

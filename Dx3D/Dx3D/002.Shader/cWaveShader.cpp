@@ -35,7 +35,7 @@ void cWaveShader::Render(D3DXVECTOR4 vCameraPosition)
 
     D3DXMATRIXA16 matW, matView, matProjection;
     D3DXMatrixIdentity(&matW);
-    matW._42 += m_pHeight;
+    matW._42 += m_pHeight - 128;
 
     D3DXVECTOR4 gWorldCameraPosition = vCameraPosition;
     g_pDevice->GetTransform(D3DTS_VIEW, &matView);

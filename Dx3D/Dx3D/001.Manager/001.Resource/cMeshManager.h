@@ -15,10 +15,10 @@ private:
 
 public:
     HRESULT LoadBasicMesh();
-    LPMESH* GetBasicMesh(string szKey);
+    LPMESH GetBasicMesh(string szKey);
 
-    void LoadMapMesh(string szKey);
-    void LoadWaterMesh(string szKey, string szFolderName);
+    void LoadMesh(string szKey, string szPath);
+    void AddMesh(string szKey, LPMESH* mesh);
 
     void LoadSkinnedMesh();
     cSkinnedMesh* GetMesh(string szKey);

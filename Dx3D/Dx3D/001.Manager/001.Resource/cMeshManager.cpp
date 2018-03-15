@@ -28,31 +28,25 @@ HRESULT cMeshManager::LoadBasicMesh()
     return S_OK;
 }
 
-// 맵 매쉬 로드
-void cMeshManager::LoadMapMesh(string szKey)
+void cMeshManager::LoadMesh(string szKey, string szPath)
 {
     LPMESH* mesh = new LPMESH;
-    string szPath = MAP_PATH + szKey + "/" + szKey + ".x";
     D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
     m_mapBasicMesh.insert(make_pair(szKey, mesh));
 }
 
-// 물 매쉬 로드
-void cMeshManager::LoadWaterMesh(string szKey, string szFolderName)
+void cMeshManager::AddMesh(string szKey, LPMESH* mesh)
 {
-    LPMESH* mesh = new LPMESH;
-    string szPath = MAP_PATH + szFolderName + "/" + szKey + ".x";
-    D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
     m_mapBasicMesh.insert(make_pair(szKey, mesh));
 }
 
-LPMESH* cMeshManager::GetBasicMesh(string szKey)
+LPMESH cMeshManager::GetBasicMesh(string szKey)
 {
-    LPMESH* mesh = NULL;
+    LPMESH mesh = NULL;
 
     if (m_mapBasicMesh.find(szKey) != m_mapBasicMesh.end())
     {
-        mesh = m_mapBasicMesh[szKey];
+        mesh = *m_mapBasicMesh[szKey];
     }
 
     return mesh;

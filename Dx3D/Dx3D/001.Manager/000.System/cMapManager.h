@@ -11,15 +11,14 @@ private:
 
     string                          m_szCurrMapKey;
 
-private:
-    void SetCurrMap(string szKey);
-
 public:
     // == ╪бем ==
     void SetMapInfo(string szKey, ST_MAP* stmap);
+    void SetCurrMap(string szKey);
 
     // == ╟ыем ==
     ST_MAP* GetCurrMapInfo();
+    bool IsLoadMapInfo(string szKey);
 
     void Destroy();
 };

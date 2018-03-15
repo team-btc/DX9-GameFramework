@@ -142,6 +142,9 @@ struct ST_MAP
     // ÇÏ´Ã
     LPCUBETEXTURE9      pSkyTexture;
 
+    // Àå¾Ö¹°
+    vector<LPMESH>      vecObstacleMesh;
+
     ST_MAP() : pTerrainMesh(NULL), pTerTexture1(NULL), pTerTexture2(NULL), pTerTexture3(NULL),
         pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL) {}
 };

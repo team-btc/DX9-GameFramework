@@ -14,11 +14,8 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
-
-    cMapLoad* map = new cMapLoad; // ->이걸 딜리트 안해줘서 오류남
-
-    g_pScnManager->AddScene("map", map);
-    g_pScnManager->ChangeScene("map");
+    
+    g_pScnManager->Setup();
 }
 
 
@@ -61,7 +58,10 @@ void cMainGame::Setup()
 
     D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
 
-    g_pScnManager->Setup();
+    cMapLoad* map = new cMapLoad;
+
+    g_pScnManager->AddScene("map", map);
+    g_pScnManager->ChangeScene("map");
 }
 
 void cMainGame::Update()
