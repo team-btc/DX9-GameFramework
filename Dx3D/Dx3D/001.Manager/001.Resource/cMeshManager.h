@@ -10,7 +10,7 @@ class cMeshManager
     SINGLETON(cMeshManager);
     
 private:
-    map<string, LPMESH*>        m_mapBasicMesh;
+    map<string, LPMESH>         m_mapBasicMesh;
     map<string, cSkinnedMesh*>  m_mapSkinnedMesh;
 
 public:

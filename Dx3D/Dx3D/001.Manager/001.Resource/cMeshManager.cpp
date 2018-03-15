@@ -13,16 +13,14 @@ cMeshManager::~cMeshManager()
 
 HRESULT cMeshManager::LoadBasicMesh()
 {
-    LPMESH* mesh = new LPMESH;
-    D3DXCreateBox(g_pDevice, 1.0f, 1.0f, 1.0f, mesh, NULL);
+    LPMESH mesh;
+    D3DXCreateBox(g_pDevice, 1.0f, 1.0f, 1.0f, &mesh, NULL);
     m_mapBasicMesh.insert(make_pair("cube", mesh));
 
-    mesh = new LPMESH;
-    D3DXCreateSphere(g_pDevice, 1.0f, 10, 10, mesh, NULL);
+    D3DXCreateSphere(g_pDevice, 1.0f, 10, 10, &mesh, NULL);
     m_mapBasicMesh.insert(make_pair("sphere", mesh));
 
-    mesh = new LPMESH;
-    D3DXCreateTorus(g_pDevice, 1.0f - D3DX_16F_EPSILON, 1.0f, 10, 10, mesh, NULL);
+    D3DXCreateTorus(g_pDevice, 1.0f - D3DX_16F_EPSILON, 1.0f, 10, 10, &mesh, NULL);
     m_mapBasicMesh.insert(make_pair("torus", mesh));
 
     return S_OK;
@@ -30,7 +28,7 @@ HRESULT cMeshManager::LoadBasicMesh()
 
 LPMESH* cMeshManager::GetBasicMesh(string szKey)
 {
-    return nullptr;
+    return &m_mapBasicMesh[szKey];
 }
 
 void cMeshManager::LoadSkinnedMesh()
@@ -71,7 +69,7 @@ void cMeshManager::Destroy()
 {
     for (auto iter = m_mapBasicMesh.begin(); iter != m_mapBasicMesh.end();)
     {
-        (*iter->second)->Release();
+        iter->second->Release();
         iter = m_mapBasicMesh.erase(iter);
     }
 

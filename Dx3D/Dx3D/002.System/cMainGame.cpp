@@ -50,6 +50,8 @@ void cMainGame::Setup()
 
     D3DXCreateBox(g_pDevice, 1, 1, 1, &m_pFloor, NULL);
     g_pAutoReleasePool->AddObject(m_pFloor);
+
+    g_pMeshManager->LoadBasicMesh();
 }
 
 void cMainGame::Update()
