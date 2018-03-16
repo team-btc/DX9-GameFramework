@@ -44,12 +44,13 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
+    LIGHT9 l = g_pLightManager->InitDirectional(&Vector3(1, -1, 1), &D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    g_pDevice->SetLight(0, &l);
+    g_pDevice->LightEnable(0, true);
+
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
-
-    D3DXCreateBox(g_pDevice, 1, 1, 1, &m_pFloor, NULL);
-    g_pAutoReleasePool->AddObject(m_pFloor);
 
     g_pMeshManager->LoadBasicMesh();
 }

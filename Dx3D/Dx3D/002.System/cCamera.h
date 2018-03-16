@@ -33,5 +33,6 @@ public:
     Matrix4 GetViewProjMatrix() { return m_matView * m_matProj; }
     void SetLength(float l) { m_fDistance = l; }
     float GetLength() { return m_fDistance; }
+    Vector3 GetEye() { return m_vEye; }
 };
 
