@@ -4,7 +4,7 @@
 
 cTextureShader::cTextureShader()
 {
-    g_pShaderManager->AddEffect("rendtex", SHADER_PATH + (string)"FX/TextureShader.fx");
+    g_pShaderManager->AddEffect("rendtex", SHADER_PATH + (string)"FX/Ingame_TextureShader.fx");
     m_pTextureShader = g_pShaderManager->GetEffect("rendtex");
     ZeroMemory(m_pTexture, 3);
 
@@ -16,6 +16,12 @@ cTextureShader::cTextureShader()
 
 cTextureShader::~cTextureShader()
 {
+}
+
+void cTextureShader::SetBGTexture(LPTEXTURE9 pTex, float fDensity)
+{
+    m_pBGTexture = pTex;
+    m_fBGDensity = fDensity * 0.1f;
 }
 
 void cTextureShader::SetTexture1(LPTEXTURE9 pTex, float fDensity)
@@ -48,19 +54,16 @@ void cTextureShader::Render()
     m_pTextureShader->SetMatrix("gViewMatrix", &matView);
     m_pTextureShader->SetMatrix("gProjectionMatrix", &matProjection);
 
-    m_pTextureShader->SetTexture("texture0", m_pTexture[0]);
+    m_pTextureShader->SetTexture("BackGroundTexture", m_pBGTexture);
     m_pTextureShader->SetTexture("texture1", m_pTexture[0]);
     m_pTextureShader->SetTexture("texture2", m_pTexture[1]);
     m_pTextureShader->SetTexture("texture3", m_pTexture[2]);
     
     m_pTextureShader->SetTexture("AlphaMap", m_pAlphaDraw);
 
-    m_pTextureShader->SetVector("gUV", &Vector4(0, 0, 0, 0));
-   
-    m_pTextureShader->SetFloat("Brush_Radius", 0);
-    m_pTextureShader->SetFloat("Spray_Radius",0);
     m_pTextureShader->SetFloat("Density", 0);
 
+    m_pTextureShader->SetFloat("BackGroundDensity", m_fBGDensity);
     m_pTextureShader->SetFloat("Tex1Density", m_TexDensity[0]);
     m_pTextureShader->SetFloat("Tex2Density", m_TexDensity[1]);
     m_pTextureShader->SetFloat("Tex3Density", m_TexDensity[2]);

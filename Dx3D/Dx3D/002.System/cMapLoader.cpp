@@ -37,6 +37,11 @@ void cMapLoader::LoadMap(string szKey)
     stMap->pTextureMap = (LPTEXTURE9)g_pTextureManager->GetTexture(szKey);
 
     // 텍스쳐
+    string szBGTex = jLoad["texture"]["BGtex"]["key"];
+    szBGTex = TERRAIN_PATH + szBGTex;
+    g_pTextureManager->AddTexture(jLoad["texture"]["BGtex"]["key"], szBGTex);
+    stMap->pTerBGTexture = (LPTEXTURE9)g_pTextureManager->GetTexture(jLoad["texture"]["BGtex"]["key"]);
+    stMap->fBGTexDensity = jLoad["texture"]["BGtex"]["density"];
     string szTex1 = jLoad["texture"]["tex1"]["key"];
     szTex1 = TERRAIN_PATH + szTex1;
     g_pTextureManager->AddTexture(jLoad["texture"]["tex1"]["key"], szTex1);
@@ -95,10 +100,6 @@ void cMapLoader::LoadMap(string szKey)
             vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,       255,    vecObstacle[i].z), Color(YELLOW)));	    // 1
             vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   255,    vecObstacle[i + 1].z), Color(YELLOW)));	    // 2
             vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   0,      vecObstacle[i + 1].z), Color(YELLOW)));	    // 3
-            //vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,       0,      vecObstacle[i + 1].z), Color(YELLOW)));	// 4
-            //vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,       255,    vecObstacle[i + 1].z), Color(YELLOW)));	// 5
-            //vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   255,    vecObstacle[i + 1].z), Color(YELLOW)));	// 6
-            //vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   0,      vecObstacle[i + 1].z), Color(YELLOW)));	// 7
 
             // 인덱스
             vector<DWORD> vecIndex;
@@ -151,7 +152,7 @@ void cMapLoader::LoadMap(string szKey)
 
             // 매쉬 저장
             char buffer[10];
-            snprintf(buffer, 10, "%d", i);
+            snprintf(buffer, 10, "%d_%d", nBG, i);
             string szMeshKey = szKey + "Obstacle" + buffer;
             g_pMeshManager->AddMesh(szMeshKey, mesh);
             stMap->vecObstacleMesh.push_back(g_pMeshManager->GetBasicMesh(szMeshKey));

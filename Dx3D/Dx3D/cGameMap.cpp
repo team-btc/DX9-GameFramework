@@ -67,7 +67,6 @@ void cGameMap::RendObstacle()
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
     for (int i = 0; i < m_vecObstacleMesh.size(); ++i)

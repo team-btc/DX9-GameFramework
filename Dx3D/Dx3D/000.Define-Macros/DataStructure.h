@@ -120,6 +120,8 @@ struct ST_MAP
     LPTEXTURE9          pTextureMap;
 
     // ÅØ½ºÃÄ
+    LPTEXTURE9          pTerBGTexture;
+    float               fBGTexDensity;
     LPTEXTURE9          pTerTexture1;
     float               fTex1Density;
     LPTEXTURE9          pTerTexture2;

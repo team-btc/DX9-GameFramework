@@ -35,7 +35,7 @@ HRESULT cMapLoad::Start()
     if (m_stMapInfo == NULL)
     {
         cMapLoader mapLoader;
-        mapLoader.LoadMap("tempdun");
+        mapLoader.LoadMap("iceCrown");
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
 
@@ -48,6 +48,7 @@ HRESULT cMapLoad::Start()
         m_pTextureShader = new cTextureShader;
 
         m_pTextureShader->SetMesh(m_stMapInfo->pTerrainMesh);
+        m_pTextureShader->SetBGTexture(m_stMapInfo->pTerBGTexture, m_stMapInfo->fBGTexDensity);
         m_pTextureShader->SetTexture1(m_stMapInfo->pTerTexture1, m_stMapInfo->fTex1Density);
         m_pTextureShader->SetTexture2(m_stMapInfo->pTerTexture2, m_stMapInfo->fTex2Density);
         m_pTextureShader->SetTexture3(m_stMapInfo->pTerTexture3, m_stMapInfo->fTex3Density);
