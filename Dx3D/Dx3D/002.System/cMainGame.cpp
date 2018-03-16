@@ -62,6 +62,12 @@ void cMainGame::Setup()
 
     g_pScnManager->AddScene("map", map);
     g_pScnManager->ChangeScene("map");
+
+    // 카메라 타겟 설정
+    if (m_pCamera)
+    {
+        m_pCamera->Update(&g_pMapManager->GetCurrMapInfo()->vStartPos);
+    }
 }
 
 void cMainGame::Update()

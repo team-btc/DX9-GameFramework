@@ -898,5 +898,10 @@
         "transparent": 0.0,
         "uvspeed": 0.0,
         "waveheight": 0.0
+    },
+    "startPos": {
+        "x": 256.0,
+        "y": 128.0,
+        "z": 500.0
     }
 }

@@ -13,9 +13,9 @@ cMapLoad::cMapLoad()
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
     , m_pSphereMesh(NULL)
-    , m_vSpherePos(10, 128, 256)
+    , m_vSpherePos(0, 0, 0)
     , m_vDirection(0, 0, 1)
-    , m_fRotY(90.0f / 180.0f * D3DX_PI)
+    , m_fRotY(D3DX_PI)
 {
     D3DXMatrixIdentity(&m_matWorld);
 }
@@ -38,6 +38,9 @@ HRESULT cMapLoad::Start()
         mapLoader.LoadMap("iceCrown");
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
+
+        // 플레이어 시작 위치 셋팅
+        m_vSpherePos = m_stMapInfo->vStartPos;
 
         // 현재 맵 셋팅
         m_pGameMap = new cGameMap;
@@ -87,16 +90,6 @@ HRESULT cMapLoad::Update()
     D3DXMatrixRotationY(&matRotY, m_fRotY);
     D3DXVec3TransformNormal(&m_vDirection, &vDir, &matRotY);
 
-    Vector3 vMovePos = m_vSpherePos;
-
-    if (g_pKeyManager->isStayKeyDown(VK_UP))
-    {
-        vMovePos += m_vDirection;
-    }
-    if (g_pKeyManager->isStayKeyDown(VK_DOWN))
-    {
-        vMovePos -= m_vDirection;
-    }
     if (g_pKeyManager->isStayKeyDown(VK_LEFT))
     {
         m_fRotY -= 0.1f;
@@ -105,14 +98,27 @@ HRESULT cMapLoad::Update()
     {
         m_fRotY += 0.1f;
     }
-
-    // 장애물 체크
-    cRay ray;
-    ray.m_vOrg = vMovePos;
-    ray.m_vDir = m_vDirection;
-    if (m_pGameMap->CheckObstacle(ray) == false)
+    if (g_pKeyManager->isStayKeyDown(VK_UP))
     {
-        m_vSpherePos = vMovePos;
+        cRay ray;
+        ray.m_vOrg = m_vSpherePos;
+        ray.m_vDir = m_vDirection;
+        // 정면에 장애물이 없으면
+        if (m_pGameMap->CheckObstacle(ray) == false)
+        {
+            m_vSpherePos += m_vDirection;
+        }
+    }
+    if (g_pKeyManager->isStayKeyDown(VK_DOWN))
+    {
+        cRay ray;
+        ray.m_vOrg = m_vSpherePos;
+        ray.m_vDir = -m_vDirection;
+        // 후면에 장애물이 없으면
+        if (m_pGameMap->CheckObstacle(ray) == false)
+        {
+            m_vSpherePos -= m_vDirection;
+        }
     }
 
     // 위치 체크

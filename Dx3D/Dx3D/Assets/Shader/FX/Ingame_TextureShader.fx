@@ -118,7 +118,10 @@ float4 main_0(PS_INPUT Input) : COLOR
     float Gd = Alpha.g / d;
     float Bd = Alpha.b / d;
     float Backd = 1 - Alpha.r - Alpha.g - Alpha.b;
-
+    if (Backd <= 0)
+    {
+       Backd = 0.0f;
+    }
     // Player Bottom Circle Render
     float4 Pbrush = float4(0, 0, 0, 1);
     float Pr = PlayerScale;

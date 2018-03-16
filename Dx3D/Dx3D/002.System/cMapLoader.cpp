@@ -28,6 +28,11 @@ void cMapLoader::LoadMap(string szKey)
 
     ST_MAP* stMap = new ST_MAP;
 
+    // 플레이어 스타트 위치
+    stMap->vStartPos.x = jLoad["startPos"]["x"];
+    stMap->vStartPos.y = jLoad["startPos"]["y"];
+    stMap->vStartPos.z = jLoad["startPos"]["z"];
+
     // 지형 매쉬
     g_pMeshManager->LoadMesh(szKey, MAP_PATH + szKey + "/" + szKey + ".x");
     stMap->pTerrainMesh = g_pMeshManager->GetBasicMesh(szKey);
@@ -96,10 +101,10 @@ void cMapLoader::LoadMap(string szKey)
         {
             // 버텍스
             vector<ST_PC_VERTEX> vecPCVertex;
-            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,       0,      vecObstacle[i].z), Color(YELLOW)));	    // 0
-            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,       255,    vecObstacle[i].z), Color(YELLOW)));	    // 1
-            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   255,    vecObstacle[i + 1].z), Color(YELLOW)));	    // 2
-            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,   0,      vecObstacle[i + 1].z), Color(YELLOW)));	    // 3
+            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,        0,      vecObstacle[i].z),      Color(RED)));       // 0
+            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i].x,        255,    vecObstacle[i].z),      Color(RED)));	    // 1
+            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,    255,    vecObstacle[i + 1].z),  Color(RED)));	    // 2
+            vecPCVertex.push_back(ST_PC_VERTEX(Vector3(vecObstacle[i + 1].x,    0,      vecObstacle[i + 1].z),  Color(RED)));	    // 3
 
             // 인덱스
             vector<DWORD> vecIndex;

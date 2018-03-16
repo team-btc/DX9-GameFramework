@@ -5,13 +5,13 @@
 cCamera::cCamera()
     : m_fDistance(250)
     , m_vEye(0, LOOKAT_POS, -m_fDistance)
-    , m_vLookAt(0, LOOKAT_POS, 256)
+    , m_vLookAt(0, LOOKAT_POS, 0)
     , m_vUp(0, 1, 0)
     , m_fRotX(0.9f)
-    , m_fRotY(90.0f / 180.0f * D3DX_PI)
+    , m_fRotY(D3DX_PI)
     , m_isRButtonDown(false)
     , m_isFocus(false)
-    , m_vPosition(128, 128, 256)
+    , m_vPosition(0, 0, 0)
 {
 }
 
@@ -130,11 +130,13 @@ void cCamera::Update(Vector3* pTarget)
             || g_pKeyManager->isStayKeyDown(VK_PRIOR)
             || g_pKeyManager->isStayKeyDown(VK_NEXT))
         {
-            D3DXVECTOR3 dirX, dirZ;
-            D3DXVec3Normalize(&dirZ, &m_vEye);
-            D3DXVec3Cross(&dirX, &m_vEye, &D3DXVECTOR3(0, 1, 0));
-            D3DXVec3Cross(&dirZ, &dirX, &D3DXVECTOR3(0, 1, 0));
-            float fMovePower = 0.1f;//m_fDistance * 0.0001f;
+            Vector3 dirX(1, 0, 0);
+            Vector3 dirZ(0, 0, 1);
+            Matrix4 matRotY;
+            D3DXMatrixRotationY(&matRotY, m_fRotY);
+            D3DXVec3TransformNormal(&dirX, &dirX, &matRotY);
+            D3DXVec3TransformNormal(&dirZ, &dirZ, &matRotY);
+            float fMovePower = 1.0f;//m_fDistance * 0.0001f;
 
             // == 키보드 컨트롤 ======= 
             if (g_pKeyManager->isStayKeyDown('A'))

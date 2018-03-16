@@ -24,7 +24,7 @@ HRESULT cGameMap::GetHeight(OUT Vector3& vPos)
 {
     cRay ray;
     ray.m_vOrg = vPos;
-    ray.m_vOrg.y += 255.0f;
+    ray.m_vOrg.y = 255.0f;
     ray.m_vDir = Vector3(0, -1, 0);
     BOOL isHit = false;
     float fDist;
@@ -67,7 +67,7 @@ void cGameMap::RendObstacle()
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
     for (int i = 0; i < m_vecObstacleMesh.size(); ++i)
     {

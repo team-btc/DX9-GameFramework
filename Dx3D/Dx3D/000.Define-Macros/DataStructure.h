@@ -113,6 +113,9 @@ struct ST_SPHERE
 
 struct ST_MAP
 {
+    // 플레이어 시작위치
+    Vector3             vStartPos;
+
     // 지형 매쉬
     LPMESH              pTerrainMesh;
 
