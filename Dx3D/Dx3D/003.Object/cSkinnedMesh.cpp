@@ -23,7 +23,7 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, str
     string str = m_Json["Scale"];
     float scale = atof(str.c_str());
     if(scale>0.0f)
-        D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
+        D3DXMatrixScaling(&matS, scale, scale, scale);
    
 
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
@@ -42,6 +42,44 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, str
 
 }
 
+cSkinnedMesh::cSkinnedMesh(string szKey)
+    : m_pRootFrame(NULL)
+    , m_pAnimController(NULL)
+    , m_dwWorkingPaletteSize(0)
+    , m_pmWorkingPalette(NULL)
+    , m_pEffect(NULL)
+    , m_vPosition(0, 0, 0)
+    , m_fBlendDuration(0.5f)
+    , m_fPassedBlendTime(0.0f)
+{
+    D3DXMatrixIdentity(&m_matWorld);
+    D3DXMatrixIdentity(&matS);
+
+    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey);
+    m_Json = g_pMeshManager->GetJson(szKey);
+
+
+    string str = m_Json["Scale"];
+    float scale = atof(str.c_str());
+    if (scale>0.0f)
+        D3DXMatrixScaling(&matS, scale, scale, scale);
+
+
+    m_pRootFrame = pSkinnedMesh->m_pRootFrame;
+    m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
+    m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
+    m_pEffect = pSkinnedMesh->m_pEffect;
+    m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
+
+    if (pSkinnedMesh->m_pAnimController)
+        pSkinnedMesh->m_pAnimController->CloneAnimationController(
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationOutputs(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumTracks(),
+            pSkinnedMesh->m_pAnimController->GetMaxNumEvents(),
+            &m_pAnimController);
+
+}
 cSkinnedMesh::cSkinnedMesh()
     : m_pRootFrame(NULL)
     , m_pAnimController(NULL)

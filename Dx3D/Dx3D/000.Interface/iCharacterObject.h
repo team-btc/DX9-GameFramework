@@ -8,7 +8,7 @@ class cUILayer;
 interface iCharacterObject :public cObject
 {
 public:
-    enum E_TAG { PLAYER = 1, MONSTER, NPC, END_TAG };
+    enum E_TAG { PLAYER = 1, MONSTER , BOSS, NPC, END_TAG };
     enum E_STATE {END_STATE};
 
 protected:
@@ -28,17 +28,11 @@ protected:
     map<string, ST_STATE>   m_mapStateInfo;
     
     // 스탯
-    float           m_fATK;
-    float           m_fDEF;
-    float           m_fSTR;
-    float           m_fDEX;
-    float           m_fINT;
-    float           m_fHP;
-    float           m_fMP;
-    float           m_fSpeed;
+    ST_STATUS       m_stStat;
+   
     E_TAG           m_eTag;
-    int             m_Level;
     E_STATE         m_eState;
+
 
     bool            isAttack; //공격중이냐
     bool            isRun;
@@ -54,7 +48,7 @@ public:
     virtual void Update() PURE;
     virtual void Render() PURE;
     //virtual void Destroy() PURE;
-
+#pragma region Set
     virtual void SetTarget(iCharacterObject* target) PURE;
     virtual void SetSkinnedMesh(cSkinnedMesh* Mesh) PURE;
     virtual void SetUILayer(cUILayer* UILayer) PURE;
@@ -65,18 +59,12 @@ public:
     virtual void SetDir(Vector3 dir) PURE;
     virtual void SetPosition(Vector3 Pos) PURE;
     virtual void SetPikingMesh(LPMESH Mesh) PURE;
-    virtual void SetRotY(float RotY) PURE;
-    virtual void SetATK(float ATK) PURE;
-    virtual void SetDEF(float DEF) PURE;
-    virtual void SetSTR(float STR) PURE;
-    virtual void SetDEX(float DEX) PURE;
-    virtual void SetINT(float INT) PURE;
-    virtual void SetHP(float HP) PURE;
-    virtual void SetMP(float MP) PURE;
-    virtual void SetSpeed(float Speed) PURE;
+
+    virtual void SetStatus(ST_STATUS stat)PURE;
+
     virtual void SetTag(E_TAG Tag) PURE;
-    virtual void SetLevel(int Level) PURE;
     virtual void SetState(E_STATE State) PURE;
+
     virtual void SetAttack(bool Attack) PURE;
     virtual void SetRun(bool Run) PURE;
     virtual void SetIdle(bool Idle) PURE;
@@ -85,7 +73,9 @@ public:
     virtual void SetActive(bool Active) PURE;
     virtual void SetAlive(bool Alive) PURE;
     virtual void SetMoveToTarget(bool MoveToTarget) PURE;
+#pragma endregion
 
+#pragma region Get
     virtual iCharacterObject* GetTarget() PURE;
     virtual cSkinnedMesh* GetSkinnedMesh() PURE;
     virtual cUILayer* GetUILayer() PURE;
@@ -96,18 +86,12 @@ public:
     virtual Vector3 GetPosition() PURE;
     virtual ST_SPHERE GetSphere() PURE;
     virtual LPMESH GetPikingMesh() PURE;
-    virtual float GetRotY() PURE;
-    virtual float GetATK() PURE;
-    virtual float GetDEF() PURE;
-    virtual float GetSTR() PURE;
-    virtual float GetDEX() PURE;
-    virtual float GetINT() PURE;
-    virtual float GetHP() PURE;
-    virtual float GetMP() PURE;
-    virtual float GetSpeed() PURE;
+
+    virtual ST_STATUS& GetStatus() PURE;
+
     virtual E_TAG GetTag() PURE;
-    virtual int GetLevel() PURE;
     virtual E_STATE GetState() PURE;
+
     virtual bool GetAttak() PURE;
     virtual bool GetRun() PURE;
     virtual bool GetIdle() PURE;
@@ -116,12 +100,13 @@ public:
     virtual bool GetActive() PURE;
     virtual bool GetAlive() PURE;
     virtual bool GetMoveToTarget() PURE;
+#pragma endregion
 
     //상대방 설정
     virtual bool RayCast(iCharacterObject* Charater) PURE;
 
     //액션 폼 함수
-    virtual void Action(string Command, string value) PURE;
+    virtual void Action(string Command, float value) PURE;
     virtual void Attack(int ATK) PURE;
     virtual void Heal(int Value) PURE;
 

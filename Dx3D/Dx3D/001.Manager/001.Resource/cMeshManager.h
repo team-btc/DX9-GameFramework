@@ -19,6 +19,7 @@ public:
     LPMESH* GetBasicMesh(string szKey);
 
     void LoadSkinnedMesh();
+    void LoadJSON();
     cSkinnedMesh* GetMesh(string szKey);
     cSkinnedMesh* GetMesh(string szKey, string szDirectory, string szFilepath);
     json          GetJson(string szKey);

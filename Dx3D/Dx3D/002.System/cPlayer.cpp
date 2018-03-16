@@ -7,10 +7,34 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     :DestPoint(0,0,0)
     , isMoveToPoint(false)
     , isPoint(false)
+    , isPickMonster(false)
 {
-    m_eTag = PLAYER;
-    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename , szJsonName);
+    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename, szJsonName);
     g_pAutoReleasePool->AddObject(m_pMesh);
+
+    m_eTag = PLAYER;
+
+    m_stStat.m_szName = "ChiChi";
+    m_stStat.m_Level = 1;
+
+    m_stStat.m_fSTR = 20 + m_stStat.m_Level * 5;
+    m_stStat.m_fDEX = 15 + m_stStat.m_Level * 5;
+    m_stStat.m_fINT = 15 + m_stStat.m_Level * 5;
+
+    m_stStat.m_fATK = 35 + m_stStat.m_Level * 20;
+    m_stStat.m_fDEF = 10 + m_stStat.m_Level * 5;
+    m_stStat.m_fCurHP = 500 + m_stStat.m_Level * 100;
+    m_stStat.m_fMaxHP = 500 + m_stStat.m_Level * 100;
+    m_stStat.m_fCurMP = 300 + m_stStat.m_Level * 50;
+    m_stStat.m_fMaxMP = 300 + m_stStat.m_Level * 50;
+    m_stStat.m_fSpeed = 1;
+    m_stStat.m_fCritical = 15;
+    m_stStat.m_fHPGen = m_stStat.m_fMaxHP*0.01f + m_stStat.m_Level *0.5f;
+    m_stStat.m_fMPGen = m_stStat.m_fMaxMP*0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_nCoolTime = 0;
+    m_stStat.m_nCurEXP = 0;
+    m_stStat.m_nMaxEXP = 100;
+
 
     for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
     {
@@ -38,6 +62,65 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     
 }
 
+cPlayer::cPlayer(string szKey)
+    :DestPoint(0, 0, 0)
+    , isMoveToPoint(false)
+    , isPoint(false)
+    , isPickMonster(false)
+{
+    m_pMesh = new cSkinnedMesh(szKey);
+    g_pAutoReleasePool->AddObject(m_pMesh);
+
+    m_eTag = PLAYER;
+
+    m_stStat.m_szName = "ChiChi";
+    m_stStat.m_Level = 1;
+
+    m_stStat.m_fSTR = 20 + m_stStat.m_Level * 5;
+    m_stStat.m_fDEX = 15 + m_stStat.m_Level * 5;
+    m_stStat.m_fINT = 15 + m_stStat.m_Level * 5;
+
+    m_stStat.m_fATK = 35 + m_stStat.m_Level * 20;
+    m_stStat.m_fDEF = 10 + m_stStat.m_Level * 5;
+    m_stStat.m_fCurHP = 500 + m_stStat.m_Level * 100;
+    m_stStat.m_fMaxHP = 500 + m_stStat.m_Level * 100;
+    m_stStat.m_fCurMP = 300 + m_stStat.m_Level * 50;
+    m_stStat.m_fMaxMP = 300 + m_stStat.m_Level * 50;
+    m_stStat.m_fSpeed = 1;
+    m_stStat.m_fCritical = 15;
+    m_stStat.m_fHPGen = m_stStat.m_fMaxHP*0.01f + m_stStat.m_Level *0.5f;
+    m_stStat.m_fMPGen = m_stStat.m_fMaxMP*0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_nCoolTime = 0;
+    m_stStat.m_nCurEXP = 0;
+    m_stStat.m_nMaxEXP = 100;
+
+
+    for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
+    {
+        ST_STATE state;
+        string str1 = m_pMesh->GetJson()["State"][i]["index"];
+        state.nStateNum = atoi(str1.c_str());
+        for (int j = 0; j < m_pMesh->GetJson()["State"][i]["Position"].size(); j++)
+        {
+            string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
+            string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
+            float pos = atof(str2.c_str());
+            state.mapPosition.insert(make_pair(str1, pos));
+        }
+        string str = m_pMesh->GetJson()["State"][i]["Name"];
+        m_mapStateInfo.insert(make_pair(str, state));
+    }
+
+    IdleAnim();
+
+    m_stSphere.fRadius = 1.0f;
+    m_stSphere.vCenter = m_vPosition;
+
+    m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_vecMonster = new vector<cMonster*>;
+
+}
+
 cPlayer::cPlayer()
 {
 }
@@ -53,57 +136,60 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
-
-    if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON) && !isAttack)
-    {
-        cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
-        BOOL isHit = false;
-        float _dist = 0.0f;
-
-        //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
-        D3DXIntersectSubset(*g_pMeshManager->GetBasicMesh("map"), 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
-        if (isHit)
-        {
-            if (!isRun)
-                RunAnim();
-            Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
-            isAttack = false;
-            isMoveToTarget = false;
-            isMoveToPoint = true;
-            DestPoint = _Dest;
-        }
-
-
-        //메쉬 공격
-        for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-        {
-            if (ray.IsPicked(&(*iter)->GetSphere()))
-            {
-                if (!isRun)
-                   RunAnim();
-                isMoveToPoint = false;
-                isMoveToTarget = true;
-                RayCast(*iter);
-            }
-        }
-
-    }
-
-    // 타켓만 정해준다.
-    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
-    {
-        if ((*m_vecMonster).size() > 0)
-        {
-            NearestSearch((*m_vecMonster));
-        }
-    }
-
     if (!isAttack)
     {
+        //오른쪽 버튼 누를시
+        if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
+        {
+            cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
+            BOOL isHit = false;
+            float _dist = 0.0f;
+            isPickMonster = false;
+
+            //메쉬 공격
+            for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+            {
+                if (ray.IsPicked(&(*iter)->GetSphere()))
+                {
+                    isPickMonster = true;
+                    isMoveToPoint = false;
+                    isMoveToTarget = true;
+                    RayCast(*iter);
+                    if (!isRun && Distance((*iter)->GetPosition()) >= m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
+                        RunAnim();
+                }
+            }
+
+            //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
+            if (!isPickMonster)
+            {
+                D3DXIntersectSubset(*g_pMeshManager->GetBasicMesh("map"), 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
+                if (isHit)
+                {
+                    if (!isRun)
+                        RunAnim();
+                    Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
+                    isAttack = false;
+                    isMoveToTarget = false;
+                    isMoveToPoint = true;
+                    DestPoint = _Dest;
+                }
+            }
+
+        }
+
+        //기본 공격
+        if (g_pKeyManager->isOnceKeyDown('1'))
+        {
+            isPoint = true;
+            AttackAnim();
+        }
+
+        //공격중이아니라면 이동할수있고 회복스킬을 쓸수있다.
         if (g_pKeyManager->isOnceKeyDown('Q'))
         {
             // 바로 액션이 아니라 모션이 다지나야지 액션이가능함
-            Action("Heal", "3");
+            Action("Heal", 50.0f);
         }
 
         if (g_pKeyManager->isOnceKeyDown('W'))
@@ -157,14 +243,9 @@ void cPlayer::Update()
             IdleAnim();
         }
     }
-
-    if (g_pKeyManager->isOnceKeyDown('1') && !isAttack)
-    {
-        isPoint = true;
-        AttackAnim();
-    }
-
-    if(isAttack)
+    
+    //공격중이라면
+    else
     {
         //원하는 위치일때 데미지가 들어간다.
         if (m_pMesh->GetAnimName() == "Attack")
@@ -172,22 +253,32 @@ void cPlayer::Update()
             if (isPoint && m_pMesh->GetdescPos() >= m_mapStateInfo["Attack"].mapPosition["attack"])
             {
                 isPoint = false;
-                Action("Attack", "10");// 다시해야함
+                Action("Attack", m_stStat.m_fATK);// 다시해야함
                 if (m_pTarget)
                     m_pTarget->RayCast(this); // 어그로 주고
             }
             if (m_pMesh->GetCurPos() >= 1)
                 IdleAnim();
         }
-        else 
+        else
         {
             if (m_pMesh->GetCurPos() >= 1)
             {
-                Action("Attack", "10");// 다시해야함
+                Action("Attack", m_stStat.m_fATK);// 다시해야함
                 if (m_pTarget)
                     m_pTarget->RayCast(this); // 어그로 주고
                 IdleAnim();
             }
+        }
+    }
+
+    //쉬프트 누를시
+    // 타켓만 정해준다.
+    if (g_pKeyManager->isOnceKeyDown(VK_SHIFT))
+    {
+        if ((*m_vecMonster).size() > 0)
+        {
+            NearestSearch((*m_vecMonster));
         }
     }
 
@@ -198,16 +289,21 @@ void cPlayer::Update()
 
         D3DXVec3Normalize(&_Dir, &_Dir);
 
-        m_vPosition += _Dir * m_fSpeed;
+        m_vPosition += _Dir * Speed;
         m_stSphere.vCenter = m_vPosition;
 
         D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &_Dir, &D3DXVECTOR3(0, 1, 0));
         D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
 
+        if(_Dir.z >0)
+            m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        else
+            m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+
         D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
         //도착
-        if (Distance(DestPoint) <m_fSpeed )
+        if (Distance(DestPoint) < Speed)
         {
             m_vPosition = DestPoint;
             IdleAnim();
@@ -232,7 +328,7 @@ void cPlayer::Update()
         }
         else
         {
-            m_vPosition += Dir * m_fSpeed;
+            m_vPosition += Dir * Speed;
             m_stSphere.vCenter = m_vPosition;
 
             D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
@@ -244,7 +340,7 @@ void cPlayer::Update()
 
     Matrix4 matR,matW;
     D3DXMatrixRotationY(&matR, -D3DX_PI/2);
-    D3DXMatrixScaling(&m_MatScale, 5, 5, 5);
+    D3DXMatrixScaling(&m_MatScale, 0.5, 0.5, 0.5);
     matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
     m_stSphere.vCenter = m_vPosition;
     m_pMesh->SetWorldMatrix(matW);
@@ -257,7 +353,7 @@ void cPlayer::Render()
     Matrix4 matR,matT, matW;
     D3DXMatrixRotationY(&matR, -D3DX_PI/2);
     D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 0.5f, m_stSphere.vCenter.z);
-    D3DXMatrixScaling(&m_MatScale, 1, 1, 1);
+    D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
     matW = m_MatScale * m_MatRotate * matR * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);

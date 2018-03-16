@@ -21,14 +21,8 @@ cCharacterObject::cCharacterObject()
    m_stSphere.vCenter = Vector3(0, 0, 0);
    m_pPikingMesh = NULL;
 
-   m_fSTR =0;
-   m_fDEX =0;
-   m_fINT =0;
-   m_fHP =0;
-   m_fMP =0;
-   m_fSpeed =0.01f;
+   
    m_eTag = END_TAG;
-   m_Level = 1;
    m_eState = END_STATE;
 
    isAttack = false;
@@ -68,17 +62,23 @@ bool cCharacterObject::RayCast(iCharacterObject * Charater)
     return false;
 }
 
-void cCharacterObject::Action(string Command, string value)
+void cCharacterObject::Action(string Command, float value)
 {
     if (Command == "Attack")
     {
-        int ATK = atoi(value.c_str());
-        Attack(ATK);
+        Attack(value);
     }
     else if (Command == "Heal")
     {
-        int Value = atoi(value.c_str());
-        Heal(Value);
+        Heal(value);
+    }
+    else if (Command == "Skil1")
+    {
+
+    }
+    else if (Command == "Skil2")
+    {
+
     }
 }
 
@@ -86,14 +86,14 @@ void cCharacterObject::Attack(int ATK)
 {
     if (m_pTarget)
     {
-        m_pTarget->SetHP(m_pTarget->GetHP() - ATK);
-        cout << m_pTarget->GetHP() << endl;
+        m_pTarget->GetStatus().m_fCurHP -= ATK;
+        cout << m_pTarget->GetStatus().m_fCurHP << endl;
     }
 }
 
 void cCharacterObject::Heal(int Value)
 {
-    m_fHP += Value;
+    m_stStat.m_fCurHP += Value;
 }
 
 void cCharacterObject::AttackAnim()
@@ -132,14 +132,12 @@ void cCharacterObject::IdleAnim()
 void cCharacterObject::LeftAnim()
 {
     FalseAnim();
-    isIdle = true;
     m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnLeft")->second.nStateNum);
 }
 
 void cCharacterObject::RightAnim()
 {
     FalseAnim();
-    isIdle = true;
     m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnRight")->second.nStateNum);
 }
 
@@ -163,7 +161,7 @@ void cCharacterObject::MoveForword()
     m_vDir.z = cos(m_fRotY);
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition += m_vDir* m_fSpeed;
+    m_vPosition += m_vDir* Speed;
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 
@@ -173,7 +171,7 @@ void cCharacterObject::MoveBackword()
     m_vDir.z = cos(m_fRotY);
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition -= m_vDir* m_fSpeed;
+    m_vPosition -= m_vDir* Speed;
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 

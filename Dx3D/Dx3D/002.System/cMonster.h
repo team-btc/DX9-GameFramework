@@ -7,6 +7,7 @@ private:
 
 public:
     cMonster(string szKey, string szFolder, string szFilename,string szJsonName);
+    cMonster(string szKey);
     cMonster();
     ~cMonster();
 

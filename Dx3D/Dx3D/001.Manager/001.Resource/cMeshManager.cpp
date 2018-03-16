@@ -32,6 +32,7 @@ HRESULT cMeshManager::LoadBasicMesh()
     return S_OK;
 }
 
+
 LPMESH* cMeshManager::GetBasicMesh(string szKey)
 {
     auto iter = m_mapBasicMesh.find(szKey);
@@ -47,6 +48,28 @@ LPMESH* cMeshManager::GetBasicMesh(string szKey)
 
 void cMeshManager::LoadSkinnedMesh()
 {
+    cSkinnedMesh* pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Player\\ArthasLichking", "arthaslichking.X");
+    m_mapSkinnedMesh.insert(make_pair("arthaslichking", pNewMesh));
+
+    pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Enemy\\Deathwing", "Deathwing.X");
+    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
+}
+
+void cMeshManager::LoadJSON()
+{
+    json newJson;
+    ifstream m_fileJson;
+    m_fileJson.open("Assets\\Player\\ArthasLichking\\arthaslichking.json");
+    m_fileJson >> newJson;
+    m_mapJson.insert(make_pair("arthaslichking", newJson));
+    m_fileJson.close();
+
+    m_fileJson.open("Assets\\Enemy\\Deathwing\\Deathwing.json");
+    m_fileJson >> newJson;
+    m_mapJson.insert(make_pair("Deathwing", newJson));
+    m_fileJson.close();
 }
 
 cSkinnedMesh* cMeshManager::GetMesh(string szKey)
@@ -102,6 +125,7 @@ json cMeshManager::GetJson(string szKey, string szDirectory, string szFilepath)
 
         m_fileJson >> newJson;
         m_mapJson.insert(make_pair(szKey, newJson));
+        m_fileJson.close();
         return m_mapJson[szKey];
     }
     else

@@ -37,6 +37,7 @@ private:
 
 public:
     cSkinnedMesh(string szKey, string szFolder, string szFilename, string szJsonName);
+    cSkinnedMesh(string szKey);
     ~cSkinnedMesh(void);
 
     void UpdateAndRender();

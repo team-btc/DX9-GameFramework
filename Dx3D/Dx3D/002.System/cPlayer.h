@@ -1,6 +1,8 @@
 #pragma once
 #include "003.Object\cCharacterObject.h"
 
+#define Speed 0.01f
+
 class cPlayer : public cCharacterObject
 {
 private:
@@ -11,9 +13,11 @@ private:
 
     bool isMoveToPoint;
     bool isPoint;
+    bool isPickMonster;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename, string szJsonName);
+    cPlayer(string szKey);
     cPlayer();
     ~cPlayer();
 

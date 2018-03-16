@@ -14,12 +14,12 @@ cCharacterManager::~cCharacterManager()
 
 void cCharacterManager::Setup()
 {
-    m_pPlayer = new cPlayer("arthaslichking", "Assets\\Player\\ArthasLichking", "arthaslichking.X", "arthaslichking.json");
+    m_pPlayer = new cPlayer("arthaslichking");
     g_pAutoReleasePool->AddObject(m_pPlayer);
 
     for (int i = 0; i < limitMonster; i++)
     {
-        cMonster* newMonster = new cMonster("Deathwing", "Assets\\Enemy\\Deathwing", "Deathwing.X", "Deathwing.json");
+        cMonster* newMonster = new cMonster("Deathwing");
         g_pAutoReleasePool->AddObject(newMonster);
         m_mapMonster.insert(make_pair(i, newMonster));
         m_listMonster.push_back(newMonster);

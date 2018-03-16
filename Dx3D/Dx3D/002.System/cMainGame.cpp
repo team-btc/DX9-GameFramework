@@ -17,6 +17,8 @@ cMainGame::cMainGame()
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
     g_pMeshManager->LoadBasicMesh();
+    g_pMeshManager->LoadSkinnedMesh();
+    g_pMeshManager->LoadJSON();
     g_pCharacterManager->Setup();
     D3DXCreateSphere(g_pDevice, 1, 10, 10, &m_pSphere, NULL);
 }
@@ -71,8 +73,6 @@ void cMainGame::Setup()
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
         m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
         m_pEnermy->SetActive(true);
-        m_pEnermy->SetHP(100);
-        m_pEnermy->SetATK(5);
         (*m_vecMonster).push_back(m_pEnermy);
     } 
 

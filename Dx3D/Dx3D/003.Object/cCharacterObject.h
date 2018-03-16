@@ -1,6 +1,8 @@
 #pragma once
 #include "iCharacterObject.h"
 
+#define Speed 0.01f
+
 class cMonster;
 
 class cCharacterObject : public iCharacterObject
@@ -17,6 +19,7 @@ public:
     virtual void Render() override;
   //  virtual void Destroy() override;
 
+#pragma region Set
     virtual void SetTarget(iCharacterObject* target) override { m_pTarget = target; }
     virtual void SetSkinnedMesh(cSkinnedMesh* Mesh) override { m_pMesh = Mesh; }
     virtual void SetUILayer(cUILayer* UILayer)override { m_pUILayer = UILayer; }
@@ -27,18 +30,12 @@ public:
     virtual void SetPosition(Vector3 Pos) override { m_vPosition = Pos; }
     virtual void SetSphere(ST_SPHERE Sphere) override { m_stSphere = Sphere; };
     virtual void SetPikingMesh(LPMESH Mesh) override { m_pPikingMesh = Mesh; }
-    virtual void SetRotY(float RotY) override { m_fRotY = RotY; }
-    virtual void SetATK(float ATK) override { m_fATK = ATK; }
-    virtual void SetDEF(float DEF) override { m_fDEF = DEF; }
-    virtual void SetSTR(float STR) override { m_fSTR = STR; }
-    virtual void SetDEX(float DEX) override { m_fDEX = DEX; }
-    virtual void SetINT(float INT) override { m_fINT = INT; }
-    virtual void SetHP(float HP) override { m_fHP = HP; }
-    virtual void SetMP(float MP) override { m_fMP = MP; }
-    virtual void SetSpeed(float Speed) override { m_fSpeed = Speed; }
+
+    virtual void SetStatus(ST_STATUS stat) override { m_stStat = stat; }
+   
     virtual void SetTag(E_TAG Tag) override { m_eTag = Tag; }
-    virtual void SetLevel(int Level) override { m_Level = Level; }
     virtual void SetState(E_STATE State) override { m_eState = State; }
+
     virtual void SetAttack(bool Attack) { isAttack = Attack; }
     virtual void SetRun(bool Run) { isRun = Run; }
     virtual void SetIdle(bool Idle) override { isIdle = Idle; }
@@ -47,7 +44,9 @@ public:
     virtual void SetActive(bool Active) override { isActive = Active; }
     virtual void SetAlive(bool Alive) override { isAlive = Alive; }
     virtual void SetMoveToTarget(bool MoveToTarget) { isMoveToTarget = MoveToTarget; }
+#pragma endregion
 
+#pragma region Get
     virtual iCharacterObject* GetTarget() override { return m_pTarget; }
     virtual cSkinnedMesh* GetSkinnedMesh() override { return m_pMesh; }
     virtual cUILayer* GetUILayer() override { return m_pUILayer; }
@@ -58,18 +57,12 @@ public:
     virtual Vector3 GetPosition() override { return m_vPosition; }
     virtual ST_SPHERE GetSphere() override { return m_stSphere; }
     virtual LPMESH GetPikingMesh() override { return m_pPikingMesh; }
-    virtual float GetRotY() override { return m_fRotY; }
-    virtual float GetATK() override { return m_fATK; }
-    virtual float GetDEF() override { return m_fDEF; }
-    virtual float GetSTR() override { return m_fSTR; }
-    virtual float GetDEX() override { return m_fDEX; }
-    virtual float GetINT() override { return m_fINT; }
-    virtual float GetHP() override { return m_fHP; }
-    virtual float GetMP() override { return m_fMP; }
-    virtual float GetSpeed() override { return m_fSpeed; }
+
+    virtual ST_STATUS& GetStatus() override { return m_stStat; }
+    
     virtual E_TAG GetTag() override { return m_eTag; }
-    virtual int GetLevel() override { return m_Level; }
     virtual E_STATE GetState() override { return m_eState; }
+
     virtual bool GetAttak() override { return isAttack; }
     virtual bool GetRun() override { return isRun; }
     virtual bool GetIdle() override { return isIdle; }
@@ -78,14 +71,13 @@ public:
     virtual bool GetActive() override { return isActive; }
     virtual bool GetAlive() override { return isAlive; }
     virtual bool GetMoveToTarget() override { return isMoveToTarget; }
+#pragma endregion
 
     virtual bool RayCast(iCharacterObject* Charater) override;
 
-
-    virtual void Action(string Command, string value) override;
+    virtual void Action(string Command, float value) override;
     virtual void Attack(int ATK) override;
     virtual void Heal(int Value) override;
-
 
     virtual void AttackAnim() override;
     virtual void RunAnim() override;
