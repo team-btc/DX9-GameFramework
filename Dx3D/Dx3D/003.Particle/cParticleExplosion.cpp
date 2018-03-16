@@ -10,10 +10,10 @@ cParticleExplosion::~cParticleExplosion()
 cParticleExplosion::cParticleExplosion(Vector3* origin, int numParticles)
 {
     m_vOriginPos = *origin;
-    _size = 0.9f;
-    m_dvertexBufferSize = 2048;
-    _vbOffset = 0;
-    _vbBatchSize = 512;
+    m_fSize = 0.9f;
+    m_vbBufferSize = 2048;
+    m_vbOffset = 0;
+    m_vbBatchSize = 512;
 
     for (int i = 0; i < numParticles; i++)
     {
@@ -24,28 +24,28 @@ cParticleExplosion::cParticleExplosion(Vector3* origin, int numParticles)
 // 시스템 원천의 파티클을 초기화하고 구체 내에서 임의의 속도를 만들며,
 // 시스템 내의 파티클들은 임의의 컬러를 부여.
 // 각 파티클들이 2초 동안 유지하도록 수명을 지정. 
-void cParticleExplosion::ResetParticle(Attribute* attribute)
+void cParticleExplosion::ResetParticle(ST_PARTICLE_ATTR* attribute)
 {
     attribute->isAlive = true;
-    attribute->position = m_vOriginPos;
+    attribute->p = m_vOriginPos;
 
     Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
     Vector3 max = Vector3(1.0f, 1.0f, 1.0f);
 
     // 지정된 범위의 랜덤한 벡터를 저장
-    attribute->velocity = GetRandomVector3(min, max);
+    attribute->v = GetRandomVector3(min, max);
 
     D3DXVec3Normalize(
-        &attribute->velocity,
-        &attribute->velocity);
-    attribute->velocity *= 100.0f;
-    attribute->color = XColor(
+        &attribute->v,
+        &attribute->v);
+    attribute->v *= 100.0f;
+    attribute->c = XColor(
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
         1.0f);
     attribute->age = 0.0f;
-    attribute->lifeTime = 2.0f;
+    attribute->life = 2.0f;
     // 2초 동안의 수명을 가진다. 
 }
 
@@ -56,15 +56,15 @@ void cParticleExplosion::ResetParticle(Attribute* attribute)
 void cParticleExplosion::Update()
 {
     float timeDelta = g_pTimerManager->GetDeltaTime();
-    list<Attribute>::iterator i;
-    for (i = _particles.begin(); i != _particles.end(); i++)
+    list<ST_PARTICLE_ATTR>::iterator i;
+    for (i = m_particleList.begin(); i != m_particleList.end(); i++)
     {
         // 생존한 파티클만 갱신. 
         if (i->isAlive)
         {
-            i->position += i->velocity * timeDelta;
+            i->p += i->v * timeDelta;
             i->age += timeDelta;
-            if (i->age > i->lifeTime)
+            if (i->age > i->life)
             {
                 // 죽인다.
                 i->isAlive = false;

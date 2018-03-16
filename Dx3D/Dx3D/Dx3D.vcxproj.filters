@@ -195,6 +195,12 @@
     <ClInclude Include="003.Particle\cParticleExplosion.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="003.Object\cBoundingBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Particle\cParticleSnow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -321,6 +327,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Particle\cParticleExplosion.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Object\cBoundingBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Particle\cParticleSnow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,5 @@
 #pragma once
 #include "cParticle.h"
-using namespace psystem;
 
 class cParticleExplosion : public cParticle
 {
@@ -9,8 +8,8 @@ public:
     cParticleExplosion(Vector3* origin, int numParticles);	// 생성자 초기화 
     ~cParticleExplosion();
 
-    virtual void ResetParticle(Attribute* attribute) override;
+    virtual void ResetParticle(ST_PARTICLE_ATTR* attribute) override;
     virtual void Update() override;
-    void PreRender();
-    void PostRender();
+    virtual void PreRender() override;
+    virtual void PostRender() override;
 };

@@ -20,6 +20,7 @@ cMainGame::~cMainGame()
     HRESULT hr = S_OK;
 
     SAFE_DELETE(m_pExplosion);
+    SAFE_DELETE(m_pSnow);
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -56,9 +57,15 @@ void cMainGame::Setup()
     g_pMeshManager->LoadBasicMesh();
 
     g_pTextureManager->AddTexture("test", "Assets/Texture/Particle/particle_circle.png");
+    g_pTextureManager->AddTexture("snow", "Assets/Texture/Particle/particle_snow.png");
 
     m_pExplosion = new cParticleExplosion(&Vector3(0, 0, 0), 1000);
     m_pExplosion->Init("test");
+
+    cBoundingBox* box = new cBoundingBox(Vector3(-100, 0, -100), Vector3(100, 10, 100));
+    
+    m_pSnow = new cParticleSnow(box, 1000);
+    m_pSnow->Init("snow");
 }
 
 void cMainGame::Update()
@@ -124,6 +131,11 @@ void cMainGame::Update()
     {
         m_pExplosion->Update();
     }
+
+    if (m_pSnow)
+    {
+        m_pSnow->Update();
+    }
 }
 
 
@@ -139,7 +151,9 @@ void cMainGame::Render()
         hr = g_pDevice->BeginScene();
 
         hr = g_pScnManager->Render();
-        m_pExplosion->Render();
+
+        SAFE_RENDER(m_pExplosion);
+        SAFE_RENDER(m_pSnow);
 
         hr = g_pTimerManager->Render();
 
