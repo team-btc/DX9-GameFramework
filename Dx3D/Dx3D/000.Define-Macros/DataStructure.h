@@ -2,58 +2,58 @@
 #pragma region VERTEX
 typedef struct ST_PC_VERTEX
 {
-    Vector3     p;
+    Vector3     vPos;
     Color       c;
 
     static const int FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
     ST_PC_VERTEX() {}
-    ST_PC_VERTEX(Vector3 _p, Color _c) : p(_p), c(_c) {}
-} Particle;
+    ST_PC_VERTEX(Vector3 _p, Color _c) : vPos(_p), c(_c) {}
+} ST_PARTICLE;
 
 struct ST_PT_VERTEX
 {
-    Vector3     p;
+    Vector3     vPos;
     Vector2     t;
 
     static const int FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 
     ST_PT_VERTEX() {}
-    ST_PT_VERTEX(Vector3 _p, Vector2 _t) : p(_p), t(_t) {}
+    ST_PT_VERTEX(Vector3 _p, Vector2 _t) : vPos(_p), t(_t) {}
 };
 
 struct ST_PN_VERTEX
 {
-    Vector3		p;
+    Vector3		vPos;
     Vector3		n;
 
     static const int FVF = D3DFVF_XYZ | D3DFVF_NORMAL;
 
     ST_PN_VERTEX() {}
-    ST_PN_VERTEX(Vector3 _p, Vector3 _n) : p(_p), n(_n) {}
+    ST_PN_VERTEX(Vector3 _p, Vector3 _n) : vPos(_p), n(_n) {}
 };
 
 struct ST_PNT_VERTEX
 {
-    Vector3     p;
+    Vector3     vPos;
     Vector3     n;
     Vector2     t;
 
     static const int FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
 
     ST_PNT_VERTEX() {}
-    ST_PNT_VERTEX(Vector3 _p, Vector3 _n, Vector2 _t) : p(_p), n(_n), t(_t) {}
+    ST_PNT_VERTEX(Vector3 _p, Vector3 _n, Vector2 _t) : vPos(_p), n(_n), t(_t) {}
 };
 
 struct ST_RHWC_VERTEX
 {
-    Vector4     p;
+    Vector4     vPos;
     Color       c;
 
     static const int FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE;
 
     ST_RHWC_VERTEX() {}
-    ST_RHWC_VERTEX(Vector4 _p, Color _c) : p(_p), c(_c) {}
+    ST_RHWC_VERTEX(Vector4 _p, Color _c) : vPos(_p), c(_c) {}
 };
 
 using VertexPC      = ST_PC_VERTEX;
@@ -95,11 +95,11 @@ struct ST_BONE_MESH : public D3DXMESHCONTAINER
 
 struct ST_BOUNDING_SPHERE
 {
-    Vector3     p;
+    Vector3     vPos;
     float       d;
 
-    ST_BOUNDING_SPHERE() : p(0, 0, 0), d(0.0f) {}
-    ST_BOUNDING_SPHERE(Vector3 _p, float _d) : p(_p), d(_d) {}
+    ST_BOUNDING_SPHERE() : vPos(0, 0, 0), d(0.0f) {}
+    ST_BOUNDING_SPHERE(Vector3 _p, float _d) : vPos(_p), d(_d) {}
 };
 
 
@@ -114,22 +114,45 @@ struct ST_SPHERE
 // 파티클의 속성 구조체
 struct ST_PARTICLE_ATTR
 {
-    Vector3         p;          // 월드스페이스 상의 파티클 위치
-    Vector3         v;          // 파티클의 속도, 보통은 초당 이동 단위로 기록
-    Vector3         a;          // 파티클의 가속,
-    float           g;          // 중력
-    float           life;       // 파티클이 소멸 할때까지 유지되는 시간
-    float           age;        // 파티클의 현재 나이
-    XColor          c;          // 파티클의 컬러
-    XColor          fade;       // 파티클의 컬러가 시간이 흐름에 따라 퇴색하는 방법
-    bool            isAlive;    // 파티클이 생존 true, 소멸 false
+    Vector3         vPos;               //  파티클의 현재 위치
+    Vector3         vSpeed;             //  파티클의 방향 벡터
+    float           fSpeed;             //  파티클의 속력(스칼라 값)
+    Vector3         deltaAccelMin;      //  파티클 변속 최소값
+    Vector3         deltaAccelMax;      //  파티클 변속 최대값
+    Vector3         vAccel;             //  파티클의 가속
+    float           fGravity;           //  중력
+    float           fMaxLife;           //  최대 생명
+    float           fMinLife;           //  최소 생명
+    float           life;               //  파티클이 소멸 할때까지 유지되는 시간
+    float           age;                //  파티클의 현재 나이
+    XColor          color;              //  파티클의 컬러
+    XColor          originColor;
+    XColor          fadeColor;          //  파티클의 컬러가 시간이 흐름에 따라 퇴색하는 방법
+    bool            isFade;
+    bool            isAlive;            //  파티클이 생존 true, 소멸 false
+    bool            isVariableSpeed;    //  변속 가능 여부
+    bool            isLoop;             //  파티클 재활용 여부
 
     // 파티클 속성 구조체의 초기값 세팅
     ST_PARTICLE_ATTR()
     {
+        vPos = Vector3(0, 0, 0);
+        vSpeed = Vector3(0, 0, 0);
+        vAccel = Vector3(0, 0, 0);
+        deltaAccelMax = Vector3(0, 0, 0);
+        deltaAccelMin = Vector3(0, 0, 0);
         life = 0.0f;
+        fMaxLife = 0.0f;
+        fMinLife = 0.0f;
         age = 0.0f;
-        g = 0.0f;
+        fGravity = 0.0f;
+        fSpeed = 0.0f;
+        isFade = true;
         isAlive = true;
+        isVariableSpeed = true;
+        isLoop = true;
+        color = XColor(1.0f, 1.0f, 1.0f, 1.0f);
+        originColor = XColor(1.0f, 1.0f, 1.0f, 1.0f);
+        fadeColor = XColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 };

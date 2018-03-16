@@ -27,17 +27,17 @@ void cParticleSnow::ResetParticle(ST_PARTICLE_ATTR* attribute)
 {
     attribute->isAlive = true;
     // 최소점 min과 최대점 max로 정의된 상자 내의 임의 벡터를 출력, 눈송이의 위치 지정을 위해 임의의 x, y z 좌표를 얻는다. 
-    attribute->p = GetRandomVector3(m_pBoundingBox->GetMin(), m_pBoundingBox->GetMax());
+    attribute->vPos = GetRandomVector3(m_pBoundingBox->GetMin(), m_pBoundingBox->GetMax());
     // 높이 (y좌표) 는 항상 경계 상자의 최상단
-    attribute->p.y = m_pBoundingBox->GetMax().y;
+    attribute->vPos.y = m_pBoundingBox->GetMax().y;
 
     // 눈이 떨어지는 속도, 아래쪽으로 떨어지며 약간 왼쪽을 향한다. 
-    attribute->v.x = GetRandomFloat(0.0f, 1.0f) * -5.0f;
-    attribute->v.y = GetRandomFloat(0.0f, 1.0f) * -12.0f;
-    attribute->v.z = 0.0f;
+    attribute->vSpeed.x = GetRandomFloat(0.0f, 1.0f) * -5.0f;
+    attribute->vSpeed.y = GetRandomFloat(0.0f, 1.0f) * -12.0f;
+    attribute->vSpeed.z = 0.0f;
     attribute->life = 2;            //눈이 소멸되기 까지의 시간
 
-    attribute->c = D3DCOLOR_ARGB(150, 255, 255, 255); // 눈 색상 
+    attribute->color = D3DCOLOR_ARGB(150, 255, 255, 255); // 눈 색상 
 }
 
 // 파티클의 위치를 갱신하며, 시스템의 경계 상자를 벗어났는지 확인. 만약 경계 상자를 벗어났다면 해당 파티클을 초기화. 
@@ -48,10 +48,10 @@ void cParticleSnow::Update()
     for (iter = m_particleList.begin(); iter != m_particleList.end(); iter++)
     {
         // 시간과 속도의 곱으로 눈이 이동한다 
-        iter->p += iter->v * fTimeDelta;
+        iter->vPos += iter->vSpeed * fTimeDelta;
 
         // 파티클의 위치가 경계상자를 벗어났는지 확인 
-        if (m_pBoundingBox->IsPointInside(iter->p) == false)
+        if (m_pBoundingBox->IsPointInside(iter->vPos) == false)
         {
             // 경계를 벗어난 파티클을 초기화 하여 재활용함
             ResetParticle(&(*iter));

@@ -999,9 +999,9 @@ void to_json(BasicJsonType& j, T (&arr)[N])
 }
 
 template<typename BasicJsonType, typename... Args>
-void to_json(BasicJsonType& j, const std::pair<Args...>& p)
+void to_json(BasicJsonType& j, const std::pair<Args...>& vPos)
 {
-    j = {p.first, p.second};
+    j = {vPos.first, vPos.second};
 }
 
 template<typename BasicJsonType, typename Tuple, std::size_t... Idx>
@@ -1206,9 +1206,9 @@ void from_json(const BasicJsonType& j, CompatibleObjectType& obj)
     std::transform(
         inner_object->begin(), inner_object->end(),
         std::inserter(obj, obj.begin()),
-        [](typename BasicJsonType::object_t::value_type const & p)
+        [](typename BasicJsonType::object_t::value_type const & vPos)
     {
-        return value_type(p.first, p.second.template get<typename CompatibleObjectType::mapped_type>());
+        return value_type(vPos.first, vPos.second.template get<typename CompatibleObjectType::mapped_type>());
     });
 }
 
@@ -1255,9 +1255,9 @@ void from_json(const BasicJsonType& j, ArithmeticType& val)
 }
 
 template<typename BasicJsonType, typename A1, typename A2>
-void from_json(const BasicJsonType& j, std::pair<A1, A2>& p)
+void from_json(const BasicJsonType& j, std::pair<A1, A2>& vPos)
 {
-    p = {j.at(0).template get<A1>(), j.at(1).template get<A2>()};
+    vPos = {j.at(0).template get<A1>(), j.at(1).template get<A2>()};
 }
 
 template<typename BasicJsonType, typename Tuple, std::size_t... Idx>

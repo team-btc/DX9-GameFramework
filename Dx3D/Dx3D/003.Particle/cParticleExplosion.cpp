@@ -27,19 +27,19 @@ cParticleExplosion::cParticleExplosion(Vector3* origin, int numParticles)
 void cParticleExplosion::ResetParticle(ST_PARTICLE_ATTR* attribute)
 {
     attribute->isAlive = true;
-    attribute->p = m_vOriginPos;
+    attribute->vPos = m_vOriginPos;
 
     Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
     Vector3 max = Vector3(1.0f, 1.0f, 1.0f);
 
     // 지정된 범위의 랜덤한 벡터를 저장
-    attribute->v = GetRandomVector3(min, max);
+    attribute->vSpeed = GetRandomVector3(min, max);
 
     D3DXVec3Normalize(
-        &attribute->v,
-        &attribute->v);
-    attribute->v *= 100.0f;
-    attribute->c = XColor(
+        &attribute->vSpeed,
+        &attribute->vSpeed);
+    attribute->vSpeed *= 100.0f;
+    attribute->color = XColor(
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
@@ -62,7 +62,7 @@ void cParticleExplosion::Update()
         // 생존한 파티클만 갱신. 
         if (i->isAlive)
         {
-            i->p += i->v * timeDelta;
+            i->vPos += i->vSpeed * timeDelta;
             i->age += timeDelta;
             if (i->age > i->life)
             {

@@ -19,8 +19,7 @@ cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
 
-    SAFE_DELETE(m_pExplosion);
-    SAFE_DELETE(m_pSnow);
+    SAFE_DELETE(m_pParticle);
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -56,21 +55,32 @@ void cMainGame::Setup()
 
     g_pMeshManager->LoadBasicMesh();
 
-    g_pTextureManager->AddTexture("test", "Assets/Texture/Particle/particle_circle.png");
+    g_pTextureManager->AddTexture("circle", "Assets/Texture/Particle/particle_circle.png");
     g_pTextureManager->AddTexture("snow", "Assets/Texture/Particle/particle_snow.png");
+    g_pTextureManager->AddTexture("star", "Assets/Texture/Particle/particle_star.png");
+    g_pTextureManager->AddTexture("star-a", "Assets/Texture/Particle/particle_star_alpha.png");
 
-    m_pExplosion = new cParticleExplosion(&Vector3(0, 0, 0), 1000);
-    m_pExplosion->Init("test");
-
-    cBoundingBox* box = new cBoundingBox(Vector3(-100, 0, -100), Vector3(100, 10, 100));
-    
-    m_pSnow = new cParticleSnow(box, 1000);
-    m_pSnow->Init("snow");
+    float power = 1.0f;
+    m_pParticle = new cParticle(&Vector3(0, 1, 0), 1, 1000);
+    m_pParticle->Init("star-a");
+    ST_PARTICLE_ATTR attr;
+    attr.fGravity = 0.0f;
+    attr.isLoop = true;
+    attr.deltaAccelMin = Vector3(-power, -power, -power);
+    attr.deltaAccelMax = Vector3(power, power, power);
+    attr.life = 10.0f;
+    attr.fSpeed = 5.0f;
+    attr.fMinLife = 10.0f;
+    attr.fMaxLife = 15.0f;
+    attr.color = XColor(0.5f, 1.0f, 0.5f, 1.0f);
+    attr.isFade = false;
+    m_pParticle->SetGenTerm(0.1f);
+    m_pParticle->Reset(attr);
 }
 
 void cMainGame::Update()
 {
-    float speed = 5.0f;
+    float speed = 10.0f;
     if (g_pKeyManager->isStayKeyDown('Q'))
     {
         float l = m_pCamera->GetLength();
@@ -127,14 +137,9 @@ void cMainGame::Update()
         m_pCamera->Update();
     }
 
-    if (m_pExplosion)
+    if (m_pParticle)
     {
-        m_pExplosion->Update();
-    }
-
-    if (m_pSnow)
-    {
-        m_pSnow->Update();
+        m_pParticle->Update();
     }
 }
 
@@ -152,8 +157,7 @@ void cMainGame::Render()
 
         hr = g_pScnManager->Render();
 
-        SAFE_RENDER(m_pExplosion);
-        SAFE_RENDER(m_pSnow);
+        SAFE_RENDER(m_pParticle);
 
         hr = g_pTimerManager->Render();
 

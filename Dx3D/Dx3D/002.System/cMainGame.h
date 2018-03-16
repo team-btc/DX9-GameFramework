@@ -2,6 +2,7 @@
 #include "cCamera.h"
 #include "cParticleExplosion.h"
 #include "cParticleSnow.h"
+#include "cParticle.h"
 
 class cMainGame
 {
@@ -9,6 +10,7 @@ private:
     cCamera*                m_pCamera;
     cParticleExplosion*     m_pExplosion;
     cParticleSnow*          m_pSnow;
+    cParticle*              m_pParticle;
 
 public:
     cMainGame();

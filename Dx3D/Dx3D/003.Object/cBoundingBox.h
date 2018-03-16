@@ -15,6 +15,6 @@ public:
 
     void SetMin(Vector3 vMin) { m_vMin = vMin; }
     void SetMax(Vector3 vMax) { m_vMax = vMax; }
-    bool IsPointInside(Vector3 p);
+    bool IsPointInside(Vector3 vPos);
 };
 

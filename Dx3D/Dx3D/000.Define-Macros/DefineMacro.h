@@ -1,10 +1,10 @@
 #pragma once
 #pragma region DEFINE_MACRO
-#define SAFE_DELETE(p) { if (p) delete (p); (p) = NULL; }
-#define SAFE_DELETE_ARRAY(p) { if (p) delete[] (p); (p) = NULL; }
-#define SAFE_RELEASE(p) { if (p) (p)->Release(); }
-#define SAFE_DESTROY(p) { if (p) (p)->Destroy(); }
-#define SAFE_ADDREF(p) { if (p) (p)->AddRef(); }
+#define SAFE_DELETE(vPos) { if (vPos) delete (vPos); (vPos) = NULL; }
+#define SAFE_DELETE_ARRAY(vPos) { if (vPos) delete[] (vPos); (vPos) = NULL; }
+#define SAFE_RELEASE(vPos) { if (vPos) (vPos)->Release(); }
+#define SAFE_DESTROY(vPos) { if (vPos) (vPos)->Destroy(); }
+#define SAFE_ADDREF(vPos) { if (vPos) (vPos)->AddRef(); }
 
 #define SAFE_UPDATE(instance) { if (instance) { (instance)->Update(); } }
 #define SAFE_UPDATE2(instance, argument) { if (instance) { (instance)->Update(argument); } }

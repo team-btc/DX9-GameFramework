@@ -243,7 +243,7 @@ HRESULT cObjMeshLoader::LoadGeometryFromOBJ(const WCHAR* strFileName)
 
                 // OBJ format uses 1-based arrays
                 InFile >> iPosition;
-                vertex.p = Positions[iPosition - 1];
+                vertex.vPos = Positions[iPosition - 1];
 
                 if ('/' == InFile.peek())
                 {
