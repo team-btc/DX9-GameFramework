@@ -5,7 +5,6 @@
 cMainGame::cMainGame()
     : m_pCamera(NULL)
 {
-    SetCursorPos(W_WIDTH / 2, W_HEIGHT / 2);
     HRESULT hr = S_OK;
     g_pLogManager->Setup("\\Log\\");
     hr = g_pDbManager->Setup();
@@ -19,6 +18,8 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
+
+    SAFE_DELETE(m_pExplosion);
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -53,6 +54,11 @@ void cMainGame::Setup()
     g_pAutoReleasePool->AddObject(m_pCamera);
 
     g_pMeshManager->LoadBasicMesh();
+
+    g_pTextureManager->AddTexture("test", "Assets/Texture/Particle/particle_circle.png");
+
+    m_pExplosion = new cParticleExplosion(&Vector3(0, 0, 0), 1000);
+    m_pExplosion->Init("test");
 }
 
 void cMainGame::Update()
@@ -81,6 +87,7 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('R'))
     {
+        m_pExplosion->Reset();
     }
 
     if (g_pKeyManager->isStayKeyDown('A'))
@@ -112,6 +119,11 @@ void cMainGame::Update()
     {
         m_pCamera->Update();
     }
+
+    if (m_pExplosion)
+    {
+        m_pExplosion->Update();
+    }
 }
 
 
@@ -127,8 +139,7 @@ void cMainGame::Render()
         hr = g_pDevice->BeginScene();
 
         hr = g_pScnManager->Render();
-
-        m_pFloor->DrawSubset(0);
+        m_pExplosion->Render();
 
         hr = g_pTimerManager->Render();
 

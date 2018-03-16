@@ -105,12 +105,6 @@
     <ClInclude Include="001.Manager\000.System\cCameraManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cParticle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="cParticleExplosion.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="005.UI\cUIButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -195,6 +189,12 @@
     <ClInclude Include="003.Object\cMeshLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="002.System\cParticle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Particle\cParticleExplosion.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -246,12 +246,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\000.System\cCameraManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cParticle.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cParticleExplosion.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="005.UI\cUIButton.cpp">
@@ -321,6 +315,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Object\cMeshLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.System\cParticle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Particle\cParticleExplosion.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

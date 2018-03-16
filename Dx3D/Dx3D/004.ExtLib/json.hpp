@@ -11195,11 +11195,11 @@ class basic_json
 
         if (JSON_UNLIKELY(not is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name())));
+            JSON_THROW(type_error::create(312, "cannot use Update() with " + std::string(type_name())));
         }
         if (JSON_UNLIKELY(not j.is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(j.type_name())));
+            JSON_THROW(type_error::create(312, "cannot use Update() with " + std::string(j.type_name())));
         }
 
         for (auto it = j.begin(); it != j.end(); ++it)
@@ -11239,7 +11239,7 @@ class basic_json
 
         if (JSON_UNLIKELY(not is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name())));
+            JSON_THROW(type_error::create(312, "cannot use Update() with " + std::string(type_name())));
         }
 
         // check if range iterators belong to the same JSON object

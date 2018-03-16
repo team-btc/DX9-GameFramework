@@ -7,7 +7,7 @@ cParticleExplosion::cParticleExplosion()
 cParticleExplosion::~cParticleExplosion()
 {}
 
-cParticleExplosion::cParticleExplosion(D3DXVECTOR3 * origin, int numParticles)
+cParticleExplosion::cParticleExplosion(Vector3* origin, int numParticles)
 {
     m_vOriginPos = *origin;
     _size = 0.9f;
@@ -16,19 +16,21 @@ cParticleExplosion::cParticleExplosion(D3DXVECTOR3 * origin, int numParticles)
     _vbBatchSize = 512;
 
     for (int i = 0; i < numParticles; i++)
-        addParticle();
+    {
+        AddParticle();
+    }
 }
 
 // 시스템 원천의 파티클을 초기화하고 구체 내에서 임의의 속도를 만들며,
 // 시스템 내의 파티클들은 임의의 컬러를 부여.
 // 각 파티클들이 2초 동안 유지하도록 수명을 지정. 
-void cParticleExplosion::resetParticle(Attribute * attribute)
+void cParticleExplosion::ResetParticle(Attribute* attribute)
 {
     attribute->isAlive = true;
     attribute->position = m_vOriginPos;
 
-    D3DXVECTOR3 min = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-    D3DXVECTOR3 max = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+    Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
+    Vector3 max = Vector3(1.0f, 1.0f, 1.0f);
 
     // 지정된 범위의 랜덤한 벡터를 저장
     attribute->velocity = GetRandomVector3(min, max);
@@ -37,7 +39,7 @@ void cParticleExplosion::resetParticle(Attribute * attribute)
         &attribute->velocity,
         &attribute->velocity);
     attribute->velocity *= 100.0f;
-    attribute->color = D3DXCOLOR(
+    attribute->color = XColor(
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
@@ -51,9 +53,10 @@ void cParticleExplosion::resetParticle(Attribute * attribute)
 // 이 시스템은 죽은 파티클을 제거하지 않는다.
 // 이것은 새로운 불꽃을 만들 때 기존의 죽은 Firework 시스템을 재활용할 수 있기 때문.
 // 즉, 파티클을 만들고 제거하는 번거로운 과정을 최소화. 
-void cParticleExplosion::update(float timeDelta)
+void cParticleExplosion::Update()
 {
-    std::list<Attribute>::iterator i;
+    float timeDelta = g_pTimerManager->GetDeltaTime();
+    list<Attribute>::iterator i;
     for (i = _particles.begin(); i != _particles.end(); i++)
     {
         // 생존한 파티클만 갱신. 
@@ -61,9 +64,11 @@ void cParticleExplosion::update(float timeDelta)
         {
             i->position += i->velocity * timeDelta;
             i->age += timeDelta;
-            if (i->age >i->lifeTime)
-                // 죽인다. 
+            if (i->age > i->lifeTime)
+            {
+                // 죽인다.
                 i->isAlive = false;
+            }
         }
     }
 }
@@ -73,10 +78,10 @@ void cParticleExplosion::update(float timeDelta)
 // 다른 블렌드 인수가 이용.
 // 깊이 버퍼로의 쓰기도 허용되지 않음.
 // 디폴트 블렌드 인수와 쓰기 여부를 변경하고자 한다면
-// pSystem::preRender와 pSystem::postRender 메서드를 오버라이드하면 됨. 
-void cParticleExplosion::preRender()
+// pSystem::PreRender와 pSystem::PostRender 메서드를 오버라이드하면 됨. 
+void cParticleExplosion::PreRender()
 {
-    cParticle::preRender();
+    cParticle::PreRender();
     // 부모 버전의 메서드를 호출. 
     g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
     g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
@@ -84,8 +89,8 @@ void cParticleExplosion::preRender()
     g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
 }
 
-void cParticleExplosion::postRender()
+void cParticleExplosion::PostRender()
 {
-    cParticle::postRender();
+    cParticle::PostRender();
     g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
 }

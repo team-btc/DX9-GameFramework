@@ -1,6 +1,6 @@
 #pragma once
 #pragma region VERTEX
-struct ST_PC_VERTEX
+typedef struct ST_PC_VERTEX
 {
     Vector3     p;
     Color       c;
@@ -9,7 +9,7 @@ struct ST_PC_VERTEX
 
     ST_PC_VERTEX() {}
     ST_PC_VERTEX(Vector3 _p, Color _c) : p(_p), c(_c) {}
-};
+} Particle;
 
 struct ST_PT_VERTEX
 {

@@ -3,25 +3,17 @@
 // 네임스페이스 내의 구조체 
 namespace psystem
 {
-    // 파티클의 위치와 컬러를 표현하는 구조체 
-    struct Particle
-    {
-        D3DXVECTOR3         position;   // 위치 
-        D3DCOLOR            color;      // 색상
-        static const DWORD  FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;  // 유연한 버텍스 포맷
-    };
-
     // 파티클의 속성 구조체
     struct Attribute
     {
-        D3DXVECTOR3         position;       // 월드스페이스 상의 파티클 위치
-        D3DXVECTOR3         velocity;       // 파티클의 속도, 보통은 초당 이동 단위로 기록
-        D3DXVECTOR3         acceleration;   // 파티클의 가속,
-        float               lifeTime;       // 파티클이 소멸 할때까지 유지되는 시간
-        float               age;            // 파티클의 현재 나이
-        D3DXCOLOR           color;          // 파티클의 컬러
-        D3DXCOLOR           colorFade;      // 파티클의 컬러가 시간이 흐름에 따라 퇴색하는 방법
-        bool                isAlive;        // 파티클이 생존 true, 소멸 false
+        Vector3         position;       // 월드스페이스 상의 파티클 위치
+        Vector3         velocity;       // 파티클의 속도, 보통은 초당 이동 단위로 기록
+        Vector3         acceleration;   // 파티클의 가속,
+        float           lifeTime;       // 파티클이 소멸 할때까지 유지되는 시간
+        float           age;            // 파티클의 현재 나이
+        XColor          color;          // 파티클의 컬러
+        XColor          colorFade;      // 파티클의 컬러가 시간이 흐름에 따라 퇴색하는 방법
+        bool            isAlive;        // 파티클이 생존 true, 소멸 false
 
         // 파티클 속성 구조체의 초기값 세팅
         Attribute()
@@ -45,12 +37,12 @@ using namespace psystem;
 class cParticle
 {
 protected:
-    D3DXVECTOR3             m_vOriginPos;       // 시스템 내에서 파티클이 시작되는 곳.
+    Vector3                 m_vOriginPos;       // 시스템 내에서 파티클이 시작되는 곳.
     float                   _emitRate;          // 시스템에 새로운 파티클이 추가되는 비율. 보통은 초당 파티클 수로 기록.
     float                   _size;              // 시스템 내 모든 파티클의 크기
 
-    LPTEXTURE9			    m_vTexture;         // 시스템이 사용할 텍스쳐 
-    IDirect3DVertexBuffer9* m_vertexBuffer;     // 시스템이 사용할 버텍스 버퍼
+    LPTEXTURE9              m_vTexture;         // 시스템이 사용할 텍스쳐 
+    LPVTXBUFFER9            m_vertexBuffer;     // 시스템이 사용할 버텍스 버퍼
 
     list<Attribute>         _particles;         // 시스템 내 파티클 속성의 리스트.
                                                 // 우리는 파티클을 만들고 제거하고 갱신하는 데 이 리스트를 이용.
@@ -72,32 +64,32 @@ protected:
 public:
     cParticle();                                // 생성자 
     virtual ~cParticle();                       // 소멸자 (버텍스 버퍼, 텍스쳐를 해제) 
-    virtual bool init(string texFileName);      // init - 포인트 스프라이트를 저장하기 위한 버텍스 버퍼를 만들고 텍스쳐를 설정
-    virtual void reset();                       // 시스템 내의 모든 파티클 속성을 리셋
+    virtual bool Init(string texFileName);      // init - 포인트 스프라이트를 저장하기 위한 버텍스 버퍼를 만들고 텍스쳐를 설정
+    virtual void Reset();                       // 시스템 내의 모든 파티클 속성을 리셋
 
     // 시스템에 파티클을 추가.
-    virtual void addParticle();
+    virtual void AddParticle();
 
     // 렌더링에 앞서 지정해야 할 초기 렌더 상태를 지정.
     // 이 메서드는 시스템에 따라 달라질 수 있으므로 가상 함수로 선언.
-    virtual void preRender();
+    virtual void PreRender();
 
     // 시스템 내의 모든 파티클들을 렌더링
-    virtual void render();
+    virtual void Render();
 
     // 특정 파티클 시스템이 지정했을 수 있는 렌더 상태를 복구하는 데 이용.
     // 이 메서드는 시스템에 따라 달라질 수 있으므로 가상 메서드로 선언.
-    virtual void postRender();
+    virtual void PostRender();
 
     // 현재 시스템에 파티클이 없는 경우 true 리턴.
-    bool isEmpty();
+    bool IsEmpty();
 
     // 시스템 내의 파티클이 모두 죽은 경우 true 리턴.
-    bool isDead();
+    bool IsDead();
 
-    virtual void resetParticle(Attribute* attribute) PURE;   // 순수 가상함수
-    virtual void update(float timeDelta) PURE;   // 시스템 내의 모든 파티클들을 갱신.
+    virtual void ResetParticle(Attribute* attribute) PURE;   // 순수 가상함수
+    virtual void Update() PURE;   // 시스템 내의 모든 파티클들을 갱신.
 protected:
     // 속성 리스트 _particle을 검색하여 죽은 파티클을 리스트에서 제거.
-    virtual void removeDeadParticles();
+    virtual void RemoveDeadParticles();
 };
