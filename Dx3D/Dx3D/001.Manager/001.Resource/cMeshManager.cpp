@@ -32,12 +32,24 @@ void cMeshManager::LoadMesh(string szKey, string szPath)
 {
     LPMESH* mesh = new LPMESH;
     D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
-    m_mapBasicMesh.insert(make_pair(szKey, mesh));
+    m_mapMesh.insert(make_pair(szKey, mesh));
 }
 
 void cMeshManager::AddMesh(string szKey, LPMESH* mesh)
 {
-    m_mapBasicMesh.insert(make_pair(szKey, mesh));
+    m_mapMesh.insert(make_pair(szKey, mesh));
+}
+
+LPMESH cMeshManager::GetMesh(string szKey)
+{
+    LPMESH mesh = NULL;
+
+    if (m_mapMesh.find(szKey) != m_mapMesh.end())
+    {
+        mesh = *m_mapMesh[szKey];
+    }
+
+    return mesh;
 }
 
 LPMESH cMeshManager::GetBasicMesh(string szKey)
@@ -56,7 +68,7 @@ void cMeshManager::LoadSkinnedMesh()
 {
 }
 
-cSkinnedMesh* cMeshManager::GetMesh(string szKey)
+cSkinnedMesh* cMeshManager::GetSkinnedMesh(string szKey)
 {
     auto iter = m_mapSkinnedMesh.find(szKey);
     if (iter != m_mapSkinnedMesh.end())
@@ -69,7 +81,7 @@ cSkinnedMesh* cMeshManager::GetMesh(string szKey)
     }
 }
 
-cSkinnedMesh* cMeshManager::GetMesh(string szKey, string szDirectory, string szFilepath)
+cSkinnedMesh* cMeshManager::GetSkinnedMesh(string szKey, string szDirectory, string szFilepath)
 {
     auto iter = m_mapSkinnedMesh.find(szKey);
     if (iter == m_mapSkinnedMesh.end())
@@ -91,6 +103,12 @@ void cMeshManager::Destroy()
     {
         SAFE_RELEASE(*iter->second);
         iter = m_mapBasicMesh.erase(iter);
+    }
+
+    for (auto iter = m_mapMesh.begin(); iter != m_mapMesh.end();)
+    {
+        SAFE_RELEASE(*iter->second);
+        iter = m_mapMesh.erase(iter);
     }
 
     for (auto iter = m_mapSkinnedMesh.begin(); iter != m_mapSkinnedMesh.end();)

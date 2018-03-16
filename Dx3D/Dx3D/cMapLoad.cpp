@@ -27,7 +27,6 @@ cMapLoad::~cMapLoad()
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
-    SAFE_RELEASE(m_pSphereMesh);
 }
 
 HRESULT cMapLoad::Start()
@@ -44,17 +43,16 @@ HRESULT cMapLoad::Start()
 
         // 현재 맵 셋팅
         m_pGameMap = new cGameMap;
-        m_pGameMap->SetCurrMapMesh(m_stMapInfo->pTerrainMesh);
-        m_pGameMap->SetCurrObstacleMesh(m_stMapInfo->vecObstacleMesh);
+        m_pGameMap->SetCurrMapInfo(m_stMapInfo);
 
         // 텍스쳐 쉐이더 셋팅
         m_pTextureShader = new cTextureShader;
 
         m_pTextureShader->SetMesh(m_stMapInfo->pTerrainMesh);
-        m_pTextureShader->SetBGTexture(m_stMapInfo->pTerBGTexture, m_stMapInfo->fBGTexDensity);
-        m_pTextureShader->SetTexture1(m_stMapInfo->pTerTexture1, m_stMapInfo->fTex1Density);
-        m_pTextureShader->SetTexture2(m_stMapInfo->pTerTexture2, m_stMapInfo->fTex2Density);
-        m_pTextureShader->SetTexture3(m_stMapInfo->pTerTexture3, m_stMapInfo->fTex3Density);
+        m_pTextureShader->SetBGTexture(m_stMapInfo->arrTextureInfo[0].pTexture, m_stMapInfo->arrTextureInfo[0].fDensity);
+        m_pTextureShader->SetTexture1(m_stMapInfo->arrTextureInfo[1].pTexture, m_stMapInfo->arrTextureInfo[1].fDensity);
+        m_pTextureShader->SetTexture2(m_stMapInfo->arrTextureInfo[2].pTexture, m_stMapInfo->arrTextureInfo[2].fDensity);
+        m_pTextureShader->SetTexture3(m_stMapInfo->arrTextureInfo[3].pTexture, m_stMapInfo->arrTextureInfo[3].fDensity);
         m_pTextureShader->SetAlphaDraw(m_stMapInfo->pTextureMap);
 
         // 스카이박스 쉐이더 셋팅
@@ -71,7 +69,8 @@ HRESULT cMapLoad::Start()
                 m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
         }
 
-        D3DXCreateSphere(g_pDevice, 1, 10, 10, &m_pSphereMesh, NULL);
+        // 플레이어 대용 구
+        m_pSphereMesh = g_pMeshManager->GetBasicMesh("sphere");
     }
 
     // 라이트
@@ -103,8 +102,10 @@ HRESULT cMapLoad::Update()
         cRay ray;
         ray.m_vOrg = m_vSpherePos;
         ray.m_vDir = m_vDirection;
-        // 정면에 장애물이 없으면
-        if (m_pGameMap->CheckObstacle(ray) == false)
+        // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
+        float fDist = FLT_MAX;
+        if (m_pGameMap->CheckObstacle(fDist, ray) == false
+            || fDist > 3.0f)
         {
             m_vSpherePos += m_vDirection;
         }
@@ -114,8 +115,11 @@ HRESULT cMapLoad::Update()
         cRay ray;
         ray.m_vOrg = m_vSpherePos;
         ray.m_vDir = -m_vDirection;
-        // 후면에 장애물이 없으면
-        if (m_pGameMap->CheckObstacle(ray) == false)
+
+        // 후면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
+        float fDist = FLT_MAX;
+        if (m_pGameMap->CheckObstacle(fDist, ray) == false
+            || fDist > 3.0f)
         {
             m_vSpherePos -= m_vDirection;
         }
@@ -124,6 +128,18 @@ HRESULT cMapLoad::Update()
     // 위치 체크
     m_pGameMap->GetHeight(m_vSpherePos);
 
+    // 이벤트 체크
+    string szEventName = "";
+    if (m_pGameMap->CheckEvent(szEventName, m_vSpherePos))
+    {
+        // 이벤트 발동
+    }
+#ifdef _DEBUG
+
+    //g_pLogManager->WriteLog(EL_INFO, szEventName);
+
+#endif // _DEBUG
+    
     Matrix4 matR, matT;
     D3DXMatrixRotationY(&matR, m_fRotY);
     D3DXMatrixTranslation(&matT, m_vSpherePos.x, m_vSpherePos.y, m_vSpherePos.z);
@@ -165,8 +181,11 @@ HRESULT cMapLoad::Render()
     }
 
     // 구 출력
-    g_pDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
-    m_pSphereMesh->DrawSubset(0);
+    if (m_pSphereMesh)
+    {
+        g_pDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
+        m_pSphereMesh->DrawSubset(0);
+    }
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
@@ -180,10 +199,16 @@ HRESULT cMapLoad::Render()
         m_pWaveShader->Render(vP);
     }
 
-    g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
+    //g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
+    //g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
 
-    // 장애물 출력
+#ifdef _DEBUG
+
+    // 장애물, 이벤트 트랩 출력
     m_pGameMap->RendObstacle();
+    m_pGameMap->RendEventTrap();
+
+#endif // _DEBUG
 
     return S_OK;
 }

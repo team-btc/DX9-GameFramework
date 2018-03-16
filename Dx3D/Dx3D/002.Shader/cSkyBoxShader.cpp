@@ -8,7 +8,7 @@ cSkyBoxShader::cSkyBoxShader()
     g_pShaderManager->AddEffect("SkyBox", SHADER_PATH + (string)"FX/SkyBox.fx");
     m_pSkyBoxShader = g_pShaderManager->GetEffect("SkyBox");
     g_pMeshManager->LoadMesh("Box", SHADER_PATH + (string)"Model/Box.x");
-    m_pMesh = g_pMeshManager->GetBasicMesh("Box");
+    m_pMesh = g_pMeshManager->GetMesh("Box");
 }
 
 

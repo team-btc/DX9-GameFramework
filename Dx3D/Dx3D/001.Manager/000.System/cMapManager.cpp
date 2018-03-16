@@ -16,7 +16,7 @@ void cMapManager::SetCurrMap(string szKey)
     m_szCurrMapKey = szKey;
 }
 
-void cMapManager::SetMapInfo(string szKey, ST_MAP* stmap)
+void cMapManager::SetMapInfo(string szKey, ST_MAP_INFO* stmap)
 {
     m_mapMapInfo[szKey] = stmap;
 
@@ -24,9 +24,9 @@ void cMapManager::SetMapInfo(string szKey, ST_MAP* stmap)
     SetCurrMap(szKey);
 }
 
-ST_MAP* cMapManager::GetCurrMapInfo()
+ST_MAP_INFO* cMapManager::GetCurrMapInfo()
 {
-    ST_MAP* stMap = NULL;
+    ST_MAP_INFO* stMap = NULL;
 
     if (m_mapMapInfo.find(m_szCurrMapKey) != m_mapMapInfo.end())
     {

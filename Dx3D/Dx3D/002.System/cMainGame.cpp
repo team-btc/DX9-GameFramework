@@ -14,6 +14,7 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
+    g_pMeshManager->LoadBasicMesh();
     
     g_pScnManager->Setup();
 }
@@ -22,8 +23,6 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
-
-    m_pMesh->Release();
 
     g_pScnManager->Destroy();
 
@@ -55,8 +54,6 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
-
-    D3DXCreateSphere(g_pDevice, 10, 10, 10, &m_pMesh, NULL);
 
     cMapLoad* map = new cMapLoad;
 
@@ -96,11 +93,6 @@ void cMainGame::Render()
         hr = g_pTimerManager->Render();
 
         hr = g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-
-        if (m_pMesh)
-        {
-            hr = m_pMesh->DrawSubset(0);
-        }
 
         g_pScnManager->Render();
 

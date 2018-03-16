@@ -9,7 +9,7 @@ class cSkyBoxShader;
 class cMapLoad : public iSceneObject
 {
 private:
-    ST_MAP*             m_stMapInfo;
+    ST_MAP_INFO*        m_stMapInfo;
 
     cGameMap*           m_pGameMap;
 

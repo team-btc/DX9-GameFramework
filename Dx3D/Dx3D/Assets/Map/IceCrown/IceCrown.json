@@ -859,6 +859,20 @@
             ]
         }
     ],
+    "EVENT": [
+        {
+            "EVENT_NAME": "startpos",
+            "EVENT_POSITION_X": 255.502563476563,
+            "EVENT_POSITION_Y": 82.3549957275391,
+            "EVENT_POSITION_Z": 453.874572753906
+        },
+        {
+            "EVENT_NAME": "to-dungeon",
+            "EVENT_POSITION_X": 257.057434082031,
+            "EVENT_POSITION_Y": 95.2875366210938,
+            "EVENT_POSITION_Z": 383.043884277344
+        }
+    ],
     "OBJECT_TAB_SETTING": {
         "OBJECT_TAB_BLOCK_MAKE_NUM": 105,
         "OBJECT_TAB_OBJECT_MAKE_NUM": 100
@@ -898,10 +912,5 @@
         "transparent": 0.0,
         "uvspeed": 0.0,
         "waveheight": 0.0
-    },
-    "startPos": {
-        "x": 256.0,
-        "y": 128.0,
-        "z": 500.0
     }
 }

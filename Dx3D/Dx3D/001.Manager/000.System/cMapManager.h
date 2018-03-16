@@ -7,17 +7,17 @@ class cMapManager
     SINGLETON(cMapManager);
 
 private:
-    map<string, ST_MAP*>            m_mapMapInfo;
+    map<string, ST_MAP_INFO*>            m_mapMapInfo;
 
     string                          m_szCurrMapKey;
 
 public:
     // == ╪бем ==
-    void SetMapInfo(string szKey, ST_MAP* stmap);
+    void SetMapInfo(string szKey, ST_MAP_INFO* stmap);
     void SetCurrMap(string szKey);
 
     // == ╟ыем ==
-    ST_MAP* GetCurrMapInfo();
+    ST_MAP_INFO* GetCurrMapInfo();
     bool IsLoadMapInfo(string szKey);
 
     void Destroy();

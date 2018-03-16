@@ -11,7 +11,7 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     , m_pEffect(NULL)
     , m_vPosition(0, 0, 0)
 {
-    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey, szFolder, szFilename);
+    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey, szFolder, szFilename);
 
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
     m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;

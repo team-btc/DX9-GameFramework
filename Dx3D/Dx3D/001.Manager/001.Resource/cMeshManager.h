@@ -11,6 +11,7 @@ class cMeshManager
     
 private:
     map<string, LPMESH*>        m_mapBasicMesh;
+    map<string, LPMESH*>        m_mapMesh;
     map<string, cSkinnedMesh*>  m_mapSkinnedMesh;
 
 public:
@@ -19,10 +20,11 @@ public:
 
     void LoadMesh(string szKey, string szPath);
     void AddMesh(string szKey, LPMESH* mesh);
+    LPMESH GetMesh(string szKey);
 
     void LoadSkinnedMesh();
-    cSkinnedMesh* GetMesh(string szKey);
-    cSkinnedMesh* GetMesh(string szKey, string szDirectory, string szFilepath);
+    cSkinnedMesh* GetSkinnedMesh(string szKey);
+    cSkinnedMesh* GetSkinnedMesh(string szKey, string szDirectory, string szFilepath);
     void Destroy();
 };
 

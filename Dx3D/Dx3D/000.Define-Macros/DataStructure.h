@@ -111,45 +111,55 @@ struct ST_SPHERE
     bool        isRender;
 };
 
-struct ST_MAP
+struct ST_TEXTURE_INFO
 {
-    // 플레이어 시작위치
-    Vector3             vStartPos;
+    LPTEXTURE9          pTexture;
+    float               fDensity;
+
+    ST_TEXTURE_INFO() : pTexture(NULL) {}
+};
+
+struct ST_EVENT_INFO
+{
+    string              szName;
+    Vector3             vPos;
+    float               fRadius;
+};
+
+struct ST_MAP_INFO
+{
+    // 플레이어 시작 위치
+    Vector3                 vStartPos;
 
     // 지형 매쉬
-    LPMESH              pTerrainMesh;
+    LPMESH                  pTerrainMesh;
 
     // 텍스쳐 밀도 PNG
-    LPTEXTURE9          pTextureMap;
+    LPTEXTURE9              pTextureMap;
 
     // 텍스쳐
-    LPTEXTURE9          pTerBGTexture;
-    float               fBGTexDensity;
-    LPTEXTURE9          pTerTexture1;
-    float               fTex1Density;
-    LPTEXTURE9          pTerTexture2;
-    float               fTex2Density;
-    LPTEXTURE9          pTerTexture3;
-    float               fTex3Density;
+    ST_TEXTURE_INFO         arrTextureInfo[4];
 
     // 물
-    LPMESH              pWaterMesh;
-    LPTEXTURE9          pWaterTexture;
-    bool                isEnableWater;
-    float               fWaterDensity;
-    float               fWaterHeight;
-    float               fWaterUVSpeed;
-    float               fWaterWaveHeight;
-    float               fWaterHeightSpeed;
-    float               fWaterfrequency;
-    float               fWaterTransparent;
+    LPMESH                  pWaterMesh;
+    LPTEXTURE9              pWaterTexture;
+    bool                    isEnableWater;
+    float                   fWaterDensity;
+    float                   fWaterHeight;
+    float                   fWaterUVSpeed;
+    float                   fWaterWaveHeight;
+    float                   fWaterHeightSpeed;
+    float                   fWaterfrequency;
+    float                   fWaterTransparent;
 
     // 하늘
-    LPCUBETEXTURE9      pSkyTexture;
+    LPCUBETEXTURE9          pSkyTexture;
 
     // 장애물
-    vector<LPMESH>      vecObstacleMesh;
+    LPMESH                  pObstacleMesh;
 
-    ST_MAP() : pTerrainMesh(NULL), pTerTexture1(NULL), pTerTexture2(NULL), pTerTexture3(NULL),
-        pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL) {}
+    // 이벤트 트랩
+    vector<ST_EVENT_INFO>   vecEventInfo;
+
+    ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {}
 };
