@@ -212,8 +212,6 @@
     <ClInclude Include="001.Manager\000.System\cMapManager.h" />
     <ClInclude Include="cGameMap.h" />
     <ClInclude Include="cMapLoad.h" />
-    <ClInclude Include="cParticle.h" />
-    <ClInclude Include="cParticleExplosion.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Particle\cParticleExplosion.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
@@ -269,8 +267,6 @@
     <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
     <ClCompile Include="cGameMap.cpp" />
     <ClCompile Include="cMapLoad.cpp" />
-    <ClCompile Include="cParticle.cpp" />
-    <ClCompile Include="cParticleExplosion.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Particle\cParticleExplosion.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />

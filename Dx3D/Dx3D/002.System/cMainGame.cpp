@@ -66,7 +66,11 @@ void cMainGame::Setup()
     g_pScnManager->AddScene("map", map);
     g_pScnManager->ChangeScene("map");
 
-    g_pMeshManager->LoadBasicMesh();
+    // 카메라 타겟 설정
+    if (m_pCamera)
+    {
+        m_pCamera->Update(&g_pMapManager->GetCurrMapInfo()->vStartPos);
+    }
 
     g_pTextureManager->AddTexture("test", "Assets/Texture/Particle/particle_circle.png");
     g_pTextureManager->AddTexture("snow", "Assets/Texture/Particle/particle_snow.png");
@@ -78,63 +82,6 @@ void cMainGame::Setup()
     
     m_pSnow = new cParticleSnow(box, 1000);
     m_pSnow->Init("snow");
-}
-
-void cMainGame::Update()
-{
-    float speed = 5.0f;
-    if (g_pKeyManager->isStayKeyDown('Q'))
-    {
-        float l = m_pCamera->GetLength();
-        l -= speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetLength(l);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('W'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.x -= speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('E'))
-    {
-        float l = m_pCamera->GetLength();
-        l += speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetLength(l);
-    }
-
-    if (g_pKeyManager->isOnceKeyDown('R'))
-    {
-        m_pExplosion->Reset();
-    }
-
-    if (g_pKeyManager->isStayKeyDown('A'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.y -= speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('S'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.x += speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetRotation(r);
-    }
-
-    if (g_pKeyManager->isStayKeyDown('D'))
-    {
-        Vector3 r = m_pCamera->GetRotation();
-        r.y += speed * g_pTimerManager->GetDeltaTime();
-        m_pCamera->SetRotation(r);
-    }
-
-    // 카메라 타겟 설정
-    if (m_pCamera)
-    {
-        m_pCamera->Update(&g_pMapManager->GetCurrMapInfo()->vStartPos);
-    }
 }
 
 void cMainGame::Update()
@@ -156,7 +103,6 @@ void cMainGame::Update()
         m_pSnow->Update();
     }
 }
-
 
 void cMainGame::Render()
 {

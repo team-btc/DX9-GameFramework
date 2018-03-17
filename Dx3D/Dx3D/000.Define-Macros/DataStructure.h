@@ -111,7 +111,6 @@ struct ST_SPHERE
     bool        isRender;
 };
 
-<<<<<<< HEAD
 struct ST_TEXTURE_INFO
 {
     LPTEXTURE9          pTexture;
@@ -163,7 +162,7 @@ struct ST_MAP_INFO
     vector<ST_EVENT_INFO>   vecEventInfo;
 
     ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {}
-}
+};
 
 // 파티클의 속성 구조체
 struct ST_PARTICLE_ATTR

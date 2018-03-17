@@ -13,14 +13,16 @@ cMeshManager::~cMeshManager()
 
 HRESULT cMeshManager::LoadBasicMesh()
 {
-    LPMESH mesh;
-    D3DXCreateBox(g_pDevice, 1.0f, 1.0f, 1.0f, &mesh, NULL);
+    LPMESH* mesh = new LPMESH;
+    D3DXCreateBox(g_pDevice, 1.0f, 1.0f, 1.0f, mesh, NULL);
     m_mapBasicMesh.insert(make_pair("cube", mesh));
 
-    D3DXCreateSphere(g_pDevice, 1.0f, 10, 10, &mesh, NULL);
+    mesh = new LPMESH;
+    D3DXCreateSphere(g_pDevice, 1.0f, 10, 10, mesh, NULL);
     m_mapBasicMesh.insert(make_pair("sphere", mesh));
 
-    D3DXCreateTorus(g_pDevice, 1.0f - D3DX_16F_EPSILON, 1.0f, 10, 10, &mesh, NULL);
+    mesh = new LPMESH;
+    D3DXCreateTorus(g_pDevice, 1.0f - D3DX_16F_EPSILON, 1.0f, 10, 10, mesh, NULL);
     m_mapBasicMesh.insert(make_pair("torus", mesh));
 
     return S_OK;
