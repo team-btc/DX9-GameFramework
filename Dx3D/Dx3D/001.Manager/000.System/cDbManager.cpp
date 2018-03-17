@@ -17,12 +17,12 @@ HRESULT cDbManager::Setup()
     return S_OK;
     m_pDatabase = new cAdo;
 
-    if (!m_pDatabase->Connect(".\\SQLEXPRESS", "fire", "guest"))
-    {
-#ifdef _DEBUG
-        cout << "DB connection failed" << endl;
-#endif // _DEBUG
-    }
+//    if (!m_pDatabase->Connect(".\\SQLEXPRESS", "fire", "guest"))
+//    {
+//#ifdef _DEBUG
+//        cout << "DB connection failed" << endl;
+//#endif // _DEBUG
+//    }
 
     return S_OK;
 }

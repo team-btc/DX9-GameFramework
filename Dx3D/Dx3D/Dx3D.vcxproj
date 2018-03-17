@@ -215,6 +215,14 @@
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Particle\cParticleExplosion.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
+    <ClInclude Include="003.Object\cCharacterObject.h" />
+    <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
+    <ClInclude Include="cDbManager.h" />
+    <ClInclude Include="002.System\cMonster.h" />
+    <ClInclude Include="cNonPlayer.h" />
+    <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cParticleExplosion.h" />
+    <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -270,6 +278,14 @@
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Particle\cParticleExplosion.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
+    <ClCompile Include="003.Object\cCharacterObject.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp" />
+    <ClCompile Include="cDbManager.cpp" />
+    <ClCompile Include="002.System\cMonster.cpp" />
+    <ClCompile Include="cNonPlayer.cpp" />
+    <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cParticleExplosion.cpp" />
+    <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

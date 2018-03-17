@@ -2,6 +2,9 @@
 #include "cMainGame.h"
 #include "cCamera.h"
 #include "cMapLoad.h"
+#include "cPlayer.h"
+#include "cMonster.h"
+#include "cFrustum.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -16,11 +19,18 @@ cMainGame::cMainGame()
     g_pMeshManager->LoadBasicMesh();
     
     g_pScnManager->Setup();
+
+    g_pMeshManager->LoadSkinnedMesh();
+    g_pMeshManager->LoadJSON();
+    g_pCharacterManager->Setup();
 }
 
 
 cMainGame::~cMainGame()
 {
+    SAFE_RELEASE(m_pSphere);
+    SAFE_RELEASE(m_pTerain);
+
     HRESULT hr = S_OK;
 
     g_pScnManager->Destroy();
@@ -41,7 +51,8 @@ cMainGame::~cMainGame()
     g_pMapManager->Destroy();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
-
+    g_pCharacterManager->Destroy();
+    
     if (hr != S_OK)
     {
         assert(false && _TEXT("매니저 Destroy에 실패했음."));
@@ -53,10 +64,6 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    LIGHT9 l = g_pLightManager->InitDirectional(&Vector3(1, -1, 1), &D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-    g_pDevice->SetLight(0, &l);
-    g_pDevice->LightEnable(0, true);
-
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
@@ -66,41 +73,52 @@ void cMainGame::Setup()
     g_pScnManager->AddScene("map", map);
     g_pScnManager->ChangeScene("map");
 
-    // 카메라 타겟 설정
-    if (m_pCamera)
+    m_pFrustum = new cFrustum;
+    g_pAutoReleasePool->AddObject(m_pFrustum);
+    m_pFrustum->Setup();
+
+    m_pPlayer = g_pCharacterManager->GetPlayer();
+
+    m_vecMonster = new vector<cMonster*>;
+    for (int i = 0; i < 1; i++)
     {
-        m_pCamera->Update(&g_pMapManager->GetCurrMapInfo()->vStartPos);
-    }
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+        m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
+        m_pEnermy->SetActive(true);
+        (*m_vecMonster).push_back(m_pEnermy);
+    } 
 
-    g_pTextureManager->AddTexture("test", "Assets/Texture/Particle/particle_circle.png");
-    g_pTextureManager->AddTexture("snow", "Assets/Texture/Particle/particle_snow.png");
-
-    m_pExplosion = new cParticleExplosion(&Vector3(0, 0, 0), 1000);
-    m_pExplosion->Init("test");
-
-    cBoundingBox* box = new cBoundingBox(Vector3(-100, 0, -100), Vector3(100, 10, 100));
-    
-    m_pSnow = new cParticleSnow(box, 1000);
-    m_pSnow->Init("snow");
+    m_pPlayer->SetVecMonster(m_vecMonster);
 }
 
 void cMainGame::Update()
 {
     if (m_pCamera)
     {
-        m_pCamera->Update();
+        m_pCamera->Update(&m_pPlayer->GetPosition());
     }
 
     g_pScnManager->Update();
 
-    if (m_pExplosion)
+    m_pFrustum->Update();
+
+    m_pPlayer->Update();
+
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
-        m_pExplosion->Update();
+        (*iter)->Update();
     }
 
-    if (m_pSnow)
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
     {
-        m_pSnow->Update();
+        if ((*iter)->GetAlive())
+        {
+            iter++;
+        }
+        else
+        {
+            iter = (*m_vecMonster).erase(iter);
+        }
     }
 }
 
@@ -117,15 +135,22 @@ void cMainGame::Render()
 
         hr = g_pScnManager->Render();
 
-        SAFE_RENDER(m_pExplosion);
-        SAFE_RENDER(m_pSnow);
-
         hr = g_pTimerManager->Render();
 
         g_pScnManager->Render();
         
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);
+    }
+
+    m_pPlayer->Render();
+    
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+    {
+        bool result = false;
+        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
+        if (result)
+            (*iter)->Render();
     }
 
     //if (hr == D3DERR_DEVICELOST)
@@ -144,4 +169,6 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (m_pCamera)
+        m_pCamera->WndProc(hWnd, message, wParam, lParam);
 }

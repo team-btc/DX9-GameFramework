@@ -2,7 +2,7 @@
 #include "cGameObject.h"
 
 #define LOOKAT_POS 1.0f
-#define LIMITED_ROT 0.49f
+#define LIMITED_ROT 90.0f
 
 class cCamera : public cGameObject
 {
@@ -11,7 +11,6 @@ private:
     Vector3         m_vEye;         // 카메라 위치
     Vector3         m_vLookAt;      // 바라보는 위치
     Vector3         m_vUp;          // 임의의 업 벡터
-    Vector3         m_vPosition;    // 카메라 위치
 
     Matrix4         m_matView;
     Matrix4         m_matProj;
@@ -32,8 +31,11 @@ public:
     void Update(Vector3* pTarget = NULL);
 
     Matrix4 GetViewProjMatrix() { return m_matView * m_matProj; }
+
     void SetLength(float l) { m_fDistance = l; }
     float GetLength() { return m_fDistance; }
     Vector3 GetEye() { return m_vEye; }
+
+    void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
 

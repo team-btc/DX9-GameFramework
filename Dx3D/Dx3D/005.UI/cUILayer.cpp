@@ -41,6 +41,8 @@ cUILayer::~cUILayer()
 
 HRESULT cUILayer::Setup()
 {
+    //test
+    g_pTextureManager->AddTexture("Arrow", "Assets\\UI\\Target_Arrow_UI.png", true);
     return E_NOTIMPL;
 }
 

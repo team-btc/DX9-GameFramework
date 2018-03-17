@@ -1,14 +1,18 @@
 #pragma once
 #include "cCamera.h"
-#include "cParticleExplosion.h"
-#include "cParticleSnow.h"
+#include "cPlayer.h"
+#include "cMonster.h"
+
+class cSkinnedMesh;
+class cFrustum;
 
 class cMainGame
 {
 private:
     cCamera*                m_pCamera;
-    cParticleExplosion*     m_pExplosion;
-    cParticleSnow*          m_pSnow;
+    cPlayer*                m_pPlayer;
+    cFrustum*               m_pFrustum;
+    vector<cMonster*>*      m_vecMonster;
 
 public:
     cMainGame();

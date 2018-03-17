@@ -186,3 +186,34 @@ struct ST_PARTICLE_ATTR
         isAlive = true;
     }
 };
+
+struct ST_STATE 
+{
+    int nStateNum;
+    string szStateName;
+    map<string, float> mapPosition;
+};
+
+struct ST_STATUS
+{
+public:
+    string          m_szName;
+    float           m_fATK;
+    float           m_fDEF;
+    float           m_fSTR;
+    float           m_fDEX;
+    float           m_fINT;
+    float           m_fMaxHP;
+    float           m_fMaxMP;
+    float           m_fSpeed;
+    int             m_Level;
+
+    float           m_fCurHP;
+    float           m_fCurMP;
+    int             m_nCurEXP;
+    int             m_nMaxEXP;
+    float           m_fHPGen;
+    float           m_fMPGen;
+    float           m_fCritical;
+    int             m_nCoolTime;
+};

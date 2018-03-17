@@ -3,15 +3,14 @@
 
 
 cCamera::cCamera()
-    : m_fDistance(250)
+    : m_fDistance(3)
     , m_vEye(0, LOOKAT_POS, -m_fDistance)
     , m_vLookAt(0, LOOKAT_POS, 0)
     , m_vUp(0, 1, 0)
-    , m_fRotX(0.9f)
-    , m_fRotY(D3DX_PI)
+    , m_fRotX(0.0f)
+    , m_fRotY(0.0f)
     , m_isRButtonDown(false)
     , m_isFocus(false)
-    , m_vPosition(0, 0, 0)
 {
 }
 
@@ -39,147 +38,102 @@ ULONG cCamera::Release()
 
 void cCamera::Update(Vector3* pTarget)
 {
-    m_vEye = D3DXVECTOR3(0, LOOKAT_POS, -m_fDistance);
-
-    // == 마우스 컨트롤 =======
-    if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
+    // x축 회전은 -90 ~ 90 으로 고정
+    if (m_fRotX < -LIMITED_ROT + D3DX_16F_EPSILON)
     {
-        m_isRButtonDown = true;
-        m_ptPrevMouse = g_ptMouse;
+        m_fRotX = -LIMITED_ROT + D3DX_16F_EPSILON;
     }
-    if (g_pKeyManager->isOnceKeyUp(VK_RBUTTON))
+    else if (m_fRotX > LIMITED_ROT - D3DX_16F_EPSILON)
+    {
+        m_fRotX = LIMITED_ROT - D3DX_16F_EPSILON;
+    }
+
+    if (m_fRotY >= 360.0f)
+    {
+        m_fRotY -= 360.0f;
+    }
+    // 뷰 매트릭스 셋팅 - 타겟 == 큐브의 포지션
+    m_vEye = Vector3(0, 0, -m_fDistance);
+
+    Matrix4 matRotX, matRotY;
+    D3DXMatrixRotationX(&matRotX, D3DXToRadian(m_fRotX));
+    D3DXMatrixRotationY(&matRotY, D3DXToRadian(m_fRotY));
+
+    D3DXVec3TransformCoord(&m_vEye, &m_vEye, &(matRotX * matRotY));
+
+    Vector3 vDirZ, vDirX;
+    D3DXVec3Normalize(&vDirZ, &m_vEye);
+    D3DXVec3Cross(&vDirX, &vDirZ, &Vector3(0, 1, 0));
+    D3DXVec3Cross(&vDirZ, &vDirX, &Vector3(0, 1, 0));
+
+    if (pTarget)
+    {
+        m_vLookAt = *pTarget;
+        m_vLookAt.y += LOOKAT_POS;
+        m_vEye = m_vEye + *pTarget;
+    }
+
+    Matrix4 matView;
+    D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &Vector3(0, 1, 0));
+    g_pDevice->SetTransform(D3DTS_VIEW, &matView);
+
+    g_vCameraPos = m_vEye;
+}
+
+void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_LBUTTONDOWN:
+    {
+        m_ptPrevMouse.x = LOWORD(lParam);
+        m_ptPrevMouse.y = HIWORD(lParam);
+        m_isRButtonDown = true;
+    }
+    break;
+    case WM_LBUTTONUP:
     {
         m_isRButtonDown = false;
     }
-    if (g_pKeyManager->isStayKeyDown(VK_RBUTTON))
+    break;
+    case WM_MOUSEMOVE:
     {
         if (m_isRButtonDown)
         {
             POINT ptCurrMouse;
-            ptCurrMouse = g_ptMouse;
+            ptCurrMouse.x = LOWORD(lParam);
+            ptCurrMouse.y = HIWORD(lParam);
 
-            m_fRotY += (ptCurrMouse.x - m_ptPrevMouse.x) / 100.0f;
-            m_fRotX += (ptCurrMouse.y - m_ptPrevMouse.y) / 100.0f;
+            m_fRotY += (ptCurrMouse.x - m_ptPrevMouse.x) / 5.0f;
+            m_fRotX += (ptCurrMouse.y - m_ptPrevMouse.y) / 5.0f;
 
-            // x축 회전은 -85 ~ 85 으로 고정
-            if (m_fRotX < -D3DX_PI * LIMITED_ROT + D3DX_16F_EPSILON)
+            // x축 회전은 -90 ~ 90 으로 고정
+            if (m_fRotX < -LIMITED_ROT + D3DX_16F_EPSILON)
             {
-                m_fRotX = -D3DX_PI * LIMITED_ROT + D3DX_16F_EPSILON;
+                m_fRotX = -LIMITED_ROT + D3DX_16F_EPSILON;
             }
-            else if (m_fRotX > D3DX_PI * LIMITED_ROT - D3DX_16F_EPSILON)
+            else if (m_fRotX > LIMITED_ROT - D3DX_16F_EPSILON)
             {
-                m_fRotX = D3DX_PI * LIMITED_ROT - D3DX_16F_EPSILON;
+                m_fRotX = LIMITED_ROT - D3DX_16F_EPSILON;
             }
 
             m_ptPrevMouse = ptCurrMouse;
         }
     }
-
-    if (g_pKeyManager->isStayKeyDown('I')) 
+    break;
+    case WM_MOUSEWHEEL:
     {
-        m_fDistance -= 5.0f;
-
-        if (m_fDistance < 5.0f)
+        if (m_fDistance > 2)
         {
-            m_fDistance = 5.0f;
+            m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
+        }
+        else
+        {
+            m_fDistance = 2;
+            if(GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+                m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
         }
     }
-    else if (g_pKeyManager->isStayKeyDown('O'))
-    {
-        m_fDistance += 5.0f;
-
-        if (m_fDistance < 5.0f)
-        {
-            m_fDistance = 5.0f;
-        }
+    break;
     }
-
-    //if (g_nWheelDelta != 0)
-    //{
-    //    m_fDistance -= g_nWheelDelta * 0.1f;
-    //    g_nWheelDelta = 0;
-
-    //    if (m_fDistance < 5.0f)
-    //    {
-    //        m_fDistance = 5.0f;
-    //    }
-    //}
-
-    D3DXMATRIXA16 matRotX, matRotY;
-    D3DXMatrixRotationX(&matRotX, m_fRotX);
-    D3DXMatrixRotationY(&matRotY, m_fRotY);
-
-    D3DXVec3TransformCoord(&m_vEye, &m_vEye, &(matRotX * matRotY));
-
-    // 카메라가 고정으로 봐야하는 타겟이 있다면
-    if (pTarget)
-    {
-        m_vLookAt = *pTarget;
-        m_vLookAt.y += LOOKAT_POS;
-        m_vPosition = *pTarget;
-    }
-
-
-    // 카메라를 컨트롤 해야 한다면
-    else
-    {
-        if (g_pKeyManager->isStayKeyDown('A')
-            || g_pKeyManager->isStayKeyDown('D')
-            || g_pKeyManager->isStayKeyDown('W')
-            || g_pKeyManager->isStayKeyDown('S')
-            || g_pKeyManager->isStayKeyDown(VK_PRIOR)
-            || g_pKeyManager->isStayKeyDown(VK_NEXT))
-        {
-            Vector3 dirX(1, 0, 0);
-            Vector3 dirZ(0, 0, 1);
-            Matrix4 matRotY;
-            D3DXMatrixRotationY(&matRotY, m_fRotY);
-            D3DXVec3TransformNormal(&dirX, &dirX, &matRotY);
-            D3DXVec3TransformNormal(&dirZ, &dirZ, &matRotY);
-            float fMovePower = 1.0f;//m_fDistance * 0.0001f;
-
-            // == 키보드 컨트롤 ======= 
-            if (g_pKeyManager->isStayKeyDown('A'))
-            {
-                m_vPosition -= dirX * fMovePower;
-                m_vLookAt -= dirX * fMovePower;
-            }
-            if (g_pKeyManager->isStayKeyDown('D'))
-            {
-                m_vPosition += dirX * fMovePower;
-                m_vLookAt += dirX * fMovePower;
-            }
-            if (g_pKeyManager->isStayKeyDown('W'))
-            {
-                m_vPosition += dirZ * fMovePower;
-                m_vLookAt += dirZ * fMovePower;
-            }
-            if (g_pKeyManager->isStayKeyDown('S'))
-            {
-                m_vPosition -= dirZ * fMovePower;
-                m_vLookAt -= dirZ * fMovePower;
-            }
-            if (g_pKeyManager->isStayKeyDown(VK_PRIOR)) //PGUP
-            {
-                Vector3 vDirY(0, 1, 0);
-                m_vPosition += vDirY * 10;// * fMovePower;
-                m_vLookAt += vDirY * 10;// * fMovePower;
-            }
-            if (g_pKeyManager->isStayKeyDown(VK_NEXT)) //PGDOWN
-            {
-                Vector3 vDirY(0, 1, 0);
-                m_vPosition -= vDirY * 10;// *fMovePower;
-                m_vLookAt -= vDirY * 10;// * fMovePower;
-            }
-        }
-    }
-
-    m_vEye += m_vPosition;
-
-    // 뷰 메트릭스 셋팅
-    D3DXMATRIXA16 matView;
-    D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &D3DXVECTOR3(0, 1, 0));
-    g_pDevice->SetTransform(D3DTS_VIEW, &matView);
-
-    g_vCameraPos = m_vEye;
 }
