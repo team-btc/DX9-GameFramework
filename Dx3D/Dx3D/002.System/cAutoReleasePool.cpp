@@ -12,7 +12,7 @@ cAutoReleasePool::~cAutoReleasePool()
 {
 }
 
-void cAutoReleasePool::AddObject(iObject* pObject)
+void cAutoReleasePool::AddObject(IUnknown* pObject)
 {
     m_lstObject.push_back(pObject);
 }

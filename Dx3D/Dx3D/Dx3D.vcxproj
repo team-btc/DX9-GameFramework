@@ -77,16 +77,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Particle;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x64\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(ProjectDir)005.UI;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir);$(DXSDK_DIR)include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;$(ProjectDir)000.Define-Macros;$(ProjectDir)000.Interface;$(ProjectDir)001.Manager\000.System;$(ProjectDir)001.Manager\001.Resource;$(ProjectDir)002.System;$(ProjectDir)003.Object;$(ProjectDir)003.Repository\000.Model;$(ProjectDir)003.Repository\001.Repository;$(ProjectDir)004.ExtLib;$(ProjectDir)005.UI;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x64;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x64\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -182,6 +182,7 @@
     <ClInclude Include="002.Shader\cWaveShader.h" />
     <ClInclude Include="003.Object\cFrustum.h" />
     <ClInclude Include="003.Object\cGameObject.h" />
+    <ClInclude Include="003.Object\cMeshLoader.h" />
     <ClInclude Include="003.Object\cObject.h" />
     <ClInclude Include="003.Object\cRay.h" />
     <ClInclude Include="003.Object\cSkinnedMesh.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="002.System\cAllocateHierarchy.h" />
     <ClInclude Include="002.System\cAutoReleasePool.h" />
     <ClInclude Include="002.System\cCamera.h" />
+    <ClInclude Include="003.Particle\cParticleSnow.h" />
     <ClInclude Include="004.ExtLib\json.hpp" />
     <ClInclude Include="005.UI\cUIButton.h" />
     <ClInclude Include="005.UI\cUIImageView.h" />
@@ -212,6 +214,9 @@
     <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleExplosion.h" />
+    <ClInclude Include="002.System\cParticle.h" />
+    <ClInclude Include="003.Particle\cParticleExplosion.h" />
+    <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -236,6 +241,7 @@
     <ClCompile Include="002.Shader\cWaveShader.cpp" />
     <ClCompile Include="003.Object\cFrustum.cpp" />
     <ClCompile Include="003.Object\cGameObject.cpp" />
+    <ClCompile Include="003.Object\cMeshLoader.cpp" />
     <ClCompile Include="003.Object\cObject.cpp" />
     <ClCompile Include="003.Object\cRay.cpp" />
     <ClCompile Include="003.Object\cSkinnedMesh.cpp" />
@@ -247,6 +253,7 @@
     <ClCompile Include="002.System\cMainGame.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cLightManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cCameraManager.cpp" />
+    <ClCompile Include="003.Particle\cParticleSnow.cpp" />
     <ClCompile Include="005.UI\cUIButton.cpp" />
     <ClCompile Include="005.UI\cUIImageView.cpp" />
     <ClCompile Include="005.UI\cUILayer.cpp" />
@@ -264,6 +271,9 @@
     <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleExplosion.cpp" />
+    <ClCompile Include="002.System\cParticle.cpp" />
+    <ClCompile Include="003.Particle\cParticleExplosion.cpp" />
+    <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

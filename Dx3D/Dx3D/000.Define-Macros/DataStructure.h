@@ -1,6 +1,6 @@
 #pragma once
 #pragma region VERTEX
-struct ST_PC_VERTEX
+typedef struct ST_PC_VERTEX
 {
     Vector3     p;
     Color       c;
@@ -9,7 +9,7 @@ struct ST_PC_VERTEX
 
     ST_PC_VERTEX() {}
     ST_PC_VERTEX(Vector3 _p, Color _c) : p(_p), c(_c) {}
-};
+} Particle;
 
 struct ST_PT_VERTEX
 {
@@ -111,6 +111,7 @@ struct ST_SPHERE
     bool        isRender;
 };
 
+<<<<<<< HEAD
 struct ST_TEXTURE_INFO
 {
     LPTEXTURE9          pTexture;
@@ -162,4 +163,27 @@ struct ST_MAP_INFO
     vector<ST_EVENT_INFO>   vecEventInfo;
 
     ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {}
+}
+
+// 파티클의 속성 구조체
+struct ST_PARTICLE_ATTR
+{
+    Vector3         p;          // 월드스페이스 상의 파티클 위치
+    Vector3         v;          // 파티클의 속도, 보통은 초당 이동 단위로 기록
+    Vector3         a;          // 파티클의 가속,
+    float           g;          // 중력
+    float           life;       // 파티클이 소멸 할때까지 유지되는 시간
+    float           age;        // 파티클의 현재 나이
+    XColor          c;          // 파티클의 컬러
+    XColor          fade;       // 파티클의 컬러가 시간이 흐름에 따라 퇴색하는 방법
+    bool            isAlive;    // 파티클이 생존 true, 소멸 false
+
+    // 파티클 속성 구조체의 초기값 세팅
+    ST_PARTICLE_ATTR()
+    {
+        life = 0.0f;
+        age = 0.0f;
+        g = 0.0f;
+        isAlive = true;
+    }
 };
