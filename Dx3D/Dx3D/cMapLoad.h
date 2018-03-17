@@ -1,6 +1,9 @@
 #pragma once
 #include "iSceneObject.h"
+#include "cPlayer.h"
+#include "cMonster.h"
 
+class cFrustum;
 class cGameMap;
 class cWaveShader;
 class cTextureShader;
@@ -13,15 +16,13 @@ private:
 
     cGameMap*           m_pGameMap;
 
+    cPlayer*                m_pPlayer;
+    cFrustum*               m_pFrustum;
+    vector<cMonster*>*      m_vecMonster;
+
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
-
-    LPMESH              m_pSphereMesh;
-    Vector3             m_vSpherePos;
-    Vector3             m_vDirection;
-    float               m_fRotY;
-    Matrix4             m_matWorld;
 
 public:
     cMapLoad();
@@ -30,5 +31,7 @@ public:
     virtual HRESULT Start() override;
     virtual HRESULT Update() override;
     virtual HRESULT Render() override;
+
+    Vector3 GetPlayerPos() { return m_pPlayer->GetPosition(); }
 };
 

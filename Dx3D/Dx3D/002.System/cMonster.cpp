@@ -13,20 +13,20 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename ,string szJs
     m_stStat.m_szName = "Monster1";
     m_stStat.m_Level = 1;
 
-    m_stStat.m_fSTR = 10 + m_stStat.m_Level * 3;
-    m_stStat.m_fDEX = 5 + m_stStat.m_Level * 3;
-    m_stStat.m_fINT = 5 + m_stStat.m_Level * 3;
+    m_stStat.m_fSTR = 10.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fDEX = 5.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fINT = 5.0f + m_stStat.m_Level * 3.0f;
 
-    m_stStat.m_fATK = 30 + m_stStat.m_Level * 10;
-    m_stStat.m_fDEF = 5 + m_stStat.m_Level * 3;
-    m_stStat.m_fCurHP = 300 + m_stStat.m_Level * 30;
-    m_stStat.m_fMaxHP = 300 + m_stStat.m_Level * 30;
-    m_stStat.m_fCurMP = 0;
-    m_stStat.m_fMaxMP = 0;
-    m_stStat.m_fSpeed = 1;
-    m_stStat.m_fCritical = 15;
-    m_stStat.m_fHPGen = 3;
-    m_stStat.m_fMPGen = 3;
+    m_stStat.m_fATK = 30.0f + m_stStat.m_Level * 10.0f;
+    m_stStat.m_fDEF = 5.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fCurHP = 300.0f + m_stStat.m_Level * 30.0f;
+    m_stStat.m_fMaxHP = 300.0f + m_stStat.m_Level * 30.0f;
+    m_stStat.m_fCurMP = 0.0f;
+    m_stStat.m_fMaxMP = 0.0f;
+    m_stStat.m_fSpeed = 1.0f;
+    m_stStat.m_fCritical = 15.0f;
+    m_stStat.m_fHPGen = 3.0f;
+    m_stStat.m_fMPGen = 3.0f;
     m_stStat.m_nCoolTime = 0;
     m_stStat.m_nCurEXP = 0;
     m_stStat.m_nMaxEXP = 100;
@@ -40,7 +40,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename ,string szJs
         {
             string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
             string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = atof(str2.c_str());
+            float pos = (float)atof(str2.c_str());
             state.mapPosition.insert(make_pair(str1, pos));
         }
         string str = m_pMesh->GetJson()["State"][i]["Name"];
@@ -52,7 +52,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename ,string szJs
     m_stSphere.fRadius = 2.5f;
     m_stSphere.vCenter = m_vPosition;
 
-    m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
 
 cMonster::cMonster(string szKey)
@@ -65,20 +65,20 @@ cMonster::cMonster(string szKey)
     m_stStat.m_szName = "Monster1";
     m_stStat.m_Level = 1;
 
-    m_stStat.m_fSTR = 10 + m_stStat.m_Level * 3;
-    m_stStat.m_fDEX = 5 + m_stStat.m_Level * 3;
-    m_stStat.m_fINT = 5 + m_stStat.m_Level * 3;
+    m_stStat.m_fSTR = 10.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fDEX = 5.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fINT = 5.0f + m_stStat.m_Level * 3.0f;
 
-    m_stStat.m_fATK = 30 + m_stStat.m_Level * 10;
-    m_stStat.m_fDEF = 5 + m_stStat.m_Level * 3;
-    m_stStat.m_fCurHP = 300 + m_stStat.m_Level * 30;
-    m_stStat.m_fMaxHP = 300 + m_stStat.m_Level * 30;
-    m_stStat.m_fCurMP = 0;
-    m_stStat.m_fMaxMP = 0;
-    m_stStat.m_fSpeed = 1;
-    m_stStat.m_fCritical = 15;
-    m_stStat.m_fHPGen = 3;
-    m_stStat.m_fMPGen = 3;
+    m_stStat.m_fATK = 30.0f + m_stStat.m_Level * 10.0f;
+    m_stStat.m_fDEF = 5.0f + m_stStat.m_Level * 3.0f;
+    m_stStat.m_fCurHP = 300.0f + m_stStat.m_Level * 30.0f;
+    m_stStat.m_fMaxHP = 300.0f + m_stStat.m_Level * 30.0f;
+    m_stStat.m_fCurMP = 0.0f;
+    m_stStat.m_fMaxMP = 0.0f;
+    m_stStat.m_fSpeed = 1.0f;
+    m_stStat.m_fCritical = 15.0f;
+    m_stStat.m_fHPGen = 3.0f;
+    m_stStat.m_fMPGen = 3.0f;
     m_stStat.m_nCoolTime = 0;
     m_stStat.m_nCurEXP = 0;
     m_stStat.m_nMaxEXP = 100;
@@ -92,7 +92,7 @@ cMonster::cMonster(string szKey)
         {
             string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
             string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = atof(str2.c_str());
+            float pos = (float)atof(str2.c_str());
             state.mapPosition.insert(make_pair(str1, pos));
         }
         string str = m_pMesh->GetJson()["State"][i]["Name"];
@@ -104,7 +104,7 @@ cMonster::cMonster(string szKey)
     m_stSphere.fRadius = 2.5f;
     m_stSphere.vCenter = m_vPosition;
 
-    m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
 
 cMonster::cMonster()
@@ -173,7 +173,7 @@ void cMonster::Update()
                     isAttack = false;
                 }
 
-                m_vPosition += Dir * 0.005;
+                m_vPosition += Dir * 0.005f;
                 m_stSphere.vCenter = m_vPosition;
 
                 D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);

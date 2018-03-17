@@ -16,12 +16,12 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, str
     D3DXMatrixIdentity(&m_matWorld);
     D3DXMatrixIdentity(&matS);
 
-    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey, szFolder, szFilename);
+    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey, szFolder, szFilename);
     m_Json = g_pMeshManager->GetJson(szKey, szFolder, szJsonName);
 
     
     string str = m_Json["Scale"];
-    float scale = atof(str.c_str());
+    float scale = (float)atof(str.c_str());
     if (scale > 0.0f)
     {
         D3DXMatrixScaling(&matS, scale, scale, scale);
@@ -57,12 +57,12 @@ cSkinnedMesh::cSkinnedMesh(string szKey)
     D3DXMatrixIdentity(&m_matWorld);
     D3DXMatrixIdentity(&matS);
 
-    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetMesh(szKey);
+    cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey);
     m_Json = g_pMeshManager->GetJson(szKey);
 
 
     string str = m_Json["Scale"];
-    float scale = atof(str.c_str());
+    float scale = (float)atof(str.c_str());
     if (scale>0.0f)
         D3DXMatrixScaling(&matS, scale, scale, scale);
 
@@ -431,11 +431,13 @@ float cSkinnedMesh::GetdescPos()
     D3DXTRACK_DESC desc;
     m_pAnimController->GetTrackDesc(0, &desc);
 
-    return desc.Position;
+    return (float)desc.Position;
 }
 
 int cSkinnedMesh::GetCurPos()
 {
+    int nResult = 0;
+
     if (m_pAnimController)
     {
         LPANIMATIONSET pAnimSet = NULL;
@@ -444,10 +446,11 @@ int cSkinnedMesh::GetCurPos()
         D3DXTRACK_DESC desc;
         m_pAnimController->GetTrackDesc(0, &desc);
 
-        int CurPos = desc.Position / pAnimSet->GetPeriod();
+        int CurPos = (int)desc.Position / (int)pAnimSet->GetPeriod();
 
-        return CurPos;
+        nResult =  CurPos;
     }
+    return nResult;
 }
 
 string cSkinnedMesh::GetAnimName()

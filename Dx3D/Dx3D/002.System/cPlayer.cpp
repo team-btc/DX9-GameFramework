@@ -8,6 +8,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     , isMoveToPoint(false)
     , isPoint(false)
     , isPickMonster(false)
+    , isMove(false)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename, szJsonName);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -17,20 +18,20 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     m_stStat.m_szName = "ChiChi";
     m_stStat.m_Level = 1;
 
-    m_stStat.m_fSTR = 20 + m_stStat.m_Level * 5;
-    m_stStat.m_fDEX = 15 + m_stStat.m_Level * 5;
-    m_stStat.m_fINT = 15 + m_stStat.m_Level * 5;
+    m_stStat.m_fSTR = 20.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fDEX = 15.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fINT = 15.0f + m_stStat.m_Level * 5.0f;
 
-    m_stStat.m_fATK = 35 + m_stStat.m_Level * 20;
-    m_stStat.m_fDEF = 10 + m_stStat.m_Level * 5;
-    m_stStat.m_fCurHP = 500 + m_stStat.m_Level * 100;
-    m_stStat.m_fMaxHP = 500 + m_stStat.m_Level * 100;
-    m_stStat.m_fCurMP = 300 + m_stStat.m_Level * 50;
-    m_stStat.m_fMaxMP = 300 + m_stStat.m_Level * 50;
-    m_stStat.m_fSpeed = 1;
-    m_stStat.m_fCritical = 15;
-    m_stStat.m_fHPGen = m_stStat.m_fMaxHP*0.01f + m_stStat.m_Level *0.5f;
-    m_stStat.m_fMPGen = m_stStat.m_fMaxMP*0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_fATK = 35.0f + m_stStat.m_Level * 20.0f;
+    m_stStat.m_fDEF = 10.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fCurHP = 500.0f + m_stStat.m_Level * 100.0f;
+    m_stStat.m_fMaxHP = 500.0f + m_stStat.m_Level * 100.0f;
+    m_stStat.m_fCurMP = 300.0f + m_stStat.m_Level * 50.0f;
+    m_stStat.m_fMaxMP = 300.0f + m_stStat.m_Level * 50.0f;
+    m_stStat.m_fSpeed = 1.0f;
+    m_stStat.m_fCritical = 15.0f;
+    m_stStat.m_fHPGen = m_stStat.m_fMaxHP * 0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_fMPGen = m_stStat.m_fMaxMP * 0.01f + m_stStat.m_Level * 0.5f;
     m_stStat.m_nCoolTime = 0;
     m_stStat.m_nCurEXP = 0;
     m_stStat.m_nMaxEXP = 100;
@@ -45,7 +46,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
         {
             string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
             string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = atof(str2.c_str());
+            float pos = (float)atof(str2.c_str());
             state.mapPosition.insert(make_pair(str1, pos));
         }
         string str = m_pMesh->GetJson()["State"][i]["Name"];
@@ -57,7 +58,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonN
     m_stSphere.fRadius = 1.0f;
     m_stSphere.vCenter = m_vPosition;
 
-    m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
     m_vecMonster = new vector<cMonster*>;
     
 }
@@ -67,6 +68,7 @@ cPlayer::cPlayer(string szKey)
     , isMoveToPoint(false)
     , isPoint(false)
     , isPickMonster(false)
+    , isMove(false)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -76,24 +78,23 @@ cPlayer::cPlayer(string szKey)
     m_stStat.m_szName = "ChiChi";
     m_stStat.m_Level = 1;
 
-    m_stStat.m_fSTR = 20 + m_stStat.m_Level * 5;
-    m_stStat.m_fDEX = 15 + m_stStat.m_Level * 5;
-    m_stStat.m_fINT = 15 + m_stStat.m_Level * 5;
+    m_stStat.m_fSTR = 20.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fDEX = 15.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fINT = 15.0f + m_stStat.m_Level * 5.0f;
 
-    m_stStat.m_fATK = 35 + m_stStat.m_Level * 20;
-    m_stStat.m_fDEF = 10 + m_stStat.m_Level * 5;
-    m_stStat.m_fCurHP = 500 + m_stStat.m_Level * 100;
-    m_stStat.m_fMaxHP = 500 + m_stStat.m_Level * 100;
-    m_stStat.m_fCurMP = 300 + m_stStat.m_Level * 50;
-    m_stStat.m_fMaxMP = 300 + m_stStat.m_Level * 50;
-    m_stStat.m_fSpeed = 1;
-    m_stStat.m_fCritical = 15;
-    m_stStat.m_fHPGen = m_stStat.m_fMaxHP*0.01f + m_stStat.m_Level *0.5f;
-    m_stStat.m_fMPGen = m_stStat.m_fMaxMP*0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_fATK = 35.0f + m_stStat.m_Level * 20.0f;
+    m_stStat.m_fDEF = 10.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.m_fCurHP = 500.0f + m_stStat.m_Level * 100.0f;
+    m_stStat.m_fMaxHP = 500.0f + m_stStat.m_Level * 100.0f;
+    m_stStat.m_fCurMP = 300.0f + m_stStat.m_Level * 50.0f;
+    m_stStat.m_fMaxMP = 300.0f + m_stStat.m_Level * 50.0f;
+    m_stStat.m_fSpeed = 1.0f;
+    m_stStat.m_fCritical = 15.0f;
+    m_stStat.m_fHPGen = m_stStat.m_fMaxHP * 0.01f + m_stStat.m_Level * 0.5f;
+    m_stStat.m_fMPGen = m_stStat.m_fMaxMP * 0.01f + m_stStat.m_Level * 0.5f;
     m_stStat.m_nCoolTime = 0;
     m_stStat.m_nCurEXP = 0;
     m_stStat.m_nMaxEXP = 100;
-
 
     for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
     {
@@ -104,7 +105,7 @@ cPlayer::cPlayer(string szKey)
         {
             string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
             string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = atof(str2.c_str());
+            float pos = (float)atof(str2.c_str());
             state.mapPosition.insert(make_pair(str1, pos));
         }
         string str = m_pMesh->GetJson()["State"][i]["Name"];
@@ -116,7 +117,7 @@ cPlayer::cPlayer(string szKey)
     m_stSphere.fRadius = 1.0f;
     m_stSphere.vCenter = m_vPosition;
 
-    m_pPikingMesh = *g_pMeshManager->GetBasicMesh("sphere");
+    m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
     m_vecMonster = new vector<cMonster*>;
 
 }
@@ -141,6 +142,7 @@ void cPlayer::Update()
         //오른쪽 버튼 누를시
         if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
         {
+            isMove = true;
             cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
             BOOL isHit = false;
             float _dist = 0.0f;
@@ -163,7 +165,7 @@ void cPlayer::Update()
             //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
             if (!isPickMonster)
             {
-                D3DXIntersectSubset(*g_pMeshManager->GetBasicMesh("map"), 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
+                D3DXIntersectSubset(m_pTerrain, 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
                 if (isHit)
                 {
                     if (!isRun)
@@ -194,6 +196,7 @@ void cPlayer::Update()
 
         if (g_pKeyManager->isOnceKeyDown('W'))
         {
+            isMove = true;
             RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('W'))
@@ -207,6 +210,7 @@ void cPlayer::Update()
 
         if (g_pKeyManager->isOnceKeyDown('S'))
         {
+            isMove = true;
             RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('S'))
@@ -288,6 +292,7 @@ void cPlayer::Update()
         Vector3 _Dir = DestPoint - m_vPosition;
 
         D3DXVec3Normalize(&_Dir, &_Dir);
+        m_vDir = _Dir;
 
         m_vPosition += _Dir * Speed;
         m_stSphere.vCenter = m_vPosition;
@@ -318,6 +323,7 @@ void cPlayer::Update()
         Vector3 Dir = m_pTarget->GetPosition() - m_vPosition;
         float Distance = D3DXVec3Length(&Dir);
         D3DXVec3Normalize(&Dir, &Dir);
+        m_vDir = Dir;
 
         // 공격모션으로 변경
         if (Distance < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius )

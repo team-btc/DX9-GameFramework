@@ -2,9 +2,6 @@
 #include "cMainGame.h"
 #include "cCamera.h"
 #include "cMapLoad.h"
-#include "cPlayer.h"
-#include "cMonster.h"
-#include "cFrustum.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -28,15 +25,9 @@ cMainGame::cMainGame()
 
 cMainGame::~cMainGame()
 {
-    SAFE_RELEASE(m_pSphere);
-    SAFE_RELEASE(m_pTerain);
-
     HRESULT hr = S_OK;
 
     g_pScnManager->Destroy();
-
-    SAFE_DELETE(m_pExplosion);
-    SAFE_DELETE(m_pSnow);
 
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
@@ -68,58 +59,20 @@ void cMainGame::Setup()
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
 
-    cMapLoad* map = new cMapLoad;
+    map = new cMapLoad;
 
     g_pScnManager->AddScene("map", map);
     g_pScnManager->ChangeScene("map");
-
-    m_pFrustum = new cFrustum;
-    g_pAutoReleasePool->AddObject(m_pFrustum);
-    m_pFrustum->Setup();
-
-    m_pPlayer = g_pCharacterManager->GetPlayer();
-
-    m_vecMonster = new vector<cMonster*>;
-    for (int i = 0; i < 1; i++)
-    {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(GetRandomVector3(Vector3(0, 0, 0), Vector3(5, 0, 5)));
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
-    } 
-
-    m_pPlayer->SetVecMonster(m_vecMonster);
 }
 
 void cMainGame::Update()
 {
     if (m_pCamera)
     {
-        m_pCamera->Update(&m_pPlayer->GetPosition());
+        m_pCamera->Update(&map->GetPlayerPos());
     }
 
     g_pScnManager->Update();
-
-    m_pFrustum->Update();
-
-    m_pPlayer->Update();
-
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    {
-        (*iter)->Update();
-    }
-
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
-    {
-        if ((*iter)->GetAlive())
-        {
-            iter++;
-        }
-        else
-        {
-            iter = (*m_vecMonster).erase(iter);
-        }
-    }
 }
 
 void cMainGame::Render()
@@ -141,16 +94,6 @@ void cMainGame::Render()
         
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);
-    }
-
-    m_pPlayer->Render();
-    
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    {
-        bool result = false;
-        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
-        if (result)
-            (*iter)->Render();
     }
 
     //if (hr == D3DERR_DEVICELOST)

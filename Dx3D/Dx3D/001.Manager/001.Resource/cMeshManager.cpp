@@ -25,10 +25,6 @@ HRESULT cMeshManager::LoadBasicMesh()
     D3DXCreateTorus(g_pDevice, 1.0f - D3DX_16F_EPSILON, 1.0f, 10, 10, mesh, NULL);
     m_mapBasicMesh.insert(make_pair("torus", mesh));
 
-    mesh = new LPMESH;
-    D3DXLoadMeshFromX(L"Assets\\HeightMapData\\Plane.X", D3DXMESH_MANAGED, g_pDevice, NULL, NULL, NULL, NULL, mesh);
-    m_mapBasicMesh.insert(make_pair("map", mesh));
-
     return S_OK;
 }
 

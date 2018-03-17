@@ -1,7 +1,7 @@
 #pragma once
 #include "iCharacterObject.h"
 
-#define Speed 0.01f
+#define Speed 0.1f
 
 class cMonster;
 

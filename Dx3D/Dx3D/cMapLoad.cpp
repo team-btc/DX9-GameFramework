@@ -5,6 +5,9 @@
 #include "002.Shader\cTextureShader.h"
 #include "002.Shader\cSkyBoxShader.h"
 #include "002.Shader\cWaveShader.h"
+#include "cPlayer.h"
+#include "cMonster.h"
+#include "cFrustum.h"
 
 cMapLoad::cMapLoad()
     : m_stMapInfo(NULL)
@@ -12,14 +15,8 @@ cMapLoad::cMapLoad()
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_pSphereMesh(NULL)
-    , m_vSpherePos(0, 0, 0)
-    , m_vDirection(0, 0, 1)
-    , m_fRotY(D3DX_PI)
 {
-    D3DXMatrixIdentity(&m_matWorld);
 }
-
 
 cMapLoad::~cMapLoad()
 {
@@ -37,10 +34,7 @@ HRESULT cMapLoad::Start()
         mapLoader.LoadMap("iceCrown");
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
-
-        // 플레이어 시작 위치 셋팅
-        m_vSpherePos = m_stMapInfo->vStartPos;
-
+        
         // 현재 맵 셋팅
         m_pGameMap = new cGameMap;
         m_pGameMap->SetCurrMapInfo(m_stMapInfo);
@@ -68,69 +62,83 @@ HRESULT cMapLoad::Start()
             m_pWaveShader->SetShader(m_stMapInfo->fWaterHeight, m_stMapInfo->fWaterWaveHeight, m_stMapInfo->fWaterHeightSpeed,
                 m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
         }
-
-        // 플레이어 대용 구
-        m_pSphereMesh = g_pMeshManager->GetBasicMesh("sphere");
     }
 
-    // 라이트
-    Vector3 dir(1.0f, -1.0f, 0.0f);
-    D3DXVec3Normalize(&dir, &dir);
-    LIGHT9 stLight = g_pLightManager->InitDirectional(&dir, &WHITE);
-    g_pDevice->SetLight(0, &stLight);
+    m_pFrustum = new cFrustum;
+    g_pAutoReleasePool->AddObject(m_pFrustum);
+    m_pFrustum->Setup();
+
+    m_pPlayer = g_pCharacterManager->GetPlayer();
+    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+
+    m_vecMonster = new vector<cMonster*>;
+    for (int i = 0; i < 1; i++)
+    {
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+        m_pEnermy->SetPosition(m_stMapInfo->vStartPos);
+        m_pEnermy->SetActive(true);
+        (*m_vecMonster).push_back(m_pEnermy);
+    }
+
+    m_pPlayer->SetVecMonster(m_vecMonster);
+    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+
+    //// 라이트
+    //Vector3 dir(1.0f, -1.0f, 0.0f);
+    //D3DXVec3Normalize(&dir, &dir);
+    //LIGHT9 stLight = g_pLightManager->InitDirectional(&dir, &WHITE);
+    //g_pDevice->SetLight(0, &stLight);
 
     return S_OK;
 }
 
 HRESULT cMapLoad::Update()
 {
-    Vector3 vDir(0, 0, 1);
-    Matrix4 matRotY;
-    D3DXMatrixRotationY(&matRotY, m_fRotY);
-    D3DXVec3TransformNormal(&m_vDirection, &vDir, &matRotY);
+    m_pFrustum->Update();
 
-    if (g_pKeyManager->isStayKeyDown(VK_LEFT))
+    m_pPlayer->Update();
+
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
-        m_fRotY -= 0.1f;
+        (*iter)->Update();
     }
-    if (g_pKeyManager->isStayKeyDown(VK_RIGHT))
+
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
     {
-        m_fRotY += 0.1f;
+        if ((*iter)->GetAlive())
+        {
+            iter++;
+        }
+        else
+        {
+            iter = (*m_vecMonster).erase(iter);
+        }
     }
-    if (g_pKeyManager->isStayKeyDown(VK_UP))
+
+    if (m_pPlayer->GetMove())
     {
         cRay ray;
-        ray.m_vOrg = m_vSpherePos;
-        ray.m_vDir = m_vDirection;
+        ray.m_vOrg = m_pPlayer->GetPosition();
+        ray.m_vDir = m_pPlayer->GetDir();
         // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
         float fDist = FLT_MAX;
-        if (m_pGameMap->CheckObstacle(fDist, ray) == false
-            || fDist > 3.0f)
+        if (m_pGameMap->CheckObstacle(fDist, ray) == true
+            || fDist < 3.0f)
         {
-            m_vSpherePos += m_vDirection;
+            m_pPlayer->SetMoveToPoint(false);
+            m_pPlayer->SetMoveToTarget(false);
         }
     }
-    if (g_pKeyManager->isStayKeyDown(VK_DOWN))
-    {
-        cRay ray;
-        ray.m_vOrg = m_vSpherePos;
-        ray.m_vDir = -m_vDirection;
-
-        // 후면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
-        float fDist = FLT_MAX;
-        if (m_pGameMap->CheckObstacle(fDist, ray) == false
-            || fDist > 3.0f)
-        {
-            m_vSpherePos -= m_vDirection;
-        }
-    }
+    
 
     // 위치 체크
-    m_pGameMap->GetHeight(m_vSpherePos);
+    Vector3 Pos = m_pPlayer->GetPosition();
+    m_pGameMap->GetHeight(Pos);
+    m_pPlayer->SetPosition(Pos);
 
     // 이벤트 체크
     string szEventName = "";
-    if (m_pGameMap->CheckEvent(szEventName, m_vSpherePos))
+    if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
     {
         // 이벤트 발동
     }
@@ -140,11 +148,11 @@ HRESULT cMapLoad::Update()
 
 #endif // _DEBUG
     
-    Matrix4 matR, matT;
+   /* Matrix4 matR, matT;
     D3DXMatrixRotationY(&matR, m_fRotY);
     D3DXMatrixTranslation(&matT, m_vSpherePos.x, m_vSpherePos.y, m_vSpherePos.z);
 
-    m_matWorld = matR * matT;
+    m_matWorld = matR * matT;*/
 
     return S_OK;
 }
@@ -180,11 +188,14 @@ HRESULT cMapLoad::Render()
         m_pSkyBoxShader->Render(vP);
     }
 
-    // 구 출력
-    if (m_pSphereMesh)
+    m_pPlayer->Render();
+
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
-        g_pDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
-        m_pSphereMesh->DrawSubset(0);
+        bool result = false;
+        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
+        if (result)
+            (*iter)->Render();
     }
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);

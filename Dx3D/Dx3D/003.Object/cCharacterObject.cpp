@@ -66,11 +66,11 @@ void cCharacterObject::Action(string Command, float value)
 {
     if (Command == "Attack")
     {
-        Attack(value);
+        Attack((int)value);
     }
     else if (Command == "Heal")
     {
-        Heal(value);
+        Heal((int)value);
     }
     else if (Command == "Skil1")
     {
@@ -177,14 +177,14 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.005f;
+    m_fRotY -= 0.01f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     
 }
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.005f;
+    m_fRotY += 0.01f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 }
 
