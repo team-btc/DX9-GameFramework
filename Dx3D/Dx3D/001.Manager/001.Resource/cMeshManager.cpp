@@ -64,8 +64,9 @@ void cMeshManager::LoadStaticMesh(string szKey, string szPath)
 {
     if (m_mapStaticMesh.find(szKey) == m_mapStaticMesh.end())
     {
-        LPMESH* mesh = new LPMESH;
-        HRESULT hr = D3DXLoadMeshFromXA(szKey.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+        LPMESH mesh;
+        HRESULT hr = D3DXLoadMeshFromXA(szPath.c_str(), D3DXMESH_32BIT | D3DXMESH_IB_MANAGED,
+            g_pDevice, NULL, NULL, NULL, NULL, &mesh);
         m_mapStaticMesh.insert(make_pair(szKey, mesh));
     }
 }
@@ -76,7 +77,7 @@ LPMESH cMeshManager::GetStaticMesh(string szKey)
 
     if (m_mapStaticMesh.find(szKey) != m_mapStaticMesh.end())
     {
-        mesh = *m_mapStaticMesh[szKey];
+        mesh = m_mapStaticMesh[szKey];
     }
 
     return mesh;
@@ -127,46 +128,46 @@ void cMeshManager::LoadSkinnedMesh()
 
     pNewMesh = new cSkinnedMesh;
     pNewMesh->Load("Assets\\Enemy\\Deathwing", "Deathwing.X");
-    if (GetJson("Deathwing") != NULL)
+    if (GetJson("deathwing") != NULL)
     {
-        string str = GetJson("Deathwing")["Scale"];
+        string str = GetJson("deathwing")["Scale"];
         float scale = (float)atof(str.c_str());
         if (scale > 0.0f)
         {
             D3DXMatrixScaling(&pNewMesh->matS, scale, scale, scale);
         }
 
-        for (int i = 0; i <GetJson("Deathwing")["State"].size(); i++)
+        for (int i = 0; i <GetJson("deathwing")["State"].size(); i++)
         {
             ST_STATE state;
-            string str1 = GetJson("Deathwing")["State"][i]["index"];
+            string str1 = GetJson("deathwing")["State"][i]["index"];
             state.nStateNum = atoi(str1.c_str());
-            for (int j = 0; j < GetJson("Deathwing")["State"][i]["Position"].size(); j++)
+            for (int j = 0; j < GetJson("deathwing")["State"][i]["Position"].size(); j++)
             {
-                string str1 = GetJson("Deathwing")["State"][i]["Position"][j]["Name"];
-                string str2 = GetJson("Deathwing")["State"][i]["Position"][j]["Value"];
+                string str1 = GetJson("deathwing")["State"][i]["Position"][j]["Name"];
+                string str2 = GetJson("deathwing")["State"][i]["Position"][j]["Value"];
                 float pos = (float)atof(str2.c_str());
                 state.mapPosition.insert(make_pair(str1, pos));
             }
-            string str = GetJson("Deathwing")["State"][i]["Name"];
+            string str = GetJson("deathwing")["State"][i]["Name"];
             pNewMesh->m_mapStateInfo.insert(make_pair(str, state));
         }
     }
-    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair("deathwing", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()
 {
     json newJson;
     ifstream m_fileJson;
-    m_fileJson.open("Assets\\Player\\ArthasLichking\\arthaslichking.json");
+    m_fileJson.open("Assets\\Player\\ArthasLichking\\ArthasLichking.json");
     m_fileJson >> newJson;
     m_mapJson.insert(make_pair("arthaslichking", newJson));
     m_fileJson.close();
 
-    m_fileJson.open("Assets\\Enemy\\Deathwing\\Deathwing.json");
+    m_fileJson.open("Assets\\Enemy\\Deathwing.json");
     m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Deathwing", newJson));
+    m_mapJson.insert(make_pair("deathwing", newJson));
     m_fileJson.close();
 }
 
@@ -249,7 +250,7 @@ void cMeshManager::Destroy()
 
     for (auto iter = m_mapStaticMesh.begin(); iter != m_mapStaticMesh.end();)
     {
-        SAFE_RELEASE(*iter->second); // 로드가 수정되면 문제 없는 코드!
+        SAFE_RELEASE(iter->second); // 로드가 수정되면 문제 없는 코드!
         iter = m_mapStaticMesh.erase(iter);
     }
 

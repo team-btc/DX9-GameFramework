@@ -248,6 +248,7 @@ void cMapLoader::LoadEvent(json jEvent)
 
 void cMapLoader::LoadObject(json jObject)
 {
+    return;
     for (int i = 0; i < jObject.size(); ++i)
     {
         ST_OBJECT_INFO stObject;

@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cCamera.h"
 
 cMainGame::cMainGame()
-    : m_pCamera(NULL)
 {
     HRESULT hr = S_OK;
     g_pLogManager->Setup("\\Log\\");
@@ -15,7 +13,7 @@ cMainGame::cMainGame()
     g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
     g_pMeshManager->LoadSkinnedMesh();
-    
+
     g_pScnManager->Setup();
     g_pCharacterManager->Setup();
 }
@@ -51,19 +49,16 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    m_pCamera = new cCamera;
-    hr = m_pCamera->Setup();
-    g_pAutoReleasePool->AddObject(m_pCamera);
+    hr = g_pScnManager->AddScene("title", new cTitleScene);
+    hr = g_pScnManager->AddScene("loading", new cLoadingScene);
+    hr = g_pScnManager->AddScene("play", new cPlayScene);
+    hr = g_pScnManager->AddScene("ending", new cEndingScene);
+
+    hr = g_pScnManager->ChangeScene("play");
 }
 
 void cMainGame::Update()
 {
-    // 씬안에 카메라 넣기
-    if (m_pCamera)
-    {
-        m_pCamera->Update();
-    }
-
     g_pScnManager->Update();
 }
 
@@ -106,8 +101,5 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
+    g_pScnManager->WndProc(hWnd, message, wParam, lParam);
 }

@@ -34,5 +34,10 @@ HRESULT cTitleScene::Render()
 
 ULONG cTitleScene::Release()
 {
+    cObject::Release();
     return 0;
+}
+
+void cTitleScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "cPlayer.h"
-#include "003.Object\cSkinnedMesh.h"
+#include "cSkinnedMesh.h"
 #include "cMonster.h"
 
 cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
@@ -38,12 +38,11 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     
     IdleAnim();
     
-    m_stSphere.fRadius = 4.0f;
+    m_stSphere.fRadius = m_pMesh->GetBoundingSphere()->fRadius;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
     m_vecMonster = new vector<cMonster*>;
-    
 }
 
 cPlayer::cPlayer(string szKey)
@@ -81,7 +80,7 @@ cPlayer::cPlayer(string szKey)
 
     IdleAnim();
 
-    m_stSphere.fRadius = 4.0f;
+    m_stSphere.fRadius = m_pMesh->GetBoundingSphere()->fRadius;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
@@ -125,7 +124,9 @@ void cPlayer::Update()
                     isMoveToTarget = true;
                     RayCast(*iter);
                     if (!isRun && Distance((*iter)->GetPosition()) >= m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
+                    {
                         RunAnim();
+                    }
                 }
             }
 
@@ -136,7 +137,9 @@ void cPlayer::Update()
                 if (isHit)
                 {
                     if (!isRun)
+                    {
                         RunAnim();
+                    }
                     Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
                     isAttack = false;
                     isMoveToTarget = false;
@@ -227,10 +230,14 @@ void cPlayer::Update()
                 //데미지 계산식을 넣어야함
                 Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
+                {
                     m_pTarget->RayCast(this); // 어그로 주고
+                }
             }
             if (m_pMesh->GetCurPos() >= 1)
+            {
                 IdleAnim();
+            }
         }
         else
         {
@@ -238,7 +245,9 @@ void cPlayer::Update()
             {
                 Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
+                {
                     m_pTarget->RayCast(this); // 어그로 주고
+                }
                 IdleAnim();
             }
         }
@@ -315,7 +324,7 @@ void cPlayer::Update()
 
     Matrix4 matR,matW;
     D3DXMatrixScaling(&m_MatScale, 8, 8, 8);
-    D3DXMatrixRotationY(&matR, -D3DX_PI / 2);
+    D3DXMatrixRotationY(&matR, -D3DX_PI * 0.5f);
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
     m_stSphere.vCenter = m_vPosition;
     matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
