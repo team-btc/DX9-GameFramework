@@ -30,13 +30,21 @@ HRESULT cMeshManager::LoadBasicMesh()
 
 void cMeshManager::LoadMesh(string szKey, string szPath)
 {
-    LPMESH* mesh = new LPMESH;
-    D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
-    m_mapMesh.insert(make_pair(szKey, mesh));
+    if (m_mapMesh.find(szKey) == m_mapMesh.end())
+    {
+        LPMESH* mesh = new LPMESH;
+        D3DXLoadMeshFromXA(szPath.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+        m_mapMesh.insert(make_pair(szKey, mesh));
+    }
 }
 
 void cMeshManager::AddMesh(string szKey, LPMESH* mesh)
 {
+    if (m_mapMesh.find(szKey) != m_mapMesh.end())
+    {
+        SAFE_RELEASE(*m_mapMesh[szKey]);
+    }
+
     m_mapMesh.insert(make_pair(szKey, mesh));
 }
 
@@ -47,6 +55,28 @@ LPMESH cMeshManager::GetMesh(string szKey)
     if (m_mapMesh.find(szKey) != m_mapMesh.end())
     {
         mesh = *m_mapMesh[szKey];
+    }
+
+    return mesh;
+}
+
+void cMeshManager::LoadStaticMesh(string szKey, string szPath)
+{
+    if (m_mapStaticMesh.find(szKey) == m_mapStaticMesh.end())
+    {
+        LPMESH* mesh = new LPMESH;
+        HRESULT hr = D3DXLoadMeshFromXA(szKey.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+        m_mapStaticMesh.insert(make_pair(szKey, mesh));
+    }
+}
+
+LPMESH cMeshManager::GetStaticMesh(string szKey)
+{
+    LPMESH mesh = NULL;
+
+    if (m_mapStaticMesh.find(szKey) != m_mapStaticMesh.end())
+    {
+        mesh = *m_mapStaticMesh[szKey];
     }
 
     return mesh;
@@ -165,6 +195,12 @@ void cMeshManager::Destroy()
     {
         SAFE_RELEASE(*iter->second);
         iter = m_mapMesh.erase(iter);
+    }
+
+    for (auto iter = m_mapStaticMesh.begin(); iter != m_mapStaticMesh.end();)
+    {
+        SAFE_RELEASE(*iter->second); // 로드가 수정되면 문제 없는 코드!
+        iter = m_mapStaticMesh.erase(iter);
     }
 
     for (auto iter = m_mapSkinnedMesh.begin(); iter != m_mapSkinnedMesh.end();)

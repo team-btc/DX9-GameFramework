@@ -50,6 +50,9 @@ void cMapLoader::LoadMap(string szKey)
     // 이벤트 -> 여기서 플레이어 시작 위치 셋팅
     LoadEvent(jLoad["event"]);
 
+    // 오브젝트
+    LoadObject(jLoad["OBJECT"]);
+
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
     g_pMapManager->SetMapInfo(szKey, m_stMapInfo);
 }
@@ -240,5 +243,28 @@ void cMapLoader::LoadEvent(json jEvent)
         }
 
         m_stMapInfo->vecEventInfo.push_back(stEvent);
+    }
+}
+
+void cMapLoader::LoadObject(json jObject)
+{
+    for (int i = 0; i < jObject.size(); ++i)
+    {
+        ST_OBJECT_INFO stObject;
+        string szName = jObject[i]["OBJECT_FILE_KEY"];
+        string szPath = OBJECT_PATH + szName + "/" + szName + ".x";
+        g_pMeshManager->LoadStaticMesh(szName, szPath);
+        stObject.pMesh = g_pMeshManager->GetStaticMesh(szName);
+
+        Matrix4 matS, matRX, matRY, matRZ, matT;
+        float fScale = jObject[i]["OBJECT_SCALE"];
+        D3DXMatrixScaling(&matS, fScale, fScale, fScale);
+        D3DXMatrixRotationX(&matRX, jObject[i]["OBJECT_ROTATION_X"]);
+        D3DXMatrixRotationY(&matRY, jObject[i]["OBJECT_ROTATION_Y"]);
+        D3DXMatrixRotationZ(&matRZ, jObject[i]["OBJECT_ROTATION_Z"]);
+        D3DXMatrixTranslation(&matT, jObject[i]["OBJECT_POSITION_X"], jObject[i]["OBJECT_POSITION_Y"], jObject[i]["OBJECT_POSITION_Z"]);
+        stObject.matWorld = matS * matRX * matRY * matRZ * matT;
+
+        m_stMapInfo->vecObjectInfo.push_back(stObject);
     }
 }

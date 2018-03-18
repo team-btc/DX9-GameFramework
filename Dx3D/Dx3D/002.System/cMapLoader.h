@@ -14,6 +14,7 @@ private:
     void LoadSky(json jSky);
     void LoadObstacle(json jObstacle);
     void LoadEvent(json jEvent);
+    void LoadObject(json jObject);
 
 public:
     cMapLoader();

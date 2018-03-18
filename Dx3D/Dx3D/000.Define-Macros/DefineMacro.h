@@ -125,4 +125,5 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define WATER_PATH "Assets/Texture/"
 #define SKY_PATH "Assets/Texture/Skybox/"
 #define SHADER_PATH "Assets/Shader/"
+#define OBJECT_PATH "Assets/Obejct/"
 #pragma endregion
