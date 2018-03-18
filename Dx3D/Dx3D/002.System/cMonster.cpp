@@ -33,6 +33,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
 
     IdleAnim();
 
+    m_fMoveRadius = 30.0f;
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
@@ -69,6 +70,7 @@ cMonster::cMonster(string szKey)
 
     IdleAnim();
 
+    m_fMoveRadius = 30.0f;
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
@@ -169,7 +171,7 @@ void cMonster::Update()
                     isAttack = false;
                 }
 
-                m_vPosition += Dir * 0.05f;
+                m_vPosition += Dir * 0.1f;
                 m_stSphere.vCenter = m_vPosition;
 
                 D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
@@ -187,7 +189,7 @@ void cMonster::Update()
         }
         else
         {
-          
+            m_fMoveCount += g_pTimerManager->GetDeltaTime();
         }
     }
     else
@@ -208,7 +210,8 @@ void cMonster::Render()
 {
     m_pMesh->UpdateAndRender();
 
-    Matrix4 matS,matW;
+#ifdef _DEBUG
+    Matrix4 matS, matW;
     D3DXMatrixScaling(&matS, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
     D3DXMatrixTranslation(&m_MatTrans, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 5.0f, m_stSphere.vCenter.z);
     matW = matS * m_MatRotate * m_MatTrans;
@@ -216,4 +219,5 @@ void cMonster::Render()
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+#endif // _DEBUG
 }

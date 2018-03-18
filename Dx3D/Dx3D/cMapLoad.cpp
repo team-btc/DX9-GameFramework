@@ -106,7 +106,7 @@ HRESULT cMapLoad::Update()
     if (m_vecMonster->size() == 0)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[1].vPos);
+        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);
     }

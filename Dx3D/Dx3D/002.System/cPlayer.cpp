@@ -326,13 +326,15 @@ void cPlayer::Render()
 {
     m_pMesh->UpdateAndRender();
 
-    Matrix4 matR,matT, matW;
+#ifdef _DEBUG
+    Matrix4 matR, matT, matW;
     D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
-    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
+    D3DXMatrixRotationY(&matR, -D3DX_PI / 2);
     D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
     matW = m_MatScale * m_MatRotate * matR * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+#endif // _DEBUG
 }
