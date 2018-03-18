@@ -13,12 +13,11 @@ cMainGame::cMainGame()
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
     hr = g_pMaterialManager->Setup();
+    g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
+    g_pMeshManager->LoadSkinnedMesh();
     
     g_pScnManager->Setup();
-
-    g_pMeshManager->LoadSkinnedMesh();
-    g_pMeshManager->LoadJSON();
     g_pCharacterManager->Setup();
 }
 
@@ -67,6 +66,7 @@ void cMainGame::Setup()
 
 void cMainGame::Update()
 {
+    // 씬안에 카메라 넣기
     if (m_pCamera)
     {
         m_pCamera->Update(&map->GetPlayerPos());

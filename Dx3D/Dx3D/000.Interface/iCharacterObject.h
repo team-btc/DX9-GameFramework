@@ -25,8 +25,6 @@ protected:
     LPMESH          m_pPikingMesh; // 가상의 구를 보여줌
     ST_SPHERE       m_stSphere; // 가상의 구 실질적으로 피킹되게끔함
 
-    map<string, ST_STATE>   m_mapStateInfo;
-    
     // 스탯
     ST_STATUS       m_stStat;
    

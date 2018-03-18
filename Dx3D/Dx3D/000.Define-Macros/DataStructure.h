@@ -197,23 +197,23 @@ struct ST_STATE
 struct ST_STATUS
 {
 public:
-    string          m_szName;
-    float           m_fATK;
-    float           m_fDEF;
-    float           m_fSTR;
-    float           m_fDEX;
-    float           m_fINT;
-    float           m_fMaxHP;
-    float           m_fMaxMP;
-    float           m_fSpeed;
-    int             m_Level;
+    string          szName;
+    float           fATK;
+    float           fDEF;
+    float           fSTR;
+    float           fDEX;
+    float           fINT;
+    float           fMaxHP;
+    float           fMaxMP;
+    float           fSpeed;
+    int             Level;
 
-    float           m_fCurHP;
-    float           m_fCurMP;
-    int             m_nCurEXP;
-    int             m_nMaxEXP;
-    float           m_fHPGen;
-    float           m_fMPGen;
-    float           m_fCritical;
-    int             m_nCoolTime;
+    float           fCurHP;
+    float           fCurMP;
+    int             nCurEXP;
+    int             nMaxEXP;
+    float           fHPGen;
+    float           fMPGen;
+    float           fCritical;
+    int             nCoolTime;
 };

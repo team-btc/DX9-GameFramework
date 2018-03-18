@@ -1,7 +1,7 @@
 #pragma once
 #include "003.Object\cCharacterObject.h"
 
-#define Speed 1.0f
+#define Speed 0.3f
 
 class cPlayer : public cCharacterObject
 {
@@ -19,7 +19,7 @@ private:
     bool isMove;
 
 public:
-    cPlayer(string szKey, string szFolder, string szFilename, string szJsonName);
+    cPlayer(string szKey, string szFolder, string szFilename);
     cPlayer(string szKey);
     cPlayer();
     ~cPlayer();

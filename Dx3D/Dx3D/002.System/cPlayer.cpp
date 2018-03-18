@@ -3,59 +3,42 @@
 #include "003.Object\cSkinnedMesh.h"
 #include "cMonster.h"
 
-cPlayer::cPlayer(string szKey, string szFolder, string szFilename,string szJsonName)
+cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     :DestPoint(0,0,0)
     , isMoveToPoint(false)
     , isPoint(false)
     , isPickMonster(false)
     , isMove(false)
 {
-    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename, szJsonName);
+    m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
 
     m_eTag = PLAYER;
 
-    m_stStat.m_szName = "ChiChi";
-    m_stStat.m_Level = 1;
+    m_stStat.szName = "ChiChi";
+    m_stStat.Level = 1;
 
-    m_stStat.m_fSTR = 20.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fDEX = 15.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fINT = 15.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
+    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
+    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
 
-    m_stStat.m_fATK = 35.0f + m_stStat.m_Level * 20.0f;
-    m_stStat.m_fDEF = 10.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fCurHP = 500.0f + m_stStat.m_Level * 100.0f;
-    m_stStat.m_fMaxHP = 500.0f + m_stStat.m_Level * 100.0f;
-    m_stStat.m_fCurMP = 300.0f + m_stStat.m_Level * 50.0f;
-    m_stStat.m_fMaxMP = 300.0f + m_stStat.m_Level * 50.0f;
-    m_stStat.m_fSpeed = 1.0f;
-    m_stStat.m_fCritical = 15.0f;
-    m_stStat.m_fHPGen = m_stStat.m_fMaxHP * 0.01f + m_stStat.m_Level * 0.5f;
-    m_stStat.m_fMPGen = m_stStat.m_fMaxMP * 0.01f + m_stStat.m_Level * 0.5f;
-    m_stStat.m_nCoolTime = 0;
-    m_stStat.m_nCurEXP = 0;
-    m_stStat.m_nMaxEXP = 100;
-
-
-    for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
-    {
-        ST_STATE state;
-        string str1 = m_pMesh->GetJson()["State"][i]["index"];
-        state.nStateNum = atoi(str1.c_str());
-        for (int j = 0; j < m_pMesh->GetJson()["State"][i]["Position"].size(); j++)
-        {
-            string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
-            string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = (float)atof(str2.c_str());
-            state.mapPosition.insert(make_pair(str1, pos));
-        }
-        string str = m_pMesh->GetJson()["State"][i]["Name"];
-        m_mapStateInfo.insert(make_pair(str, state));
-    }
+    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
+    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
+    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fSpeed = 1.0f;
+    m_stStat.fCritical = 15.0f;
+    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.nCoolTime = 0;
+    m_stStat.nCurEXP = 0;
+    m_stStat.nMaxEXP = 100;
     
     IdleAnim();
     
-    m_stSphere.fRadius = 1.0f;
+    m_stSphere.fRadius = 4.0f;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
@@ -75,46 +58,30 @@ cPlayer::cPlayer(string szKey)
 
     m_eTag = PLAYER;
 
-    m_stStat.m_szName = "ChiChi";
-    m_stStat.m_Level = 1;
+    m_stStat.szName = "ChiChi";
+    m_stStat.Level = 1;
 
-    m_stStat.m_fSTR = 20.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fDEX = 15.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fINT = 15.0f + m_stStat.m_Level * 5.0f;
+    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
+    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
+    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
 
-    m_stStat.m_fATK = 35.0f + m_stStat.m_Level * 20.0f;
-    m_stStat.m_fDEF = 10.0f + m_stStat.m_Level * 5.0f;
-    m_stStat.m_fCurHP = 500.0f + m_stStat.m_Level * 100.0f;
-    m_stStat.m_fMaxHP = 500.0f + m_stStat.m_Level * 100.0f;
-    m_stStat.m_fCurMP = 300.0f + m_stStat.m_Level * 50.0f;
-    m_stStat.m_fMaxMP = 300.0f + m_stStat.m_Level * 50.0f;
-    m_stStat.m_fSpeed = 1.0f;
-    m_stStat.m_fCritical = 15.0f;
-    m_stStat.m_fHPGen = m_stStat.m_fMaxHP * 0.01f + m_stStat.m_Level * 0.5f;
-    m_stStat.m_fMPGen = m_stStat.m_fMaxMP * 0.01f + m_stStat.m_Level * 0.5f;
-    m_stStat.m_nCoolTime = 0;
-    m_stStat.m_nCurEXP = 0;
-    m_stStat.m_nMaxEXP = 100;
-
-    for (int i = 0; i < m_pMesh->GetJson()["State"].size(); i++)
-    {
-        ST_STATE state;
-        string str1 = m_pMesh->GetJson()["State"][i]["index"];
-        state.nStateNum = atoi(str1.c_str());
-        for (int j = 0; j < m_pMesh->GetJson()["State"][i]["Position"].size(); j++)
-        {
-            string str1 = m_pMesh->GetJson()["State"][i]["Position"][j]["Name"];
-            string str2 = m_pMesh->GetJson()["State"][i]["Position"][j]["Value"];
-            float pos = (float)atof(str2.c_str());
-            state.mapPosition.insert(make_pair(str1, pos));
-        }
-        string str = m_pMesh->GetJson()["State"][i]["Name"];
-        m_mapStateInfo.insert(make_pair(str, state));
-    }
+    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
+    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
+    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fSpeed = 1.0f;
+    m_stStat.fCritical = 15.0f;
+    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.nCoolTime = 0;
+    m_stStat.nCurEXP = 0;
+    m_stStat.nMaxEXP = 100;
 
     IdleAnim();
 
-    m_stSphere.fRadius = 1.0f;
+    m_stSphere.fRadius = 4.0f;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
@@ -254,10 +221,11 @@ void cPlayer::Update()
         //원하는 위치일때 데미지가 들어간다.
         if (m_pMesh->GetAnimName() == "Attack")
         {
-            if (isPoint && m_pMesh->GetdescPos() >= m_mapStateInfo["Attack"].mapPosition["attack"])
+            if (isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack"].mapPosition["attack"])
             {
                 isPoint = false;
-                Action("Attack", m_stStat.m_fATK);// 다시해야함
+                //데미지 계산식을 넣어야함
+                Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
                     m_pTarget->RayCast(this); // 어그로 주고
             }
@@ -268,7 +236,7 @@ void cPlayer::Update()
         {
             if (m_pMesh->GetCurPos() >= 1)
             {
-                Action("Attack", m_stStat.m_fATK);// 다시해야함
+                Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
                     m_pTarget->RayCast(this); // 어그로 주고
                 IdleAnim();
@@ -304,6 +272,7 @@ void cPlayer::Update()
             m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
         else
             m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 
         D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
@@ -345,10 +314,11 @@ void cPlayer::Update()
     }
 
     Matrix4 matR,matW;
-    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
-    D3DXMatrixScaling(&m_MatScale, 0.5, 0.5, 0.5);
-    matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
+    D3DXMatrixScaling(&m_MatScale, 8, 8, 8);
+    D3DXMatrixRotationY(&matR, -D3DX_PI / 2);
+    D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
     m_stSphere.vCenter = m_vPosition;
+    matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
     m_pMesh->SetWorldMatrix(matW);
 }
 
@@ -357,16 +327,12 @@ void cPlayer::Render()
     m_pMesh->UpdateAndRender();
 
     Matrix4 matR,matT, matW;
-    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
-    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 0.5f, m_stSphere.vCenter.z);
     D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
+    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
+    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
     matW = m_MatScale * m_MatRotate * matR * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
-
-//void cPlayer::Destroy()
-//{
-//}
