@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
-#include "cMapLoad.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -27,7 +26,6 @@ cMainGame::~cMainGame()
     HRESULT hr = S_OK;
 
     g_pScnManager->Destroy();
-
     //  CUSTOM RESOURCE 해제
     g_pFontManager->Destroy();
     g_pTextureManager->Destroy();
@@ -36,7 +34,6 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE 해제
     g_pAutoReleasePool->Drain();
-    g_pBroadcastManager->Destroy();
     g_pObjectManager->Destory();
     g_pMapManager->Destroy();
     hr = g_pDbManager->Destroy();
@@ -57,11 +54,6 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
-
-    map = new cMapLoad;
-
-    g_pScnManager->AddScene("map", map);
-    g_pScnManager->ChangeScene("map");
 }
 
 void cMainGame::Update()
@@ -69,7 +61,7 @@ void cMainGame::Update()
     // 씬안에 카메라 넣기
     if (m_pCamera)
     {
-        m_pCamera->Update(&map->GetPlayerPos());
+        m_pCamera->Update();
     }
 
     g_pScnManager->Update();
@@ -88,7 +80,9 @@ void cMainGame::Render()
 
         hr = g_pScnManager->Render();
 
+#ifdef _DEBUG
         hr = g_pTimerManager->Render();
+#endif // _DEBUG
 
         g_pScnManager->Render();
         
@@ -113,5 +107,7 @@ void cMainGame::Render()
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (m_pCamera)
+    {
         m_pCamera->WndProc(hWnd, message, wParam, lParam);
+    }
 }

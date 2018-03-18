@@ -27,9 +27,6 @@
     <ClInclude Include="Dx3D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cBroadcastManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="001.Manager\000.System\cDeviceManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -213,13 +210,7 @@
     <ClInclude Include="002.System\cParticle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="003.Particle\cParticleExplosion.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="003.Object\cBoundingBox.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Particle\cParticleSnow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="003.Object\cCharacterObject.h">
@@ -237,15 +228,24 @@
     <ClInclude Include="cNonPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="003.Scene\cTitleScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Scene\cEndingScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Scene\cPlayScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="003.Scene\cLoadingScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="001.Manager\000.System\cBroadcastManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp">
@@ -383,13 +383,7 @@
     <ClCompile Include="002.System\cParticle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="003.Particle\cParticleExplosion.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="003.Object\cBoundingBox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="003.Particle\cParticleSnow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Object\cCharacterObject.cpp">
@@ -405,6 +399,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="cNonPlayer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Scene\cTitleScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Scene\cEndingScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Scene\cPlayScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="003.Scene\cLoadingScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

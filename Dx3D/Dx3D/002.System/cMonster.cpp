@@ -190,6 +190,11 @@ void cMonster::Update()
         else
         {
             m_fMoveCount += g_pTimerManager->GetDeltaTime();
+            
+            if (m_fMoveCount > 10.0f)
+            {
+
+            }
         }
     }
     else

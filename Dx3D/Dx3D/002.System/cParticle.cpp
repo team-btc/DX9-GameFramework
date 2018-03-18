@@ -8,6 +8,22 @@ cParticle::cParticle()
     m_vTexture = NULL;  //텍스처
 }
 
+cParticle::cParticle(Vector3* vOriginPos, int nGenNum, int nMaxNum)
+{
+    m_vOriginPos = *vOriginPos;
+    m_fSize = 0.9f;
+    m_vbBufferSize = 2048;
+    m_vbOffset = 0;
+    m_vbBatchSize = 512;
+    m_fGenTerm = 0.0f;
+    m_nMaxParticle = nMaxNum;
+
+    for (int i = 0; i < nGenNum; i++)
+    {
+        AddParticle();
+    }
+}
+
 cParticle::~cParticle()
 {
     SAFE_RELEASE(m_vertexBuffer);
@@ -28,10 +44,10 @@ bool cParticle::Init(string szKey)
     // 버텍스 버퍼 생성
     hr = g_pDevice->CreateVertexBuffer(
         // 버텍스 버퍼 크기가 m_vbBufferSize에 의해 미리 정의되며, 시스템 내의 파티클 수와는 관련이 없음을 주의. 
-        m_vbBufferSize * sizeof(Particle),
+        m_vbBufferSize * sizeof(ST_PARTICLE),
         // 버텍스 버퍼가 포인트 스프라이트를 보관할 것임을 지정하는 D3DUSAGE_POINTS를 이용.
         D3DUSAGE_DYNAMIC | D3DUSAGE_POINTS | D3DUSAGE_WRITEONLY,
-        Particle::FVF,
+        ST_PARTICLE::FVF,
         // 동적 버텍스 버퍼는 관리 메모리 풀에 보관할 수 없으므로 디폴트 메모리 풀을 이용.
         D3DPOOL_DEFAULT,
         &m_vertexBuffer,
@@ -41,6 +57,7 @@ bool cParticle::Init(string szKey)
     if (FAILED(hr))
     {
         MessageBox(0, L"버텍스 버퍼 생성 실패", L"cParticle", 0);
+        g_pLogManager->WriteLog(EL_ERROR, "Creation FAILED : VertexBuffer - cParticle");
 
         return false;
     }
@@ -51,6 +68,7 @@ bool cParticle::Init(string szKey)
     if (!m_vTexture)
     {
         MessageBox(0, L"텍스쳐 로딩 실패", L"cParticle", 0);
+        g_pLogManager->WriteLog(EL_ERROR, "Creation FAILED : Texture - cParticle");
 
         return false;
     }
@@ -61,8 +79,8 @@ bool cParticle::Init(string szKey)
 // 시스템 내의 모든 파티클 속성을 리셋.
 void cParticle::Reset()
 {
-    list<ST_PARTICLE_ATTR>::iterator i;
-    for (i = m_particleList.begin(); i != m_particleList.end(); i++)
+    auto i = m_particleList.begin();
+    for (; i != m_particleList.end(); i++)
     {
         // 한 파티클의 속성을 리셋.
         // 파티클의 속성이 리셋되는 방식은 파티클 시스템에 따라 달라짐.
@@ -71,12 +89,27 @@ void cParticle::Reset()
     }
 }
 
+void cParticle::Reset(ST_PARTICLE_ATTR attrOrigin)
+{
+    m_particleOrigin = attrOrigin;
+    auto i = m_particleList.begin();
+    for (; i != m_particleList.end(); i++)
+    {
+        // 한 파티클의 속성을 리셋.
+        // 파티클의 속성이 리셋되는 방식은 파티클 시스템에 따라 달라짐.
+        // 따라서 하위 클래스에서 메서드를 구현하도록 추상 메서드로 선언.
+        ResetParticle(&(*i), m_particleOrigin);
+    }
+}
+
 // 시스템에 파티클을 추가.
 // 이 메서드는 리스트에 추가 하기전에 파티클을 초기화 하는데 resetPaticle 메서드를 이용.
 void cParticle::AddParticle()
 {
     ST_PARTICLE_ATTR attribute;
-    ResetParticle(&attribute);
+    attribute = m_particleOrigin;
+    attribute.vPos = m_vOriginPos;
+    ResetParticle(&attribute, m_particleOrigin);
     m_particleList.push_back(attribute);
 }
 
@@ -84,40 +117,20 @@ void cParticle::AddParticle()
 void cParticle::PreRender()
 {
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-    // 현재 지정된 전체 텍스처를 포인트 스프라이트의 텍스처 매핑에 이용할것임을 의미.
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
-    // 포인트 크기를 뷰 스페이스 단위로 해석하도록 지정.
-    // 뷰 스페이스 단위는 간단히 카메라 공간 내의 3D 포인트를 나타내며,
-    // 포인트 스프라이트의 크기는 카메라와의 거리에 따라 적절하게 조정됨.
-    // 즉, 카메라와 멀리 떨어진 파티클은 가까운 파티클에 비해작게 나타남.
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true);
-    // 포인트 스프라이트의 크기를 지정.
-    // 이 값은 D3DRS_POINTSCALEENABLE 상태 값에 따라서 뷰 스페이스 내의 크기나 
-    // 스크린 스페이스 내의 크기로 해석. 
-    // FtoDw 함수는 float을 DWORD로 형 변환한다.
-    // 이 함수가 필요한 것은 일반적인 IDirect3DDevice9::SetRenderState 호출이
-    // float이 아닌 DWORD를 필요로 하기 때문.
     g_pDevice->SetRenderState(D3DRS_POINTSIZE, FloatToDword(m_fSize));
-
-    // 포인트 스프라이트의 지정할 수 있는 최소 크기를 지정.
     g_pDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FloatToDword(0.0f));
 
-    // 이 세 개의 상수는 거리에 따라 포인트 스프라이트의 크기가 변하는 방법을 제어.
-    // 여기에서 말하는 거리란 카메라와 포인트 스프라이트 간의 거리.
+    /*
+    (1 / (A + B * D + C * D^2)) * SIZE
+    */
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_A, FloatToDword(0.0f));
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_B, FloatToDword(0.0f));
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_C, FloatToDword(1.0f));
 
-    // 텍스처의 알파를 이용.
     g_pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
     g_pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-
-    // 알파 블렌딩을 활성화하여 텍스처의 알파 채널이 텍스처의 픽셀 투명도를 결정하도록 했음.
-    // 이를 통해 다양한 효과를 얻을 수 있으며,
-    // 가장 대표적인 것이 사각형이 아닌 다른 파티클 형태를 구현 하는 것.
-    // 예, "눈덩이와 비슷한" 둥근 파티클을 얻기 위해서는 
-    // 흰색의 원형과 검은색의 알파 채널을 갖는 흰색 텍스처를 이용하면 됨.
-    // 이렇게 하면 사각형의 흰색 텍스처 전체가아닌 흰색 원 모양의 파티클을 만들 수 있다.
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -131,6 +144,7 @@ void cParticle::PostRender()
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+    g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
 }
 
 // 렌더링 메서드
@@ -147,8 +161,8 @@ void cParticle::Render()
         PreRender();
 
         g_pDevice->SetTexture(0, m_vTexture);
-        g_pDevice->SetFVF(Particle::FVF);
-        g_pDevice->SetStreamSource(0, m_vertexBuffer, 0, sizeof(Particle));
+        g_pDevice->SetFVF(ST_PARTICLE::FVF);
+        g_pDevice->SetStreamSource(0, m_vertexBuffer, 0, sizeof(ST_PARTICLE));
 
         // Render batches one by one
         // 버텍스 버퍼를 벗어날 경우 처음부터 시작한다.
@@ -160,11 +174,11 @@ void cParticle::Render()
             m_vbOffset = 0;
         }
 
-        Particle* v = NULL;
+        ST_PARTICLE* v = NULL;
         // _vbBatchSize - 하나의 단계에 정의된 파티클의 수.
         m_vertexBuffer->Lock(
-            m_vbOffset * sizeof(Particle),
-            m_vbBatchSize * sizeof(Particle),
+            m_vbOffset * sizeof(ST_PARTICLE),
+            m_vbBatchSize * sizeof(ST_PARTICLE),
             (void**)&v,
             m_vbOffset ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD);
         DWORD numParticlesInBatch = 0;
@@ -176,8 +190,8 @@ void cParticle::Render()
             if (i->isAlive)
             {
                 // 한단계의 생존한 파티클을다음 버텍스 버퍼 세그먼트로 복사.
-                v->p = i->p;
-                v->c = (Color)i->c;
+                v->vPos = i->vPos;
+                v->c = (Color)i->color;
                 v++; // next element;
                 numParticlesInBatch++; //단계 카운터를 증가시킨다.
                                        // 현재 단계가 모두 채워져 있는가?
@@ -201,8 +215,8 @@ void cParticle::Render()
                     }
 
                     m_vertexBuffer->Lock(
-                        m_vbOffset * sizeof(Particle),
-                        m_vbBatchSize * sizeof(Particle),
+                        m_vbOffset * sizeof(ST_PARTICLE),
+                        m_vbBatchSize * sizeof(ST_PARTICLE),
                         (void**)&v,
                         m_vbOffset ? D3DLOCK_NOOVERWRITE : D3DLOCK_DISCARD);
                     numParticlesInBatch = 0; // 다음 단계를 위한 리셋
@@ -254,22 +268,22 @@ bool cParticle::IsDead()
     return true;
 }
 
-void cParticle::ResetParticle(ST_PARTICLE_ATTR * attribute)
+void cParticle::ResetParticle(ST_PARTICLE_ATTR* attribute)
 {
     attribute->isAlive = true;
-    attribute->p = m_vOriginPos;
+    attribute->vPos = m_vOriginPos;
 
     Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
     Vector3 max = Vector3(1.0f, 1.0f, 1.0f);
 
     // 지정된 범위의 랜덤한 벡터를 저장
-    attribute->v = GetRandomVector3(min, max);
+    attribute->vSpeed = GetRandomVector3(min, max);
 
     D3DXVec3Normalize(
-        &attribute->v,
-        &attribute->v);
-    attribute->v *= 100.0f;
-    attribute->c = XColor(
+        &attribute->vSpeed,
+        &attribute->vSpeed);
+    attribute->vSpeed *= 100.0f;
+    attribute->color = XColor(
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
         GetRandomFloat(0.0f, 1.0f),
@@ -279,21 +293,65 @@ void cParticle::ResetParticle(ST_PARTICLE_ATTR * attribute)
     // 2초 동안의 수명을 가진다. 
 }
 
+void cParticle::ResetParticle(ST_PARTICLE_ATTR* attrDest, ST_PARTICLE_ATTR attrOrigin)
+{
+    *attrDest = attrOrigin;
+    attrDest->vPos = m_vOriginPos;
+    Vector3 min = attrOrigin.deltaAccelMin;
+    Vector3 max = attrOrigin.deltaAccelMax;
+
+    // 랜덤한 속도 생성
+    attrDest->vSpeed = GetRandomVector3(min, max);
+
+    //D3DXVec3Normalize(
+    //    &attrDest->vSpeed,
+    //    &attrDest->vSpeed);
+    attrDest->vSpeed *= attrDest->fSpeed;
+
+    attrDest->life = GetRandomFloat(attrDest->fMinLife, attrDest->fMaxLife);
+}
+
 void cParticle::Update()
 {
     float timeDelta = g_pTimerManager->GetDeltaTime();
-    list<ST_PARTICLE_ATTR>::iterator i;
-    for (i = m_particleList.begin(); i != m_particleList.end(); i++)
+    if ((int)m_particleList.size() < m_nMaxParticle &&
+        m_fGenTime < g_pTimerManager->GetWorldTime())
+    {
+        AddParticle();
+        m_fGenTime = g_pTimerManager->GetWorldTime() + m_fGenTerm;
+    }
+
+    auto i = m_particleList.begin();
+    for (; i != m_particleList.end(); i++)
     {
         // 생존한 파티클만 갱신.
         if (i->isAlive)
         {
-            i->p += i->v * timeDelta;
+            if (i->isFade)
+            {
+                Vector4 c1, c2;
+                c1 = Vector4(i->originColor.r, i->originColor.g, i->originColor.b, i->originColor.a);
+                c2 = Vector4(i->fadeColor.r, i->fadeColor.g, i->fadeColor.b, i->fadeColor.a);
+                D3DXVec4Lerp(&c1, &c1, &c2, (i->age / i->life));
+                i->color = XColor(c1.x, c1.y, c1.z, c1.w);
+            }
+
+            i->vAccel.y -= i->fGravity;
+            i->vPos += (i->vSpeed + i->vAccel) * timeDelta;
+            i->vPos.y -= i->fGravity * timeDelta;
             i->age += timeDelta;
             if (i->age > i->life)
             {
-                // 죽인다.
-                i->isAlive = false;
+                if (i->isLoop)
+                {
+                    i->vPos = m_vOriginPos;
+                    i->age = 0.0f;
+                    ResetParticle(&(*i), m_particleOrigin);
+                }
+                else
+                {
+                    i->isAlive = false;
+                }
             }
         }
     }

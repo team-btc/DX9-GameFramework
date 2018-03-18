@@ -72,8 +72,8 @@ void cUIObject::UpdateWorldTM()
 
 void cUIObject::UpdateChildren()
 {
-    for each (auto p in m_vecChild)
-        p->Update();
+    for each (auto vPos in m_vecChild)
+        vPos->Update();
 }
 
 void cUIObject::Render(LPSPRITE pSprite)
@@ -84,8 +84,8 @@ void cUIObject::Render(LPSPRITE pSprite)
         g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &m_vecVertex[0], sizeof(VertexRHWC));
     }
 
-    for each (auto p in m_vecChild)
-        p->Render(pSprite);
+    for each (auto vPos in m_vecChild)
+        vPos->Render(pSprite);
 }
 
 void cUIObject::AddChild(cUIObject* pChild)
@@ -109,9 +109,9 @@ cUIObject* cUIObject::GetChildByTag(int tag)
     if (m_nTag == tag)	// 찾고 있는 tag 값이 현재 UI 인 경우
         return this;
 
-    for each(auto p in m_vecChild)	// 자식들 중에 찾는 tag 값이 있는지 검색
+    for each(auto vPos in m_vecChild)	// 자식들 중에 찾는 tag 값이 있는지 검색
     {
-        cUIObject* pChild = p->GetChildByTag(tag);
+        cUIObject* pChild = vPos->GetChildByTag(tag);
         if (pChild)
             return pChild;
     }
@@ -134,11 +134,11 @@ cUIObject * cUIObject::GetChildByName(string strChildName)
     {
         if (!m_vecChild.empty())
         {
-            for each(auto p in m_vecChild)
+            for each(auto vPos in m_vecChild)
             {
-                if (p->m_szName == strChildName)
+                if (vPos->m_szName == strChildName)
                 {
-                    return p;
+                    return vPos;
                 }
             }
         }

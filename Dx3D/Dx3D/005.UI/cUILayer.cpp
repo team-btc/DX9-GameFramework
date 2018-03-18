@@ -87,10 +87,10 @@ HRESULT cUILayer::Render()
         // 레이어 자식이 있을 경우 
         if (!m_vecUILayerChilds.empty())
         {
-            for each(auto p in m_vecUILayerChilds)
+            for each(auto vPos in m_vecUILayerChilds)
             {
-                p->SetActive(m_isActive);
-                p->Render();
+                vPos->SetActive(m_isActive);
+                vPos->Render();
             }
         }
     }
@@ -119,9 +119,9 @@ HRESULT cUILayer::UpdateWorldMatrix()
 
 HRESULT cUILayer::UpdateChildren()
 {
-    for each(auto p in m_vecUILayerChilds)
+    for each(auto vPos in m_vecUILayerChilds)
     {
-        p->Update();
+        vPos->Update();
     }
 
     return S_OK;
@@ -168,13 +168,13 @@ HRESULT cUILayer::FindUILayerChild(OUT cUILayer** pChild, IN string strChildName
     {
         if (!m_vecUILayerChilds.empty())
         {
-            for each (auto p in m_vecUILayerChilds)
+            for each (auto vPos in m_vecUILayerChilds)
             {
-                p->FindUILayerChild(pChild, strChildName);
+                vPos->FindUILayerChild(pChild, strChildName);
 
-                if (p->m_strName == strChildName)
+                if (vPos->m_strName == strChildName)
                 {
-                    *pChild = p;
+                    *pChild = vPos;
                     return S_OK;
                 }
             }
