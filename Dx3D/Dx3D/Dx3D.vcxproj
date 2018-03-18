@@ -164,7 +164,6 @@
     <ClInclude Include="000.Interface\iSceneObject.h" />
     <ClInclude Include="000.Interface\iUILayer.h" />
     <ClInclude Include="000.Interface\iUIObject.h" />
-    <ClInclude Include="001.Manager\000.System\cBroadcastManager.h" />
     <ClInclude Include="001.Manager\000.System\cDeviceManager.h" />
     <ClInclude Include="001.Manager\000.System\cEventManager.h" />
     <ClInclude Include="001.Manager\000.System\cKeyManager.h" />
@@ -211,7 +210,7 @@
     <ClInclude Include="001.Manager\000.System\cMapManager.h" />
     <ClInclude Include="003.Scene\cEndingScene.h" />
     <ClInclude Include="cGameMap.h" />
-    <ClInclude Include="cLoadingScene.h" />
+    <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
@@ -228,7 +227,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="001.Manager\000.System\cBroadcastManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cEventManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cKeyManager.cpp" />
@@ -273,7 +271,7 @@
     <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
     <ClCompile Include="003.Scene\cEndingScene.cpp" />
     <ClCompile Include="cGameMap.cpp" />
-    <ClCompile Include="cLoadingScene.cpp" />
+    <ClCompile Include="003.Scene\cLoadingScene.cpp" />
     <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />

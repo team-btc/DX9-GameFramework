@@ -27,9 +27,6 @@
     <ClInclude Include="Dx3D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cBroadcastManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="001.Manager\000.System\cDeviceManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -240,7 +237,7 @@
     <ClInclude Include="003.Scene\cPlayScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cLoadingScene.h">
+    <ClInclude Include="003.Scene\cLoadingScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -249,9 +246,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="001.Manager\000.System\cBroadcastManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp">
@@ -416,7 +410,7 @@
     <ClCompile Include="003.Scene\cPlayScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cLoadingScene.cpp">
+    <ClCompile Include="003.Scene\cLoadingScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
