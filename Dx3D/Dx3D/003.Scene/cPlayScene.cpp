@@ -102,10 +102,7 @@ HRESULT cPlayScene::Start()
     {
         m_vecMonster = new vector<cMonster*>;
     }
-    else
-    {
-        m_vecMonster->clear();
-    }
+    m_vecMonster->clear();
 
     for (int i = 0; i < 1; i++)
     {
@@ -198,17 +195,22 @@ HRESULT cPlayScene::Update()
     if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
     {
         // 이벤트 발동
+        if (szEventName == "to-icecrown")
+        {
+            m_szMapKey = "icecrown";
+            m_stMapInfo = NULL;
+            Start();
+            Update();
+        }
     }
-#ifdef _DEBUG
-    //g_pLogManager->WriteLog(EL_INFO, szEventName);
-#endif // _DEBUG
 
     return S_OK;
 }
 
 HRESULT cPlayScene::Render()
 {
-    if (!m_stMapInfo || !m_stMapInfo->pTerrainMesh)
+    if (m_stMapInfo == NULL ||
+        m_stMapInfo->pTerrainMesh == NULL)
     {
         return E_FAIL;
     }
@@ -258,8 +260,7 @@ HRESULT cPlayScene::Render()
 
     for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
     {
-        g_pDevice->SetTransform(D3DTS_WORLD, &m_stMapInfo->vecObjectInfo[i].matWorld);
-        //m_stMapInfo->vecObjectInfo[i].pMesh->DrawSubset(0);
+        m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
     }
 
     if (m_stMapInfo->isEnableWater && m_pWaveShader)

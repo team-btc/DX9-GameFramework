@@ -19,9 +19,9 @@ void cAutoReleasePool::AddObject(IUnknown* pObject)
 
 void cAutoReleasePool::Drain()
 {
-    for each (auto vPos in m_lstObject)
+    for each (auto p in m_lstObject)
     {
-        while (vPos->Release());
+        while (p->Release());
     }
 
     m_lstObject.clear();

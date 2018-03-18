@@ -103,10 +103,13 @@ void cMeshManager::LoadSkinnedMesh()
     {
         string str = GetJson("arthaslichking")["Scale"];
         float scale = (float)atof(str.c_str());
-        if (scale > 0.0f)
+        if (scale < D3DX_16F_EPSILON)
         {
-            D3DXMatrixScaling(&pNewMesh->matS, scale, scale, scale);
+            scale = 1.0f;
         }
+
+        pNewMesh->SetRotation(Vector3(0, 0, 0));
+        pNewMesh->SetScale(scale);
 
         for (int i = 0; i <GetJson("arthaslichking")["State"].size(); i++)
         {
@@ -132,10 +135,13 @@ void cMeshManager::LoadSkinnedMesh()
     {
         string str = GetJson("deathwing")["Scale"];
         float scale = (float)atof(str.c_str());
-        if (scale > 0.0f)
+        if (scale < D3DX_16F_EPSILON)
         {
-            D3DXMatrixScaling(&pNewMesh->matS, scale, scale, scale);
+            scale = 1.0f;
         }
+
+        pNewMesh->SetRotation(Vector3(0, 0, 0));
+        pNewMesh->SetScale(scale);
 
         for (int i = 0; i <GetJson("deathwing")["State"].size(); i++)
         {
@@ -257,7 +263,7 @@ void cMeshManager::Destroy()
     for (auto iter = m_mapSkinnedMesh.begin(); iter != m_mapSkinnedMesh.end();)
     {
         iter->second->Destroy();
-        SAFE_RELEASE(iter->second);
+        while (iter->second->Release());
         iter = m_mapSkinnedMesh.erase(iter);
     }
 }

@@ -217,10 +217,9 @@ void cPlayer::Update()
             IdleAnim();
         }
     }
-    
-    //공격중이라면
     else
     {
+        //공격중이라면
         //원하는 위치일때 데미지가 들어간다.
         if (m_pMesh->GetAnimName() == "Attack")
         {
@@ -277,12 +276,15 @@ void cPlayer::Update()
         D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &_Dir, &D3DXVECTOR3(0, 1, 0));
         D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
 
-        if(_Dir.z >0)
+        if (_Dir.z > 0)
+        {
             m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        }
         else
+        {
             m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        }
         D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
-
         D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
         //도착
@@ -314,21 +316,15 @@ void cPlayer::Update()
         {
             m_vPosition += Dir * Speed;
             m_stSphere.vCenter = m_vPosition;
-
-            D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
         }
 
         D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &Dir, &D3DXVECTOR3(0, 1, 0));
         D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
     }
 
-    Matrix4 matR,matW;
-    D3DXMatrixScaling(&m_MatScale, 8, 8, 8);
-    D3DXMatrixRotationY(&matR, -D3DX_PI * 0.5f);
-    D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-    m_stSphere.vCenter = m_vPosition;
-    matW = m_MatScale * m_MatRotate * matR * m_MatTrans ;
-    m_pMesh->SetWorldMatrix(matW);
+    m_pMesh->SetScale(8.0f);
+    m_pMesh->SetPosition(m_vPosition);
+    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
 }
 
 void cPlayer::Render()

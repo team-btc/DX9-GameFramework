@@ -32,8 +32,8 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE ÇØÁ¦
     g_pAutoReleasePool->Drain();
-    g_pObjectManager->Destory();
     g_pMapManager->Destroy();
+    g_pObjectManager->Destory();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
     g_pCharacterManager->Destroy();
