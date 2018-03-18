@@ -31,7 +31,7 @@ HRESULT cMapLoad::Start()
     if (m_stMapInfo == NULL)
     {
         cMapLoader mapLoader;
-        mapLoader.LoadMap("iceCrown");
+        mapLoader.LoadMap("badland");
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
         
