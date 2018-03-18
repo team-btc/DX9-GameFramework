@@ -117,40 +117,20 @@ void cParticle::AddParticle()
 void cParticle::PreRender()
 {
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-    // 현재 지정된 전체 텍스처를 포인트 스프라이트의 텍스처 매핑에 이용할것임을 의미.
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
-    // 포인트 크기를 뷰 스페이스 단위로 해석하도록 지정.
-    // 뷰 스페이스 단위는 간단히 카메라 공간 내의 3D 포인트를 나타내며,
-    // 포인트 스프라이트의 크기는 카메라와의 거리에 따라 적절하게 조정됨.
-    // 즉, 카메라와 멀리 떨어진 파티클은 가까운 파티클에 비해작게 나타남.
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true);
-    // 포인트 스프라이트의 크기를 지정.
-    // 이 값은 D3DRS_POINTSCALEENABLE 상태 값에 따라서 뷰 스페이스 내의 크기나 
-    // 스크린 스페이스 내의 크기로 해석. 
-    // FtoDw 함수는 float을 DWORD로 형 변환한다.
-    // 이 함수가 필요한 것은 일반적인 IDirect3DDevice9::SetRenderState 호출이
-    // float이 아닌 DWORD를 필요로 하기 때문.
     g_pDevice->SetRenderState(D3DRS_POINTSIZE, FloatToDword(m_fSize));
-
-    // 포인트 스프라이트의 지정할 수 있는 최소 크기를 지정.
     g_pDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FloatToDword(0.0f));
 
-    // 이 세 개의 상수는 거리에 따라 포인트 스프라이트의 크기가 변하는 방법을 제어.
-    // 여기에서 말하는 거리란 카메라와 포인트 스프라이트 간의 거리.
+    /*
+    (1 / (A + B * D + C * D^2)) * SIZE
+    */
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_A, FloatToDword(0.0f));
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_B, FloatToDword(0.0f));
     g_pDevice->SetRenderState(D3DRS_POINTSCALE_C, FloatToDword(1.0f));
 
-    // 텍스처의 알파를 이용.
     g_pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
     g_pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-
-    // 알파 블렌딩을 활성화하여 텍스처의 알파 채널이 텍스처의 픽셀 투명도를 결정하도록 했음.
-    // 이를 통해 다양한 효과를 얻을 수 있으며,
-    // 가장 대표적인 것이 사각형이 아닌 다른 파티클 형태를 구현 하는 것.
-    // 예, "눈덩이와 비슷한" 둥근 파티클을 얻기 위해서는 
-    // 흰색의 원형과 검은색의 알파 채널을 갖는 흰색 텍스처를 이용하면 됨.
-    // 이렇게 하면 사각형의 흰색 텍스처 전체가아닌 흰색 원 모양의 파티클을 만들 수 있다.
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -164,8 +144,6 @@ void cParticle::PostRender()
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-
-    // z 버퍼 읽기는 가능 하지만 쓰기는 허용하지 않는다. 
     g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
 }
 
