@@ -30,6 +30,7 @@ private:
     cSkinnedMesh();
 
     void Load(string szFolder, string szFilename);
+    void LoadJSON(string szName);
     LPEFFECT LoadEffect(string szFilename);
     void Update(ST_BONE* pCurrent, Matrix4* pmatParent);
     void Render(ST_BONE* pBone = NULL);
@@ -59,7 +60,7 @@ public:
         return &m_stBoundingSphere;
     }
     float GetdescPos();
-    int GetCurPos();
+    float GetCurPos();
     string GetAnimName();
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }

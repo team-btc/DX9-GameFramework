@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
+#include "cMapLoad.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -54,6 +55,11 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
+
+    map = new cMapLoad;
+
+    g_pScnManager->AddScene("map", map);
+    g_pScnManager->ChangeScene("map");
 }
 
 void cMainGame::Update()
@@ -61,7 +67,7 @@ void cMainGame::Update()
     // 씬안에 카메라 넣기
     if (m_pCamera)
     {
-        m_pCamera->Update();
+        m_pCamera->Update(&map->GetPlayerPos());
     }
 
     g_pScnManager->Update();

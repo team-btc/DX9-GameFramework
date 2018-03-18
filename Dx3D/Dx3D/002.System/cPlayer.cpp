@@ -5,10 +5,10 @@
 
 cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     :DestPoint(0,0,0)
-    , isMoveToPoint(false)
-    , isPoint(false)
-    , isPickMonster(false)
-    , isMove(false)
+    , m_isMoveToPoint(false)
+    , m_isPoint(false)
+    , m_isPickMonster(false)
+    , m_isMove(false)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -37,7 +37,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     m_stStat.nMaxEXP = 100;
     
     IdleAnim();
-    
+   
     m_stSphere.fRadius = 4.0f;
     m_stSphere.vCenter = m_vPosition;
 
@@ -48,10 +48,10 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
 
 cPlayer::cPlayer(string szKey)
     :DestPoint(0, 0, 0)
-    , isMoveToPoint(false)
-    , isPoint(false)
-    , isPickMonster(false)
-    , isMove(false)
+    , m_isMoveToPoint(false)
+    , m_isPoint(false)
+    , m_isPickMonster(false)
+    , m_isMove(false)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -109,19 +109,19 @@ void cPlayer::Update()
         //오른쪽 버튼 누를시
         if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
         {
-            isMove = true;
+            m_isMove = true;
             cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
             BOOL isHit = false;
             float _dist = 0.0f;
-            isPickMonster = false;
+            m_isPickMonster = false;
 
             //메쉬 공격
             for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
             {
                 if (ray.IsPicked(&(*iter)->GetSphere()))
                 {
-                    isPickMonster = true;
-                    isMoveToPoint = false;
+                    m_isPickMonster = true;
+                    m_isMoveToPoint = false;
                     isMoveToTarget = true;
                     RayCast(*iter);
                     if (!isRun && Distance((*iter)->GetPosition()) >= m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
@@ -130,7 +130,7 @@ void cPlayer::Update()
             }
 
             //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
-            if (!isPickMonster)
+            if (!m_isPickMonster)
             {
                 D3DXIntersectSubset(m_pTerrain, 0, &ray.m_vOrg, &ray.m_vDir, &isHit, 0, 0, 0, &_dist, NULL, NULL);
                 if (isHit)
@@ -140,7 +140,7 @@ void cPlayer::Update()
                     Vector3 _Dest = ray.m_vOrg + ray.m_vDir*_dist;
                     isAttack = false;
                     isMoveToTarget = false;
-                    isMoveToPoint = true;
+                    m_isMoveToPoint = true;
                     DestPoint = _Dest;
                 }
             }
@@ -150,7 +150,7 @@ void cPlayer::Update()
         //기본 공격
         if (g_pKeyManager->isOnceKeyDown('1'))
         {
-            isPoint = true;
+            m_isPoint = true;
             AttackAnim();
         }
 
@@ -163,7 +163,7 @@ void cPlayer::Update()
 
         if (g_pKeyManager->isOnceKeyDown('W'))
         {
-            isMove = true;
+            m_isMove = true;
             RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('W'))
@@ -177,7 +177,7 @@ void cPlayer::Update()
 
         if (g_pKeyManager->isOnceKeyDown('S'))
         {
-            isMove = true;
+            m_isMove = true;
             RunAnim();
         }
         else if (g_pKeyManager->isStayKeyDown('S'))
@@ -221,24 +221,32 @@ void cPlayer::Update()
         //원하는 위치일때 데미지가 들어간다.
         if (m_pMesh->GetAnimName() == "Attack")
         {
-            if (isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack"].mapPosition["attack"])
+            if (m_isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack"].mapPosition["attack"])
             {
-                isPoint = false;
+                m_isPoint = false;
                 //데미지 계산식을 넣어야함
                 Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
+                {
                     m_pTarget->RayCast(this); // 어그로 주고
+                    cMonster* ss = (cMonster*)m_pTarget;
+                    ss->SetAggroTime(AggroTime);
+                }
             }
-            if (m_pMesh->GetCurPos() >= 1)
+            if (m_pMesh->GetCurPos() >= 1.0f)
                 IdleAnim();
         }
         else
         {
-            if (m_pMesh->GetCurPos() >= 1)
+            if (m_pMesh->GetCurPos() >= 1.0f)
             {
                 Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
+                {
                     m_pTarget->RayCast(this); // 어그로 주고
+                    cMonster* Target = (cMonster*)m_pTarget;
+                    Target->SetAggroTime(AggroTime);
+                }
                 IdleAnim();
             }
         }
@@ -255,14 +263,14 @@ void cPlayer::Update()
     }
 
     //마우스 이동
-    if (isMoveToPoint)
+    if (m_isMoveToPoint)
     {
         Vector3 _Dir = DestPoint - m_vPosition;
 
         D3DXVec3Normalize(&_Dir, &_Dir);
         m_vDir = _Dir;
 
-        m_vPosition += _Dir * Speed;
+        m_vPosition += _Dir * m_fMoveSpeed;
         m_stSphere.vCenter = m_vPosition;
 
         D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &_Dir, &D3DXVECTOR3(0, 1, 0));
@@ -277,11 +285,11 @@ void cPlayer::Update()
         D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
         //도착
-        if (Distance(DestPoint) < Speed)
+        if (Distance(DestPoint) < m_fMoveSpeed)
         {
             m_vPosition = DestPoint;
             IdleAnim();
-            isMoveToPoint = false;
+            m_isMoveToPoint = false;
             DestPoint = Vector3(0, 0, 0);
         }
     }
@@ -298,12 +306,12 @@ void cPlayer::Update()
         if (Distance < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius )
         {
             isMoveToTarget = false;
-            isPoint = true;
+            m_isPoint = true;
             AttackAnim();
         }
         else
         {
-            m_vPosition += Dir * Speed;
+            m_vPosition += Dir * m_fMoveSpeed;
             m_stSphere.vCenter = m_vPosition;
 
             D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);

@@ -21,7 +21,7 @@ void cCharacterManager::Setup()
     {
         cMonster* newMonster = new cMonster("Deathwing");
         g_pAutoReleasePool->AddObject(newMonster);
-        //m_mapMonster.insert(make_pair(i, newMonster));
+       
         m_listMonster.push_back(newMonster);
     }
 }
@@ -32,17 +32,11 @@ void cCharacterManager::Destroy()
 
 void cCharacterManager::PushMonster(cMonster* monster)
 {
-   
-    //monster->Setup();
-    //m_mapMonster.insert(make_pair(m_mapMonster.size() + 1, monster));
     m_listMonster.push_back(monster);
 }
 
 cMonster * cCharacterManager::GetMonster()
 {
-   /* if (count == 20)
-        count = 0;
-    return m_mapMonster.find(count++)->second;*/
     cMonster* returnMonster = m_listMonster.back();
     returnMonster->Setup();
     m_listMonster.pop_back();

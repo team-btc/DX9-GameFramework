@@ -30,6 +30,7 @@ public:
     virtual void SetPosition(Vector3 Pos) override { m_vPosition = Pos; }
     virtual void SetSphere(ST_SPHERE Sphere) override { m_stSphere = Sphere; };
     virtual void SetPikingMesh(LPMESH Mesh) override { m_pPikingMesh = Mesh; }
+    virtual void SetMoveSpeed(float speed) override { m_fMoveSpeed = speed; }
 
     virtual void SetStatus(ST_STATUS stat) override { m_stStat = stat; }
    
@@ -38,6 +39,7 @@ public:
 
     virtual void SetAttack(bool Attack) { isAttack = Attack; }
     virtual void SetRun(bool Run) { isRun = Run; }
+    virtual void SetWalk(bool Walk) { isWalk = Walk; }
     virtual void SetIdle(bool Idle) override { isIdle = Idle; }
     virtual void SetHeal(bool Heal) override { isHeal = Heal; }
     virtual void SetStatic(bool Static) override { isStatic = Static; }
@@ -57,6 +59,7 @@ public:
     virtual Vector3 GetPosition() override { return m_vPosition; }
     virtual ST_SPHERE GetSphere() override { return m_stSphere; }
     virtual LPMESH GetPikingMesh() override { return m_pPikingMesh; }
+    virtual float GetMoveSpeed()  override { return m_fMoveSpeed; }
 
     virtual ST_STATUS& GetStatus() override { return m_stStat; }
     
@@ -65,6 +68,7 @@ public:
 
     virtual bool GetAttak() override { return isAttack; }
     virtual bool GetRun() override { return isRun; }
+    virtual bool GetWalk() override { return isWalk; }
     virtual bool GetIdle() override { return isIdle; }
     virtual bool GetHeal() override { return isHeal; }
     virtual bool GetStatic() override { return isStatic; }
@@ -81,6 +85,7 @@ public:
 
     virtual void AttackAnim() override;
     virtual void RunAnim() override;
+    virtual void WalkAnim() override;
     virtual void IdleAnim() override;
     virtual void LeftAnim() override;
     virtual void RightAnim() override;

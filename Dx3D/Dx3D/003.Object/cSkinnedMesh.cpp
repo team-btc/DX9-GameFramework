@@ -130,6 +130,33 @@ void cSkinnedMesh::Load(string szDirectory, string szFilename)
         SetupBoneMatrixPtrs(m_pRootFrame);
 }
 
+void cSkinnedMesh::LoadJSON(string szName)
+{
+    json jsonData = g_pMeshManager->GetJson(szName);
+    string str = jsonData["Scale"];
+    float scale = (float)atof(str.c_str());
+    if (scale > 0.0f)
+    {
+        D3DXMatrixScaling(&matS, scale, scale, scale);
+    }
+
+    for (int i = 0; i <jsonData["State"].size(); i++)
+    {
+        ST_STATE state;
+        string str1 = jsonData["State"][i]["index"];
+        state.nStateNum = atoi(str1.c_str());
+        for (int j = 0; j < jsonData["State"][i]["Position"].size(); j++)
+        {
+            string str1 = jsonData["State"][i]["Position"][j]["Name"];
+            string str2 = jsonData["State"][i]["Position"][j]["Value"];
+            float pos = (float)atof(str2.c_str());
+            state.mapPosition.insert(make_pair(str1, pos));
+        }
+        string str = jsonData["State"][i]["Name"];
+       m_mapStateInfo.insert(make_pair(str, state));
+    }
+}
+
 void cSkinnedMesh::UpdateAndRender()
 {
     if (m_pAnimController)
@@ -421,7 +448,7 @@ float cSkinnedMesh::GetdescPos()
     return (float)desc.Position;
 }
 
-int cSkinnedMesh::GetCurPos()
+float cSkinnedMesh::GetCurPos()
 {
     int nResult = 0;
 
@@ -433,7 +460,7 @@ int cSkinnedMesh::GetCurPos()
         D3DXTRACK_DESC desc;
         m_pAnimController->GetTrackDesc(0, &desc);
 
-        int CurPos = (int)desc.Position / (int)pAnimSet->GetPeriod();
+        float CurPos = desc.Position / pAnimSet->GetPeriod();
 
         nResult =  CurPos;
     }

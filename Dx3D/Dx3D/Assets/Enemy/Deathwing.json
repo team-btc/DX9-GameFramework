@@ -1,0 +1,37 @@
+{
+    "Scale": "1",
+    "State": [
+        {
+            "Name": "Roar",
+            "index": "0"
+        },
+        {
+            "Name": "Attack2",
+            "index": "1"
+        },
+        {
+            "Name": "Attack1",
+            "index": "2"
+        },
+        {
+            "Name": "Attack0",
+            "index": "3"
+        },
+        {
+            "Name": "Death",
+            "index": "4"
+        },
+        {
+            "Name": "Run",
+            "index": "5"
+        },
+        {
+            "Name": "Walk",
+            "index": "6"
+        },
+        {
+            "Name": "Stand",
+            "index": "7"
+        }
+    ]
+}
