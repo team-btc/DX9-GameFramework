@@ -28,7 +28,6 @@ cMainGame::~cMainGame()
     HRESULT hr = S_OK;
 
     g_pScnManager->Destroy();
-
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();
     g_pTextureManager->Destroy();
@@ -58,18 +57,13 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
-
-    map = new cMapLoad;
-
-    g_pScnManager->AddScene("map", map);
-    g_pScnManager->ChangeScene("map");
 }
 
 void cMainGame::Update()
 {
     if (m_pCamera)
     {
-        m_pCamera->Update(&map->GetPlayerPos());
+        m_pCamera->Update();
     }
 
     g_pScnManager->Update();
@@ -113,5 +107,7 @@ void cMainGame::Render()
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (m_pCamera)
+    {
         m_pCamera->WndProc(hWnd, message, wParam, lParam);
+    }
 }

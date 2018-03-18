@@ -1,14 +1,10 @@
 #pragma once
 #include "cCamera.h"
 
-class cMapLoad;
-class cSkinnedMesh;
-
 class cMainGame
 {
 private:
     cCamera*                m_pCamera;
-    cMapLoad*                map;
 
 public:
     cMainGame();

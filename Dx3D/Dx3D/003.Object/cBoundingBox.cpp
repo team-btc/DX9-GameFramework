@@ -19,14 +19,14 @@ cBoundingBox::~cBoundingBox()
 {
 }
 
-bool cBoundingBox::IsPointInside(Vector3 p)
+bool cBoundingBox::IsPointInside(Vector3 vPos)
 {
-    if (p.x >= m_vMin.x &&
-        p.y >= m_vMin.y &&
-        p.z >= m_vMin.z &&
-        p.x <= m_vMax.x &&
-        p.y <= m_vMax.y &&
-        p.z <= m_vMax.z)
+    if (vPos.x >= m_vMin.x &&
+        vPos.y >= m_vMin.y &&
+        vPos.z >= m_vMin.z &&
+        vPos.x <= m_vMax.x &&
+        vPos.y <= m_vMax.y &&
+        vPos.z <= m_vMax.z)
     {
         return true;
     }

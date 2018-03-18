@@ -169,18 +169,18 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
     // ³ÐÀÌ ¼¼ÆÃ
     if (!m_vecChild.empty())
     {
-        for each(auto p in m_vecChild)
+        for each(auto vPos in m_vecChild)
         {
-            switch ((E_PROGRESSBAR_INNER_TYPE)p->GetTag())
+            switch ((E_PROGRESSBAR_INNER_TYPE)vPos->GetTag())
             {
             case E_PROGRESSBAR_TEXTURE_FRONT:
-                ((cUIImageView*)p)->SetScale(width, m_stSize.y);
+                ((cUIImageView*)vPos)->SetScale(width, m_stSize.y);
                 break;
             case E_PROGRESSBAR_TEXTURE_BACK:
-                ((cUIImageView*)p)->SetScale(m_stSize.x, m_stSize.y);
+                ((cUIImageView*)vPos)->SetScale(m_stSize.x, m_stSize.y);
                 break;
             case E_PROGRESSBAR_TEXT:
-                ((cUITextView*)p)->SetSize(m_stSize);
+                ((cUITextView*)vPos)->SetSize(m_stSize);
                 break;
             }
         }
