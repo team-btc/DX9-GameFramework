@@ -260,7 +260,7 @@ HRESULT cUILayer::SetWorldMatrix(IN Matrix4 matWorld)
 
 //1)이름, 2)위치, 3)사이즈, 4)백그라운드 표시 = false, 5)백그라운드 컬러 = 0, 6)백그라운드 텍스쳐 ="")) 
 //입력된 값을 통해 레이어를 설정한다.	
-HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN Color colerBackGround, IN string strTextureName)
+HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN Color colorBackGround, IN string strTextureName)
 {
     HRESULT hr;
 
@@ -328,7 +328,7 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
             m_isVertexBackground = false;
         }
         // 백그라운드 컬러를 설정 
-        hr = SetBackGroundColor(colerBackGround);
+        hr = SetBackGroundColor(colorBackGround);
     }
 
     m_pUIobjectRoot = new cUIObject;
