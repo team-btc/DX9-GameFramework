@@ -48,7 +48,7 @@ void cMapLoader::LoadMap(string szKey)
     LoadObstacle(jLoad["BLOCK_GROUP"]);
 
     // 이벤트 -> 여기서 플레이어 시작 위치 셋팅
-    LoadEvent(jLoad["EVENT"]);
+    LoadEvent(jLoad["event"]);
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
     g_pMapManager->SetMapInfo(szKey, m_stMapInfo);
@@ -112,7 +112,7 @@ void cMapLoader::LoadWater(json jWater)
     m_stMapInfo->fWaterWaveHeight = jWater["waveheight"];
     m_stMapInfo->fWaterHeightSpeed = jWater["heightspeed"];
     m_stMapInfo->fWaterfrequency = jWater["frequency"];
-    m_stMapInfo->fWaterDensity = jWater["transparent"];
+    m_stMapInfo->fWaterTransparent = jWater["transparent"];
 }
 
 void cMapLoader::LoadSky(json jSky)
@@ -208,11 +208,11 @@ void cMapLoader::LoadEvent(json jEvent)
     {
         ST_EVENT_INFO stEvent;
 
-        string szName = jEvent[i]["EVENT_NAME"];
+        string szName = jEvent[i]["event-name"];
         stEvent.szName = szName;
-        stEvent.vPos.x = jEvent[i]["EVENT_POSITION_X"];
-        stEvent.vPos.y = jEvent[i]["EVENT_POSITION_Y"];
-        stEvent.vPos.z = jEvent[i]["EVENT_POSITION_Z"];
+        stEvent.vPos.x = jEvent[i]["event-position-x"];
+        stEvent.vPos.y = jEvent[i]["event-position-y"];
+        stEvent.vPos.z = jEvent[i]["event-position-z"];
         stEvent.fRadius = 10.0f;
 
         // 맵의 Y값에 맞게 설정
