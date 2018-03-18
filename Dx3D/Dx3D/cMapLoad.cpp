@@ -75,7 +75,7 @@ HRESULT cMapLoad::Start()
     for (int i = 0; i < 1; i++)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(m_stMapInfo->vStartPos);
+        m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[1].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);
     }
@@ -92,9 +92,26 @@ HRESULT cMapLoad::Update()
 
     m_pPlayer->Update();
 
+    // 위치 체크
+    Vector3 Pos = m_pPlayer->GetPosition();
+    m_pGameMap->GetHeight(Pos);
+    m_pPlayer->SetPosition(Pos);
+
+    if (m_vecMonster->size() == 0)
+    {
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
+        m_pEnermy->SetActive(true);
+        (*m_vecMonster).push_back(m_pEnermy);
+    }
+
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
         (*iter)->Update();
+
+        Vector3 Pos = (*iter)->GetPosition();
+        m_pGameMap->GetHeight(Pos);
+        (*iter)->SetPosition(Pos);
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
@@ -117,18 +134,14 @@ HRESULT cMapLoad::Update()
         // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
         float fDist = FLT_MAX;
         if (m_pGameMap->CheckObstacle(fDist, ray) == true
-            || fDist < 3.0f)
-        {
+            && fDist < 3.0f)
+        { 
+            // 문제가 있다.
             m_pPlayer->SetMoveToPoint(false);
             m_pPlayer->SetMoveToTarget(false);
         }
     }
-    
-
-    // 위치 체크
-    Vector3 Pos = m_pPlayer->GetPosition();
-    m_pGameMap->GetHeight(Pos);
-    m_pPlayer->SetPosition(Pos);
+   
 
     // 이벤트 체크
     string szEventName = "";

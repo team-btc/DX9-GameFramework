@@ -3,7 +3,7 @@
 #include "cAllocateHierarchy.h"
 
 
-cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, string szJsonName)
+cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     : m_pRootFrame(NULL)
     , m_pAnimController(NULL)
     , m_dwWorkingPaletteSize(0)
@@ -17,21 +17,14 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename, str
     D3DXMatrixIdentity(&matS);
 
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey, szFolder, szFilename);
-    m_Json = g_pMeshManager->GetJson(szKey, szFolder, szJsonName);
-
-    
-    string str = m_Json["Scale"];
-    float scale = (float)atof(str.c_str());
-    if (scale > 0.0f)
-    {
-        D3DXMatrixScaling(&matS, scale, scale, scale);
-    }
    
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
     m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
     m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
     m_pEffect = pSkinnedMesh->m_pEffect;
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
+    matS = pSkinnedMesh->matS;
+    m_mapStateInfo = pSkinnedMesh->m_mapStateInfo;
 
     if (pSkinnedMesh->m_pAnimController)
     {
@@ -58,20 +51,14 @@ cSkinnedMesh::cSkinnedMesh(string szKey)
     D3DXMatrixIdentity(&matS);
 
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey);
-    m_Json = g_pMeshManager->GetJson(szKey);
-
-
-    string str = m_Json["Scale"];
-    float scale = (float)atof(str.c_str());
-    if (scale>0.0f)
-        D3DXMatrixScaling(&matS, scale, scale, scale);
-
 
     m_pRootFrame = pSkinnedMesh->m_pRootFrame;
     m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
     m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
     m_pEffect = pSkinnedMesh->m_pEffect;
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
+    matS = pSkinnedMesh->matS;
+    m_mapStateInfo = pSkinnedMesh->m_mapStateInfo;
 
     if (pSkinnedMesh->m_pAnimController)
         pSkinnedMesh->m_pAnimController->CloneAnimationController(

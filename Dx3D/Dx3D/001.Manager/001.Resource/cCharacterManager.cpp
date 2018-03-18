@@ -32,6 +32,8 @@ void cCharacterManager::Destroy()
 
 void cCharacterManager::PushMonster(cMonster* monster)
 {
+   
+    //monster->Setup();
     //m_mapMonster.insert(make_pair(m_mapMonster.size() + 1, monster));
     m_listMonster.push_back(monster);
 }
@@ -42,6 +44,7 @@ cMonster * cCharacterManager::GetMonster()
         count = 0;
     return m_mapMonster.find(count++)->second;*/
     cMonster* returnMonster = m_listMonster.back();
+    returnMonster->Setup();
     m_listMonster.pop_back();
     return returnMonster;
 }

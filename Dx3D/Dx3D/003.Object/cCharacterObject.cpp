@@ -52,10 +52,6 @@ void cCharacterObject::Render()
 {
 }
 
-//void cCharacterObject::Destroy()
-//{
-//}
-
 bool cCharacterObject::RayCast(iCharacterObject * Charater)
 {
     m_pTarget = Charater;
@@ -86,14 +82,15 @@ void cCharacterObject::Attack(int ATK)
 {
     if (m_pTarget)
     {
-        m_pTarget->GetStatus().m_fCurHP -= ATK;
-        cout << m_pTarget->GetStatus().m_fCurHP << endl;
+        //데미지 계산식을 넣어야함
+        m_pTarget->GetStatus().fCurHP -= ATK;
+        cout << m_pTarget->GetStatus().fCurHP << endl;
     }
 }
 
 void cCharacterObject::Heal(int Value)
 {
-    m_stStat.m_fCurHP += Value;
+    m_stStat.fCurHP += Value;
 }
 
 void cCharacterObject::AttackAnim()
@@ -105,46 +102,46 @@ void cCharacterObject::AttackAnim()
     {
         int RandomNum = rand() % 3;
         if (RandomNum == 0)
-            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
         else if (RandomNum == 1)
-            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack2")->second.nStateNum);
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
         else if (RandomNum == 2)
-            m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack3")->second.nStateNum);
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
     }
     else
-        m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Attack")->second.nStateNum);
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack")->second.nStateNum);
 }
 
 void cCharacterObject::RunAnim()
 {
     FalseAnim();
     isRun = true;
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Run")->second.nStateNum);
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Run")->second.nStateNum);
 }
 
 void cCharacterObject::IdleAnim()
 {
     FalseAnim();
     isIdle = true;
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Stand")->second.nStateNum);
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Stand")->second.nStateNum);
 }
 
 void cCharacterObject::LeftAnim()
 {
     FalseAnim();
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnLeft")->second.nStateNum);
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("TurnLeft")->second.nStateNum);
 }
 
 void cCharacterObject::RightAnim()
 {
     FalseAnim();
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("TurnRight")->second.nStateNum);
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("TurnRight")->second.nStateNum);
 }
 
 void cCharacterObject::DeadAnim()
 {
     FalseAnim();
-    m_pMesh->SetAnimationIndex(m_mapStateInfo.find("Death")->second.nStateNum);
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Death")->second.nStateNum);
 }
 
 void cCharacterObject::FalseAnim()
@@ -177,15 +174,16 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.01f;
+    m_fRotY -= 0.05f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     
 }
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.01f;
+    m_fRotY += 0.05f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+    m_MatRotate;
 }
 
 void cCharacterObject::NearestSearch(vector<cMonster*> _vec)

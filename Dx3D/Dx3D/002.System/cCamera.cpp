@@ -3,8 +3,8 @@
 
 
 cCamera::cCamera()
-    : m_fDistance(3)
-    , m_vEye(0, LOOKAT_POS, -m_fDistance)
+    : m_fDistance(80)
+    , m_vEye(0, LOOKAT_POS, m_fDistance)
     , m_vLookAt(0, LOOKAT_POS, 0)
     , m_vUp(0, 1, 0)
     , m_fRotX(0.0f)
@@ -53,7 +53,7 @@ void cCamera::Update(Vector3* pTarget)
         m_fRotY -= 360.0f;
     }
     // 뷰 매트릭스 셋팅 - 타겟 == 큐브의 포지션
-    m_vEye = Vector3(0, 0, -m_fDistance);
+    m_vEye = Vector3(0, 0, m_fDistance);
 
     Matrix4 matRotX, matRotY;
     D3DXMatrixRotationX(&matRotX, D3DXToRadian(m_fRotX));
@@ -105,7 +105,7 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ptCurrMouse.y = HIWORD(lParam);
 
             m_fRotY += (ptCurrMouse.x - m_ptPrevMouse.x) / 5.0f;
-            m_fRotX += (ptCurrMouse.y - m_ptPrevMouse.y) / 5.0f;
+            m_fRotX -= (ptCurrMouse.y - m_ptPrevMouse.y) / 5.0f;
 
             // x축 회전은 -90 ~ 90 으로 고정
             if (m_fRotX < -LIMITED_ROT + D3DX_16F_EPSILON)
