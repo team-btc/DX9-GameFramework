@@ -83,12 +83,6 @@ HRESULT cMapLoad::Start()
     m_pPlayer->SetVecMonster(m_vecMonster);
     m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
 
-    //// ¶óÀÌÆ®
-    //Vector3 dir(1.0f, -1.0f, 0.0f);
-    //D3DXVec3Normalize(&dir, &dir);
-    //LIGHT9 stLight = g_pLightManager->InitDirectional(&dir, &WHITE);
-    //g_pDevice->SetLight(0, &stLight);
-
     return S_OK;
 }
 

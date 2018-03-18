@@ -1,7 +1,7 @@
 #pragma once
 #include "003.Object\cCharacterObject.h"
 
-#define Speed 1.0f
+//#define Speed 1.0f
 
 class cPlayer : public cCharacterObject
 {

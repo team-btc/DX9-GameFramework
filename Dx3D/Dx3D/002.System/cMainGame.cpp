@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
-#include "cMapLoad.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -36,7 +35,6 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE ÇØÁ¦
     g_pAutoReleasePool->Drain();
-    g_pBroadcastManager->Destroy();
     g_pObjectManager->Destory();
     g_pMapManager->Destroy();
     hr = g_pDbManager->Destroy();
@@ -82,7 +80,9 @@ void cMainGame::Render()
 
         hr = g_pScnManager->Render();
 
+#ifdef _DEBUG
         hr = g_pTimerManager->Render();
+#endif // _DEBUG
 
         g_pScnManager->Render();
         
