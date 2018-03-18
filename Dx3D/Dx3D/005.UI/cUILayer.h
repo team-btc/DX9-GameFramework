@@ -65,5 +65,5 @@ public:
     virtual HRESULT GetWorldMatrix(OUT Matrix4 matWorld) override;
     virtual HRESULT SetWorldMatrix(IN Matrix4 matWorld) override;
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
-        IN bool useBackground = false, IN Color colerBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*ºó ½ºÆ®¸µ*/) override;
+        IN bool useBackground = false, IN Color colorBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*ºó ½ºÆ®¸µ*/) override;
 };
