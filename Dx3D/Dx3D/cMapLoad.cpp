@@ -199,6 +199,12 @@ HRESULT cMapLoad::Render()
         m_pTextureShader->Render();
     }
 
+    for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
+    {
+        g_pDevice->SetTransform(D3DTS_WORLD, &m_stMapInfo->vecObjectInfo[i].matWorld);
+        //m_stMapInfo->vecObjectInfo[i].pMesh->DrawSubset(0);
+    }
+
     if (m_stMapInfo->isEnableWater && m_pWaveShader)
     {
         m_pWaveShader->Render(vP);

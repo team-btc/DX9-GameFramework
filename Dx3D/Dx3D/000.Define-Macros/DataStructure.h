@@ -126,6 +126,14 @@ struct ST_EVENT_INFO
     float               fRadius;
 };
 
+struct ST_OBJECT_INFO
+{
+    LPMESH              pMesh;
+    Matrix4             matWorld;
+
+    ST_OBJECT_INFO() : pMesh(NULL) {}
+};
+
 struct ST_MAP_INFO
 {
     // 플레이어 시작 위치
@@ -160,6 +168,9 @@ struct ST_MAP_INFO
 
     // 이벤트 트랩
     vector<ST_EVENT_INFO>   vecEventInfo;
+
+    // 오브젝트 정보
+    vector<ST_OBJECT_INFO>  vecObjectInfo;
 
     ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {}
 };

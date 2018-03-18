@@ -12,6 +12,7 @@ class cMeshManager
 private:
     map<string, LPMESH*>        m_mapMesh;
     map<string, LPMESH*>        m_mapBasicMesh;
+    map<string, LPMESH*>        m_mapStaticMesh;
     map<string, cSkinnedMesh*>  m_mapSkinnedMesh;
     map<string, json>           m_mapJson;
 
@@ -22,6 +23,9 @@ public:
     void LoadMesh(string szKey, string szPath);
     void AddMesh(string szKey, LPMESH* mesh);
     LPMESH GetMesh(string szKey);
+
+    void LoadStaticMesh(string szKey, string szPath);
+    LPMESH GetStaticMesh(string szKey);
 
     void LoadSkinnedMesh();
     cSkinnedMesh* GetSkinnedMesh(string szKey);
