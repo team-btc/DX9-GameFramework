@@ -188,7 +188,6 @@
     <ClInclude Include="002.System\cAllocateHierarchy.h" />
     <ClInclude Include="002.System\cAutoReleasePool.h" />
     <ClInclude Include="002.System\cCamera.h" />
-    <ClInclude Include="003.Particle\cParticleSnow.h" />
     <ClInclude Include="004.ExtLib\json.hpp" />
     <ClInclude Include="005.UI\cUIButton.h" />
     <ClInclude Include="005.UI\cUIImageView.h" />
@@ -206,7 +205,6 @@
     <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h" />
     <ClInclude Include="001.Manager\000.System\cDbManager.h" />
     <ClInclude Include="002.System\cParticle.h" />
-    <ClInclude Include="003.Particle\cParticleExplosion.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
@@ -241,7 +239,6 @@
     <ClCompile Include="002.System\cMainGame.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cLightManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cCameraManager.cpp" />
-    <ClCompile Include="003.Particle\cParticleSnow.cpp" />
     <ClCompile Include="005.UI\cUIButton.cpp" />
     <ClCompile Include="005.UI\cUIImageView.cpp" />
     <ClCompile Include="005.UI\cUILayer.cpp" />
@@ -254,7 +251,6 @@
     <ClCompile Include="003.Repository\001.Repository\cCharacterRepository.cpp" />
     <ClCompile Include="001.Manager\000.System\cDbManager.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
-    <ClCompile Include="003.Particle\cParticleExplosion.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">

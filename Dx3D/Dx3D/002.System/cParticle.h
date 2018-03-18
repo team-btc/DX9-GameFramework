@@ -71,6 +71,7 @@ public:
     virtual void Update();   // 시스템 내의 모든 파티클들을 갱신.
 
     void SetGenTerm(float fTerm) { m_fGenTerm = fTerm; }
+    void SetSize(float size) { m_fSize = size; }
 
 protected:
     // 속성 리스트 _particle을 검색하여 죽은 파티클을 리스트에서 제거.

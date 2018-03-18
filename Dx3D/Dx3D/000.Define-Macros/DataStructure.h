@@ -115,6 +115,7 @@ struct ST_SPHERE
 struct ST_PARTICLE_ATTR
 {
     Vector3         vPos;               //  파티클의 현재 위치
+    float           fPosOffset;         //  파티클 생성 영역 범위
     Vector3         vSpeed;             //  파티클의 방향 벡터
     float           fSpeed;             //  파티클의 속력(스칼라 값)
     Vector3         deltaAccelMin;      //  파티클 변속 최소값

@@ -68,12 +68,14 @@ void cMainGame::Setup()
     attr.isLoop = true;
     attr.deltaAccelMin = Vector3(-power, -power, -power);
     attr.deltaAccelMax = Vector3(power, power, power);
-    attr.life = 10.0f;
-    attr.fSpeed = 5.0f;
-    attr.fMinLife = 10.0f;
-    attr.fMaxLife = 15.0f;
+    attr.life = 3.0f;
+    attr.fSpeed = 1.0f;
+    attr.fMinLife = 2.0f;
+    
+    attr.fMaxLife = 5.0f;
     attr.color = XColor(0.5f, 1.0f, 0.5f, 1.0f);
-    attr.isFade = false;
+    attr.isFade = true;
+    m_pParticle->SetSize(5.0f);
     m_pParticle->SetGenTerm(0.1f);
     m_pParticle->Reset(attr);
 }
@@ -104,7 +106,6 @@ void cMainGame::Update()
 
     if (g_pKeyManager->isOnceKeyDown('R'))
     {
-        m_pExplosion->Reset();
     }
 
     if (g_pKeyManager->isStayKeyDown('A'))
