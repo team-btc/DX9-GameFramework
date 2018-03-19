@@ -16,7 +16,7 @@ cWaveShader::~cWaveShader()
 {
 }
 
-void cWaveShader::SetShader(float fHeight, float fWaveHeight, float fSpeed, float fUVSpeed, float fWaveFrequency, float fTransparent)
+void cWaveShader::SetShader(float fHeight, float fWaveHeight, float fSpeed, float fUVSpeed, float fWaveFrequency, float fTransparent, float fDensity)
 {
     m_pHeight = fHeight;
     m_pWaveHeight = fWaveHeight;
@@ -24,6 +24,7 @@ void cWaveShader::SetShader(float fHeight, float fWaveHeight, float fSpeed, floa
     m_pUVSpeed = fUVSpeed;
     m_pWaveFrequency = fWaveFrequency;
     m_pTransparent = fTransparent;
+    m_fDensity = fDensity;
 }
 
 void cWaveShader::Render(D3DXVECTOR4 vCameraPosition)
@@ -55,6 +56,7 @@ void cWaveShader::Render(D3DXVECTOR4 vCameraPosition)
     m_pWaveShader->SetFloat("gWaveFrequency", m_pWaveFrequency);                    // 출렁이는 빈도
     m_pWaveShader->SetFloat("gUVSpeed", m_pUVSpeed);                                // 텍스쳐가 움직이는 속도
     m_pWaveShader->SetFloat("gTransparent", m_pTransparent);                        // 투명도
+    m_pWaveShader->SetFloat("Density", m_fDensity);                        // 투명도
 
                                                       
     ULONGLONG tick = GetTickCount64();                                               // 시스템 시간을 구함
