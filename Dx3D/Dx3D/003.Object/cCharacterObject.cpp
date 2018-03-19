@@ -100,19 +100,25 @@ void cCharacterObject::AttackAnim()
     FalseAnim();
     isAttack = true;
 
-   
-    int RandomNum = rand() % 3;
-    if (RandomNum == 0)
+    if (m_eTag == PLAYER)
+    {
+        int RandomNum = rand() % 3;
+        if (RandomNum == 0)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
+        }
+        else if (RandomNum == 1)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
+        }
+        else if (RandomNum == 2)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
+        }
+    }
+    else
     {
         m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
-    }
-    else if (RandomNum == 1)
-    {
-        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
-    }
-    else if (RandomNum == 2)
-    {
-        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
     }
 
 }

@@ -1,0 +1,31 @@
+{
+    "Scale": "1",
+    "State": [
+        {
+            "Name": "Attack0",
+            "Position": [
+                {
+                    "Name": "attack",
+                    "Value": "0.660000"
+                }
+            ],
+            "index": "0"
+        },
+        {
+            "Name": "Death",
+            "index": "1"
+        },
+        {
+            "Name": "Run",
+            "index": "2"
+        },
+        {
+            "Name": "Walk",
+            "index": "3"
+        },
+        {
+            "Name": "Stand",
+            "index": "4"
+        }
+    ]
+}

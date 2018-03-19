@@ -251,7 +251,7 @@ void cMonster::Update()
     {
     }
 
-    m_pMesh->SetScale(1.0f);
+    m_pMesh->SetScale(8.0f);
     m_pMesh->SetPosition(m_vPosition);
     m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
 }

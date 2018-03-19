@@ -211,6 +211,7 @@
     <ClInclude Include="003.Scene\cEndingScene.h" />
     <ClInclude Include="002.System\cGameMap.h" />
     <ClInclude Include="003.Scene\cLoadingScene.h" />
+    <ClInclude Include="cBoss.h" />
     <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="003.Scene\cEndingScene.cpp" />
     <ClCompile Include="002.System\cGameMap.cpp" />
     <ClCompile Include="003.Scene\cLoadingScene.cpp" />
+    <ClCompile Include="cBoss.cpp" />
     <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
