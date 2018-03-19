@@ -202,13 +202,9 @@ void cMonster::Update()
      
     }
 
-    Matrix4 matR,matW;
-    D3DXMatrixScaling(&m_MatScale, 2, 2, 2);
-    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
-    D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-    m_stSphere.vCenter = m_vPosition;
-    matW = m_MatScale * m_MatRotate* matR * m_MatTrans;
-    m_pMesh->SetWorldMatrix(matW);
+    m_pMesh->SetScale(2.0f);
+    m_pMesh->SetPosition(m_vPosition);
+    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
 }
 
 void cMonster::Render()
@@ -222,7 +218,7 @@ void cMonster::Render()
     matW = matS * m_MatRotate * m_MatTrans;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-   // m_pPikingMesh->DrawSubset(0);
+    m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }

@@ -20,7 +20,8 @@ private:
 
     cPlayer*                m_pPlayer;
     cFrustum*               m_pFrustum;
-    vector<cMonster*>*      m_vecMonster;
+    //<cMonster*>*      m_vecMonster;
+    cMonster*           m_pSindragosa;
 
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
@@ -36,5 +37,13 @@ public:
     virtual HRESULT Render() override;
     virtual ULONG Release() override;
     virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+
+    void ShootMoive();
+    HRESULT MoveSindragosa(Vector3 vPos, bool isAppear);
+    HRESULT MoveArthus(Vector3 vPos, bool isAppear);
+
+    void SetSindraAni();
+    void SetArthusAni();
+    void SetSindragosa();
 };
 

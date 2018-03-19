@@ -1,0 +1,53 @@
+{
+    "Scale": "1",
+    "State": [
+        {
+            "Name": "Stand",
+            "index": "0"
+        },
+        {
+            "Name": "Walk",
+            "index": "1"
+        },
+        {
+            "Name": "Run",
+            "index": "2"
+        },
+        {
+            "Name": "Death",
+            "index": "3"
+        },
+        {
+            "Name": "Roar",
+            "index": "4"
+        },
+        {
+            "Name": "Attack0",
+            "index": "5"
+        },
+        {
+            "Name": "Attack1",
+            "index": "6"
+        },
+        {
+            "Name": "Attack2",
+            "index": "7"
+        },
+        {
+            "Name": "FlySitGround",
+            "index": "8"
+        },
+        {
+            "Name": "FlySitGroundUp",
+            "index": "9"
+        },
+        {
+            "Name": "FlyWalk",
+            "index": "10"
+        },
+        {
+            "Name": "FlySitGroundDown",
+            "index": "11"
+        }
+    ]
+}

@@ -98,23 +98,23 @@ HRESULT cTitleScene::Start()
 
     m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
 
-    if (!m_vecMonster)
-    {
-        m_vecMonster = new vector<cMonster*>;
-    }
-    m_vecMonster->clear();
+   //if (!m_vecMonster)
+   //{
+   //    m_vecMonster = new vector<cMonster*>;
+   //}
+   //m_vecMonster->clear();
 
-    for (int i = 0; i < 1; i++)
-    {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[0].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
-    }
+    //for (int i = 0; i < 1; i++)
+    //{
+    //    cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+    //    m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[0].vPos);
+    //    m_pEnermy->SetActive(true);
+    //    (*m_vecMonster).push_back(m_pEnermy);
+    //}
 
-    m_pPlayer->SetVecMonster(m_vecMonster);
+   // m_pPlayer->SetVecMonster(m_vecMonster);
     m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
-
+    SetSindragosa();
     return S_OK;
 }
 
@@ -138,41 +138,43 @@ HRESULT cTitleScene::Update()
 
     //  PLAYER UPDATE
     m_pPlayer->Update();
+    // 신드라고사 업데이트
+    m_pSindragosa->Update();
 
     // 위치 체크
     Vector3 Pos = m_pPlayer->GetPosition();
     m_pGameMap->GetHeight(Pos);
     m_pPlayer->SetPosition(Pos);
 
-    if (m_vecMonster->size() == 0)
-    {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
-    }
+  //  if (m_vecMonster->size() == 0)
+  //  {
+  //      cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+  //      m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
+  //      m_pEnermy->SetActive(true);
+  //      (*m_vecMonster).push_back(m_pEnermy);
+  //  }
+  //
+  //  for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+  //  {
+  //      (*iter)->Update();
+  //
+  //      Vector3 Pos = (*iter)->GetPosition();
+  //      m_pGameMap->GetHeight(Pos);
+  //      (*iter)->SetPosition(Pos);
+  //  }
 
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    {
-        (*iter)->Update();
-
-        Vector3 Pos = (*iter)->GetPosition();
-        m_pGameMap->GetHeight(Pos);
-        (*iter)->SetPosition(Pos);
-    }
-
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
-    {
-        if ((*iter)->GetAlive())
-        {
-            iter++;
-        }
-        else
-        {
-            iter = (*m_vecMonster).erase(iter);
-        }
-    }
-
+    //for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
+    //{
+    //    if ((*iter)->GetAlive())
+    //    {
+    //        iter++;
+    //    }
+    //    else
+    //    {
+    //        iter = (*m_vecMonster).erase(iter);
+    //    }
+    //}
+    
     if (m_pPlayer->GetMove())
     {
         cRay ray;
@@ -240,17 +242,17 @@ HRESULT cTitleScene::Render()
     }
 
     m_pPlayer->Render();
-
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    {
-        bool result = false;
-        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
-        if (result)
-        {
-            (*iter)->Render();
-        }
-    }
-
+    m_pSindragosa->Render();
+    //for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+    //{
+    //    bool result = false;
+    //    m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
+    //    if (result)
+    //    {
+    //        (*iter)->Render();
+    //    }
+    //}
+    
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
     if (m_pTextureShader)
@@ -299,4 +301,46 @@ void cTitleScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         m_pCamera->WndProc(hWnd, message, wParam, lParam);
     }
+}
+
+void cTitleScene::ShootMoive()
+{
+   // MoveSindragosa();
+   // MoveArthus();
+}
+
+HRESULT cTitleScene::MoveSindragosa(Vector3 vPos, bool isAppear)
+{
+    return S_OK;
+}
+
+HRESULT cTitleScene::MoveArthus(Vector3 vPos, bool isAppear)
+{
+    return S_OK;
+}
+
+void cTitleScene::SetSindraAni()
+{
+
+}
+
+void cTitleScene::SetArthusAni()
+{
+
+}
+
+void cTitleScene::SetSindragosa()
+{
+    Matrix4 matS;
+    D3DXMatrixScaling(&matS, 0.5f, 0.5f, 0.5f);
+    m_pSindragosa = new cMonster("Frostwurmnorthlend");
+    g_pAutoReleasePool->AddObject(m_pSindragosa);
+    m_pSindragosa->SetPosition(Vector3(228, 200, 205));
+    m_pSindragosa->SetScale(matS);
+    m_pSindragosa->SetActive(true);
+    //m_pSindragosa->SetIdle(true);
+  //  m_pSindragosa->SetActive(true);
+  //  m_pSindragosa->SetIdle(true);
+    //m_pSindragosa->SetScale();
+    //m_pSindragosa->
 }
