@@ -12,7 +12,7 @@ class cMeshManager
 private:
     map<string, LPMESH*>        m_mapMesh;
     map<string, LPMESH*>        m_mapBasicMesh;
-    map<string, LPMESH*>        m_mapStaticMesh;
+    map<string, LPMESH>        m_mapStaticMesh;
     map<string, cSkinnedMesh*>  m_mapSkinnedMesh;
     map<string, json>           m_mapJson;
 

@@ -10,4 +10,5 @@ public:
     virtual HRESULT Start() PURE;
     virtual HRESULT Update() PURE;
     virtual HRESULT Render() PURE;
+    virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) PURE;
 };

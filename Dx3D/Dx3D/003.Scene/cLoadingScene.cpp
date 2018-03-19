@@ -151,6 +151,10 @@ ULONG cLoadingScene::Release()
     SAFE_DELETE(m_pMapLoader);
 
     cObject::Release();
-
+    
     return 0;
+}
+
+void cLoadingScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 }

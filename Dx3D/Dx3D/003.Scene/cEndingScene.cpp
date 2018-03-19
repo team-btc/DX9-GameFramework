@@ -34,5 +34,10 @@ HRESULT cEndingScene::Render()
 
 ULONG cEndingScene::Release()
 {
+    cObject::Release();
     return 0;
+}
+
+void cEndingScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 }

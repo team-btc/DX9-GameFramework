@@ -15,10 +15,9 @@ cMapLoader::~cMapLoader()
 void cMapLoader::LoadMap()
 {
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
-    if (g_pMapManager->IsLoadMapInfo(m_szKey))
+    g_pMapManager->SetCurrMap(szKey);
+    if (g_pMapManager->IsLoadMapInfo(szKey))
     {
-        g_pMapManager->SetCurrMap(m_szKey);
-
         return;
     }
 
@@ -37,19 +36,34 @@ void cMapLoader::LoadMap()
     LoadTextureMap();
 
     // 텍스쳐
-    LoadTexture(jLoad["texture"]);
+    if (!jLoad["texture"].is_null())
+    {
+        LoadTexture(jLoad["texture"]);
+    }
 
     // 물
-    LoadWater(jLoad["water"]);
+    if (!jLoad["water"].is_null())
+    {
+        LoadWater(jLoad["water"]);
+    }
     
     // 하늘
-    LoadSky(jLoad["skybox"]);
+    if (!jLoad["skybox"].is_null())
+    {
+        LoadSky(jLoad["skybox"]);
+    }
 
     // 장애물
-    LoadObstacle(jLoad["BLOCK_GROUP"]);
+    if (!jLoad["skybox"].is_null())
+    {
+        LoadObstacle(jLoad["block-group"]);
+    }
 
     // 이벤트 -> 여기서 플레이어 시작 위치 셋팅
-    LoadEvent(jLoad["event"]);
+    if (!jLoad["event"].is_null())
+    {
+        LoadEvent(jLoad["event"]);
+    }
 
     // 오브젝트
     m_jObject = jLoad["OBJECT"];
@@ -73,7 +87,7 @@ void cMapLoader::LoadTextureMap()
 
 void cMapLoader::LoadTexture(json jTexture)
 {
-    json jTexBG = jTexture["BGtex"];
+    json jTexBG = jTexture["bgtex"];
     string szBGTex = jTexBG["key"];
     szBGTex = TERRAIN_PATH + szBGTex;
     g_pTextureManager->AddTexture(jTexBG["key"], szBGTex);
@@ -104,12 +118,12 @@ void cMapLoader::LoadTexture(json jTexture)
 
 void cMapLoader::LoadWater(json jWater)
 {
-    g_pMeshManager->LoadMesh(m_szKey + "Water", MAP_PATH + m_szKey + "/" + m_szKey + "Water.x");
-    m_stMapInfo->pWaterMesh = g_pMeshManager->GetMesh(m_szKey + "Water");
-    string szWaterTex = jWater["file_name"];
+    g_pMeshManager->LoadMesh(m_szKey + "-water", MAP_PATH + m_szKey + "/" + m_szKey + "-water.x");
+    m_stMapInfo->pWaterMesh = g_pMeshManager->GetMesh(m_szKey + "-water");
+    string szWaterTex = jWater["filename"];
     szWaterTex = WATER_PATH + szWaterTex;
-    g_pTextureManager->AddTexture(jWater["file_name"], szWaterTex);
-    m_stMapInfo->pWaterTexture = (LPTEXTURE9)g_pTextureManager->GetTexture(jWater["file_name"]);
+    g_pTextureManager->AddTexture(jWater["filename"], szWaterTex);
+    m_stMapInfo->pWaterTexture = (LPTEXTURE9)g_pTextureManager->GetTexture(jWater["filename"]);
     m_stMapInfo->fWaterDensity = jWater["density"];
     m_stMapInfo->isEnableWater = jWater["enable"];
     m_stMapInfo->fWaterHeight = jWater["height"];
@@ -139,13 +153,13 @@ void cMapLoader::LoadObstacle(json jObstacle)
     int nIndex = 0;
     for (int nBG = 0; nBG < jObstacle.size(); ++nBG)
     {
-        for (int nBG_Point = 0; nBG_Point < jObstacle[nBG]["BLOCK_GROUP_POINT"].size(); ++nBG_Point)
+        for (int nBG_Point = 0; nBG_Point < jObstacle[nBG]["block-group-point"].size(); ++nBG_Point)
         {
-            json jBGPoint = jObstacle[nBG]["BLOCK_GROUP_POINT"][nBG_Point];
+            json jBGPoint = jObstacle[nBG]["block-group-point"][nBG_Point];
             Vector3 vPos;
-            vPos.x = (float)jBGPoint["BLOCK_POINT_X"];
-            vPos.y = (float)jBGPoint["BLOCK_POINT_Y"];
-            vPos.z = (float)jBGPoint["BLOCK_POINT_Z"];
+            vPos.x = (float)jBGPoint["block-point-x"];
+            vPos.y = (float)jBGPoint["block-point-y"];
+            vPos.z = (float)jBGPoint["block-point-z"];
             vecObstacle.push_back(vPos);
         }
         for (int i = 0; i < vecObstacle.size() - 1; ++i)
@@ -236,14 +250,6 @@ void cMapLoader::LoadEvent(json jEvent)
             stEvent.vPos.y = 255.0f - fDist;
         }
 
-        // 시작포지션이면 값 넣기
-        if (!strcmp(szName.c_str(), "startpos"))
-        {
-            m_stMapInfo->vStartPos.x = stEvent.vPos.x;
-            m_stMapInfo->vStartPos.y = stEvent.vPos.y;
-            m_stMapInfo->vStartPos.z = stEvent.vPos.z;
-        }
-
         m_stMapInfo->vecEventInfo.push_back(stEvent);
     }
 }
@@ -253,19 +259,20 @@ void cMapLoader::LoadObject(int nIndex)
     json jCurrObj = m_jObject[nIndex];
 
     ST_OBJECT_INFO stObject;
-    string szName = jCurrObj["OBJECT_FILE_KEY"];
-    string szPath = OBJECT_PATH + szName + "/" + szName + ".x";
-    g_pMeshManager->LoadStaticMesh(szName, szPath);
-    stObject.pMesh = g_pMeshManager->GetStaticMesh(szName);
-
-    Matrix4 matS, matRX, matRY, matRZ, matT;
-    float fScale = jCurrObj["OBJECT_SCALE"];
-    D3DXMatrixScaling(&matS, fScale, fScale, fScale);
-    D3DXMatrixRotationX(&matRX, jCurrObj["OBJECT_ROTATION_X"]);
-    D3DXMatrixRotationY(&matRY, jCurrObj["OBJECT_ROTATION_Y"]);
-    D3DXMatrixRotationZ(&matRZ, jCurrObj["OBJECT_ROTATION_Z"]);
-    D3DXMatrixTranslation(&matT, jCurrObj["OBJECT_POSITION_X"], jCurrObj["OBJECT_POSITION_Y"], jCurrObj["OBJECT_POSITION_Z"]);
-    stObject.matWorld = matS * matRX * matRY * matRZ * matT;
+    string szName = jCurrObj["object-file-key"];
+    string szPath = OBJECT_PATH + szName;
+	stObject.pMesh = new cSkinnedMesh(szName, szPath, szName + ".x");
+    float fScale = jCurrObj["object-scale"];
+    Vector3 pos, rot;
+    pos.x = jCurrObj["object-position-x"];
+    pos.y = jCurrObj["object-position-y"];
+    pos.z = jCurrObj["object-position-z"];
+    rot.x = jCurrObj["object-rotation-x"];
+    rot.y = jCurrObj["object-rotation-y"];
+    rot.z = jCurrObj["object-rotation-z"];
+    stObject.pMesh->SetScale(fScale);
+    stObject.pMesh->SetPosition(pos);
+    stObject.pMesh->SetRotation(rot);
 
     m_stMapInfo->vecObjectInfo.push_back(stObject);
 }

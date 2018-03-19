@@ -1,10 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cCamera.h"
-#include "cPlayScene.h"
 
 cMainGame::cMainGame()
-    : m_pCamera(NULL)
 {
     HRESULT hr = S_OK;
     g_pLogManager->Setup("\\Log\\");
@@ -16,7 +13,7 @@ cMainGame::cMainGame()
     g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
     g_pMeshManager->LoadSkinnedMesh();
-    
+
     g_pScnManager->Setup();
     g_pCharacterManager->Setup();
 }
@@ -35,8 +32,8 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE 해제
     g_pAutoReleasePool->Drain();
-    g_pObjectManager->Destory();
     g_pMapManager->Destroy();
+    g_pObjectManager->Destory();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
     g_pCharacterManager->Destroy();
@@ -52,23 +49,16 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    m_pCamera = new cCamera;
-    hr = m_pCamera->Setup();
-    g_pAutoReleasePool->AddObject(m_pCamera);
+    hr = g_pScnManager->AddScene("title", new cTitleScene);
+    hr = g_pScnManager->AddScene("loading", new cLoadingScene);
+    hr = g_pScnManager->AddScene("play", new cPlayScene);
+    hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
-    cPlayScene* play = new cPlayScene;
-    g_pScnManager->AddScene("play", play);
-    g_pScnManager->ChangeScene("play");
+    hr = g_pScnManager->ChangeScene("play");
 }
 
 void cMainGame::Update()
 {
-    // 씬안에 카메라 넣기
-    if (m_pCamera)
-    {
-        m_pCamera->Update();
-    }
-
     g_pScnManager->Update();
 }
 
@@ -82,9 +72,6 @@ void cMainGame::Render()
             D3DCOLOR_XRGB(47, 121, 112), 1.0f, 0);
 
         hr = g_pDevice->BeginScene();
-
-        hr = g_pScnManager->Render();
-
 #ifdef _DEBUG
         hr = g_pTimerManager->Render();
 #endif // _DEBUG
@@ -111,8 +98,5 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
+    g_pScnManager->WndProc(hWnd, message, wParam, lParam);
 }

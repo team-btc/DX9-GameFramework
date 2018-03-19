@@ -126,9 +126,10 @@ struct ST_EVENT_INFO
     float               fRadius;
 };
 
+class cSkinnedMesh;
 struct ST_OBJECT_INFO
 {
-    LPMESH              pMesh;
+    cSkinnedMesh*       pMesh;
     Matrix4             matWorld;
 
     ST_OBJECT_INFO() : pMesh(NULL) {}
@@ -172,7 +173,7 @@ struct ST_MAP_INFO
     // 오브젝트 정보
     vector<ST_OBJECT_INFO>  vecObjectInfo;
 
-    ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {}
+    ST_MAP_INFO() : pTerrainMesh(NULL), pWaterTexture(NULL), pWaterMesh(NULL), pSkyTexture(NULL), pObstacleMesh(NULL) {};
 };
 
 // 파티클의 속성 구조체

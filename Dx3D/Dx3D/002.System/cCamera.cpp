@@ -125,13 +125,15 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         if (m_fDistance > 2)
         {
-            m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
+            m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) * 0.01f;
         }
         else
         {
             m_fDistance = 2;
-            if(GET_WHEEL_DELTA_WPARAM(wParam) < 0)
-                m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) / 100.0f;
+            if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+            {
+                m_fDistance -= GET_WHEEL_DELTA_WPARAM(wParam) * 0.01f;
+            }
         }
     }
     break;
