@@ -1,6 +1,5 @@
 #pragma once
 
-class iCharacterObject;
 class cTextureShader
 {
     LPMESH                  m_pMesh;

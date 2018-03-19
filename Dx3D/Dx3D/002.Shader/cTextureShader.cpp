@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "cTextureShader.h"
-#include "iCharacterObject.h"
 
 cTextureShader::cTextureShader()
 {

@@ -467,7 +467,7 @@ float cSkinnedMesh::GetCurPos()
         D3DXTRACK_DESC desc;
         m_pAnimController->GetTrackDesc(0, &desc);
 
-        float CurPos = desc.Position / pAnimSet->GetPeriod();
+        float CurPos = desc.Position / (float)pAnimSet->GetPeriod();
 
         nResult =  CurPos;
     }
