@@ -53,6 +53,11 @@ void cMapManager::Destroy()
     // 매니저에 있는 내용들이라 매니저가 디스트로이 될 때 딜리트 됨.
     for (auto iter = m_mapMapInfo.begin(); iter != m_mapMapInfo.end(); )
     {
+        auto objIter = iter->second->vecObjectInfo.begin();
+        for (; objIter < iter->second->vecObjectInfo.end(); objIter++)
+        {
+            while (objIter->pMesh->Release());
+        }
         SAFE_DELETE(iter->second);
         iter = m_mapMapInfo.erase(iter);
     }

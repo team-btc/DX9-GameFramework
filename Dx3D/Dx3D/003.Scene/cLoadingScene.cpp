@@ -34,5 +34,10 @@ HRESULT cLoadingScene::Render()
 
 ULONG cLoadingScene::Release()
 {
+    cObject::Release();
     return 0;
+}
+
+void cLoadingScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 }

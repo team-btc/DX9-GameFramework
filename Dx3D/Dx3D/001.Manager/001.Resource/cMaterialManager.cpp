@@ -35,14 +35,14 @@ HRESULT cMaterialManager::Destroy()
     return E_NOTIMPL;
 }
 
-MATERIAL9 cMaterialManager::InitMtrl(XColor a, XColor d, XColor s, XColor e, float vPos)
+MATERIAL9 cMaterialManager::InitMtrl(XColor a, XColor d, XColor s, XColor e, float p)
 {
     MATERIAL9 mtrl;
     mtrl.Ambient = a;
     mtrl.Diffuse = d;
     mtrl.Specular = s;
     mtrl.Emissive = e;
-    mtrl.Power = vPos;
+    mtrl.Power = p;
 
     return mtrl;
 }

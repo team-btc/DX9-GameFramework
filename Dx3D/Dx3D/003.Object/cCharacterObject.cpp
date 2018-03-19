@@ -6,6 +6,7 @@
 
 cCharacterObject::cCharacterObject()
 {
+<<<<<<< HEAD
    m_pTarget = NULL;
    m_pMesh = NULL;
    m_pUILayer = NULL;
@@ -64,11 +65,11 @@ void cCharacterObject::Action(string Command, float value)
 {
     if (Command == "Attack")
     {
-        Attack((int)value);
+        Attack(value);
     }
     else if (Command == "Heal")
     {
-        Heal((int)value);
+        Heal(value);
     }
     else if (Command == "Skil1")
     {
@@ -80,7 +81,7 @@ void cCharacterObject::Action(string Command, float value)
     }
 }
 
-void cCharacterObject::Attack(int ATK)
+void cCharacterObject::Attack(float ATK)
 {
     if (m_pTarget)
     {
@@ -90,7 +91,7 @@ void cCharacterObject::Attack(int ATK)
     }
 }
 
-void cCharacterObject::Heal(int Value)
+void cCharacterObject::Heal(float Value)
 {
     m_stStat.fCurHP += Value;
 }
@@ -101,14 +102,19 @@ void cCharacterObject::AttackAnim()
     isAttack = true;
 
    
-        int RandomNum = rand() % 3;
-        if (RandomNum == 0)
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
-        else if (RandomNum == 1)
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
-        else if (RandomNum == 2)
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
-  
+    int RandomNum = rand() % 3;
+    if (RandomNum == 0)
+    {
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
+    }
+    else if (RandomNum == 1)
+    {
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
+    }
+    else if (RandomNum == 2)
+    {
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
+
 }
 
 void cCharacterObject::RunAnim()
@@ -190,17 +196,16 @@ void cCharacterObject::RotateRight()
 {
     m_fRotY += 0.05f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
-    m_MatRotate;
 }
 
 void cCharacterObject::NearestSearch(vector<cMonster*> _vec)
 {
-    float nearDist = 9999;
+    float nearDist = FLT_MAX;
     for (auto iter = _vec.begin(); iter != _vec.end(); iter++)
     {
-        if (Distance((*iter)->GetPosition()) < nearDist)
+        if (D3DXVec3Length(&(*iter)->GetPosition()) < nearDist)
         {
-            nearDist = Distance((*iter)->GetPosition());
+            nearDist = D3DXVec3Length(&(*iter)->GetPosition());
             RayCast(*iter);
         }
     }
@@ -210,6 +215,6 @@ float cCharacterObject::Distance(Vector3 Pos)
 {
     Vector3 vDistance = Pos - m_vPosition;
     float fDistance = D3DXVec3Length(&vDistance);
-    
+
     return fDistance;
 }

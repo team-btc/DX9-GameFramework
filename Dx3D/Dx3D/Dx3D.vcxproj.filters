@@ -201,9 +201,6 @@
     <ClInclude Include="002.Shader\cSkyBoxShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cGameMap.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="003.Object\cMeshLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -238,6 +235,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="003.Scene\cLoadingScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="002.System\cGameMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -374,9 +374,6 @@
     <ClCompile Include="002.Shader\cSkyBoxShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cGameMap.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="003.Object\cMeshLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -411,6 +408,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Scene\cLoadingScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="002.System\cGameMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

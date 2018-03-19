@@ -74,6 +74,14 @@ HRESULT cSceneManager::Destroy()
     return hr;
 }
 
+void cSceneManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (m_pCurrScene)
+    {
+        m_pCurrScene->WndProc(hWnd, message, wParam, lParam);
+    }
+}
+
 HRESULT cSceneManager::AddScene(IN string szName, IN iSceneObject* pScene)
 {
     HRESULT hr = S_OK;

@@ -80,8 +80,8 @@ public:
     virtual bool RayCast(iCharacterObject* Charater) override;
 
     virtual void Action(string Command, float value) override;
-    virtual void Attack(int ATK) override;
-    virtual void Heal(int Value) override;
+    virtual void Attack(float ATK) override;
+    virtual void Heal(float Value) override;
 
     virtual void AttackAnim() override;
     virtual void RunAnim() override;

@@ -270,3 +270,8 @@ void cMonster::Render()
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }
+
+ULONG cMonster::Release()
+{
+    return cObject::Release();
+}

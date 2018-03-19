@@ -31,8 +31,8 @@ HRESULT cFontManager::Destroy()
 {
     RemoveFontResource(_TEXT("umberto"));
 
-    for each (auto vPos in m_mapFont)
-        SAFE_RELEASE(vPos.second);
+    for each (auto p in m_mapFont)
+        SAFE_RELEASE(p.second);
 
     m_mapFont.clear();
 

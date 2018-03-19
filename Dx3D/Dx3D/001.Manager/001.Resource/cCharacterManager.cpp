@@ -19,7 +19,7 @@ void cCharacterManager::Setup()
 
     for (int i = 0; i < limitMonster; i++)
     {
-        cMonster* newMonster = new cMonster("Deathwing");
+        cMonster* newMonster = new cMonster("deathwing");
         g_pAutoReleasePool->AddObject(newMonster);
        
         m_listMonster.push_back(newMonster);
@@ -35,7 +35,7 @@ void cCharacterManager::PushMonster(cMonster* monster)
     m_listMonster.push_back(monster);
 }
 
-cMonster * cCharacterManager::GetMonster()
+cMonster* cCharacterManager::GetMonster()
 {
     cMonster* returnMonster = m_listMonster.back();
     returnMonster->Setup();

@@ -1,10 +1,16 @@
 #pragma once
 #include "cCamera.h"
+#include "cTitleScene.h"
+#include "cLoadingScene.h"
+#include "cPlayScene.h"
+#include "cEndingScene.h"
+
 class cMapLoad;
 
 class cMainGame
 {
 private:
+
     cCamera*                m_pCamera;
     cMapLoad*                map;
 

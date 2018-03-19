@@ -14,7 +14,6 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     , m_fPassedBlendTime(0.0f)
 {
     D3DXMatrixIdentity(&m_matWorld);
-    D3DXMatrixIdentity(&matS);
 
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey, szFolder, szFilename);
    
@@ -23,7 +22,8 @@ cSkinnedMesh::cSkinnedMesh(string szKey, string szFolder, string szFilename)
     m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
     m_pEffect = pSkinnedMesh->m_pEffect;
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
-    matS = pSkinnedMesh->matS;
+    m_vScale = pSkinnedMesh->GetScale();
+    m_vRotation = pSkinnedMesh->GetRotation();
     m_mapStateInfo = pSkinnedMesh->m_mapStateInfo;
 
     if (pSkinnedMesh->m_pAnimController)
@@ -48,7 +48,6 @@ cSkinnedMesh::cSkinnedMesh(string szKey)
     , m_fPassedBlendTime(0.0f)
 {
     D3DXMatrixIdentity(&m_matWorld);
-    D3DXMatrixIdentity(&matS);
 
     cSkinnedMesh* pSkinnedMesh = g_pMeshManager->GetSkinnedMesh(szKey);
 
@@ -56,8 +55,9 @@ cSkinnedMesh::cSkinnedMesh(string szKey)
     m_dwWorkingPaletteSize = pSkinnedMesh->m_dwWorkingPaletteSize;
     m_pmWorkingPalette = pSkinnedMesh->m_pmWorkingPalette;
     m_pEffect = pSkinnedMesh->m_pEffect;
+    m_vScale = pSkinnedMesh->GetScale();
+    m_vRotation = pSkinnedMesh->GetRotation();
     m_stBoundingSphere = pSkinnedMesh->m_stBoundingSphere;
-    matS = pSkinnedMesh->matS;
     m_mapStateInfo = pSkinnedMesh->m_mapStateInfo;
 
     if (pSkinnedMesh->m_pAnimController)
@@ -127,7 +127,9 @@ void cSkinnedMesh::Load(string szDirectory, string szFilename)
     }
 
     if (m_pRootFrame)
+    {
         SetupBoneMatrixPtrs(m_pRootFrame);
+    }
 }
 
 void cSkinnedMesh::LoadJSON(string szName)
@@ -184,9 +186,14 @@ void cSkinnedMesh::UpdateAndRender()
 
     if (m_pRootFrame)
     {
-        Matrix4 matT,matW;
+        Matrix4 matS, matR, matT, matW;
+        D3DXMatrixScaling(&matS, m_vScale.x, m_vScale.y, m_vScale.z);
+        D3DXMatrixRotationYawPitchRoll(&matR,
+            D3DXToRadian(m_vRotation.y),
+            D3DXToRadian(m_vRotation.x),
+            D3DXToRadian(m_vRotation.z));
         D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-        matW = matS* matT * m_matWorld;
+        matW = (matS * matR * matT);
 
         Update(m_pRootFrame, &matW);
         Render(m_pRootFrame);

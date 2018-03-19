@@ -64,8 +64,9 @@ void cMeshManager::LoadStaticMesh(string szKey, string szPath)
 {
     if (m_mapStaticMesh.find(szKey) == m_mapStaticMesh.end())
     {
-        LPMESH* mesh = new LPMESH;
-        HRESULT hr = D3DXLoadMeshFromXA(szKey.c_str(), NULL, g_pDevice, NULL, NULL, NULL, NULL, mesh);
+        LPMESH mesh;
+        HRESULT hr = D3DXLoadMeshFromXA(szPath.c_str(), D3DXMESH_32BIT | D3DXMESH_IB_MANAGED,
+            g_pDevice, NULL, NULL, NULL, NULL, &mesh);
         m_mapStaticMesh.insert(make_pair(szKey, mesh));
     }
 }
@@ -76,7 +77,7 @@ LPMESH cMeshManager::GetStaticMesh(string szKey)
 
     if (m_mapStaticMesh.find(szKey) != m_mapStaticMesh.end())
     {
-        mesh = *m_mapStaticMesh[szKey];
+        mesh = m_mapStaticMesh[szKey];
     }
 
     return mesh;
@@ -110,21 +111,21 @@ void cMeshManager::LoadSkinnedMesh()
     {
         pNewMesh->LoadJSON("Deathwing");
     }
-    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair("deathwing", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()
 {
     json newJson;
     ifstream m_fileJson;
-    m_fileJson.open("Assets\\Player\\ArthasLichking\\arthaslichking.json");
+    m_fileJson.open("Assets\\Player\\ArthasLichking\\ArthasLichking.json");
     m_fileJson >> newJson;
     m_mapJson.insert(make_pair("arthaslichking", newJson));
     m_fileJson.close();
 
     m_fileJson.open("Assets\\Enemy\\Deathwing.json");
     m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Deathwing", newJson));
+    m_mapJson.insert(make_pair("deathwing", newJson));
     m_fileJson.close();
 }
 
@@ -207,14 +208,14 @@ void cMeshManager::Destroy()
 
     for (auto iter = m_mapStaticMesh.begin(); iter != m_mapStaticMesh.end();)
     {
-        //SAFE_RELEASE(*iter->second); // 로드가 수정되면 문제 없는 코드!
+        SAFE_RELEASE(iter->second); // 로드가 수정되면 문제 없는 코드!
         iter = m_mapStaticMesh.erase(iter);
     }
 
     for (auto iter = m_mapSkinnedMesh.begin(); iter != m_mapSkinnedMesh.end();)
     {
         iter->second->Destroy();
-        SAFE_RELEASE(iter->second);
+        while (iter->second->Release());
         iter = m_mapSkinnedMesh.erase(iter);
     }
 }

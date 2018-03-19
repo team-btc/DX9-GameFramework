@@ -19,7 +19,7 @@ public:
     void Setup();
     void Update();
     void Render();
-    //void Destroy();
+    virtual ULONG Release();
 
     void SetStartPoint(Vector3 startpos) { m_vStartPoint = startpos;
                                             m_vPosition = startpos; }

@@ -18,13 +18,14 @@ private:
 
     // 객체마다 생성
     LPANIMCONTROLLER            m_pAnimController;
+    Vector3                     m_vScale;
+    Vector3                     m_vRotation;
     Vector3                     m_vPosition;
     Matrix4                     m_matWorld;
-    Matrix4                     matS;
     map<string, ST_STATE>       m_mapStateInfo;
 
-    float						m_fBlendDuration;
-    float						m_fPassedBlendTime;
+    float                       m_fBlendDuration;
+    float                       m_fPassedBlendTime;
 
 private:
     cSkinnedMesh();
@@ -65,4 +66,8 @@ public:
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }
 
+    void SetRotation(Vector3 rot) { m_vRotation = rot; }
+    Vector3 GetRotation() { return m_vRotation; }
+    void SetScale(float scale) { m_vScale = Vector3(scale, scale, scale); }
+    Vector3 GetScale() { return m_vScale; }
 };

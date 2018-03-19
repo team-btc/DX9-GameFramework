@@ -3,8 +3,8 @@
 #include "cCamera.h"
 #include "cMapLoad.h"
 
+
 cMainGame::cMainGame()
-    : m_pCamera(NULL)
 {
     HRESULT hr = S_OK;
     g_pLogManager->Setup("\\Log\\");
@@ -16,7 +16,7 @@ cMainGame::cMainGame()
     g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
     g_pMeshManager->LoadSkinnedMesh();
-    
+
     g_pScnManager->Setup();
     g_pCharacterManager->Setup();
 }
@@ -35,8 +35,8 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE ÇØÁ¦
     g_pAutoReleasePool->Drain();
-    g_pObjectManager->Destory();
     g_pMapManager->Destroy();
+    g_pObjectManager->Destory();
     hr = g_pDbManager->Destroy();
     hr = g_pDeviceManager->Destroy();
     g_pCharacterManager->Destroy();
@@ -58,8 +58,13 @@ void cMainGame::Setup()
 
     map = new cMapLoad;
 
-    g_pScnManager->AddScene("map", map);
-    g_pScnManager->ChangeScene("map");
+    hr = g_pScnManager->AddScene("title", new cTitleScene);
+    hr = g_pScnManager->AddScene("loading", new cLoadingScene);
+    hr = g_pScnManager->AddScene("play", new cPlayScene);
+    hr = g_pScnManager->AddScene("ending", new cEndingScene);
+
+    hr = g_pScnManager->ChangeScene("play");
+
 }
 
 void cMainGame::Update()
@@ -112,8 +117,5 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
+    g_pScnManager->WndProc(hWnd, message, wParam, lParam);
 }

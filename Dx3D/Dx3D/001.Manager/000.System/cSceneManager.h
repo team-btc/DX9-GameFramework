@@ -31,4 +31,6 @@ public:
     virtual HRESULT Update() override;
     virtual HRESULT Render() override;
     virtual HRESULT Destroy() override;
+
+    void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

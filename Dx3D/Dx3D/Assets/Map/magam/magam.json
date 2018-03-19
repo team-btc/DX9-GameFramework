@@ -1,8 +1,26 @@
 {
+    "event": [
+        {
+            "event-name": "startpos",
+            "event-position-x": 187.427398681641,
+            "event-position-y": 127.999984741211,
+            "event-position-z": 8.28728485107422
+        },
+        {
+            "event-name": "to-badland",
+            "event-position-x": 128.0,
+            "event-position-y": 128.0,
+            "event-position-z": 128.0
+        }
+    ],
     "skybox": {
         "key": "DeepNight.dds"
     },
     "texture": {
+        "bgtex": {
+            "density": 114.0,
+            "key": "mud1.jpg"
+        },
         "tex1": {
             "density": 100.0,
             "key": "Lava.jpg"
@@ -19,8 +37,8 @@
     "water": {
         "density": 59.0001525878906,
         "enable": true,
-        "file_name": "magma.jpg",
-        "file_path": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Shader\\Texture",
+        "filename": "magma.jpg",
+        "filepath": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Shader\\Texture",
         "frequency": 7.0,
         "height": 127.0,
         "heightspeed": 0.5,

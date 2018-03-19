@@ -111,8 +111,8 @@ public:
 
     //액션 폼 함수
     virtual void Action(string Command, float value) PURE;
-    virtual void Attack(int ATK) PURE;
-    virtual void Heal(int Value) PURE;
+    virtual void Attack(float ATK) PURE;
+    virtual void Heal(float Value) PURE;
 
     //애니메이션 변경
     virtual void AttackAnim() PURE;
