@@ -127,4 +127,5 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define SHADER_PATH "Assets\\Shader\\"
 #define OBJECT_PATH "Assets\\Object\\"
 #define INTERFACE_PATH "Assets\\Interface\\"
+#define SHOP_PATH "Assets\\Shop\\"
 #pragma endregion

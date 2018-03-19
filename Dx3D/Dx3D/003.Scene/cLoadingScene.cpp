@@ -34,7 +34,7 @@ HRESULT cLoadingScene::Start()
 
     // 배경
     m_pBGLayer = new cUILayer;
-    m_pBGLayer->SetLayer("bg", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT), false);
+    m_pBGLayer->SetLayer("bg", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
     string sz = TERRAIN_PATH + (string)"Lava.jpg";
     g_pTextureManager->AddTexture("lava", sz, true);
     cUIImageView* pUIBG = new cUIImageView;
@@ -42,7 +42,7 @@ HRESULT cLoadingScene::Start()
     pUIBG->SetLocalPos(Vector3(0, 0, 0));
     IMAGE_INFO imageInfo;
     pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("lava", &imageInfo));
-    pUIBG->SetSize(Vector2(imageInfo.Width, imageInfo.Height));
+    pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
     pUIBG->SetScale(W_WIDTH, W_HEIGHT);
     m_pBGLayer->AddUIObject(pUIBG);
 
@@ -50,7 +50,7 @@ HRESULT cLoadingScene::Start()
 
     // 프로그래스 바
     m_pProgressBarLayer = new cUILayer;
-    m_pProgressBarLayer->SetLayer("progressbar", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT), false);
+    m_pProgressBarLayer->SetLayer("progressbar", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
 
     ST_SIZE stSize = ST_SIZE(W_WIDTH * 0.8f, W_HEIGHT * 0.05f);
     Vector3 vPos = Vector3(W_WIDTH * 0.5f - stSize.w * 0.5f, W_HEIGHT - W_HEIGHT * 0.1f, 0);

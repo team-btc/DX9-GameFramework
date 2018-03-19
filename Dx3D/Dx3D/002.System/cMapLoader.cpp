@@ -9,14 +9,14 @@ cMapLoader::cMapLoader()
 
 cMapLoader::~cMapLoader()
 {
-    SAFE_DELETE(m_stMapInfo);
+    
 }
 
 void cMapLoader::LoadMap()
 {
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
-    g_pMapManager->SetCurrMap(szKey);
-    if (g_pMapManager->IsLoadMapInfo(szKey))
+    g_pMapManager->SetCurrMap(m_szKey);
+    if (g_pMapManager->IsLoadMapInfo(m_szKey))
     {
         return;
     }
@@ -66,8 +66,8 @@ void cMapLoader::LoadMap()
     }
 
     // 오브젝트
-    m_jObject = jLoad["OBJECT"];
-    m_nObjectMaxCnt = m_jObject.size();
+    m_jObject = jLoad["object"];
+    m_nObjectMaxCnt = (int)m_jObject.size();
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
     g_pMapManager->SetMapInfo(m_szKey, m_stMapInfo);

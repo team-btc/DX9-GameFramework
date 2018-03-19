@@ -11,17 +11,13 @@
 #include "cSkyBoxShader.h"
 
 class cUILayer;
+class cShop;
 
 class cPlayScene : public iSceneObject
 {
 private:
     cUILayer*                       m_pPlayerStatUILayer;
     cUILayer*                       m_pHPUILayer;
-
-    float                           m_fPlayerMaxHP;
-    float                           m_fPlayerCurrHP;
-    float                           m_fPlayerMaxMP;
-    float                           m_fPlayerCurrMP;
 
     cCamera*            			m_pCamera;
     string              			m_szMapKey;
@@ -36,6 +32,8 @@ private:
     cTextureShader*    				m_pTextureShader;
     cSkyBoxShader*      			m_pSkyBoxShader;
     cWaveShader*        			m_pWaveShader;
+    
+    cShop*                          m_pShop;
 
 private:
     void SetUI();
