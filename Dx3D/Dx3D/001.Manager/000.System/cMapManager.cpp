@@ -22,9 +22,6 @@ void cMapManager::SetCurrMap(string szKey)
 void cMapManager::SetMapInfo(string szKey, ST_MAP_INFO* stmap)
 {
     m_mapMapInfo[szKey] = stmap;
-
-    // ÇöÀç ¸Ê ¼³Á¤
-    SetCurrMap(szKey);
 }
 
 ST_MAP_INFO* cMapManager::GetCurrMapInfo()

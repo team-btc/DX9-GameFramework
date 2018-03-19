@@ -96,6 +96,23 @@ HRESULT cPlayScene::Start()
         m_pPlayer = g_pCharacterManager->GetPlayer();
     }
 
+    //  시작 지점 세팅
+    string szPrevMap = "from-" + g_pMapManager->GetPrevMap();
+    auto iter = m_stMapInfo->vecEventInfo.begin();
+    for (; iter != m_stMapInfo->vecEventInfo.end(); iter++)
+    {
+        if (iter->szName == szPrevMap)
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
+
+        if (szPrevMap == "from-" && iter->szName == "startpos")
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
+    }
     m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
 
     if (!m_vecMonster)
