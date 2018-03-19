@@ -14,6 +14,7 @@ private:
     cCamera*    m_pCurrCamera;
     LPMESH      m_pCollisionMesh;
     cRay*       m_pRay;
+    Vector3     m_vPickingPos;
     char        m_szBuffer[256] = { 0 };
     bool        m_isCollidable;
 
