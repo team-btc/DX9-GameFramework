@@ -27,7 +27,7 @@ public:
     virtual void SetRotate(Matrix4 Rotate) override { m_MatRotate = Rotate; }
     virtual void SetTrans(Matrix4 Trans) override { m_MatTrans = Trans; }
     virtual void SetDir(Vector3 dir) override { m_vDir = dir; }
-    virtual void SetPosition(Vector3 Pos) override { m_vPosition = Pos; }
+    virtual void SetPosition(Vector3 Pos) override { m_vPosition = Pos; m_stSphere.vCenter = Pos; }
     virtual void SetSphere(ST_SPHERE Sphere) override { m_stSphere = Sphere; };
     virtual void SetPikingMesh(LPMESH Mesh) override { m_pPikingMesh = Mesh; }
     virtual void SetMoveSpeed(float speed) override { m_fMoveSpeed = speed; }

@@ -13,6 +13,8 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
 
+    m_vecMonster = NULL;
+
     m_eTag = PLAYER;
 
     m_stStat.szName = "ChiChi";
@@ -38,11 +40,10 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     
     IdleAnim();
 
-    m_stSphere.fRadius = m_pMesh->GetBoundingSphere()->fRadius;
+    m_stSphere.fRadius = 4.0f;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
-    m_vecMonster = new vector<cMonster*>;
 }
 
 cPlayer::cPlayer(string szKey)
@@ -54,6 +55,8 @@ cPlayer::cPlayer(string szKey)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
+
+    m_vecMonster = NULL;
 
     m_eTag = PLAYER;
 
@@ -80,12 +83,10 @@ cPlayer::cPlayer(string szKey)
 
     IdleAnim();
 
-    m_stSphere.fRadius = m_pMesh->GetBoundingSphere()->fRadius;
+    m_stSphere.fRadius = 4.0f;
     m_stSphere.vCenter = m_vPosition;
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
-    m_vecMonster = new vector<cMonster*>;
-
 }
 
 cPlayer::cPlayer()
@@ -236,6 +237,7 @@ void cPlayer::Update()
                 }
             }
             if (m_pMesh->GetCurPos() >= 1.0f)
+            {
                 IdleAnim();
             }
         }
@@ -320,9 +322,17 @@ void cPlayer::Update()
             m_vPosition += Dir * m_fMoveSpeed;
             m_stSphere.vCenter = m_vPosition;
         }
-
         D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &Dir, &D3DXVECTOR3(0, 1, 0));
         D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
+        if (Dir.z > 0)
+        {
+            m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        }
+        else
+        {
+            m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        }
+        D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     }
 
     m_pMesh->SetScale(8.0f);
@@ -335,11 +345,10 @@ void cPlayer::Render()
     m_pMesh->UpdateAndRender();
 
 #ifdef _DEBUG
-    Matrix4 matR, matT, matW;
+    Matrix4 matT, matW;
     D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
-    D3DXMatrixRotationY(&matR, -D3DX_PI / 2);
     D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
-    matW = m_MatScale * m_MatRotate * matR * matT;
+    matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);

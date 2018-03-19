@@ -6,7 +6,6 @@
 
 cCharacterObject::cCharacterObject()
 {
-<<<<<<< HEAD
    m_pTarget = NULL;
    m_pMesh = NULL;
    m_pUILayer = NULL;
@@ -114,6 +113,7 @@ void cCharacterObject::AttackAnim()
     else if (RandomNum == 2)
     {
         m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
+    }
 
 }
 

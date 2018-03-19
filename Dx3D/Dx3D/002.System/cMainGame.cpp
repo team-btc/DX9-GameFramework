@@ -52,11 +52,11 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    m_pCamera = new cCamera;
-    hr = m_pCamera->Setup();
-    g_pAutoReleasePool->AddObject(m_pCamera);
+    //m_pCamera = new cCamera;
+    //hr = m_pCamera->Setup();
+    //g_pAutoReleasePool->AddObject(m_pCamera);
 
-    map = new cMapLoad;
+    //map = new cMapLoad;
 
     hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);

@@ -46,11 +46,7 @@ public:
     void UpdateAndRender();
 
     void SetRandomTrackPosition();  // 테스트용
-    void SetPosition(Vector3 v)
-    {
-        m_vPosition = v;
-        m_stBoundingSphere.vCenter = v;
-    }
+    void SetPosition(Vector3 v){ m_vPosition = v; }
     void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
     void SetAnimationIndex(int nIndex, bool isBlend = true);
     void SetDescZeroPos();

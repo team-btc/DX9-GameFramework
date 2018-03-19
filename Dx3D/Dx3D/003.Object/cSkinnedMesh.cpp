@@ -94,9 +94,6 @@ void cSkinnedMesh::Load(string szDirectory, string szFilename)
     ah.SetDirectory(szDirectory);
     ah.SetDefaultPaletteSize(nPaletteSize);
 
-    m_stBoundingSphere.vCenter = (ah.GetMin() + ah.GetMax()) / 2.0f;
-    m_stBoundingSphere.fRadius = D3DXVec3Length(&(ah.GetMin() - ah.GetMax()));
-
     string sFullPath(szDirectory);
     sFullPath += "\\" + std::string(szFilename);
 
@@ -107,6 +104,9 @@ void cSkinnedMesh::Load(string szDirectory, string szFilename)
                                NULL,
                                (LPFRAME*)&m_pRootFrame,
                                &m_pAnimController);
+
+    m_stBoundingSphere.vCenter = (ah.GetMin() + ah.GetMax()) / 2.0f;
+    m_stBoundingSphere.fRadius = D3DXVec3Length(&(ah.GetMin() - ah.GetMax()));
 
     if (hr == D3DERR_INVALIDCALL)
     {
@@ -139,7 +139,7 @@ void cSkinnedMesh::LoadJSON(string szName)
     float scale = (float)atof(str.c_str());
     if (scale > 0.0f)
     {
-        D3DXMatrixScaling(&matS, scale, scale, scale);
+        m_vScale = Vector3(scale, scale, scale);
     }
 
     for (int i = 0; i <jsonData["State"].size(); i++)
@@ -457,7 +457,7 @@ float cSkinnedMesh::GetdescPos()
 
 float cSkinnedMesh::GetCurPos()
 {
-    int nResult = 0;
+    float nResult = 0.0f;
 
     if (m_pAnimController)
     {

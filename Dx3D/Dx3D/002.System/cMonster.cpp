@@ -205,7 +205,7 @@ void cMonster::Update()
         }
         else
         {
-            m_fMoveCount += g_pTimerManager->GetDeltaTime();
+           /* m_fMoveCount += g_pTimerManager->GetDeltaTime();
             
             if (m_fMoveCount > 10.0f)
             {
@@ -213,12 +213,12 @@ void cMonster::Update()
                 m_fMoveCount = 0.0f;
                 m_vDest = m_vStartPoint + GetRandomVector3(Vector3(-m_fMoveRadius, m_vStartPoint.y, -m_fMoveRadius), Vector3(m_fMoveRadius, m_vStartPoint.y, m_fMoveRadius));
                 WalkAnim();
-            }
+            }*/
         }
 
         if (m_isMove)
         {
-            Vector3 Dir = m_vDest - m_vPosition;
+           /* Vector3 Dir = m_vDest - m_vPosition;
             D3DXVec3Normalize(&Dir, &Dir);
 
             m_vPosition += Dir * m_fMoveSpeed;
@@ -232,13 +232,16 @@ void cMonster::Update()
             D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &Dir, &D3DXVECTOR3(0, 1, 0));
             D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
 
-            if (Dir.z >0)
+            if (Dir.z > 0)
+            {
                 m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+            }
             else
+            { 
                 m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+            }
             D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
-
-            D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
+            D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);*/
         }
     }
     else
@@ -246,13 +249,9 @@ void cMonster::Update()
      
     }
 
-    Matrix4 matR,matW;
-    D3DXMatrixScaling(&m_MatScale, 2, 2, 2);
-    D3DXMatrixRotationY(&matR, -D3DX_PI/2);
-    D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-    m_stSphere.vCenter = m_vPosition;
-    matW = m_MatScale * m_MatRotate* matR * m_MatTrans;
-    m_pMesh->SetWorldMatrix(matW);
+    m_pMesh->SetScale(1.0f);
+    m_pMesh->SetPosition(m_vPosition);
+    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
 }
 
 void cMonster::Render()
@@ -260,10 +259,10 @@ void cMonster::Render()
     m_pMesh->UpdateAndRender();
 
 #ifdef _DEBUG
-    Matrix4 matS, matW;
-    D3DXMatrixScaling(&matS, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
-    D3DXMatrixTranslation(&m_MatTrans, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 5.0f, m_stSphere.vCenter.z);
-    matW = matS * m_MatRotate * m_MatTrans;
+    Matrix4 matT, matW;
+    D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
+    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
+    matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);

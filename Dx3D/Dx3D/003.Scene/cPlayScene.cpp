@@ -91,13 +91,6 @@ HRESULT cPlayScene::Start()
 
     m_pFrustum->Setup();
 
-    if (!m_pPlayer)
-    {
-        m_pPlayer = g_pCharacterManager->GetPlayer();
-    }
-
-    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
-
     if (!m_vecMonster)
     {
         m_vecMonster = new vector<cMonster*>;
@@ -112,8 +105,13 @@ HRESULT cPlayScene::Start()
         (*m_vecMonster).push_back(m_pEnermy);
     }
 
-    m_pPlayer->SetVecMonster(m_vecMonster);
-    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    if (!m_pPlayer)
+    {
+        m_pPlayer = g_pCharacterManager->GetPlayer();
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    }
 
     return S_OK;
 }
@@ -147,7 +145,7 @@ HRESULT cPlayScene::Update()
     if (m_vecMonster->size() == 0)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
+        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);
     }
@@ -159,6 +157,27 @@ HRESULT cPlayScene::Update()
         Vector3 Pos = (*iter)->GetPosition();
         m_pGameMap->GetHeight(Pos);
         (*iter)->SetPosition(Pos);
+
+        if ((*iter)->GetMove())
+        {
+            cRay ray;
+            ray.m_vOrg = (*iter)->GetPosition();
+            ray.m_vDir = (*iter)->GetDir();
+            // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
+            float fDist = FLT_MAX;
+            if (m_pGameMap->CheckObstacle(fDist, ray) == true
+                && fDist < 3.0f)
+            {
+                // 문제가 있다.
+                (*iter)->SetMoveSpeed(0.0f);
+                (*iter)->SetMove(false);
+                (*iter)->IdleAnim();
+            }
+            else
+            {
+                (*iter)->SetMoveSpeed(0.1f);
+            }
+        }
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
@@ -184,8 +203,15 @@ HRESULT cPlayScene::Update()
             && fDist < 3.0f)
         {
             // 문제가 있다.
+            m_pPlayer->SetMoveSpeed(0.0f);
+            m_pPlayer->SetMove(false);
             m_pPlayer->SetMoveToPoint(false);
             m_pPlayer->SetMoveToTarget(false);
+            m_pPlayer->IdleAnim();
+        }
+        else
+        {
+            m_pPlayer->SetMoveSpeed(0.3f);
         }
     }
 

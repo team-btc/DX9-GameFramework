@@ -111,7 +111,7 @@ void cMeshManager::LoadSkinnedMesh()
     {
         pNewMesh->LoadJSON("Deathwing");
     }
-    m_mapSkinnedMesh.insert(make_pair("deathwing", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()
@@ -125,7 +125,7 @@ void cMeshManager::LoadJSON()
 
     m_fileJson.open("Assets\\Enemy\\Deathwing.json");
     m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("deathwing", newJson));
+    m_mapJson.insert(make_pair("Deathwing", newJson));
     m_fileJson.close();
 }
 
