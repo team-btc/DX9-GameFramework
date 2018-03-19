@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "cTextureShader.h"
-
+#include "iCharacterObject.h"
 
 cTextureShader::cTextureShader()
 {
@@ -81,4 +81,23 @@ void cTextureShader::Render()
        }
    }
    m_pTextureShader->End();
+}
+
+void cTextureShader::SetPlayerPos(Vector3 pos)
+{
+    Vector4 playerPos(pos.x, pos.y, pos.z, 1.0f);
+    m_pTextureShader->SetVector("PlayerPos", &playerPos);
+    m_pTextureShader->SetVector("PlayerColor", &Vector4(10, 255, 10, 255));
+    m_pTextureShader->SetFloat("PlayerScale", 0.015f);
+}
+
+void cTextureShader::SetTargetPos(Vector3* target)
+{
+    if (target)
+    {
+        Vector4 targetPos(target->x, target->y, target->z, 1.0f);
+        m_pTextureShader->SetVector("TargetPos", &targetPos);
+        m_pTextureShader->SetVector("TargetColor", &Vector4(255, 10, 10, 255));
+        m_pTextureShader->SetFloat("TargetScale", 0.02f);
+    }
 }

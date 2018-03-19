@@ -15,6 +15,7 @@ cPlayScene::cPlayScene()
     , m_pWaveShader(NULL)
     , m_szMapKey("start")
     , m_pShop(NULL)
+    , m_pParticle(NULL)
 {
 }
 
@@ -27,7 +28,7 @@ cPlayScene::~cPlayScene()
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pPlayerStatUILayer);
     SAFE_DELETE(m_pHPUILayer);
-
+    SAFE_DELETE(m_pParticle);
     SAFE_RELEASE(m_pShop);
 }
 
@@ -178,12 +179,20 @@ HRESULT cPlayScene::Start()
         m_pPlayerStatUILayer->Setup();
     }
 
-    // 상점 셋팅
-    m_pShop = new cShop;
     
-    if (m_pShop)
+    if (!m_pShop)
     {
+        // 상점 셋팅
+        m_pShop = new cShop;
         m_pShop->Setup();
+    }
+
+    //  파티클 세팅
+    if (!m_pParticle)
+    {
+        m_pParticle = new cParticle;
+        ST_PARTICLE_ATTR stParticleFrost;
+        //stParticleFrost.
     }
 
     return S_OK;
@@ -279,14 +288,14 @@ HRESULT cPlayScene::Update()
         {
             // 문제가 있다.
             m_pPlayer->SetMoveSpeed(0.0f);
-            m_pPlayer->SetMove(false);
-            m_pPlayer->SetMoveToPoint(false);
-            m_pPlayer->SetMoveToTarget(false);
-            m_pPlayer->IdleAnim();
+            //m_pPlayer->SetMove(false);
+            //m_pPlayer->SetMoveToPoint(false);
+            //m_pPlayer->SetMoveToTarget(false);
+            //m_pPlayer->IdleAnim();
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.5f);
+            m_pPlayer->SetMoveSpeed(0.1f);
         }
     }
 
@@ -325,16 +334,16 @@ HRESULT cPlayScene::Render()
     D3DXMatrixIdentity(&matW);
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
-    MATERIAL9 mtrl;
-    mtrl.Ambient = WHITE;
-    mtrl.Diffuse = WHITE;
-    mtrl.Specular = WHITE;
-    mtrl.Emissive = BLACK;
-    mtrl.Power = 8.0f;
-    g_pDevice->SetMaterial(&mtrl);
-    g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
-    g_pDevice->LightEnable(0, true);
+    //MATERIAL9 mtrl;
+    //mtrl.Ambient = WHITE;
+    //mtrl.Diffuse = WHITE;
+    //mtrl.Specular = WHITE;
+    //mtrl.Emissive = BLACK;
+    //mtrl.Power = 8.0f;
+    //g_pDevice->SetMaterial(&mtrl);
+    //g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
+    //g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
+    //g_pDevice->LightEnable(0, true);
 
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -404,6 +413,19 @@ HRESULT cPlayScene::Render()
 
     if (m_pTextureShader)
     {
+        Vector3 pos = m_pPlayer->GetPosition();
+        pos = pos / m_stMapInfo->fMapSize;
+        m_pTextureShader->SetPlayerPos(pos);
+        if (m_pPlayer->GetTarget())
+        {
+            pos = m_pPlayer->GetTarget()->GetPosition();
+            pos = pos / m_stMapInfo->fMapSize;
+            m_pTextureShader->SetTargetPos(&pos);
+        }
+        else
+        {
+            m_pTextureShader->SetTargetPos(NULL);
+        }
         m_pTextureShader->Render();
     }
 

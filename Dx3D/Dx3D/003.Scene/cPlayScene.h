@@ -9,6 +9,7 @@
 #include "cWaveShader.h"
 #include "cTextureShader.h"
 #include "cSkyBoxShader.h"
+#include "cParticle.h"
 
 class cUILayer;
 class cShop;
@@ -34,6 +35,8 @@ private:
     cWaveShader*                    m_pWaveShader;
     
     cShop*                          m_pShop;
+
+    cParticle*                      m_pParticle;
 
 private:
     void SetUI();

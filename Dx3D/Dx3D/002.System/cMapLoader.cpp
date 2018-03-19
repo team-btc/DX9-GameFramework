@@ -28,7 +28,10 @@ void cMapLoader::LoadMap()
     iFile.open(MAP_PATH + m_szKey + "/" + m_szKey + ".json");
     iFile >> jLoad;
     iFile.close();
-    
+
+    int size = jLoad["map"]["size"];
+    m_stMapInfo->fMapSize = (float)(size + 1) * 64.0f;
+
     // 지형 매쉬
     LoadMapMesh();
 
