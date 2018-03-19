@@ -162,6 +162,7 @@ HRESULT cPlayScene::Start()
         m_pCamera->TrackingEnable();
         m_pCamera->SetMaxDist(100.0f);
         m_pCamera->SetMinDist(5.0f);
+        m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
         g_pCameraManager->ColliderDisable();
@@ -191,17 +192,6 @@ HRESULT cPlayScene::Start()
 HRESULT cPlayScene::Update()
 {
     //  UPDATE CAMERA
-    //if (m_pCamera)
-    //{
-    //    if (m_pPlayer)
-    //    {
-    //        m_pCamera->Update(&m_pPlayer->GetPosition());
-    //    }
-    //    else
-    //    {
-    //        m_pCamera->Update();
-    //    }
-    //}
     if (m_pCamera)
     {
         if (m_pPlayer)
@@ -378,8 +368,7 @@ HRESULT cPlayScene::Render()
                 pProgress = (cUIProgressBar*)pObject;
             }
         }
-        // 몬스터 렌더에서 출력하면됨!! 
-        // ===============================================
+
         Matrix4 matView, matProj, matVP;
         g_pDevice->GetTransform(D3DTS_VIEW, &matView);
         g_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
@@ -395,22 +384,20 @@ HRESULT cPlayScene::Render()
         matVP._43 = vp.MinZ;
         if (pProgress)
         {
-            Vector3 vMonsterPos = (*iter)->GetPosition();///////////////////몬스터로수정!
-                                                         //(*iter)
-            vMonsterPos.y += 10.0f; //몬스터의 키(높이)
+            Vector3 vMonsterPos = (*iter)->GetPosition();
+            vMonsterPos.y += 10.0f;
 
             Vector3 vScreenPos;
             D3DXVec3TransformCoord(&vScreenPos, &vMonsterPos, &(matView * matProj * matVP));
 
-            pProgress->SetMaxGuage((*iter)->GetStatus().fMaxHP);///////////////////몬스터로수정!
-            pProgress->SetCurrentGuage((*iter)->GetStatus().fCurHP);///////////////////몬스터로수정!
+            pProgress->SetMaxGuage((*iter)->GetStatus().fMaxHP);
+            pProgress->SetCurrentGuage((*iter)->GetStatus().fCurHP);
             vScreenPos.x -= pProgress->GetSize().x * 0.5f;
             m_pHPUILayer->SetPosition(vScreenPos);
             pProgress->SetLocalPos(vScreenPos);
             m_pHPUILayer->Update();
             m_pHPUILayer->Render();
         }
-        // ===============================================
     }
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
@@ -440,11 +427,6 @@ HRESULT cPlayScene::Render()
     {
         m_pPlayerStatUILayer->Render();
     }
-
-    
-
-    //g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-    //g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
 
     if (m_pShop)
     {
