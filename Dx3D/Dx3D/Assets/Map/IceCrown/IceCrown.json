@@ -885,11 +885,11 @@
     },
     "texture": {
         "bgtex": {
-            "density": 70.0,
+            "density": 130.0,
             "key": "Ice4.jpg"
         },
         "tex1": {
-            "density": 153.0,
+            "density": 183.0,
             "key": "Ice.jpg"
         },
         "tex2": {
@@ -902,7 +902,7 @@
         }
     },
     "water": {
-        "density": 1.0,
+        "density": 60.0,
         "enable": true,
         "filename": "DarkSky.jpg",
         "filepath": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Texture",

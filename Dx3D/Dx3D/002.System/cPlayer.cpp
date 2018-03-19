@@ -339,7 +339,7 @@ void cPlayer::Render()
     matW = m_MatScale * m_MatRotate * matR * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    m_pPikingMesh->DrawSubset(0);
+    //m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }
