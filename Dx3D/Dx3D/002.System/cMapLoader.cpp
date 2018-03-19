@@ -3,28 +3,29 @@
 
 
 cMapLoader::cMapLoader()
+    : m_nObjectMaxCnt(0)
 {
 }
 
 cMapLoader::~cMapLoader()
 {
+    
 }
 
-void cMapLoader::LoadMap(string szKey)
+void cMapLoader::LoadMap()
 {
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
-    g_pMapManager->SetCurrMap(szKey);
-    if (g_pMapManager->IsLoadMapInfo(szKey))
+    g_pMapManager->SetCurrMap(m_szKey);
+    if (g_pMapManager->IsLoadMapInfo(m_szKey))
     {
         return;
     }
 
     m_stMapInfo = new ST_MAP_INFO;
-    m_szKey = szKey;
 
     json jLoad;
     ifstream iFile;
-    iFile.open(MAP_PATH + szKey + "/" + szKey + ".json");
+    iFile.open(MAP_PATH + m_szKey + "/" + m_szKey + ".json");
     iFile >> jLoad;
     iFile.close();
     
@@ -65,13 +66,11 @@ void cMapLoader::LoadMap(string szKey)
     }
 
     // 오브젝트
-    if (!jLoad["object"].is_null())
-    {
-        LoadObject(jLoad["object"]);
-    }
+    m_jObject = jLoad["object"];
+    m_nObjectMaxCnt = (int)m_jObject.size();
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
-    g_pMapManager->SetMapInfo(szKey, m_stMapInfo);
+    g_pMapManager->SetMapInfo(m_szKey, m_stMapInfo);
 }
 
 void cMapLoader::LoadMapMesh()
@@ -256,26 +255,25 @@ void cMapLoader::LoadEvent(json jEvent)
     }
 }
 
-void cMapLoader::LoadObject(json jObject)
+void cMapLoader::LoadObject(int nIndex)
 {
-    for (int i = 0; i < jObject.size(); ++i)
-    {
-        ST_OBJECT_INFO stObject;
-        string szName = jObject[i]["object-file-key"];
-        string szPath = OBJECT_PATH + szName;
-        stObject.pMesh = new cSkinnedMesh(szName, szPath, szName + ".x");
-        float fScale = jObject[i]["object-scale"];
-        Vector3 pos, rot;
-        pos.x = jObject[i]["object-position-x"];
-        pos.y = jObject[i]["object-position-y"];
-        pos.z = jObject[i]["object-position-z"];
-        rot.x = jObject[i]["object-rotation-x"];
-        rot.y = jObject[i]["object-rotation-y"];
-        rot.z = jObject[i]["object-rotation-z"];
-        stObject.pMesh->SetScale(fScale);
-        stObject.pMesh->SetPosition(pos);
-        stObject.pMesh->SetRotation(rot);
+    json jCurrObj = m_jObject[nIndex];
 
-        m_stMapInfo->vecObjectInfo.push_back(stObject);
-    }
+    ST_OBJECT_INFO stObject;
+    string szName = jCurrObj["object-file-key"];
+    string szPath = OBJECT_PATH + szName;
+	stObject.pMesh = new cSkinnedMesh(szName, szPath, szName + ".x");
+    float fScale = jCurrObj["object-scale"];
+    Vector3 pos, rot;
+    pos.x = jCurrObj["object-position-x"];
+    pos.y = jCurrObj["object-position-y"];
+    pos.z = jCurrObj["object-position-z"];
+    rot.x = jCurrObj["object-rotation-x"];
+    rot.y = jCurrObj["object-rotation-y"];
+    rot.z = jCurrObj["object-rotation-z"];
+    stObject.pMesh->SetScale(fScale);
+    stObject.pMesh->SetPosition(pos);
+    stObject.pMesh->SetRotation(rot);
+
+    m_stMapInfo->vecObjectInfo.push_back(stObject);
 }

@@ -240,6 +240,9 @@
     <ClInclude Include="002.System\cGameMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="cShop.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -411,6 +414,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="002.System\cGameMap.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cShop.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

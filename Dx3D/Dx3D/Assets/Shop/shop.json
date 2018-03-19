@@ -1,0 +1,28 @@
+{
+    "item": [
+        {
+            "item-type": 0,
+            "item-name": "a",
+            "item-count": 100,
+            "item-price": 1,
+            "item-plus-stat": 0,
+            "item-plus-value": 1.0
+        },
+        {
+            "item-type": 1,
+            "item-name": "b",
+            "item-count": 100,
+            "item-price": 2,
+            "item-plus-stat": 1,
+            "item-plus-value": 2.0
+        },
+        {
+            "item-type": 2,
+            "item-name": "c",
+            "item-count": 100,
+            "item-price": 2,
+            "item-plus-stat": 1,
+            "item-plus-value": 2.0
+        }
+    ]
+}

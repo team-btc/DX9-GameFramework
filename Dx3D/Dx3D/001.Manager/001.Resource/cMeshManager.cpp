@@ -208,7 +208,7 @@ void cMeshManager::Destroy()
 
     for (auto iter = m_mapStaticMesh.begin(); iter != m_mapStaticMesh.end();)
     {
-        SAFE_RELEASE(iter->second); // 로드가 수정되면 문제 없는 코드!
+        SAFE_RELEASE(iter->second);
         iter = m_mapStaticMesh.erase(iter);
     }
 
