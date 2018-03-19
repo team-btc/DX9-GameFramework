@@ -102,7 +102,7 @@ void cMapLoader::LoadTexture(json jTexture)
 
 void cMapLoader::LoadWater(json jWater)
 {
-    g_pMeshManager->LoadMesh(m_szKey + "Water", MAP_PATH + m_szKey + "/" + m_szKey + "-water.x");
+    g_pMeshManager->LoadMesh(m_szKey + "-water", MAP_PATH + m_szKey + "/" + m_szKey + "-water.x");
     m_stMapInfo->pWaterMesh = g_pMeshManager->GetMesh(m_szKey + "-water");
     string szWaterTex = jWater["filename"];
     szWaterTex = WATER_PATH + szWaterTex;
