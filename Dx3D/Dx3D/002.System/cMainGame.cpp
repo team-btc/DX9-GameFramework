@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "cMainGame.h"
+#include "cCamera.h"
+#include "cMapLoad.h"
+
 
 cMainGame::cMainGame()
 {
@@ -51,12 +54,19 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
+    //m_pCamera = new cCamera;
+    //hr = m_pCamera->Setup();
+    //g_pAutoReleasePool->AddObject(m_pCamera);
+
+    //map = new cMapLoad;
+
     hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
     hr = g_pScnManager->ChangeScene("play");
+
 }
 
 void cMainGame::Update()
@@ -84,7 +94,6 @@ void cMainGame::Render()
         hr = g_pTimerManager->Render();
         hr = g_pCameraManager->Render();
 #endif // _DEBUG
-
         g_pScnManager->Render();
         
         hr = g_pDevice->EndScene();

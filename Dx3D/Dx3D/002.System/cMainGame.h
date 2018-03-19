@@ -5,9 +5,14 @@
 #include "cPlayScene.h"
 #include "cEndingScene.h"
 
+class cMapLoad;
+
 class cMainGame
 {
 private:
+
+    cCamera*                m_pCamera;
+    cMapLoad*                map;
 
 public:
     cMainGame();
