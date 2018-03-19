@@ -1,7 +1,7 @@
 {
     "block-group": [
         {
-            "block-group-color": 4278942815,
+            "block-group-color": 4284928107,
             "block-group-name": "GROUP_0",
             "block-group-point": [
                 {
@@ -277,42 +277,94 @@
             ]
         }
     ],
+    "event": [
+        {
+            "event-name": "to-badland",
+            "event-position-x": 21.1493339538574,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 263.398681640625
+        },
+        {
+            "event-name": "to-badland",
+            "event-position-x": 20.8486270904541,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 291.162048339844
+        },
+        {
+            "event-name": "to-badland",
+            "event-position-x": 20.1935806274414,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 234.565277099609
+        },
+        {
+            "event-name": "from-badland",
+            "event-position-x": 59.2352180480957,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 261.825805664063
+        },
+        {
+            "event-name": "to-badland",
+            "event-position-x": 19.1847896575928,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 277.952331542969
+        },
+        {
+            "event-name": "to-badland",
+            "event-position-x": 19.2152671813965,
+            "event-position-y": 69.9999847412109,
+            "event-position-z": 249.113830566406
+        },
+        {
+            "event-name": "boss",
+            "event-position-x": 391.663452148438,
+            "event-position-y": 102.753311157227,
+            "event-position-z": 355.74462890625
+        },
+        {
+            "event-name": "boss-popup",
+            "event-position-x": 271.273864746094,
+            "event-position-y": 70.0475769042969,
+            "event-position-z": 295.171600341797
+        }
+    ],
+    "map": {
+        "size": 7
+    },
+    "object-tab-setting": {
+        "object-tab-block-make-num": 100,
+        "object-tab-object-make-num": 100
+    },
     "skybox": {
         "key": "DeepNight.dds"
     },
     "texture": {
         "bgtex": {
-            "density": 100.0,
+            "density": 515.0,
             "key": "mecha-dark.jpg"
         },
         "tex1": {
-            "density": 100.0,
+            "density": 515.0,
             "key": "mecha-dark.jpg"
         },
         "tex2": {
-            "density": 100.0,
+            "density": 125.0,
             "key": "DarkSky.jpg"
         },
         "tex3": {
-            "density": 100.0,
+            "density": 467.0,
             "key": "Lava.jpg"
         }
     },
     "water": {
-        "density": 86.5998229980469,
+        "density": 36.0000648498535,
         "enable": true,
         "filename": "magma.jpg",
         "filepath": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Texture",
         "frequency": 7.0,
         "height": 66.0,
         "heightspeed": 0.699999988079071,
-        "transparent": 0.400000005960464,
+        "transparent": 0.200000002980232,
         "uvspeed": 0.0,
         "waveheight": 0.400000005960464
-    },
-    "startPos": {
-        "x": 10.0,
-        "y": 128.0,
-        "z": 256.0
     }
 }
