@@ -74,7 +74,7 @@ HRESULT cMapLoad::Start()
     m_vecMonster = new vector<cMonster*>;
     for (int i = 0; i < 1; i++)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster("start");
         m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);
@@ -99,7 +99,7 @@ HRESULT cMapLoad::Update()
 
     if (m_vecMonster->size() == 0)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+        cMonster* m_pEnermy = g_pCharacterManager->GetMonster("start");
         m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);

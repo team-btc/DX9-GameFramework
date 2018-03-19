@@ -50,7 +50,9 @@ cMonster::cMonster(string szKey)
 
     m_eTag = MONSTER;
 
-    m_stStat.szName = "Monster1";
+    m_szName = szKey;
+
+    m_stStat.szName = szKey;
     m_stStat.Level = 1;
 
     m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;

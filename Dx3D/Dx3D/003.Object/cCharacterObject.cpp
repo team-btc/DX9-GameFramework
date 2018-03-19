@@ -193,14 +193,14 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.05f;
+    m_fRotY -= 0.03f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     
 }
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.05f;
+    m_fRotY += 0.03f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 }
 

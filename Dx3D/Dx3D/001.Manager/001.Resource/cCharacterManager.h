@@ -1,7 +1,7 @@
 #pragma once
 
 #define g_pCharacterManager cCharacterManager::GetInstance()
-#define limitMonster 20
+#define limitMonster 10
 
 class cPlayer;
 class cMonster;
@@ -13,7 +13,8 @@ class cCharacterManager
 private:
 
     cPlayer * m_pPlayer;
-    list<cMonster*>     m_listMonster;
+    //list<cMonster*>     m_listMonster;
+    vector<cMonster*>     m_vMonster;
 
 public:
 
@@ -23,6 +24,6 @@ public:
     void PushMonster(cMonster* monster);
 
     cPlayer* GetPlayer() { return m_pPlayer; }
-    cMonster* GetMonster();
+    cMonster* GetMonster(string szMap);
 };
 

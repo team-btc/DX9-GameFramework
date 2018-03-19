@@ -127,7 +127,7 @@ HRESULT cPlayScene::Start()
     {
         if (m_stMapInfo->vecEventInfo[i].szName == "monster")
         {
-            cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+            cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
             m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
             m_pEnermy->SetActive(true);
             (*m_vecMonster).push_back(m_pEnermy);
@@ -183,7 +183,7 @@ HRESULT cPlayScene::Update()
         {
             if (m_stMapInfo->vecEventInfo[i].szName == "monster")
             {
-                cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
                 m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
                 m_pEnermy->SetActive(true);
                 (*m_vecMonster).push_back(m_pEnermy);
@@ -245,14 +245,10 @@ HRESULT cPlayScene::Update()
         {
             // 문제가 있다.
             m_pPlayer->SetMoveSpeed(0.0f);
-            m_pPlayer->SetMove(false);
-            m_pPlayer->SetMoveToPoint(false);
-            m_pPlayer->SetMoveToTarget(false);
-            m_pPlayer->IdleAnim();
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.5f);
+            m_pPlayer->SetMoveSpeed(0.3f);
         }
     }
 
