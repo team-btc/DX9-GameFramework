@@ -79,7 +79,7 @@ HRESULT cPlayScene::Start()
             m_pWaveShader->SetMesh(m_stMapInfo->pWaterMesh);
             m_pWaveShader->SetWaveTexture(m_stMapInfo->pWaterTexture);
             m_pWaveShader->SetShader(m_stMapInfo->fWaterHeight, m_stMapInfo->fWaterWaveHeight, m_stMapInfo->fWaterHeightSpeed,
-                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
+                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent, m_stMapInfo->fWaterDensity);
         }
     }
 
@@ -91,9 +91,34 @@ HRESULT cPlayScene::Start()
 
     m_pFrustum->Setup();
 
+    //  시작 지점 세팅
+    string szPrevMap = "from-" + g_pMapManager->GetPrevMap();
+    auto iter = m_stMapInfo->vecEventInfo.begin();
+    for (; iter != m_stMapInfo->vecEventInfo.end(); iter++)
+    {
+        if (iter->szName == szPrevMap)
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
+
+        if (szPrevMap == "from-" && iter->szName == "startpos")
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
+    }
+  
     if (!m_vecMonster)
     {
         m_vecMonster = new vector<cMonster*>;
+    }
+    else
+    {
+        for (auto iter = m_vecMonster->begin(); iter != m_vecMonster->end(); iter++)
+        {
+            g_pCharacterManager->PushMonster(*iter);
+        }
     }
     m_vecMonster->clear();
 
@@ -112,6 +137,12 @@ HRESULT cPlayScene::Start()
     if (!m_pPlayer)
     {
         m_pPlayer = g_pCharacterManager->GetPlayer();
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    }
+    else
+    {
         m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
         m_pPlayer->SetVecMonster(m_vecMonster);
         m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
@@ -344,15 +375,7 @@ void cPlayScene::ParseEvent(string szCommand)
 void cPlayScene::TransportMap(string szMap)
 {
     m_szMapKey = szMap;
-    m_stMapInfo = NULL;
-    for (auto iter = m_vecMonster->begin(); iter!= m_vecMonster->end();iter++)
-    {
-        g_pCharacterManager->PushMonster(*iter);
-    }
-    m_vecMonster->clear();
+    m_stMapInfo = NULL;   
     Start();
-    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
-    m_pPlayer->SetVecMonster(m_vecMonster);
-    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
     Update();
 }

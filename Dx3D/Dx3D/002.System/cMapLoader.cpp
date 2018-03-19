@@ -13,13 +13,11 @@ cMapLoader::~cMapLoader()
 void cMapLoader::LoadMap(string szKey)
 {
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
+    g_pMapManager->SetCurrMap(szKey);
     if (g_pMapManager->IsLoadMapInfo(szKey))
     {
-        //g_pMapManager->SetCurrMap(szKey);
-
         return;
     }
-    g_pMapManager->SetCurrMap(szKey);
 
     m_stMapInfo = new ST_MAP_INFO;
     m_szKey = szKey;
@@ -37,22 +35,40 @@ void cMapLoader::LoadMap(string szKey)
     LoadTextureMap();
 
     // 텍스쳐
-    LoadTexture(jLoad["texture"]);
+    if (!jLoad["texture"].is_null())
+    {
+        LoadTexture(jLoad["texture"]);
+    }
 
     // 물
-    LoadWater(jLoad["water"]);
+    if (!jLoad["water"].is_null())
+    {
+        LoadWater(jLoad["water"]);
+    }
     
     // 하늘
-    LoadSky(jLoad["skybox"]);
+    if (!jLoad["skybox"].is_null())
+    {
+        LoadSky(jLoad["skybox"]);
+    }
 
     // 장애물
-    LoadObstacle(jLoad["block-group"]);
+    if (!jLoad["skybox"].is_null())
+    {
+        LoadObstacle(jLoad["block-group"]);
+    }
 
     // 이벤트 -> 여기서 플레이어 시작 위치 셋팅
-    LoadEvent(jLoad["event"]);
+    if (!jLoad["event"].is_null())
+    {
+        LoadEvent(jLoad["event"]);
+    }
 
     // 오브젝트
-    LoadObject(jLoad["object"]);
+    if (!jLoad["object"].is_null())
+    {
+        LoadObject(jLoad["object"]);
+    }
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
     g_pMapManager->SetMapInfo(szKey, m_stMapInfo);
@@ -117,6 +133,7 @@ void cMapLoader::LoadWater(json jWater)
     m_stMapInfo->fWaterHeightSpeed = jWater["heightspeed"];
     m_stMapInfo->fWaterfrequency = jWater["frequency"];
     m_stMapInfo->fWaterTransparent = jWater["transparent"];
+    m_stMapInfo->fWaterDensity = jWater["density"];
 }
 
 void cMapLoader::LoadSky(json jSky)
@@ -233,16 +250,6 @@ void cMapLoader::LoadEvent(json jEvent)
         if (isHit)
         {
             stEvent.vPos.y = 255.0f - fDist;
-        }
-
-        // 시작포지션이면 값 넣기
-        if (szName == "startpos")
-        {
-            m_stMapInfo->vStartPos = stEvent.vPos;
-        }
-        else if (szName == "from-" + g_pMapManager->GetPrevMap())
-        {
-            m_stMapInfo->vStartPos = stEvent.vPos;
         }
 
         m_stMapInfo->vecEventInfo.push_back(stEvent);
