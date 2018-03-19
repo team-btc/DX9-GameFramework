@@ -13,6 +13,8 @@ cFrustum::~cFrustum()
 
 HRESULT cFrustum::Setup()
 {
+    m_vecOrigProjVertex.clear();
+
     m_vecOrigProjVertex.push_back(Vector3(-1.3f, -1.3f, -1.0f));
     m_vecOrigProjVertex.push_back(Vector3(-1.3f,  1.3f, -1.0f));
     m_vecOrigProjVertex.push_back(Vector3( 1.3f,  1.3f, -1.0f));

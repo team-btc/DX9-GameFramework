@@ -195,13 +195,7 @@ HRESULT cPlayScene::Update()
     if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
     {
         // 이벤트 발동
-        if (szEventName == "to-icecrown")
-        {
-            m_szMapKey = "icecrown";
-            m_stMapInfo = NULL;
-            Start();
-            Update();
-        }
+        ParseEvent(szEventName);
     }
 
     return S_OK;
@@ -299,4 +293,22 @@ void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         m_pCamera->WndProc(hWnd, message, wParam, lParam);
     }
+}
+
+void cPlayScene::ParseEvent(string szCommand)
+{
+    string szPrefix = szCommand.substr(0, szCommand.find('-'));
+    if (szPrefix == "to")
+    {
+        string szPostfix = szCommand.substr(szCommand.find('-') + 1);
+        TransportMap(szPostfix);
+    }
+}
+
+void cPlayScene::TransportMap(string szMap)
+{
+    m_szMapKey = szMap;
+    m_stMapInfo = NULL;
+    Start();
+    Update();
 }
