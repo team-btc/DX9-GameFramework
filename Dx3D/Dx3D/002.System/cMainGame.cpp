@@ -69,11 +69,11 @@ void cMainGame::Setup()
 
 void cMainGame::Update()
 {
-    // 씬안에 카메라 넣기
-    if (m_pCamera)
-    {
-        m_pCamera->Update(&map->GetPlayerPos());
-    }
+    //// 씬안에 카메라 넣기
+    //if (m_pCamera)
+    //{
+    //    m_pCamera->Update(&map->GetPlayerPos());
+    //}
 
     g_pScnManager->Update();
 }
@@ -91,6 +91,7 @@ void cMainGame::Render()
 #ifdef _DEBUG
         hr = g_pTimerManager->Render();
 #endif // _DEBUG
+        g_pScnManager->Render();
         
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);

@@ -97,12 +97,16 @@ HRESULT cPlayScene::Start()
     }
     m_vecMonster->clear();
 
-    for (int i = 0; i < 1; i++)
+   
+    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
+        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+        {
+            cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+            m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            m_pEnermy->SetActive(true);
+            (*m_vecMonster).push_back(m_pEnermy);
+        }
     }
 
     if (!m_pPlayer)
@@ -144,10 +148,16 @@ HRESULT cPlayScene::Update()
 
     if (m_vecMonster->size() == 0)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
+        for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+        {
+            if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+            {
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+                m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+                m_pEnermy->SetActive(true);
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+        }
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
@@ -335,6 +345,14 @@ void cPlayScene::TransportMap(string szMap)
 {
     m_szMapKey = szMap;
     m_stMapInfo = NULL;
+    for (auto iter = m_vecMonster->begin(); iter!= m_vecMonster->end();iter++)
+    {
+        g_pCharacterManager->PushMonster(*iter);
+    }
+    m_vecMonster->clear();
     Start();
+    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+    m_pPlayer->SetVecMonster(m_vecMonster);
+    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
     Update();
 }
