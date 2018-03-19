@@ -6,32 +6,35 @@
 
 cCharacterObject::cCharacterObject()
 {
-    m_pTarget = NULL;
-    m_pMesh = NULL;
-    m_pUILayer = NULL;
-    D3DXMatrixIdentity(&m_MatScale);
-    D3DXMatrixIdentity(&m_MatRotate);
-    D3DXMatrixIdentity(&m_MatTrans);
-    m_vDir = Vector3(0, 0, 0);
-    m_vPosition = Vector3(0, 0, 0);
-    m_fRotY = 0;
-    m_stSphere.fRadius = 0;
-    m_stSphere.isPicked = false;
-    m_stSphere.isRender = false;
-    m_stSphere.vCenter = Vector3(0, 0, 0);
-    m_pPikingMesh = NULL;
+   m_pTarget = NULL;
+   m_pMesh = NULL;
+   m_pUILayer = NULL;
+   D3DXMatrixIdentity(&m_MatScale);
+   D3DXMatrixIdentity(&m_MatRotate);
+   D3DXMatrixIdentity(&m_MatTrans);
+   m_vDir = Vector3(0, 0, 0);
+   m_vPosition = Vector3(0, 0, 0);
+   m_fRotY = 0.0f;
+   m_fMoveSpeed = 0.0f;
+   m_stSphere.fRadius = 0.0f;
+   m_stSphere.isPicked = false;
+   m_stSphere.isRender = false;
+   m_stSphere.vCenter = Vector3(0, 0, 0);
+   m_pPikingMesh = NULL;
 
-    m_eTag = END_TAG;
-    m_eState = END_STATE;
+   
+   m_eTag = END_TAG;
+   m_eState = END_STATE;
 
-    isAttack = false;
-    isRun = false;
-    isIdle = false;
-    isHeal = false;
-    isStatic = false;
-    isActive = false;
-    isAlive = true;
-    isMoveToTarget = false;
+   isAttack = false;
+   isRun = false;
+   isWalk = false;
+   isIdle = false;
+   isHeal = false;
+   isStatic = false;
+   isActive = false;
+   isAlive = true;
+   isMoveToTarget = false;
 }
 
 
@@ -97,26 +100,21 @@ void cCharacterObject::AttackAnim()
     FalseAnim();
     isAttack = true;
 
-    if (m_eTag == PLAYER)
+   
+    int RandomNum = rand() % 3;
+    if (RandomNum == 0)
     {
-        int RandomNum = rand() % 3;
-        if (RandomNum == 0)
-        {
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
-        }
-        else if (RandomNum == 1)
-        {
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
-        }
-        else if (RandomNum == 2)
-        {
-            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
-        }
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
     }
-    else
+    else if (RandomNum == 1)
     {
-        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack")->second.nStateNum);
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
     }
+    else if (RandomNum == 2)
+    {
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
+    }
+
 }
 
 void cCharacterObject::RunAnim()
@@ -124,6 +122,13 @@ void cCharacterObject::RunAnim()
     FalseAnim();
     isRun = true;
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Run")->second.nStateNum);
+}
+
+void cCharacterObject::WalkAnim()
+{
+    FalseAnim();
+    isWalk = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Walk")->second.nStateNum);
 }
 
 void cCharacterObject::IdleAnim()
@@ -155,6 +160,7 @@ void cCharacterObject::FalseAnim()
 {
    isAttack = false;
    isRun = false;
+   isWalk = false;
    isIdle = false;
    isHeal = false;
 }
@@ -165,7 +171,7 @@ void cCharacterObject::MoveForword()
     m_vDir.z = cos(m_fRotY);
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition += m_vDir* Speed;
+    m_vPosition += m_vDir* m_fMoveSpeed;
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 
@@ -175,7 +181,7 @@ void cCharacterObject::MoveBackword()
     m_vDir.z = cos(m_fRotY);
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition -= m_vDir* Speed;
+    m_vPosition -= m_vDir* m_fMoveSpeed;
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 

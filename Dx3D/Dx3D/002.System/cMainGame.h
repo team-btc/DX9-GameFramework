@@ -5,9 +5,14 @@
 #include "cPlayScene.h"
 #include "cEndingScene.h"
 
+class cMapLoad;
+
 class cMainGame
 {
 private:
+
+    cCamera*                m_pCamera;
+    cMapLoad*                map;
 
 public:
     cMainGame();
@@ -16,6 +21,8 @@ public:
     void Setup();
     void Update();
     void Render();
+
+    void ResetWMParam();
 
     void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

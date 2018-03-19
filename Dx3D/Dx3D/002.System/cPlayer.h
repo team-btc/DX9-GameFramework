@@ -1,7 +1,7 @@
 #pragma once
 #include "003.Object\cCharacterObject.h"
 
-#define Speed 0.3f
+#define AggroTime 10.0f
 
 class cPlayer : public cCharacterObject
 {
@@ -13,10 +13,10 @@ private:
 
     Vector3 DestPoint;
 
-    bool isMoveToPoint;
-    bool isPoint;
-    bool isPickMonster;
-    bool isMove;
+    bool m_isMoveToPoint;
+    bool m_isPoint;
+    bool m_isPickMonster;
+    bool m_isMove;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
@@ -29,13 +29,13 @@ public:
     void Render();
     //void Destroy();
 
-    void SetMoveToPoint(bool MoveToPoint) { isMoveToPoint = MoveToPoint; }
+    void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
     void SetVecMonster(vector<cMonster*>* monster) { m_vecMonster = monster; }
-    void SetMove(bool Move) { isMove = Move; }
+    void SetMove(bool Move) { m_isMove = Move; }
     void SetTerrain(LPMESH Terrain) { m_pTerrain = Terrain; }
 
-    bool GetMoveToPoint() { return isMoveToPoint; }
-    bool GetMove() { return isMove; }
+    bool GetMoveToPoint() { return m_isMoveToPoint; }
+    bool GetMove() { return m_isMove; }
 };
 

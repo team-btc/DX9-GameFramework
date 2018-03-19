@@ -160,7 +160,6 @@ struct ST_MAP_INFO
     float                   fWaterHeightSpeed;
     float                   fWaterfrequency;
     float                   fWaterTransparent;
-
     // го╢ц
     LPCUBETEXTURE9          pSkyTexture;
 

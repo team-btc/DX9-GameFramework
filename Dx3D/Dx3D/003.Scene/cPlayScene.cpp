@@ -19,18 +19,10 @@ cPlayScene::~cPlayScene()
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
-    SAFE_RELEASE(m_pCamera);
 }
 
 HRESULT cPlayScene::Start()
 {
-    //  CAMERA SETUP
-    if (!m_pCamera)
-    {
-        m_pCamera = new cCamera;
-    }
-    m_pCamera->Setup();
-
     //  LOAD MAP
     if (m_stMapInfo == NULL)
     {
@@ -79,7 +71,7 @@ HRESULT cPlayScene::Start()
             m_pWaveShader->SetMesh(m_stMapInfo->pWaterMesh);
             m_pWaveShader->SetWaveTexture(m_stMapInfo->pWaterTexture);
             m_pWaveShader->SetShader(m_stMapInfo->fWaterHeight, m_stMapInfo->fWaterWaveHeight, m_stMapInfo->fWaterHeightSpeed,
-                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
+                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent, m_stMapInfo->fWaterDensity);
         }
     }
 
@@ -91,29 +83,76 @@ HRESULT cPlayScene::Start()
 
     m_pFrustum->Setup();
 
-    if (!m_pPlayer)
+    //  시작 지점 세팅
+    string szPrevMap = "from-" + g_pMapManager->GetPrevMap();
+    auto iter = m_stMapInfo->vecEventInfo.begin();
+    for (; iter != m_stMapInfo->vecEventInfo.end(); iter++)
     {
-        m_pPlayer = g_pCharacterManager->GetPlayer();
+        if (iter->szName == szPrevMap)
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
+
+        if (szPrevMap == "from-" && iter->szName == "startpos")
+        {
+            m_stMapInfo->vStartPos = iter->vPos;
+            break;
+        }
     }
-
-    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
-
+  
     if (!m_vecMonster)
     {
         m_vecMonster = new vector<cMonster*>;
     }
+    else
+    {
+        for (auto iter = m_vecMonster->begin(); iter != m_vecMonster->end(); iter++)
+        {
+            g_pCharacterManager->PushMonster(*iter);
+        }
+    }
     m_vecMonster->clear();
 
-    for (int i = 0; i < 1; i++)
+   
+    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[0].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
+        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+        {
+            cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+            m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            m_pEnermy->SetActive(true);
+            (*m_vecMonster).push_back(m_pEnermy);
+        }
     }
 
-    m_pPlayer->SetVecMonster(m_vecMonster);
-    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    if (!m_pPlayer)
+    {
+        m_pPlayer = g_pCharacterManager->GetPlayer();
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    }
+    else
+    {
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    }
+
+    //  CAMERA SETUP
+    if (!m_pCamera)
+    {
+        m_pCamera = new cCamera;
+        m_pCamera->TrackingEnable();
+        m_pCamera->SetMaxDist(100.0f);
+        m_pCamera->SetMinDist(5.0f);
+        g_pCameraManager->AddCamera("play", m_pCamera);
+        g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
+        g_pCameraManager->ColliderEnable();
+    }
+    m_pCamera->Setup();
+    g_pCameraManager->SetCurrCamera("play");
 
     return S_OK;
 }
@@ -121,15 +160,22 @@ HRESULT cPlayScene::Start()
 HRESULT cPlayScene::Update()
 {
     //  UPDATE CAMERA
+    //if (m_pCamera)
+    //{
+    //    if (m_pPlayer)
+    //    {
+    //        m_pCamera->Update(&m_pPlayer->GetPosition());
+    //    }
+    //    else
+    //    {
+    //        m_pCamera->Update();
+    //    }
+    //}
     if (m_pCamera)
     {
         if (m_pPlayer)
         {
-            m_pCamera->Update(&m_pPlayer->GetPosition());
-        }
-        else
-        {
-            m_pCamera->Update();
+            m_pCamera->SetTargetPos(m_pPlayer->GetPosition());
         }
     }
 
@@ -146,10 +192,16 @@ HRESULT cPlayScene::Update()
 
     if (m_vecMonster->size() == 0)
     {
-        cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
-        m_pEnermy->SetActive(true);
-        (*m_vecMonster).push_back(m_pEnermy);
+        for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+        {
+            if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+            {
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+                m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+                m_pEnermy->SetActive(true);
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+        }
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
@@ -159,6 +211,27 @@ HRESULT cPlayScene::Update()
         Vector3 Pos = (*iter)->GetPosition();
         m_pGameMap->GetHeight(Pos);
         (*iter)->SetPosition(Pos);
+
+        if ((*iter)->GetMove())
+        {
+            cRay ray;
+            ray.m_vOrg = (*iter)->GetPosition();
+            ray.m_vDir = (*iter)->GetDir();
+            // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
+            float fDist = FLT_MAX;
+            if (m_pGameMap->CheckObstacle(fDist, ray) == true
+                && fDist < 3.0f)
+            {
+                // 문제가 있다.
+                (*iter)->SetMoveSpeed(0.0f);
+                (*iter)->SetMove(false);
+                (*iter)->IdleAnim();
+            }
+            else
+            {
+                (*iter)->SetMoveSpeed(0.08f);
+            }
+        }
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
@@ -184,8 +257,15 @@ HRESULT cPlayScene::Update()
             && fDist < 3.0f)
         {
             // 문제가 있다.
+            m_pPlayer->SetMoveSpeed(0.0f);
+            m_pPlayer->SetMove(false);
             m_pPlayer->SetMoveToPoint(false);
             m_pPlayer->SetMoveToTarget(false);
+            m_pPlayer->IdleAnim();
+        }
+        else
+        {
+            m_pPlayer->SetMoveSpeed(0.5f);
         }
     }
 
@@ -308,7 +388,7 @@ void cPlayScene::ParseEvent(string szCommand)
 void cPlayScene::TransportMap(string szMap)
 {
     m_szMapKey = szMap;
-    m_stMapInfo = NULL;
+    m_stMapInfo = NULL;   
     Start();
     Update();
 }

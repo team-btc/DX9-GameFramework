@@ -33,7 +33,10 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
 
     IdleAnim();
 
+    m_vDest = Vector3(0, 0, 0);
     m_fMoveRadius = 30.0f;
+    m_fMoveCount = 0.0f;
+    m_fAggroTime = 9999.0f;
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
@@ -70,9 +73,13 @@ cMonster::cMonster(string szKey)
 
     IdleAnim();
 
+    m_vDest = Vector3(0, 0, 0);
     m_fMoveRadius = 30.0f;
+    m_fMoveCount = 0.0f;
+    m_fAggroTime = 9999.0f;
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
+
 
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
@@ -99,6 +106,7 @@ void cMonster::Setup()
     isActive = false;
     isAlive = true;
     isMoveToTarget = false;
+    m_isMove = false;
 
     m_stStat.Level = 1;
 
@@ -115,13 +123,11 @@ void cMonster::Setup()
 
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
-
-
 }
 
 void cMonster::Update()
 {
-    if (!isActive &&  m_pMesh->GetCurPos() >= 1)
+    if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
     {
         isAlive = false;
         g_pCharacterManager->PushMonster(this);
@@ -141,11 +147,22 @@ void cMonster::Update()
 
     if (isActive)
     {
+        m_fAggroTime -= g_pTimerManager->GetDeltaTime();
+        if (m_fAggroTime <= 0.0f)
+        {
+            m_pTarget = NULL;
+            m_vDest = m_vStartPoint;
+            //m_isMove = false;
+            RunAnim();
+            m_fAggroTime = 9999.0f;
+        }
+
         if (m_pTarget)
         {
-            Vector3 Dir = m_pTarget->GetPosition() - m_vPosition;
-            float Distance = D3DXVec3Length(&Dir);
-            D3DXVec3Normalize(&Dir, &Dir);
+            m_isMove = true;
+            m_vDir = m_pTarget->GetPosition() - m_vPosition;
+            float Distance = D3DXVec3Length(&m_vDir);
+            D3DXVec3Normalize(&m_vDir, &m_vDir);
 
             if (Distance < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
             {
@@ -156,8 +173,9 @@ void cMonster::Update()
                     isAttack = true;
                 }
 
-                if (m_pMesh->GetCurPos() >= 1)
+                if (m_pMesh->GetCurPos() >= 1.0f)
                 {
+                    AttackAnim();
                     m_pMesh->SetDescZeroPos();
                     Action("Attack", m_stStat.fATK);
                 }
@@ -171,15 +189,15 @@ void cMonster::Update()
                     isAttack = false;
                 }
 
-                m_vPosition += Dir * 0.1f;
+                m_vPosition += m_vDir * m_fMoveSpeed;
                 m_stSphere.vCenter = m_vPosition;
 
                 D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
             }
-            D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &Dir, &D3DXVECTOR3(0, 1, 0));
+            D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
             D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
 
-            if (Dir.z >0)
+            if (m_vDir.z >0)
                 m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
             else
                 m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
@@ -190,16 +208,47 @@ void cMonster::Update()
         else
         {
             m_fMoveCount += g_pTimerManager->GetDeltaTime();
+
+            if (m_isMove)
+            {
+                m_vDir = m_vDest - m_vPosition;
+                D3DXVec3Normalize(&m_vDir, &m_vDir);
+
+                m_vPosition += m_vDir * m_fMoveSpeed;
+                m_stSphere.vCenter = m_vPosition;
+
+                if (Distance(m_vDest) < m_fMoveSpeed)
+                {
+                    m_vPosition = m_vDest;
+                    m_isMove = false;
+                    IdleAnim();
+                }
+
+                D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
+                D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
+
+                if (m_vDir.z > 0)
+                {
+                    m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+                }
+                else
+                {
+                    m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+                }
+                D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+            }
             
             if (m_fMoveCount > 10.0f)
             {
-
+                m_isMove = true;
+                m_fMoveCount = 0.0f;
+                m_vDest = m_vStartPoint + GetRandomVector3(Vector3(-m_fMoveRadius, 0, -m_fMoveRadius), Vector3(m_fMoveRadius, 0, m_fMoveRadius));
+                WalkAnim();
             }
         }
     }
     else
     {
-     
     }
 
     m_pMesh->SetScale(2.0f);
@@ -212,10 +261,10 @@ void cMonster::Render()
     m_pMesh->UpdateAndRender();
 
 #ifdef _DEBUG
-    Matrix4 matS, matW;
-    D3DXMatrixScaling(&matS, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
-    D3DXMatrixTranslation(&m_MatTrans, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 5.0f, m_stSphere.vCenter.z);
-    matW = matS * m_MatRotate * m_MatTrans;
+    Matrix4 matT, matW;
+    D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
+    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
+    matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     m_pPikingMesh->DrawSubset(0);
