@@ -8,7 +8,7 @@ cPlayScene::cPlayScene()
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("badland")
+    , m_szMapKey("start")
 {
 }
 
@@ -221,13 +221,7 @@ HRESULT cPlayScene::Update()
     if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
     {
         // 이벤트 발동
-        if (szEventName == "to-icecrown")
-        {
-            m_szMapKey = "icecrown";
-            m_stMapInfo = NULL;
-            Start();
-            Update();
-        }
+        ParseEvent(szEventName);
     }
 
     return S_OK;
@@ -284,10 +278,15 @@ HRESULT cPlayScene::Render()
         m_pTextureShader->Render();
     }
 
+    g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+    g_pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+    g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
     for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
     {
         m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
     }
+    g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+    g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 
     if (m_stMapInfo->isEnableWater && m_pWaveShader)
     {
@@ -320,4 +319,22 @@ void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         m_pCamera->WndProc(hWnd, message, wParam, lParam);
     }
+}
+
+void cPlayScene::ParseEvent(string szCommand)
+{
+    string szPrefix = szCommand.substr(0, szCommand.find('-'));
+    if (szPrefix == "to")
+    {
+        string szPostfix = szCommand.substr(szCommand.find('-') + 1);
+        TransportMap(szPostfix);
+    }
+}
+
+void cPlayScene::TransportMap(string szMap)
+{
+    m_szMapKey = szMap;
+    m_stMapInfo = NULL;
+    Start();
+    Update();
 }

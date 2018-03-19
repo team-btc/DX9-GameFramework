@@ -10,6 +10,7 @@ private:
     map<string, ST_MAP_INFO*>            m_mapMapInfo;
 
     string                          m_szCurrMapKey;
+    string                          m_szPrevMap;
 
 public:
     // == ╪бем ==
@@ -21,5 +22,8 @@ public:
     bool IsLoadMapInfo(string szKey);
 
     void Destroy();
+
+    void SetPrevMap(string szMap) { m_szCurrMapKey = szMap; }
+    string GetPrevMap() { return m_szPrevMap; }
 };
 
