@@ -19,18 +19,10 @@ cPlayScene::~cPlayScene()
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
-    SAFE_RELEASE(m_pCamera);
 }
 
 HRESULT cPlayScene::Start()
 {
-    //  CAMERA SETUP
-    if (!m_pCamera)
-    {
-        m_pCamera = new cCamera;
-    }
-    m_pCamera->Setup();
-
     //  LOAD MAP
     if (m_stMapInfo == NULL)
     {
@@ -132,21 +124,42 @@ HRESULT cPlayScene::Start()
     m_pPlayer->SetVecMonster(m_vecMonster);
     m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
 
+    //  CAMERA SETUP
+    if (!m_pCamera)
+    {
+        m_pCamera = new cCamera;
+        m_pCamera->TrackingEnable();
+        m_pCamera->SetMaxDist(100.0f);
+        m_pCamera->SetMinDist(5.0f);
+        g_pCameraManager->AddCamera("play", m_pCamera);
+        g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
+        g_pCameraManager->ColliderEnable();
+    }
+    m_pCamera->Setup();
+    g_pCameraManager->SetCurrCamera("play");
+
     return S_OK;
 }
 
 HRESULT cPlayScene::Update()
 {
     //  UPDATE CAMERA
+    //if (m_pCamera)
+    //{
+    //    if (m_pPlayer)
+    //    {
+    //        m_pCamera->Update(&m_pPlayer->GetPosition());
+    //    }
+    //    else
+    //    {
+    //        m_pCamera->Update();
+    //    }
+    //}
     if (m_pCamera)
     {
         if (m_pPlayer)
         {
-            m_pCamera->Update(&m_pPlayer->GetPosition());
-        }
-        else
-        {
-            m_pCamera->Update();
+            m_pCamera->SetTargetPos(m_pPlayer->GetPosition());
         }
     }
 
