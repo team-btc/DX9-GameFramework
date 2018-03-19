@@ -28,8 +28,6 @@ float4x4 gProjectionMatrix : Projection;
 sampler2D BackGroundTex = sampler_state
 {
    Texture = (BackGroundTexture);
-   MINFILTER = GAUSSIANQUAD;
-   MAGFILTER = GAUSSIANQUAD;
    AddressU = Mirror;
    AddressV = Mirror;
 };
@@ -37,8 +35,6 @@ sampler2D BackGroundTex = sampler_state
 sampler2D TexSampler1 = sampler_state
 {
    Texture = (texture1);
-   MINFILTER = GAUSSIANQUAD;
-   MAGFILTER = GAUSSIANQUAD;
    AddressU = Mirror;
    AddressV = Mirror;
 
@@ -46,18 +42,20 @@ sampler2D TexSampler1 = sampler_state
 sampler2D TexSampler2 = sampler_state
 {
    Texture = (texture2);
-   MINFILTER = GAUSSIANQUAD;
-   MAGFILTER = GAUSSIANQUAD;
+   AddressU = Mirror;
+   AddressV = Mirror;
 };
 sampler2D TexSampler3 = sampler_state
 {
    Texture = (texture3);
-   MINFILTER = GAUSSIANQUAD;
-   MAGFILTER = GAUSSIANQUAD;
+   AddressU = Mirror;
+   AddressV = Mirror;
 };
 sampler2D TexAlpha = sampler_state
 {
    Texture = (AlphaMap);
+   MINFILTER = LINEAR;
+   MAGFILTER = LINEAR;
 };
 
 struct VS_INPUT

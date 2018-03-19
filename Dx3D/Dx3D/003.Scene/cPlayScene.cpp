@@ -8,7 +8,7 @@ cPlayScene::cPlayScene()
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("start")
+    , m_szMapKey("icecrown")
 {
 }
 

@@ -885,7 +885,7 @@
     },
     "texture": {
         "bgtex": {
-            "density": 30.0,
+            "density": 70.0,
             "key": "Ice4.jpg"
         },
         "tex1": {
