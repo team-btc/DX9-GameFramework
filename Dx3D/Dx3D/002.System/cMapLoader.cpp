@@ -15,10 +15,11 @@ void cMapLoader::LoadMap(string szKey)
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
     if (g_pMapManager->IsLoadMapInfo(szKey))
     {
-        g_pMapManager->SetCurrMap(szKey);
+        //g_pMapManager->SetCurrMap(szKey);
 
         return;
     }
+    g_pMapManager->SetCurrMap(szKey);
 
     m_stMapInfo = new ST_MAP_INFO;
     m_szKey = szKey;
@@ -235,11 +236,13 @@ void cMapLoader::LoadEvent(json jEvent)
         }
 
         // 시작포지션이면 값 넣기
-        if (!strcmp(szName.c_str(), "startpos"))
+        if (szName == "startpos")
         {
-            m_stMapInfo->vStartPos.x = stEvent.vPos.x;
-            m_stMapInfo->vStartPos.y = stEvent.vPos.y;
-            m_stMapInfo->vStartPos.z = stEvent.vPos.z;
+            m_stMapInfo->vStartPos = stEvent.vPos;
+        }
+        else if (szName == "from-" + g_pMapManager->GetPrevMap())
+        {
+            m_stMapInfo->vStartPos = stEvent.vPos;
         }
 
         m_stMapInfo->vecEventInfo.push_back(stEvent);

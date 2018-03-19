@@ -3,6 +3,8 @@
 
 
 cMapManager::cMapManager()
+    : m_szPrevMap("")
+    , m_szCurrMapKey("")
 {
 }
 
@@ -13,6 +15,7 @@ cMapManager::~cMapManager()
 
 void cMapManager::SetCurrMap(string szKey)
 {
+    m_szPrevMap = m_szCurrMapKey;
     m_szCurrMapKey = szKey;
 }
 
