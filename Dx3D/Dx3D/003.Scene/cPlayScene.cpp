@@ -79,7 +79,7 @@ HRESULT cPlayScene::Start()
             m_pWaveShader->SetMesh(m_stMapInfo->pWaterMesh);
             m_pWaveShader->SetWaveTexture(m_stMapInfo->pWaterTexture);
             m_pWaveShader->SetShader(m_stMapInfo->fWaterHeight, m_stMapInfo->fWaterWaveHeight, m_stMapInfo->fWaterHeightSpeed,
-                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
+                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent, m_stMapInfo->fWaterDensity);
         }
     }
 

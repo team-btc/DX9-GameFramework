@@ -117,6 +117,7 @@ void cMapLoader::LoadWater(json jWater)
     m_stMapInfo->fWaterHeightSpeed = jWater["heightspeed"];
     m_stMapInfo->fWaterfrequency = jWater["frequency"];
     m_stMapInfo->fWaterTransparent = jWater["transparent"];
+    m_stMapInfo->fWaterDensity = jWater["density"];
 }
 
 void cMapLoader::LoadSky(json jSky)
