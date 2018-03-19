@@ -1,7 +1,7 @@
 {
     "block-group": [
         {
-            "block-group-color": 4284928107,
+            "block-group-color": 4280245716,
             "block-group-name": "GROUP_0",
             "block-group-point": [
                 {
@@ -356,12 +356,12 @@
         }
     },
     "water": {
-        "density": 36.0000648498535,
+        "density": 26.0000267028809,
         "enable": true,
         "filename": "magma.jpg",
         "filepath": "C:\\Users\\ChanHyeok Park\\Desktop\\BTC_MapTool\\map-editor\\ToolD3DX\\Texture",
         "frequency": 7.0,
-        "height": 66.0,
+        "height": 67.0,
         "heightspeed": 0.699999988079071,
         "transparent": 0.200000002980232,
         "uvspeed": 0.0,

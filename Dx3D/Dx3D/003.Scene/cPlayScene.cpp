@@ -8,7 +8,7 @@ cPlayScene::cPlayScene()
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("badland")
+    , m_szMapKey("start")
 {
 }
 
@@ -267,6 +267,7 @@ HRESULT cPlayScene::Render()
     }
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+
     if (m_stMapInfo->isEnableWater && m_pWaveShader)
     {
         m_pWaveShader->Render(vP);

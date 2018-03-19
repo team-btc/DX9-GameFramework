@@ -72,9 +72,6 @@ void cMainGame::Render()
             D3DCOLOR_XRGB(47, 121, 112), 1.0f, 0);
 
         hr = g_pDevice->BeginScene();
-
-        hr = g_pScnManager->Render();
-
 #ifdef _DEBUG
         hr = g_pTimerManager->Render();
 #endif // _DEBUG
