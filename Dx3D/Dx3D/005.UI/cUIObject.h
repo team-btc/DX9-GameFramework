@@ -32,5 +32,6 @@ public:
     virtual cUIObject* GetChildByTag(int tag);
     virtual cUIObject* GetChildByName(string strChildName);
     virtual cUIObject* IsClicked(POINT point, bool isTransform);
+    virtual ULONG Release(void);
 };
 

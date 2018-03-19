@@ -31,4 +31,5 @@ public:
         IN Vector3* vFollowPosition = NULL);    // 오버라이드로 했어야 오브젝트에 막들어가는데..
     virtual void Update() override;
     virtual void Render(LPSPRITE pSprite) override;
+    virtual ULONG Release(void);
 };

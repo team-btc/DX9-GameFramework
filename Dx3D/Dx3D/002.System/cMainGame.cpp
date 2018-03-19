@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 #include "cCamera.h"
+#include "cPlayScene.h"
 
 cMainGame::cMainGame()
     : m_pCamera(NULL)
@@ -54,6 +55,10 @@ void cMainGame::Setup()
     m_pCamera = new cCamera;
     hr = m_pCamera->Setup();
     g_pAutoReleasePool->AddObject(m_pCamera);
+
+    cPlayScene* play = new cPlayScene;
+    g_pScnManager->AddScene("play", play);
+    g_pScnManager->ChangeScene("play");
 }
 
 void cMainGame::Update()

@@ -3,29 +3,30 @@
 
 
 cMapLoader::cMapLoader()
+    : m_nObjectMaxCnt(0)
 {
 }
 
 cMapLoader::~cMapLoader()
 {
+    SAFE_DELETE(m_stMapInfo);
 }
 
-void cMapLoader::LoadMap(string szKey)
+void cMapLoader::LoadMap()
 {
     // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
-    if (g_pMapManager->IsLoadMapInfo(szKey))
+    if (g_pMapManager->IsLoadMapInfo(m_szKey))
     {
-        g_pMapManager->SetCurrMap(szKey);
+        g_pMapManager->SetCurrMap(m_szKey);
 
         return;
     }
 
     m_stMapInfo = new ST_MAP_INFO;
-    m_szKey = szKey;
 
     json jLoad;
     ifstream iFile;
-    iFile.open(MAP_PATH + szKey + "/" + szKey + ".json");
+    iFile.open(MAP_PATH + m_szKey + "/" + m_szKey + ".json");
     iFile >> jLoad;
     iFile.close();
     
@@ -51,10 +52,11 @@ void cMapLoader::LoadMap(string szKey)
     LoadEvent(jLoad["event"]);
 
     // 오브젝트
-    LoadObject(jLoad["OBJECT"]);
+    m_jObject = jLoad["OBJECT"];
+    m_nObjectMaxCnt = m_jObject.size();
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
-    g_pMapManager->SetMapInfo(szKey, m_stMapInfo);
+    g_pMapManager->SetMapInfo(m_szKey, m_stMapInfo);
 }
 
 void cMapLoader::LoadMapMesh()
@@ -246,25 +248,24 @@ void cMapLoader::LoadEvent(json jEvent)
     }
 }
 
-void cMapLoader::LoadObject(json jObject)
+void cMapLoader::LoadObject(int nIndex)
 {
-    for (int i = 0; i < jObject.size(); ++i)
-    {
-        ST_OBJECT_INFO stObject;
-        string szName = jObject[i]["OBJECT_FILE_KEY"];
-        string szPath = OBJECT_PATH + szName + "/" + szName + ".x";
-        g_pMeshManager->LoadStaticMesh(szName, szPath);
-        stObject.pMesh = g_pMeshManager->GetStaticMesh(szName);
+    json jCurrObj = m_jObject[nIndex];
 
-        Matrix4 matS, matRX, matRY, matRZ, matT;
-        float fScale = jObject[i]["OBJECT_SCALE"];
-        D3DXMatrixScaling(&matS, fScale, fScale, fScale);
-        D3DXMatrixRotationX(&matRX, jObject[i]["OBJECT_ROTATION_X"]);
-        D3DXMatrixRotationY(&matRY, jObject[i]["OBJECT_ROTATION_Y"]);
-        D3DXMatrixRotationZ(&matRZ, jObject[i]["OBJECT_ROTATION_Z"]);
-        D3DXMatrixTranslation(&matT, jObject[i]["OBJECT_POSITION_X"], jObject[i]["OBJECT_POSITION_Y"], jObject[i]["OBJECT_POSITION_Z"]);
-        stObject.matWorld = matS * matRX * matRY * matRZ * matT;
+    ST_OBJECT_INFO stObject;
+    string szName = jCurrObj["OBJECT_FILE_KEY"];
+    string szPath = OBJECT_PATH + szName + "/" + szName + ".x";
+    g_pMeshManager->LoadStaticMesh(szName, szPath);
+    stObject.pMesh = g_pMeshManager->GetStaticMesh(szName);
 
-        m_stMapInfo->vecObjectInfo.push_back(stObject);
-    }
+    Matrix4 matS, matRX, matRY, matRZ, matT;
+    float fScale = jCurrObj["OBJECT_SCALE"];
+    D3DXMatrixScaling(&matS, fScale, fScale, fScale);
+    D3DXMatrixRotationX(&matRX, jCurrObj["OBJECT_ROTATION_X"]);
+    D3DXMatrixRotationY(&matRY, jCurrObj["OBJECT_ROTATION_Y"]);
+    D3DXMatrixRotationZ(&matRZ, jCurrObj["OBJECT_ROTATION_Z"]);
+    D3DXMatrixTranslation(&matT, jCurrObj["OBJECT_POSITION_X"], jCurrObj["OBJECT_POSITION_Y"], jCurrObj["OBJECT_POSITION_Z"]);
+    stObject.matWorld = matS * matRX * matRY * matRZ * matT;
+
+    m_stMapInfo->vecObjectInfo.push_back(stObject);
 }

@@ -1,0 +1,63 @@
+{
+    "Scale": "1",
+    "State": [
+        {
+            "Name": "Roar",
+            "index": "0"
+        },
+        {
+            "Name": "CastChanneling",
+            "index": "1"
+        },
+        {
+            "Name": "CastSpell",
+            "index": "2"
+        },
+        {
+            "Name": "CastReady",
+            "index": "3"
+        },
+        {
+            "Name": "Attack2",
+            "index": "4"
+        },
+        {
+            "Name": "Attack1",
+            "index": "5"
+        },
+        {
+            "Name": "Attack0",
+            "Position": [
+                {
+                    "Name": "attack",
+                    "Value": "0.517000"
+                }
+            ],
+            "index": "6"
+        },
+        {
+            "Name": "TurnRight",
+            "index": "7"
+        },
+        {
+            "Name": "TurnLeft",
+            "index": "8"
+        },
+        {
+            "Name": "Death",
+            "index": "9"
+        },
+        {
+            "Name": "Run",
+            "index": "10"
+        },
+        {
+            "Name": "Walk",
+            "index": "11"
+        },
+        {
+            "Name": "Stand",
+            "index": "12"
+        }
+    ]
+}

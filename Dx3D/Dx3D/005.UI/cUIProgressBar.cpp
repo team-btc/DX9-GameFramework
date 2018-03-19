@@ -7,10 +7,14 @@
 cUIProgressBar::cUIProgressBar()
     : m_fMaxGuage(0.0f)
     , m_fCurGuage(0.0f)
-{}
+{
+
+}
 
 cUIProgressBar::~cUIProgressBar()
-{}
+{
+
+}
 
 // Max 게이지 설정 
 // 1) 맥스 게이지(0보다 큰 수를 입력해야함)
@@ -213,4 +217,11 @@ void cUIProgressBar::Render(LPSPRITE pSprite)
     {
         obj->Render(pSprite);
     }
+}
+
+ULONG cUIProgressBar::Release(void)
+{
+    cObject::Release();
+
+    return 0;
 }

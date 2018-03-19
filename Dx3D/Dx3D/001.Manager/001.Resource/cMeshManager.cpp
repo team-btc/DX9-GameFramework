@@ -126,7 +126,7 @@ void cMeshManager::LoadSkinnedMesh()
     m_mapSkinnedMesh.insert(make_pair("arthaslichking", pNewMesh));
 
     pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy\\Deathwing", "Deathwing.X");
+    pNewMesh->Load("Assets\\Enemy", "Deathwing.X");
     if (GetJson("Deathwing") != NULL)
     {
         string str = GetJson("Deathwing")["Scale"];
@@ -164,7 +164,7 @@ void cMeshManager::LoadJSON()
     m_mapJson.insert(make_pair("arthaslichking", newJson));
     m_fileJson.close();
 
-    m_fileJson.open("Assets\\Enemy\\Deathwing\\Deathwing.json");
+    m_fileJson.open("Assets\\Enemy\\Deathwing.json");
     m_fileJson >> newJson;
     m_mapJson.insert(make_pair("Deathwing", newJson));
     m_fileJson.close();
@@ -249,7 +249,7 @@ void cMeshManager::Destroy()
 
     for (auto iter = m_mapStaticMesh.begin(); iter != m_mapStaticMesh.end();)
     {
-        SAFE_RELEASE(*iter->second); // 로드가 수정되면 문제 없는 코드!
+        SAFE_RELEASE(*iter->second);
         iter = m_mapStaticMesh.erase(iter);
     }
 

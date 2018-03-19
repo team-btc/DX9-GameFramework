@@ -16,7 +16,7 @@ private:
     string              m_strName;                  // UILayer Name (Identify UILayer other UILayers) 
     Vector3             m_vPosition;                // UILayer Position
     Matrix4             m_matWorld;                 // UILayer World Matrix
-    LPDIRECT3DTEXTURE9  m_textureBackground;        // UILayer Background Texture
+    LPTEXTURE9          m_textureBackground;        // UILayer Background Texture
     ST_SIZE             m_stBackgroundTextureSize;  // UILayer Layout Size (Widht, Height)
     Color               m_colorBackground;          // UILayer Backgorund Color
     float               m_fRatioX;
@@ -53,7 +53,7 @@ public:
     HRESULT FindUILayerChild(OUT cUILayer** pChild, IN string strChildName);
     HRESULT AddUIObject(IN cUIObject* pObject);
     HRESULT FindUIObject(OUT cUIObject** pObject, IN string strObjectName);
-
+    
     // Derived iUILayer interface
     virtual HRESULT SetPosition(IN Vector3 vPosition) override;
     virtual HRESULT GetPosition(OUT Vector3& vPosition) override;
@@ -65,5 +65,5 @@ public:
     virtual HRESULT GetWorldMatrix(OUT Matrix4 matWorld) override;
     virtual HRESULT SetWorldMatrix(IN Matrix4 matWorld) override;
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
-        IN bool useBackground = false, IN Color colerBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*ºó ½ºÆ®¸µ*/) override;
+        IN bool useBackground = false, IN Color colorBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*ºó ½ºÆ®¸µ*/) override;
 };

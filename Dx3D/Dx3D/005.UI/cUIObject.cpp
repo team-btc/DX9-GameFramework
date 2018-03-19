@@ -174,3 +174,8 @@ cUIObject* cUIObject::IsClicked(POINT point, bool isTransform)
 
     return NULL;
 }
+
+ULONG cUIObject::Release(void)
+{
+    return cObject::Release();
+}

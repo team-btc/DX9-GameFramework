@@ -1,8 +1,23 @@
 #pragma once
 #include "iSceneObject.h"
 
+class cUILayer;
+
 class cPlayScene : public iSceneObject
 {
+private:
+    cUILayer*                       m_pPlayerStatUILayer;
+    cUILayer*                       m_pHPUILayer;
+
+    float                           m_fPlayerMaxHP;
+    float                           m_fPlayerCurrHP;
+    float                           m_fPlayerMaxMP;
+    float                           m_fPlayerCurrMP;
+
+private:
+    void SetUI();
+    void UpdateUI();
+
 public:
     cPlayScene();
     ~cPlayScene();
