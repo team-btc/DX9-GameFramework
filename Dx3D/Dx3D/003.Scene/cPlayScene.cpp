@@ -100,7 +100,7 @@ HRESULT cPlayScene::Start()
     for (int i = 0; i < 1; i++)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-        m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[0].vPos);
+        m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[0].vPos);
         m_pEnermy->SetActive(true);
         (*m_vecMonster).push_back(m_pEnermy);
     }
@@ -175,7 +175,7 @@ HRESULT cPlayScene::Update()
             }
             else
             {
-                (*iter)->SetMoveSpeed(0.1f);
+                (*iter)->SetMoveSpeed(0.08f);
             }
         }
     }
@@ -211,7 +211,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.3f);
+            m_pPlayer->SetMoveSpeed(0.5f);
         }
     }
 

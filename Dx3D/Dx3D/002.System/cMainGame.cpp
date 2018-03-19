@@ -94,8 +94,6 @@ void cMainGame::Render()
 #ifdef _DEBUG
         hr = g_pTimerManager->Render();
 #endif // _DEBUG
-
-        g_pScnManager->Render();
         
         hr = g_pDevice->EndScene();
         hr = g_pDevice->Present(0, 0, 0, 0);
