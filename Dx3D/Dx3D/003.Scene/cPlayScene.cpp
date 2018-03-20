@@ -222,6 +222,12 @@ HRESULT cPlayScene::Update()
     //  UPDATE CAMERA
     if (m_pCamera)
     {
+        if (m_pShop)
+        {
+            // 마우스 컨트롤 가능 여부 셋팅
+            m_pCamera->SetControl(!m_pShop->GetClickShop());
+        }
+
         if (m_pPlayer)
         {
             m_pCamera->SetTargetPos(m_pPlayer->GetPosition());

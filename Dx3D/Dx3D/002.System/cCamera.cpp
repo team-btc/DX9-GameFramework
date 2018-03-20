@@ -11,6 +11,7 @@ cCamera::cCamera()
     , m_fRotY(0.0f)
     , m_isRButtonDown(false)
     , m_isFocus(false)
+    , m_isControl(true)
     , m_fFov(45.0f)
     , m_fMaxDist(10.0f)
     , m_fMinDist(2.0f)
@@ -44,7 +45,7 @@ ULONG cCamera::Release()
 
 HRESULT cCamera::Update()
 {
-    if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))
+    if (m_isControl && g_pKeyManager->isStayKeyDown(VK_LBUTTON))
     {
         m_vRotation.y += (g_ptMouse.x - m_ptPrevMouse.x) * 0.2f;
         m_vRotation.x -= (g_ptMouse.y - m_ptPrevMouse.y) * 0.2f;

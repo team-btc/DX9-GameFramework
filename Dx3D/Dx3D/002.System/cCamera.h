@@ -22,6 +22,7 @@ private:
     POINT           m_ptPrevMouse;
     bool            m_isRButtonDown;
     bool            m_isFocus;
+    bool            m_isControl;
     float           m_fFov;
     float           m_fMaxDist;
     float           m_fMinDist;
@@ -55,6 +56,8 @@ public:
     void SetDist(float val) { m_fDistance = val; }
     void SetMinDist(float val) { m_fMinDist = val; }
     void SetMaxDist(float val) { m_fMaxDist = val; }
+
+    void SetControl(bool b) { m_isControl = b; }
 
     void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

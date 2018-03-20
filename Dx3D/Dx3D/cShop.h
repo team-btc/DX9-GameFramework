@@ -31,6 +31,7 @@ private:
     int                         m_nPlayerMoney;
 
     SYNTHESIZE(bool, m_isOpen, IsOpen);
+    SYNTHESIZE(bool, m_isClickShop, ClickShop);
 
 private:
     void SetShopUI();

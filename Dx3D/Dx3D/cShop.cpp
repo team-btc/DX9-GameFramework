@@ -10,6 +10,7 @@ cShop::cShop()
     , m_eCurrSelectItem(E_ITEM_SWORD1)
     , m_nPlayerMoney(0)
     , m_isOpen(false)
+    , m_isClickShop(false)
 {
     m_rtShopSize.left = 50;
     m_rtShopSize.top = 150;
@@ -62,8 +63,10 @@ void cShop::Setup()
         stItem.szPath = szPath;
         stItem.nCount = jItem[i]["item-count"];
         stItem.nPrice = jItem[i]["item-price"];
-        string szStatName = jItem[i]["item-plus-stat"];
-        stItem.stStat.szName = szStatName;
+        int nStatNum = jItem[i]["item-plus-stat"];
+        char szBuf[10];
+        sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
+        stItem.stStat.szName = szBuf;
         stItem.fPlusValue = jItem[i]["item-plus-value"];
 
         m_vecItemInfo.push_back(stItem);
@@ -84,9 +87,20 @@ void cShop::Setup()
 
 void cShop::Update(int nPlayerMoney)
 {
+    m_isClickShop = false;
+
     if (!m_pShopLayer)
     {
         return;
+    }
+
+    // 상점 렉트 안에서 마우스가 있다면
+    if (PtInRect(&m_rtShopSize, g_ptMouse))
+    {
+        // 버튼 클릭 무효화를 위해 
+        g_pKeyManager->isOnceKeyDown(VK_LBUTTON);
+        g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
+        m_isClickShop = true;
     }
 
     m_nPlayerMoney = nPlayerMoney;
@@ -166,14 +180,15 @@ void cShop::OpenShop()
     g_pSndManager->Play("store-open");
     g_pSndManager->Play(m_vecSzHumanSound[rand() % 6]);
     m_isOpen = true;
+    m_isClickShop = false;
 }
 
 void cShop::CloseShop()
 {
     g_pSndManager->Play("store-close");
 
+    m_isClickShop = false;
     m_isOpen = false;
-
     m_eCurrSelectItem = E_ITEM_SWORD1;
 
     // 첫번째 이미지 선택 활성화, 다른 이미지 비활성화
@@ -404,8 +419,8 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pPlusValueText->SetLocalPos(Vector3(95, 30, 0));
         pPlusValueText->SetSize(Vector2(150, 15));
         pPlusValueText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
-        char buf[10];
-        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i].stStat.szName, (int)m_vecItemInfo[i].fPlusValue);
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i].stStat.szName.c_str(), (int)m_vecItemInfo[i].fPlusValue);
         pPlusValueText->SetText(buf);
         pPlusValueText->SetColor(D3DCOLOR_XRGB(0, 255, 0));
         pPlusValueText->SetDrawTextFormat(DT_LEFT);
