@@ -98,19 +98,35 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     &m_mapFont[e]);
                 break;
             }
-            case cFontManager::E_SHOP:
+            case cFontManager::E_SHOP_TITLE:
             {
                 D3DXCreateFont(g_pDevice,
-                    15,
+                    20,
                     0,
-                    FW_DONTCARE,
+                    FW_BOLD,
                     1,
                     false,
                     DEFAULT_CHARSET,
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("umberto"),
+                    _TEXT("Calibri"),
+                    &m_mapFont[e]);
+                break;
+            }
+            case cFontManager::E_SHOP_DEFAULT:
+            {
+                D3DXCreateFont(g_pDevice,
+                    15,
+                    0,
+                    FW_BOLD,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("Calibri"),
                     &m_mapFont[e]);
                 break;
             }

@@ -1,7 +1,7 @@
 {
     "item": [
         {
-            "item-type": 0,
+            "item-id": 0,
             "item-name": "SWORD1",
             "item-path": "Assets\\Interface\\Item\\sword-01.png",
             "item-count": 100,
@@ -10,7 +10,7 @@
             "item-plus-value": 1.0
         },
         {
-            "item-type": 1,
+            "item-id": 1,
             "item-name": "SWORD2",
             "item-path": "Assets\\Interface\\Item\\sword-02.png",
             "item-count": 100,
@@ -19,7 +19,7 @@
             "item-plus-value": 2.0
         },
         {
-            "item-type": 2,
+            "item-id": 2,
             "item-name": "HELM1",
             "item-path": "Assets\\Interface\\Item\\helm-01.png",
             "item-count": 100,
@@ -28,7 +28,7 @@
             "item-plus-value": 3.0
         },
         {
-            "item-type": 3,
+            "item-id": 3,
             "item-name": "HELM2",
             "item-path": "Assets\\Interface\\Item\\helm-02.png",
             "item-count": 100,
@@ -37,7 +37,7 @@
             "item-plus-value": 4.0
         },
         {
-            "item-type": 4,
+            "item-id": 4,
             "item-name": "CHEST_PLATE1",
             "item-path": "Assets\\Interface\\Item\\chest-plate-01.png",
             "item-count": 100,
@@ -46,7 +46,7 @@
             "item-plus-value": 5.0
         },
         {
-            "item-type": 5,
+            "item-id": 5,
             "item-name": "CHEST_PLATE2",
             "item-path": "Assets\\Interface\\Item\\chest-plate-02.png",
             "item-count": 100,
@@ -55,7 +55,7 @@
             "item-plus-value": 6.0
         },
         {
-            "item-type": 6,
+            "item-id": 6,
             "item-name": "POTION_HEAL",
             "item-path": "Assets\\Interface\\Item\\potion-heal.png",
             "item-count": 100,
@@ -64,7 +64,7 @@
             "item-plus-value": 7.0
         },
         {
-            "item-type": 7,
+            "item-id": 7,
             "item-name": "POTION_MANA",
             "item-path": "Assets\\Interface\\Item\\potion-mana.png",
             "item-count": 100,
