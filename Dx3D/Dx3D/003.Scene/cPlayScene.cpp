@@ -379,7 +379,7 @@ HRESULT cPlayScene::Render()
 
     if (m_pShop)
     {
-        //m_pShop->Render();
+        m_pShop->Render();
     }
 
 #ifdef _DEBUG

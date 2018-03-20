@@ -32,7 +32,7 @@ public:
 
     void SetTexture(string sNormal, string sMouseOver, string sSelected);
     eButtonState GetButtonState() { return m_eButtonState; }
-    void SetButtonState(int state) { m_eButtonState = (eButtonState)E_NORMAL; }
+    void SetButtonState(int state = (eButtonState)E_NORMAL) { m_eButtonState = (eButtonState)E_NORMAL; }
     void SetScale(float width, float height);
 
     // cUIObject override
