@@ -16,9 +16,9 @@ private:
 
     cGameMap*           m_pGameMap;
 
-    cPlayer*                m_pPlayer;
-    cFrustum*               m_pFrustum;
-    vector<cMonster*>*      m_vecMonster;
+    cPlayer*                    m_pPlayer;
+    cFrustum*                   m_pFrustum;
+    vector<iCharacterObject*>*  m_vecMonster;
 
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;

@@ -240,7 +240,7 @@
     <ClInclude Include="002.System\cGameMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cBoss.h">
+    <ClInclude Include="002.System\cBoss.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -416,7 +416,7 @@
     <ClCompile Include="002.System\cGameMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cBoss.cpp">
+    <ClCompile Include="002.System\cBoss.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

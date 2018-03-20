@@ -38,10 +38,12 @@ public:
     virtual void SetState(E_STATE State) override { m_eState = State; }
 
     virtual void SetAttack(bool Attack) { isAttack = Attack; }
+    virtual void SetMove(bool Move) { isMove = Move; }
     virtual void SetRun(bool Run) { isRun = Run; }
     virtual void SetWalk(bool Walk) { isWalk = Walk; }
     virtual void SetIdle(bool Idle) override { isIdle = Idle; }
     virtual void SetHeal(bool Heal) override { isHeal = Heal; }
+    virtual void SetRoar(bool Roar) override { isRoar = Roar; }
     virtual void SetStatic(bool Static) override { isStatic = Static; }
     virtual void SetActive(bool Active) override { isActive = Active; }
     virtual void SetAlive(bool Alive) override { isAlive = Alive; }
@@ -67,10 +69,12 @@ public:
     virtual E_STATE GetState() override { return m_eState; }
 
     virtual bool GetAttak() override { return isAttack; }
+    virtual bool GetMove() override { return isMove; }
     virtual bool GetRun() override { return isRun; }
     virtual bool GetWalk() override { return isWalk; }
     virtual bool GetIdle() override { return isIdle; }
     virtual bool GetHeal() override { return isHeal; }
+    virtual bool GetRoar() override { return isRoar; }
     virtual bool GetStatic() override { return isStatic; }
     virtual bool GetActive() override { return isActive; }
     virtual bool GetAlive() override { return isAlive; }
@@ -87,6 +91,7 @@ public:
     virtual void RunAnim() override;
     virtual void WalkAnim() override;
     virtual void IdleAnim() override;
+    virtual void RoarAnim() override;
     virtual void LeftAnim() override;
     virtual void RightAnim() override;
     virtual void DeadAnim() override;
@@ -97,7 +102,7 @@ public:
     virtual void RotateLeft() override;
     virtual void RotateRight() override;
 
-    virtual void NearestSearch(vector<cMonster*> _vec) override;
+    virtual void NearestSearch(vector<iCharacterObject*> _vec) override;
     virtual float Distance(Vector3 Pos) override;
 };
 

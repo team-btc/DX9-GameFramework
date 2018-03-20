@@ -3,6 +3,7 @@
 #include "cCamera.h"
 #include "cPlayer.h"
 #include "cMonster.h"
+#include "cBoss.h"
 #include "cFrustum.h"
 #include "cMapLoader.h"
 #include "cGameMap.h"
@@ -20,8 +21,9 @@ private:
     cGameMap*           m_pGameMap;
 
     cPlayer*                m_pPlayer;
+    cBoss*                  m_pBoss;
     cFrustum*               m_pFrustum;
-    vector<cMonster*>*      m_vecMonster;
+    vector<iCharacterObject*>*      m_vecMonster;
 
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;

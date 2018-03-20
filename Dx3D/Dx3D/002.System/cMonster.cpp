@@ -90,7 +90,6 @@ cMonster::cMonster()
 {
 }
 
-
 cMonster::~cMonster()
 {
     SAFE_DELETE(m_pUILayer);
@@ -108,7 +107,6 @@ void cMonster::Setup()
     isActive = false;
     isAlive = true;
     isMoveToTarget = false;
-    m_isMove = false;
 
     m_stStat.Level = 1;
 
@@ -161,7 +159,7 @@ void cMonster::Update()
 
         if (m_pTarget)
         {
-            m_isMove = true;
+            isMove = true;
             m_vDir = m_pTarget->GetPosition() - m_vPosition;
             float Distance = D3DXVec3Length(&m_vDir);
             D3DXVec3Normalize(&m_vDir, &m_vDir);
@@ -211,7 +209,7 @@ void cMonster::Update()
         {
             m_fMoveCount += g_pTimerManager->GetDeltaTime();
 
-            if (m_isMove)
+            if (isMove)
             {
                 m_vDir = m_vDest - m_vPosition;
                 D3DXVec3Normalize(&m_vDir, &m_vDir);
@@ -222,7 +220,7 @@ void cMonster::Update()
                 if (Distance(m_vDest) < m_fMoveSpeed)
                 {
                     m_vPosition = m_vDest;
-                    m_isMove = false;
+                    isMove = false;
                     IdleAnim();
                 }
 
@@ -242,7 +240,7 @@ void cMonster::Update()
             
             if (m_fMoveCount > 10.0f)
             {
-                m_isMove = true;
+                isMove = true;
                 m_fMoveCount = 0.0f;
                 m_vDest = m_vStartPoint + GetRandomVector3(Vector3(-m_fMoveRadius, 0, -m_fMoveRadius), Vector3(m_fMoveRadius, 0, m_fMoveRadius));
                 WalkAnim();

@@ -5,6 +5,8 @@
 
 class cPlayer;
 class cMonster;
+class cBoss;
+struct iCharacterObject;
 
 class cCharacterManager
 {
@@ -13,17 +15,18 @@ class cCharacterManager
 private:
 
     cPlayer * m_pPlayer;
-    //list<cMonster*>     m_listMonster;
-    vector<cMonster*>     m_vMonster;
+    cBoss*  m_pBoss;
+    vector<iCharacterObject*>     m_vMonster;
 
 public:
 
     void Setup();
     void Destroy();
 
-    void PushMonster(cMonster* monster);
+    void PushMonster(iCharacterObject* monster);
 
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster(string szMap);
+    cBoss*  GetBoss();
 };
 

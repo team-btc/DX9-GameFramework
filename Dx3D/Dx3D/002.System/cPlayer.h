@@ -7,7 +7,7 @@ class cPlayer : public cCharacterObject
 {
 private:
 
-    vector<cMonster*>* m_vecMonster;
+    vector<iCharacterObject*>* m_vecMonster;
 
     LPMESH m_pTerrain;
 
@@ -16,7 +16,7 @@ private:
     bool m_isMoveToPoint;
     bool m_isPoint;
     bool m_isPickMonster;
-    bool m_isMove;
+    bool m_isMouse;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
@@ -27,15 +27,19 @@ public:
     void Setup();
     void Update();
     void Render();
-    //void Destroy();
+    
+    void PickMonster(cRay ray);
+    void PickGround(cRay ray);
+    void Attack();
+    void Move();
 
     void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
-    void SetVecMonster(vector<cMonster*>* monster) { m_vecMonster = monster; }
-    void SetMove(bool Move) { m_isMove = Move; }
+    void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
     void SetTerrain(LPMESH Terrain) { m_pTerrain = Terrain; }
 
     bool GetMoveToPoint() { return m_isMoveToPoint; }
-    bool GetMove() { return m_isMove; }
+
+    ULONG Release();
 };
 

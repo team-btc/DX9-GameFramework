@@ -27,6 +27,7 @@ cCharacterObject::cCharacterObject()
    m_eState = END_STATE;
 
    isAttack = false;
+   isMove = false;
    isRun = false;
    isWalk = false;
    isIdle = false;
@@ -57,6 +58,7 @@ void cCharacterObject::Render()
 bool cCharacterObject::RayCast(iCharacterObject * Charater)
 {
     m_pTarget = Charater;
+
     return false;
 }
 
@@ -144,6 +146,13 @@ void cCharacterObject::IdleAnim()
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Stand")->second.nStateNum);
 }
 
+void cCharacterObject::RoarAnim()
+{
+    FalseAnim();
+    isRoar = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Roar")->second.nStateNum);
+}
+
 void cCharacterObject::LeftAnim()
 {
     FalseAnim();
@@ -169,6 +178,7 @@ void cCharacterObject::FalseAnim()
    isWalk = false;
    isIdle = false;
    isHeal = false;
+   isRoar = false;
 }
 
 void cCharacterObject::MoveForword()
@@ -204,7 +214,7 @@ void cCharacterObject::RotateRight()
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 }
 
-void cCharacterObject::NearestSearch(vector<cMonster*> _vec)
+void cCharacterObject::NearestSearch(vector<iCharacterObject*> _vec)
 {
     float nearDist = FLT_MAX;
     for (auto iter = _vec.begin(); iter != _vec.end(); iter++)

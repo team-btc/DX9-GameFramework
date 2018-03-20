@@ -71,7 +71,8 @@ HRESULT cMapLoad::Start()
     m_pPlayer = g_pCharacterManager->GetPlayer();
     m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
 
-    m_vecMonster = new vector<cMonster*>;
+    m_vecMonster = new vector<iCharacterObject*>;
+
     for (int i = 0; i < 1; i++)
     {
         cMonster* m_pEnermy = g_pCharacterManager->GetMonster("start");
@@ -107,30 +108,32 @@ HRESULT cMapLoad::Update()
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
-        (*iter)->Update();
+        cMonster* Monster = (cMonster*)(*iter);
 
-        Vector3 Pos = (*iter)->GetPosition();
+        Monster->Update();
+
+        Vector3 Pos = Monster->GetPosition();
         m_pGameMap->GetHeight(Pos);
-        (*iter)->SetPosition(Pos);
+        Monster->SetPosition(Pos);
 
-        if ((*iter)->GetMove())
+        if (Monster->GetMove())
         {
             cRay ray;
-            ray.m_vOrg = (*iter)->GetPosition();
-            ray.m_vDir = (*iter)->GetDir();
+            ray.m_vOrg = Monster->GetPosition();
+            ray.m_vDir = Monster->GetDir();
             // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
             float fDist = FLT_MAX;
             if (m_pGameMap->CheckObstacle(fDist, ray) == true
                 && fDist < 3.0f)
             {
                 // 문제가 있다.
-                (*iter)->SetMoveSpeed(0.0f);
-                (*iter)->SetMove(false);
-                (*iter)->IdleAnim();
+                Monster->SetMoveSpeed(0.0f);
+                Monster->SetMove(false);
+                Monster->IdleAnim();
             }
             else
             {
-                (*iter)->SetMoveSpeed(0.1f);
+                Monster->SetMoveSpeed(0.1f);
             }
         }
     }
