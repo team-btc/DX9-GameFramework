@@ -7,7 +7,7 @@ class cMapManager
     SINGLETON(cMapManager);
 
 private:
-    map<string, ST_MAP_INFO*>            m_mapMapInfo;
+    map<string, ST_MAP_INFO*>       m_mapMapInfo;
 
     string                          m_szCurrMapKey;
     string                          m_szPrevMap;
@@ -16,6 +16,7 @@ public:
     // == ╪бем ==
     void SetMapInfo(string szKey, ST_MAP_INFO* stmap);
     void SetCurrMap(string szKey);
+    string GetCurrKey() { return m_szCurrMapKey; }
 
     // == ╟ыем ==
     ST_MAP_INFO* GetCurrMapInfo();
@@ -25,5 +26,8 @@ public:
 
     void SetPrevMap(string szMap) { m_szCurrMapKey = szMap; }
     string GetPrevMap() { return m_szPrevMap; }
+
+    json GetMapData();
+    void SetMapData(json mapData);
 };
 

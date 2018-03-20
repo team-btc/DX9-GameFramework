@@ -6,11 +6,7 @@ cDeviceManager::cDeviceManager()
     : m_pD3D(NULL)
     , m_pD3DDevice(NULL)
     , m_fWindowRatio(16.0f / 9.0f)
-#ifdef _DEBUG
     , m_isWindowed(true)
-#else
-    , m_isWindowed(false)
-#endif // _DEBUG
 {
     if (m_isWindowed)
     {

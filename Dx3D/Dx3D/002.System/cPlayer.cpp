@@ -20,23 +20,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     m_stStat.szName = "ChiChi";
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
-    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
-    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
-
-    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
-    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
-    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
-    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
-    m_stStat.fSpeed = 1.0f;
-    m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
-    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
-    m_stStat.nCoolTime = 0;
-    m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    UpdateStatus();
     
     IdleAnim();
 
@@ -63,23 +47,7 @@ cPlayer::cPlayer(string szKey)
     m_stStat.szName = "ChiChi";
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
-    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
-    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
-
-    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
-    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
-    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
-    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
-    m_stStat.fSpeed = 1.0f;
-    m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
-    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
-    m_stStat.nCoolTime = 0;
-    m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    UpdateStatus();
 
     IdleAnim();
 
@@ -100,6 +68,7 @@ cPlayer::~cPlayer()
 
 void cPlayer::Setup()
 {
+    UpdateStatus();
 }
 
 void cPlayer::Update()
@@ -364,4 +333,36 @@ ULONG cPlayer::Release()
 void cPlayer::GetSwordMatrix(Matrix4 & mat)
 {
     m_pMesh->GetMatrixByName(mat, "creature_arthaslichking_arthaslichking_bone_43");
+}
+
+void cPlayer::SumExp(int exp)
+{
+    m_stStat.nCurEXP += exp;
+    while (m_stStat.nMaxEXP <= m_stStat.nCurEXP)
+    {
+        m_stStat.Level++;
+        m_stStat.nCurEXP -= m_stStat.nMaxEXP;
+    }
+    UpdateStatus();
+}
+
+void cPlayer::UpdateStatus()
+{
+    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
+    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
+    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
+
+    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
+    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
+    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fSpeed = 1.0f;
+    m_stStat.fCritical = 15.0f;
+    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.nCoolTime = 0;
+    m_stStat.nCurEXP = 0;
+    m_stStat.nMaxEXP = 100;
 }

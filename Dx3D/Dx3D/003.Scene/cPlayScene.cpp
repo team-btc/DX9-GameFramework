@@ -128,6 +128,7 @@ HRESULT cPlayScene::Start()
         if (m_stMapInfo->vecEventInfo[i].szName == "monster")
         {
             cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+            m_pEnermy->Setup();
             m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
             m_pEnermy->SetActive(true);
             (*m_vecMonster).push_back(m_pEnermy);
@@ -138,7 +139,16 @@ HRESULT cPlayScene::Start()
     {
         m_pPlayer = g_pCharacterManager->GetPlayer();
     }
-    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+
+    if (!g_pGameManager->IsLoadData())
+    {
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+    }
+    else
+    {
+        g_pGameManager->DisableLoadFlag();
+    }
+
     m_pPlayer->SetVecMonster(m_vecMonster);
     m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
     m_pPlayer->Setup();
@@ -178,10 +188,10 @@ HRESULT cPlayScene::Start()
     if (!m_pParticleFrost)
     {
         float power = 1.0f;
-        Vector3 pos = m_pPlayer != NULL ? m_pPlayer->GetPosition() : Vector3(0, 0, 0);
-        pos.x += OFFSET_X;
-        pos.y += OFFSET_Y;
-        pos.z += OFFSET_Z;
+        Matrix4 mat;
+        m_pPlayer->GetSwordMatrix(mat);
+        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
+
         m_pParticleFrost = new cParticle(&pos, 1, 100);
         m_pParticleFrost->Init("snow");
         ST_PARTICLE_ATTR attr;
@@ -224,7 +234,6 @@ HRESULT cPlayScene::Update()
     {
         Matrix4 mat;
         m_pPlayer->GetSwordMatrix(mat);
-        cout << to_string(mat._41) << ", " << to_string(mat._42) << ", " << to_string(mat._43) << endl;
         Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
 
         m_pParticleFrost->SetPosition(pos);
@@ -346,21 +355,10 @@ HRESULT cPlayScene::Render()
         return E_FAIL;
     }
 
-    Matrix4 matW, matV, matP;
+    Matrix4 matW;
     D3DXMatrixIdentity(&matW);
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
-    //MATERIAL9 mtrl;
-    //mtrl.Ambient = WHITE;
-    //mtrl.Diffuse = WHITE;
-    //mtrl.Specular = WHITE;
-    //mtrl.Emissive = BLACK;
-    //mtrl.Power = 8.0f;
-    //g_pDevice->SetMaterial(&mtrl);
-    //g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
-    //g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
-    //g_pDevice->LightEnable(0, true);
-
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
     Vector4 vP(g_vCameraPos, 1.0f);

@@ -12,7 +12,7 @@ class cCharacterManager
 
 private:
 
-    cPlayer * m_pPlayer;
+    cPlayer*            m_pPlayer;
     list<cMonster*>     m_listMonster;
 
 public:
@@ -24,5 +24,8 @@ public:
 
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster();
+
+    json GetPlayerData();
+    void SetPlayerData(json playerData);
 };
 

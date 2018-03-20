@@ -86,7 +86,7 @@ void cCharacterObject::Attack(float ATK)
     {
         //데미지 계산식을 넣어야함
         m_pTarget->GetStatus().fCurHP -= ATK;
-        cout << m_pTarget->GetStatus().fCurHP << endl;
+        //cout << m_pTarget->GetStatus().fCurHP << endl;
     }
 }
 
@@ -216,3 +216,11 @@ float cCharacterObject::Distance(Vector3 Pos)
 
     return fDistance;
 }
+
+//void cCharacterObject::SumExp(int exp)
+//{
+//}
+//
+//void cCharacterObject::UpdateStatus()
+//{
+//}
