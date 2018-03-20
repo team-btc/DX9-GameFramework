@@ -9,7 +9,27 @@ cTitleScene::cTitleScene()
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
     , m_szMapKey("icecrown")
+    , m_vSindraPos(229, 199, 242)
+    , m_vArtuhsPos(Vector3(261, 88, 482))
+    , m_vCameraPos(259.47f, 171.95f, 279.68f)
+    , m_nCurrIndex(0)
+    , m_isRoar(false)
+    , m_isStart(false)
+    , m_isArthusMove(false)
+    , m_ft(0)
+    , m_vStartPos(0,0,0)
+    , m_fWorldTime(0)
+    , m_isMovieStart(false)
 {
+    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
+    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
+    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 400.0f, 242.0f));
+    m_vecSindraJumpTarget.push_back(Vector3(280.0f, -88.0f, 540.0f));
+   
+    for (int i = 0; i < m_vecSindraJumpTarget.size(); ++i)
+    {
+        m_vecIsArriveSindra.push_back(false);
+    }
 }
 
 
@@ -19,18 +39,11 @@ cTitleScene::~cTitleScene()
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
-    SAFE_RELEASE(m_pCamera);
 }
 
 HRESULT cTitleScene::Start()
 {
-    //  CAMERA SETUP
-    if (!m_pCamera)
-    {
-        m_pCamera = new cCamera;
-    }
-    m_pCamera->Setup();
-
+  
     //  LOAD MAP
     if (m_stMapInfo == NULL)
     {
@@ -75,11 +88,10 @@ HRESULT cTitleScene::Start()
             {
                 m_pWaveShader = new cWaveShader;
             }
-
             m_pWaveShader->SetMesh(m_stMapInfo->pWaterMesh);
             m_pWaveShader->SetWaveTexture(m_stMapInfo->pWaterTexture);
             m_pWaveShader->SetShader(m_stMapInfo->fWaterHeight, m_stMapInfo->fWaterWaveHeight, m_stMapInfo->fWaterHeightSpeed,
-                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent);
+                m_stMapInfo->fWaterUVSpeed, m_stMapInfo->fWaterfrequency, m_stMapInfo->fWaterTransparent, m_stMapInfo->fWaterDensity);
         }
     }
 
@@ -91,121 +103,83 @@ HRESULT cTitleScene::Start()
 
     m_pFrustum->Setup();
 
-    if (!m_pPlayer)
-    {
-        m_pPlayer = g_pCharacterManager->GetPlayer();
-    }
+    m_pArthus = new cSkinnedMesh("arthaslichking");
+    m_pArthus->SetPosition(m_vArtuhsPos);
+    m_pArthus->SetScale(8.0f);
+    m_pArthus->SetRotation(Vector3(0, -90.0f, 0));
+    m_pArthus->SetAnimationIndex(1);
+    g_pAutoReleasePool->AddObject(m_pArthus);
 
-    m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
-
-   //if (!m_vecMonster)
-   //{
-   //    m_vecMonster = new vector<cMonster*>;
-   //}
-   //m_vecMonster->clear();
-
-    //for (int i = 0; i < 1; i++)
-    //{
-    //    cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-    //    m_pEnermy->SetPosition(m_stMapInfo->vecEventInfo[0].vPos);
-    //    m_pEnermy->SetActive(true);
-    //    (*m_vecMonster).push_back(m_pEnermy);
-    //}
-
-   // m_pPlayer->SetVecMonster(m_vecMonster);
-    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    // Setup 신드라고사
     SetSindragosa();
+
+    //  CAMERA SETUP
+    if (!m_pCamera)
+    {
+        m_pCamera = new cCamera;
+        m_pCamera->TrackingEnable();
+        m_pCamera->SetMaxDist(400.0f);
+        m_pCamera->SetMinDist(5.0f);
+        g_pCameraManager->AddCamera("title", m_pCamera);
+        g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
+        g_pCameraManager->ColliderDisable();
+        
+    }
+    m_pCamera->Setup();
+    m_pCamera->SetPosition(m_vSindraPos);
+    m_pCamera->SetTargetPos(m_vCameraPos);
+    g_pCameraManager->SetCurrCamera("title");
+
+   
     return S_OK;
 }
 
 HRESULT cTitleScene::Update()
 {
-    //  UPDATE CAMERA
-    if (m_pCamera)
-    {
-        if (m_pPlayer)
-        {
-            m_pCamera->Update(&m_pPlayer->GetPosition());
-        }
-        else
-        {
-            m_pCamera->Update();
-        }
-    }
-
     //  FRUSTUM CULL UPDATE
     m_pFrustum->Update();
 
     //  PLAYER UPDATE
-    m_pPlayer->Update();
+    m_pArthus->SetPosition(m_vArtuhsPos);
     // 신드라고사 업데이트
     m_pSindragosa->Update();
-
+    m_pSindragosa->SetPosition(m_vSindraPos);
     // 위치 체크
-    Vector3 Pos = m_pPlayer->GetPosition();
-    m_pGameMap->GetHeight(Pos);
-    m_pPlayer->SetPosition(Pos);
 
-  //  if (m_vecMonster->size() == 0)
-  //  {
-  //      cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-  //      m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[1].vPos);
-  //      m_pEnermy->SetActive(true);
-  //      (*m_vecMonster).push_back(m_pEnermy);
-  //  }
-  //
-  //  for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-  //  {
-  //      (*iter)->Update();
-  //
-  //      Vector3 Pos = (*iter)->GetPosition();
-  //      m_pGameMap->GetHeight(Pos);
-  //      (*iter)->SetPosition(Pos);
-  //  }
-
-    //for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
-    //{
-    //    if ((*iter)->GetAlive())
-    //    {
-    //        iter++;
-    //    }
-    //    else
-    //    {
-    //        iter = (*m_vecMonster).erase(iter);
-    //    }
-    //}
-    
-    if (m_pPlayer->GetMove())
+    //신드라곳아 움직임 셋팅
+    if (g_pKeyManager->isOnceKeyDown('8'))
     {
-        cRay ray;
-        ray.m_vOrg = m_pPlayer->GetPosition();
-        ray.m_vDir = m_pPlayer->GetDir();
-        // 정면에 장애물이 없거나, 이동 예정 거리보다 먼곳에 장애물이 있으면
-        float fDist = FLT_MAX;
-        if (m_pGameMap->CheckObstacle(fDist, ray) == true
-            && fDist < 3.0f)
+        m_isStart = true;
+    }
+    if (g_pKeyManager->isOnceKeyDown('0'))
+    {
+        m_isMovieStart = true;
+    }
+    else  if (g_pKeyManager->isOnceKeyDown('9'))
+    {
+        m_isMovieStart = false;
+        m_isStart = false;
+        m_isArthusMove = false;
+        m_vSindraPos = Vector3(229, 199, 242);
+        m_isRoar = false;
+        m_pSindragosa->IdleAnim();
+        m_nCurrIndex = 0;
+        m_pArthus->SetAnimationIndex(1);
+        m_vArtuhsPos = Vector3(261, 88, 482);
+        m_ft = 0;      
+        for (int n = 0; n <m_vecIsArriveSindra.size(); ++n)
         {
-            // 문제가 있다.
-            m_pPlayer->SetMoveToPoint(false);
-            m_pPlayer->SetMoveToTarget(false);
+            m_vecIsArriveSindra[n] = false;
         }
     }
-
-
-    // 이벤트 체크
-    string szEventName = "";
-    if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
+    if (m_isMovieStart)
     {
-        // 이벤트 발동
-        if (szEventName == "to-icecrown")
-        {
-            m_szMapKey = "icecrown";
-            m_stMapInfo = NULL;
-            Start();
-            Update();
-        }
+         MoveSindraAllRoute();
     }
-
+    if (m_isStart)
+    {
+        MoveArthus();
+    }
     return S_OK;
 }
 
@@ -241,18 +215,9 @@ HRESULT cTitleScene::Render()
         m_pSkyBoxShader->Render(vP);
     }
 
-    m_pPlayer->Render();
+    m_pArthus->UpdateAndRender();
     m_pSindragosa->Render();
-    //for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    //{
-    //    bool result = false;
-    //    m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
-    //    if (result)
-    //    {
-    //        (*iter)->Render();
-    //    }
-    //}
-    
+  
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
     if (m_pTextureShader)
@@ -263,10 +228,6 @@ HRESULT cTitleScene::Render()
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
     g_pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-   // for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
-   // {
-   //     m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
-   // }
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 
@@ -275,14 +236,10 @@ HRESULT cTitleScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    //g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
-    //g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
+    
+
 
 #ifdef _DEBUG
-
-    // 장애물, 이벤트 트랩 출력
-    //m_pGameMap->RendObstacle();
-    //m_pGameMap->RendEventTrap();
 
 #endif // _DEBUG
 
@@ -303,44 +260,139 @@ void cTitleScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 }
 
-void cTitleScene::ShootMoive()
+void cTitleScene::SetSindraAni(int n)
 {
-   // MoveSindragosa();
-   // MoveArthus();
+    switch (n)
+    {
+        case 0:
+            m_pSindragosa->FlySitDownAnim();
+        break;
+        case 1:
+            m_pSindragosa->FlyWalkAnim();
+        break;
+
+        case 2:
+            m_pSindragosa->FlySitUpAnim();
+        break;
+
+        case 3:
+            m_pSindragosa->FlySitAnim();
+        break;
+
+        case 7:
+            m_pSindragosa->RoarAnim();
+        break;
+
+        case 8:
+            m_pSindragosa->DeadAnim();
+        break;
+
+        case 9:
+            m_pSindragosa->RunAnim();
+        break;
+
+        case 10:
+            m_pSindragosa->WalkAnim();
+        break;
+
+        case 11:
+            m_pSindragosa->IdleAnim();
+        break;
+
+        default:
+        break;
+
+    }
+
 }
 
-HRESULT cTitleScene::MoveSindragosa(Vector3 vPos, bool isAppear)
+void cTitleScene::MoveSindra(Vector3 vSpot, int n)
 {
-    return S_OK;
+    if (!m_vecIsArriveSindra.at(n) && m_nCurrIndex == n)
+    {
+        if (m_ft == 0)
+        {
+            m_vStartPos = m_vSindraPos;
+        }
+        m_vSindraPos = (1 - m_ft) * m_vStartPos + m_ft * vSpot;
+        m_ft += 0.006f;
+        if (m_ft >= 1.0)
+        {
+            m_vecIsArriveSindra.at(n) = true;
+            m_ft = 0.0f;
+        }
+    }
+    
 }
 
-HRESULT cTitleScene::MoveArthus(Vector3 vPos, bool isAppear)
+void cTitleScene::MoveArthus()
 {
-    return S_OK;
+    if (!m_isArthusMove)
+    {
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+        m_isArthusMove = true;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusMove)
+    {
+        if (m_ft == 0)
+        {
+            m_pArthus->SetAnimationIndex(11);
+            m_vArthusStartPos = m_vArtuhsPos;
+            m_vArthusLastPos = Vector3(261, 88, 542);
+        }
+        m_vArtuhsPos = (1 - m_ft) * m_vArthusStartPos + m_ft * m_vArthusLastPos;
+        m_ft += 0.001f;
+        if (m_ft >= 1.0)
+        {
+            m_ft = 1.0f;
+        }
+    }
 }
 
-void cTitleScene::SetSindraAni()
+void cTitleScene::MoveSindraAllRoute()
 {
+    if (!m_isMovieStart)
+    {
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 10.0f;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 0)
+    {
+        m_pSindragosa->RoarAnim();
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+        m_nCurrIndex++;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 1)
+    {
+        m_pSindragosa->FlySitUpAnim();
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+        m_nCurrIndex++;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 2)
+    {
+        m_pSindragosa->FlyWalkAnim();
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+        m_nCurrIndex++;
+    }
+    MoveSindra(m_vecSindraJumpTarget[0], 0);
+    MoveSindra(m_vecSindraJumpTarget[1], 1);
+    MoveSindra(m_vecSindraJumpTarget[2], 2);
+    MoveSindra(m_vecSindraJumpTarget[3], 3);
 
 }
 
-void cTitleScene::SetArthusAni()
-{
-
-}
 
 void cTitleScene::SetSindragosa()
 {
+    Vector3 v = Vector3(0, -90, 0);
     Matrix4 matS;
     D3DXMatrixScaling(&matS, 0.5f, 0.5f, 0.5f);
-    m_pSindragosa = new cMonster("Frostwurmnorthlend");
+    m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
     g_pAutoReleasePool->AddObject(m_pSindragosa);
-    m_pSindragosa->SetPosition(Vector3(228, 200, 205));
+    m_pSindragosa->SetPosition(m_vSindraPos);
+    m_pSindragosa->SetRotation(v);
+
     m_pSindragosa->SetScale(matS);
     m_pSindragosa->SetActive(true);
-    //m_pSindragosa->SetIdle(true);
-  //  m_pSindragosa->SetActive(true);
-  //  m_pSindragosa->SetIdle(true);
-    //m_pSindragosa->SetScale();
-    //m_pSindragosa->
+    m_pSindragosa->IdleAnim();
+    
 }

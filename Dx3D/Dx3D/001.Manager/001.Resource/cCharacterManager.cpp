@@ -2,7 +2,7 @@
 #include "cCharacterManager.h"
 #include "cPlayer.h"
 #include "cMonster.h"
-
+#include "cSindragosa.h"
 cCharacterManager::cCharacterManager()
 {
 }
@@ -25,6 +25,9 @@ void cCharacterManager::Setup()
         m_listMonster.push_back(newMonster);
     }
   
+    m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
+    g_pAutoReleasePool->AddObject(m_pSindragosa);
+
 }
 
 void cCharacterManager::Destroy()
@@ -43,3 +46,4 @@ cMonster* cCharacterManager::GetMonster()
     m_listMonster.pop_back();
     return returnMonster;
 }
+

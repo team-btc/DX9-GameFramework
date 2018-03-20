@@ -44,7 +44,7 @@ public:
     void SetEye(Vector3 pos) { m_vEye = pos; }
     Vector3 GetLookat() { return m_vLookAt; }
 
-    void TrackingToggle() { m_isFocus = !m_isFocus; }
+    void TrackingToggle() { m_isFocus = !   m_isFocus; }
     void TrackingEnable() { m_isFocus = true; }
     void TrackingDisable() { m_isFocus = false; }
 

@@ -5,6 +5,7 @@
 
 class cPlayer;
 class cMonster;
+class cSindragosa;
 
 class cCharacterManager
 {
@@ -14,6 +15,7 @@ private:
 
     cPlayer * m_pPlayer;
     list<cMonster*>     m_listMonster;
+    cSindragosa * m_pSindragosa;
 
 public:
 
@@ -24,5 +26,6 @@ public:
 
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster();
+    cSindragosa* GetSindragosa() { return m_pSindragosa; };
 };
 

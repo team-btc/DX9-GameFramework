@@ -221,6 +221,7 @@
     <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
+    <ClInclude Include="002.System\cSindragosa.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -282,6 +283,7 @@
     <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
+    <ClCompile Include="002.System\cSindragosa.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

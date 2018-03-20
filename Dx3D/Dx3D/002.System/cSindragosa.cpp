@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "cMonster.h"
+#include "cSindragosa.h"
 #include "005.UI\\cUILayer.h"
 
 
-cMonster::cMonster(string szKey, string szFolder, string szFilename)
+cSindragosa::cSindragosa(string szKey, string szFolder, string szFilename)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -43,7 +43,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
 
-cMonster::cMonster(string szKey)
+cSindragosa::cSindragosa(string szKey)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -84,17 +84,17 @@ cMonster::cMonster(string szKey)
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
 
-cMonster::cMonster()
+cSindragosa::cSindragosa()
 {
 }
 
 
-cMonster::~cMonster()
+cSindragosa::~cSindragosa()
 {
     SAFE_DELETE(m_pUILayer);
 }
 
-void cMonster::Setup()
+void cSindragosa::Setup()
 {
     m_pTarget = NULL;
 
@@ -125,12 +125,12 @@ void cMonster::Setup()
     m_stSphere.vCenter = m_vPosition;
 }
 
-void cMonster::Update()
+void cSindragosa::Update()
 {
     if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
     {
         isAlive = false;
-        g_pCharacterManager->PushMonster(this);
+        //g_pCharacterManager->PushMonster(this);
     }
 
     if (m_stStat.fCurHP <= 0 && isActive)
@@ -237,7 +237,7 @@ void cMonster::Update()
                 }
                 D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
             }
-            
+
             if (m_fMoveCount > 10.0f)
             {
                 m_isMove = true;
@@ -250,14 +250,14 @@ void cMonster::Update()
     else
     {
     }
-   
+
     m_pMesh->SetScale(8.0f);
     m_pMesh->SetPosition(m_vPosition);
     m_pMesh->SetRotation(m_vRotation);
     // p = Vector3(0, D3DXToDegree(m_fRotY) + 56.0f, 0);
 }
 
-void cMonster::Render()
+void cSindragosa::Render()
 {
     m_pMesh->UpdateAndRender();
 
@@ -267,13 +267,10 @@ void cMonster::Render()
     D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
     matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
-    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    m_pPikingMesh->DrawSubset(0);
-    g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }
 
-ULONG cMonster::Release()
+ULONG cSindragosa::Release()
 {
     return cObject::Release();
 }

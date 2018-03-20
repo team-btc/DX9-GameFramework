@@ -53,7 +53,7 @@ void cMapLoader::LoadMap(string szKey)
     }
 
     // Àå¾Ö¹°
-    if (!jLoad["skybox"].is_null())
+    if (!jLoad["block-group"].is_null())
     {
         LoadObstacle(jLoad["block-group"]);
     }

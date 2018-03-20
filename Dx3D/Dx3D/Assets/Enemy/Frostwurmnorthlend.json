@@ -2,51 +2,51 @@
     "Scale": "1",
     "State": [
         {
-            "Name": "Stand",
+            "Name": "FlySitGroundDown",
             "index": "0"
         },
         {
-            "Name": "Walk",
+            "Name": "FlyWalk",
             "index": "1"
         },
         {
-            "Name": "Run",
+            "Name": "FlySitGroundUp",
             "index": "2"
         },
         {
-            "Name": "Death",
+            "Name": "FlySitGround",
             "index": "3"
         },
         {
-            "Name": "Roar",
+            "Name": "Attack2",
             "index": "4"
         },
         {
-            "Name": "Attack0",
+            "Name": "Attack1",
             "index": "5"
         },
         {
-            "Name": "Attack1",
+            "Name": "Attack0",
             "index": "6"
         },
         {
-            "Name": "Attack2",
+            "Name": "Roar",
             "index": "7"
         },
         {
-            "Name": "FlySitGround",
+            "Name": "Death",
             "index": "8"
         },
         {
-            "Name": "FlySitGroundUp",
+            "Name": "Run",
             "index": "9"
         },
         {
-            "Name": "FlyWalk",
+            "Name": "Walk",
             "index": "10"
         },
         {
-            "Name": "FlySitGroundDown",
+            "Name": "Stand",
             "index": "11"
         }
     ]

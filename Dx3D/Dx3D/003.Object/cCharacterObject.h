@@ -90,6 +90,11 @@ public:
     virtual void LeftAnim() override;
     virtual void RightAnim() override;
     virtual void DeadAnim() override;
+    virtual void FlyWalkAnim() override;
+    virtual void FlySitUpAnim() override;
+    virtual void FlySitAnim() override;
+    virtual void FlySitDownAnim() override;
+    virtual void RoarAnim() override;
     virtual void FalseAnim() override;
     
     virtual void MoveForword() override;
