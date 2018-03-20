@@ -62,8 +62,9 @@ void cShop::Setup()
         stItem.szPath = szPath;
         stItem.nCount = jItem[i]["item-count"];
         stItem.nPrice = jItem[i]["item-price"];
-        string szStatName = jItem[i]["item-plus-stat"];
-        stItem.stStat.szName = szStatName;
+        //string szStatName = jItem[i]["item-plus-stat"];
+        //stItem.stStat.szName = szStatName;
+        ZeroMemory(&stItem.stStat, sizeof(ST_STATUS));
         stItem.fPlusValue = jItem[i]["item-plus-value"];
 
         m_vecItemInfo.push_back(stItem);
@@ -405,7 +406,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pPlusValueText->SetSize(Vector2(150, 15));
         pPlusValueText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
         char buf[10];
-        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i].stStat.szName, (int)m_vecItemInfo[i].fPlusValue);
+        sprintf_s(buf, -1, "%s + %d", m_vecItemInfo[i].stStat.szName.c_str(), (int)m_vecItemInfo[i].fPlusValue);
         pPlusValueText->SetText(buf);
         pPlusValueText->SetColor(D3DCOLOR_XRGB(0, 255, 0));
         pPlusValueText->SetDrawTextFormat(DT_LEFT);
