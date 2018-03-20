@@ -31,17 +31,17 @@ void cUITextView::Render(LPSPRITE pSprite)
     vector<VertexRHWC> vecVertex;
     vecVertex.reserve(8);
 
-    vecVertex.push_back(VertexRHWC(Vector4(rc.left, rc.top, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4(rc.right, rc.top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.top, 0, 1), color));
 
-    vecVertex.push_back(VertexRHWC(Vector4(rc.right, rc.top, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4(rc.right, rc.bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.bottom, 0, 1), color));
 
-    vecVertex.push_back(VertexRHWC(Vector4(rc.right, rc.bottom, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4(rc.left, rc.bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.bottom, 0, 1), color));
 
-    vecVertex.push_back(VertexRHWC(Vector4(rc.left, rc.bottom, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4(rc.left, rc.top, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.bottom, 0, 1), color));
+    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.top, 0, 1), color));
 
     g_pDevice->SetFVF(VertexRHWC::FVF);
     g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &vecVertex[0], sizeof(VertexRHWC));
