@@ -15,9 +15,6 @@ cUIObject::cUIObject()
 
 cUIObject::~cUIObject()
 {
-    cout << m_szName << endl;
-    cout << this << endl;
-
     if (!m_vecChild.empty())
     {
         for (int i = 0; i < m_vecChild.size(); i++)
