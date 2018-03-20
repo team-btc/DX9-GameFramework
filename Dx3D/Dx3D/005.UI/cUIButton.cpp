@@ -13,6 +13,8 @@ void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelect)
 {
     // 텍스쳐를 매니져에 추가 하고 텍스쳐 배열에 셋팅
     IMAGE_INFO stImageInfo;
+    stImageInfo.Width = 1;
+    stImageInfo.Height = 1;
 
     //g_pTextureManager->AddTexture(sNormal, sNormal, true);
     m_aTexture[E_NORMAL] = (LPTEXTURE9)g_pTextureManager->GetTexture(sNormal);

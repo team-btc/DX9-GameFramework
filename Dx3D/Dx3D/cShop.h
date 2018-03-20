@@ -15,17 +15,6 @@ enum E_ITEM_TYPE
     E_ITEM_POTION_MANA
 };
 
-struct ST_ITEM_INFO
-{
-    E_ITEM_TYPE     eType;
-    string          szName;
-    string          szPath;
-    int             nCount;
-    int             nPrice;
-    int             nPlusStat;  //증가 효과(체력. 민첩 등등) enum문으로 만들기
-    float           fPlusValue; //증가 효과 값
-};
-
 class cShop : public cObject
 {
 private:
@@ -37,7 +26,11 @@ private:
 
     E_ITEM_TYPE                 m_eCurrSelectItem;
 
+    RECT                        m_rtShopSize;
+
     int                         m_nPlayerMoney;
+
+    SYNTHESIZE(bool, m_isOpen, IsOpen);
 
 private:
     void SetShopUI();
@@ -48,8 +41,11 @@ public:
     ~cShop();
 
     void Setup();
-    void Update();
+    void Update(int nPlayerMoney);
     void Render();
+
+    void OpenShop();
+    void CloseShop();
 
     virtual ULONG Release(void) override;
 };

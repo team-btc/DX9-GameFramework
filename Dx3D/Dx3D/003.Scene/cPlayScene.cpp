@@ -83,6 +83,15 @@ HRESULT cPlayScene::Start()
         }
     }
 
+    //  LOAD SHOP
+    if (!m_pShop)
+    {
+        // 상점 셋팅
+        m_pShop = new cShop;
+        m_pShop->Setup();
+    }
+
+
     if (!m_pFrustum)
     {
         m_pFrustum = new cFrustum;
@@ -166,14 +175,6 @@ HRESULT cPlayScene::Start()
         m_pPlayerStatUILayer->Setup();
     }
 
-    
-    if (!m_pShop)
-    {
-        // 상점 셋팅
-        m_pShop = new cShop;
-        m_pShop->Setup();
-    }
-
     //  파티클 세팅
     if (!m_pParticleFrost)
     {
@@ -205,6 +206,19 @@ HRESULT cPlayScene::Start()
 
 HRESULT cPlayScene::Update()
 {
+    // == 수정 해야 하는 부분!!! 상점 활성화!!
+    if (g_pKeyManager->isOnceKeyDown('O'))
+    {
+        m_pShop->SetIsOpen(true);
+        m_pShop->OpenShop();
+    }
+
+    // SHOP UPDATE -> 상점 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
+    if (m_pShop && m_pShop->GetIsOpen())
+    {
+        m_pShop->Update(123456789);//== 수정해야 하는 부분!! 플레이어 소지금으로 변경하기!!
+    }
+
     //  UPDATE CAMERA
     if (m_pCamera)
     {
@@ -320,11 +334,6 @@ HRESULT cPlayScene::Update()
     {
         UpdateUI();
         m_pPlayerStatUILayer->Update();
-    }
-
-    if (m_pShop)
-    {
-        m_pShop->Update();
     }
 
     // 이벤트 체크
@@ -466,7 +475,8 @@ HRESULT cPlayScene::Render()
         m_pPlayerStatUILayer->Render();
     }
 
-    if (m_pShop)
+    // SHOP RENDER
+    if (m_pShop && m_pShop->GetIsOpen())
     {
         m_pShop->Render();
     }
