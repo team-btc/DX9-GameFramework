@@ -14,7 +14,8 @@ public:
         E_CHAT,
         E_QUEST,
         E_ALERT,
-        E_DEBUG
+        E_DEBUG,
+        E_SHOP,
     };
 
 private:

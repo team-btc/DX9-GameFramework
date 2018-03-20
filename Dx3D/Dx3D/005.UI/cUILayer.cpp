@@ -350,6 +350,35 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
     return S_OK;
 }
 
+void cUILayer::OnClick(cUIButton* pSender)
+{
+    m_vecClickButton.push_back(pSender);
+}
+
+void cUILayer::OnDrag(cUIButton* pSender)
+{
+
+}
+
+void cUILayer::OnRelease(cUIButton* pSender)
+{
+
+}
+
+// 클릭한 버튼 이름 겟터
+string cUILayer::GetClickButtonName()
+{
+    string szName = "";
+
+    if (!m_vecClickButton.empty())
+    {
+        szName = (*m_vecClickButton.begin())->GetName();
+        m_vecClickButton.erase(m_vecClickButton.begin());
+    }
+
+    return szName;
+}
+
 // 입력받은 너비와 높이로 레이어의 크기를 설정한다.
 HRESULT cUILayer::SetSize(IN float fWidth, IN float fHeight)
 {

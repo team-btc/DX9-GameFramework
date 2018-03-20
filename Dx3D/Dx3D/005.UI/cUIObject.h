@@ -9,6 +9,7 @@ protected:
     vector<cUIObject*>      m_vecChild;
     vector<ST_RHWC_VERTEX>  m_vecVertex;
 
+    SYNTHESIZE(bool, m_isAxtive, Axtive);
     SYNTHESIZE(Vector3, m_vLocalPos, LocalPos);
     SYNTHESIZE(cUIObject*, m_pParent, Parent);
     //SYNTHESIZE(Vector2, m_stSize, Size);
