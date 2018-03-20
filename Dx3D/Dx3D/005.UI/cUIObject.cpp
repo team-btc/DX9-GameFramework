@@ -4,6 +4,7 @@
 
 cUIObject::cUIObject()
     : m_vLocalPos(0, 0, 0)
+    , m_isAxtive(true)
     , m_pParent(NULL)
     , m_stSize(0, 0)
     , m_isDebugRender(false)

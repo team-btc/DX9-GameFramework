@@ -16,7 +16,7 @@ cUIImageView::~cUIImageView()
 
 void cUIImageView::Render(LPSPRITE pSprite)
 {
-    if (m_pTexture)
+    if (m_pTexture && m_isAxtive)
     {
         pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 

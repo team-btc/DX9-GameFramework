@@ -128,4 +128,5 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define OBJECT_PATH "Assets\\Object\\"
 #define INTERFACE_PATH "Assets\\Interface\\"
 #define SHOP_PATH "Assets\\Shop\\"
+#define STORE_SOUND_PATH "Assets\\Sound\\Effect\\Interface\\Store\\"
 #pragma endregion

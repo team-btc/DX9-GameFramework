@@ -466,7 +466,7 @@ HRESULT cPlayScene::Render()
 
     if (m_pShop)
     {
-        //m_pShop->Render();
+        m_pShop->Render();
     }
 
     if (m_pParticleFrost)
@@ -509,10 +509,10 @@ void cPlayScene::SetUI()
     ST_SIZE stMonLayerSize = ST_SIZE(80, 15);
     Vector2 vMonHPSize = Vector2(stMonLayerSize.w, stMonLayerSize.h);
 
-    string szRedPath = INTERFACE_PATH + (string)"buttons/redgrad64.png";
-    string szGreenPath = INTERFACE_PATH + (string)"buttons/greengrad64.png";
-    string szBluePath = INTERFACE_PATH + (string)"buttons/bluegrad64.png";
-    string szGreyPath = INTERFACE_PATH + (string)"buttons/greyscaleramp64.png";
+    string szRedPath = INTERFACE_PATH + (string)"progressBar/redgrad64.png";
+    string szGreenPath = INTERFACE_PATH + (string)"progressBar/greengrad64.png";
+    string szBluePath = INTERFACE_PATH + (string)"progressBar/bluegrad64.png";
+    string szGreyPath = INTERFACE_PATH + (string)"progressBar/greyscaleramp64.png";
 
     LPFONTDX pFont = g_pFontManager->GetFont(g_pFontManager->E_QUEST);
 
@@ -526,8 +526,8 @@ void cPlayScene::SetUI()
         // HP¹Ù
         cUIProgressBar* pUIProgressHP = new cUIProgressBar;
         pUIProgressHP->SetSize(vHP_MPSize);
-        pUIProgressHP->AddGuageTexture(szGreenPath, 0);
-        pUIProgressHP->AddGuageTexture(szRedPath, 1);
+        pUIProgressHP->AddGuageTexture(szGreenPath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
+        pUIProgressHP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
         pUIProgressHP->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
         pUIProgressHP->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
         pUIProgressHP->SetLocalPos(Vector3(80, 15, 0));
@@ -538,8 +538,8 @@ void cPlayScene::SetUI()
         // MP¹Ù
         cUIProgressBar* pUIProgressMP = new cUIProgressBar;
         pUIProgressMP->SetSize(vHP_MPSize);
-        pUIProgressMP->AddGuageTexture(szBluePath, 0);
-        pUIProgressMP->AddGuageTexture(szRedPath, 1);
+        pUIProgressMP->AddGuageTexture(szBluePath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
+        pUIProgressMP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
         pUIProgressMP->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
         pUIProgressMP->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
         pUIProgressMP->SetLocalPos(Vector3(80, 50, 0));
@@ -558,8 +558,8 @@ void cPlayScene::SetUI()
         // HP¹Ù
         cUIProgressBar* pUIProgressHP = new cUIProgressBar;
         pUIProgressHP->SetSize(vMonHPSize);
-        pUIProgressHP->AddGuageTexture(szRedPath, 0);
-        pUIProgressHP->AddGuageTexture(szGreyPath, 1);
+        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
+        pUIProgressHP->AddGuageTexture(szGreyPath, 1, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
         pUIProgressHP->SetMaxGuage(100);
         pUIProgressHP->SetCurrentGuage(30);
         pUIProgressHP->SetName("default-hp");

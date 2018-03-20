@@ -35,13 +35,13 @@ HRESULT cLoadingScene::Start()
     // 배경
     m_pBGLayer = new cUILayer;
     m_pBGLayer->SetLayer("bg", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
-    string sz = TERRAIN_PATH + (string)"Lava.jpg";
-    g_pTextureManager->AddTexture("lava", sz, true);
+    string sz = INTERFACE_PATH + (string)"Loading/loadscreen.png";
+    g_pTextureManager->AddTexture("loadscreen", sz, true);
     cUIImageView* pUIBG = new cUIImageView;
     pUIBG->SetName("bg");
     pUIBG->SetLocalPos(Vector3(0, 0, 0));
     IMAGE_INFO imageInfo;
-    pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("lava", &imageInfo));
+    pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("loadscreen", &imageInfo));
     pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
     pUIBG->SetScale(W_WIDTH, W_HEIGHT);
     m_pBGLayer->AddUIObject(pUIBG);
@@ -55,12 +55,24 @@ HRESULT cLoadingScene::Start()
     ST_SIZE stSize = ST_SIZE(W_WIDTH * 0.8f, W_HEIGHT * 0.05f);
     Vector3 vPos = Vector3(W_WIDTH * 0.5f - stSize.w * 0.5f, W_HEIGHT - W_HEIGHT * 0.1f, 0);
 
+    // 프로그래스바 배경
+    cUIImageView* pUIProgressBG = new cUIImageView;
+    string szbgPath = INTERFACE_PATH + (string)"Loading/loading-background.png";
+    g_pTextureManager->AddTexture("loading-background", szbgPath, true);
+    pUIProgressBG->SetName("progress-bg");
+    pUIProgressBG->SetLocalPos(vPos);
+    pUIProgressBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("loading-background", &imageInfo));
+    pUIProgressBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pUIProgressBG->SetScale(stSize.w, stSize.h);
+    m_pBGLayer->AddUIObject(pUIProgressBG);
+
+    // 프로그래스바
     cUIProgressBar* pUIProgress = new cUIProgressBar;
-    string szBluePath = INTERFACE_PATH + (string)"buttons/bluegrad64.png";
-    string szRedPath = INTERFACE_PATH + (string)"buttons/redgrad64.png";
+    string szBackPath = INTERFACE_PATH + (string)"Loading/loading-frame.png";
+    string szFrontPath = INTERFACE_PATH + (string)"Loading/loading-bar.png";
     pUIProgress->SetSize(Vector2(stSize.w, stSize.h));
-    pUIProgress->AddGuageTexture(szBluePath, 0);
-    pUIProgress->AddGuageTexture(szRedPath, 1);
+    pUIProgress->AddGuageTexture(szFrontPath, 0, ST_SIZE(stSize.w - 80, stSize.h));
+    pUIProgress->AddGuageTexture(szBackPath, 1, stSize);
     pUIProgress->SetMaxGuage(m_fMaxCount * 100.0f);
     pUIProgress->SetCurrentGuage(m_fCurrCount * 100.0f);
     pUIProgress->SetLocalPos(vPos);
