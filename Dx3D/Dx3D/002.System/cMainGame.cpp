@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cCamera.h"
-#include "cMapLoad.h"
-
 
 cMainGame::cMainGame()
 {
@@ -14,6 +11,8 @@ cMainGame::cMainGame()
     hr = g_pDeviceManager->Setup();
     hr = g_pCameraManager->Setup();
     hr = g_pMaterialManager->Setup();
+    g_pSndManager->Setup();
+    g_pTextureManager->LoadParticleTexture();
     g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
     g_pMeshManager->LoadSkinnedMesh();
@@ -54,19 +53,12 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    //m_pCamera = new cCamera;
-    //hr = m_pCamera->Setup();
-    //g_pAutoReleasePool->AddObject(m_pCamera);
-
-    //map = new cMapLoad;
-
     hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
     hr = g_pScnManager->ChangeScene("play");
-
 }
 
 void cMainGame::Update()
@@ -76,7 +68,6 @@ void cMainGame::Update()
     g_pCameraManager->Update();
     g_pScnManager->Update();
     g_ptDeltaMouse = g_ptMouse;
-
     ResetWMParam();
 }
 

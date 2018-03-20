@@ -72,6 +72,7 @@ public:
 
     void SetGenTerm(float fTerm) { m_fGenTerm = fTerm; }
     void SetSize(float size) { m_fSize = size; }
+    void SetPosition(Vector3 vPos) { m_vOriginPos = vPos; }
 
 protected:
     // 속성 리스트 _particle을 검색하여 죽은 파티클을 리스트에서 제거.

@@ -99,8 +99,6 @@ void cCharacterObject::AttackAnim()
 {
     FalseAnim();
     isAttack = true;
-
-   
     int RandomNum = rand() % 3;
     if (RandomNum == 0)
     {

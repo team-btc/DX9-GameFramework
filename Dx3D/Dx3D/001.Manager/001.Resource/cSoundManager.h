@@ -24,6 +24,7 @@ private:
     System*     m_pSystem;
 
 public:
+    void Setup();
     void Update();
     void AddSound(string Key, string Scene, string Filename, bool IsBgm = false, bool IsLoop = false);
 

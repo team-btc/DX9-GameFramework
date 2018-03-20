@@ -15,7 +15,7 @@ cDeviceManager::cDeviceManager()
     if (m_isWindowed)
     {
         m_ptWindowSize.x = W_WIDTH;
-        m_ptWindowSize.y = W_WIDTH / 16 * 9;
+        m_ptWindowSize.y = W_HEIGHT;
     }
     else
     {
@@ -44,11 +44,8 @@ HRESULT cDeviceManager::Setup()
         nVertexProcessing = D3DCREATE_HARDWARE_VERTEXPROCESSING;
     else
         nVertexProcessing = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-    
-    m_stPParam.Windowed = m_isWindowed;
-    m_stPParam.BackBufferWidth = m_ptWindowSize.x;
-    m_stPParam.BackBufferHeight = m_ptWindowSize.y;
 
+    m_stPParam.Windowed = m_isWindowed;
     m_stPParam.SwapEffect = D3DSWAPEFFECT_DISCARD;
     m_stPParam.hDeviceWindow = g_hWnd;
     m_stPParam.BackBufferFormat = D3DFMT_X8R8G8B8;     // ÇÈ¼¿ Æ÷¸Ë p79
