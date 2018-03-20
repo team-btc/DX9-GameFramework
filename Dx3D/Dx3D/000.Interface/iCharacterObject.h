@@ -22,6 +22,7 @@ protected:
     Vector3         m_vDir; // 방향
     Vector3         m_vPosition; // 위치 벡터
     float           m_fRotY; // 각도
+    float           m_fMoveSpeed;
     LPMESH          m_pPikingMesh; // 가상의 구를 보여줌
     ST_SPHERE       m_stSphere; // 가상의 구 실질적으로 피킹되게끔함
 
@@ -34,6 +35,7 @@ protected:
 
     bool            isAttack; //공격중이냐
     bool            isRun;
+    bool            isWalk;
     bool            isIdle;
     bool            isHeal;
     bool            isStatic; //
@@ -57,6 +59,7 @@ public:
     virtual void SetDir(Vector3 dir) PURE;
     virtual void SetPosition(Vector3 Pos) PURE;
     virtual void SetPikingMesh(LPMESH Mesh) PURE;
+    virtual void SetMoveSpeed(float speed)PURE;
 
     virtual void SetStatus(ST_STATUS stat)PURE;
 
@@ -65,6 +68,7 @@ public:
 
     virtual void SetAttack(bool Attack) PURE;
     virtual void SetRun(bool Run) PURE;
+    virtual void SetWalk(bool Walk)PURE;
     virtual void SetIdle(bool Idle) PURE;
     virtual void SetHeal(bool Heal) PURE;
     virtual void SetStatic(bool Static) PURE;
@@ -84,6 +88,7 @@ public:
     virtual Vector3 GetPosition() PURE;
     virtual ST_SPHERE GetSphere() PURE;
     virtual LPMESH GetPikingMesh() PURE;
+    virtual float GetMoveSpeed() PURE;
 
     virtual ST_STATUS& GetStatus() PURE;
 
@@ -92,6 +97,7 @@ public:
 
     virtual bool GetAttak() PURE;
     virtual bool GetRun() PURE;
+    virtual bool GetWalk() PURE;
     virtual bool GetIdle() PURE;
     virtual bool GetHeal() PURE;
     virtual bool GetStatic() PURE;
@@ -111,6 +117,7 @@ public:
     //애니메이션 변경
     virtual void AttackAnim() PURE;
     virtual void RunAnim() PURE;
+    virtual void WalkAnim() PURE;
     virtual void IdleAnim() PURE;
     virtual void LeftAnim() PURE;
     virtual void RightAnim() PURE;

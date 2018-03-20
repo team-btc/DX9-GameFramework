@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "cMainGame.h"
+#include "cCamera.h"
+#include "cMapLoad.h"
+
 
 cMainGame::cMainGame()
 {
@@ -9,6 +12,7 @@ cMainGame::cMainGame()
     hr = g_pKeyManager->Setup();
     hr = g_pTimerManager->Setup();
     hr = g_pDeviceManager->Setup();
+    hr = g_pCameraManager->Setup();
     hr = g_pMaterialManager->Setup();
     g_pMeshManager->LoadJSON();
     g_pMeshManager->LoadBasicMesh();
@@ -32,6 +36,7 @@ cMainGame::~cMainGame()
 
     //  SYSTEM RESOURCE ÇØÁ¦
     g_pAutoReleasePool->Drain();
+    g_pCameraManager->Destroy();
     g_pMapManager->Destroy();
     g_pObjectManager->Destory();
     hr = g_pDbManager->Destroy();
@@ -49,17 +54,30 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
+    //m_pCamera = new cCamera;
+    //hr = m_pCamera->Setup();
+    //g_pAutoReleasePool->AddObject(m_pCamera);
+
+    //map = new cMapLoad;
+
     hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
     hr = g_pScnManager->ChangeScene("play");
+
 }
 
 void cMainGame::Update()
 {
+    g_ptDeltaMouse.x = g_ptMouse.x - g_ptDeltaMouse.x;
+    g_ptDeltaMouse.y = g_ptMouse.y - g_ptDeltaMouse.y;
+    g_pCameraManager->Update();
     g_pScnManager->Update();
+    g_ptDeltaMouse = g_ptMouse;
+
+    ResetWMParam();
 }
 
 void cMainGame::Render()
@@ -74,8 +92,8 @@ void cMainGame::Render()
         hr = g_pDevice->BeginScene();
 #ifdef _DEBUG
         hr = g_pTimerManager->Render();
+        hr = g_pCameraManager->Render();
 #endif // _DEBUG
-
         g_pScnManager->Render();
         
         hr = g_pDevice->EndScene();
@@ -96,7 +114,63 @@ void cMainGame::Render()
     //}
 }
 
+void cMainGame::ResetWMParam()
+{
+    g_nWheelMouse = 0;
+}
+
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    switch (message)
+    {
+    case WM_MOUSEMOVE:
+    {
+        g_ptMouse.x = LOWORD(lParam);
+        g_ptMouse.y = HIWORD(lParam);
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        g_nWheelMouse = GET_WHEEL_DELTA_WPARAM(wParam);
+        break;
+    }
+    case WM_LBUTTONDBLCLK:
+    {
+        g_ptLDoubleClick.x = LOWORD(lParam);
+        g_ptLDoubleClick.y = HIWORD(lParam);
+        break;
+    }
+    case WM_RBUTTONDBLCLK:
+    {
+        g_ptRDoubleClick.x = LOWORD(lParam);
+        g_ptRDoubleClick.y = HIWORD(lParam);
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        g_ptLClick.x = LOWORD(lParam);
+        g_ptLClick.y = HIWORD(lParam);
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        g_ptLClick.x = -1;
+        g_ptLClick.y = -1;
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        g_ptRClick.x = LOWORD(lParam);
+        g_ptRClick.y = HIWORD(lParam);
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        g_ptRClick.x = -1;
+        g_ptRClick.y = -1;
+        break;
+    }
+    }
+
     g_pScnManager->WndProc(hWnd, message, wParam, lParam);
 }

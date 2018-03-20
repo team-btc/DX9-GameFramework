@@ -28,7 +28,10 @@ void cMapLoader::LoadMap()
     iFile.open(MAP_PATH + m_szKey + "/" + m_szKey + ".json");
     iFile >> jLoad;
     iFile.close();
-    
+
+    int size = jLoad["map"]["size"];
+    m_stMapInfo->fMapSize = (float)(size + 1) * 64.0f;
+
     // 지형 매쉬
     LoadMapMesh();
 
@@ -54,7 +57,7 @@ void cMapLoader::LoadMap()
     }
 
     // 장애물
-    if (!jLoad["skybox"].is_null())
+    if (!jLoad["block-group"].is_null())
     {
         LoadObstacle(jLoad["block-group"]);
     }
@@ -132,6 +135,7 @@ void cMapLoader::LoadWater(json jWater)
     m_stMapInfo->fWaterHeightSpeed = jWater["heightspeed"];
     m_stMapInfo->fWaterfrequency = jWater["frequency"];
     m_stMapInfo->fWaterTransparent = jWater["transparent"];
+    m_stMapInfo->fWaterDensity = jWater["density"];
 }
 
 void cMapLoader::LoadSky(json jSky)

@@ -13,7 +13,6 @@ class cCharacterManager
 private:
 
     cPlayer * m_pPlayer;
-    map<int, cMonster*> m_mapMonster;
     list<cMonster*>     m_listMonster;
 
 public:

@@ -140,6 +140,9 @@ struct ST_MAP_INFO
     // 플레이어 시작 위치
     Vector3                 vStartPos;
 
+    //  맵 사이즈
+    float                   fMapSize;
+
     // 지형 매쉬
     LPMESH                  pTerrainMesh;
 
@@ -160,7 +163,6 @@ struct ST_MAP_INFO
     float                   fWaterHeightSpeed;
     float                   fWaterfrequency;
     float                   fWaterTransparent;
-
     // 하늘
     LPCUBETEXTURE9          pSkyTexture;
 
