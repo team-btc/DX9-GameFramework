@@ -355,3 +355,13 @@ void cPlayer::Render()
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }
+
+ULONG cPlayer::Release()
+{
+    return cObject::Release();
+}
+
+void cPlayer::GetSwordMatrix(Matrix4 & mat)
+{
+    m_pMesh->GetMatrixByName(mat, "creature_arthaslichking_arthaslichking_bone_43");
+}

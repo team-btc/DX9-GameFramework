@@ -11,6 +11,11 @@ cTextureManager::~cTextureManager()
 {
 }
 
+void cTextureManager::LoadParticleTexture()
+{
+    AddTexture("snow", "Assets\\Texture\\Particle\\particle_snow.png");
+}
+
 void cTextureManager::Destroy()
 {
     auto iter = m_mapTexture.begin();

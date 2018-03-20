@@ -11,6 +11,10 @@
 #include "cSkyBoxShader.h"
 #include "cParticle.h"
 
+#define OFFSET_X (0.5f)
+#define OFFSET_Y (3.0f)
+#define OFFSET_Z (4.0f)
+
 class cUILayer;
 class cShop;
 
@@ -36,7 +40,7 @@ private:
     
     cShop*                          m_pShop;
 
-    cParticle*                      m_pParticle;
+    cParticle*                      m_pParticleFrost;
 
 private:
     void SetUI();

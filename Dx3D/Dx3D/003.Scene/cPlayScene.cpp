@@ -15,7 +15,7 @@ cPlayScene::cPlayScene()
     , m_pWaveShader(NULL)
     , m_szMapKey("start")
     , m_pShop(NULL)
-    , m_pParticle(NULL)
+    , m_pParticleFrost(NULL)
 {
 }
 
@@ -141,6 +141,7 @@ HRESULT cPlayScene::Start()
     m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
     m_pPlayer->SetVecMonster(m_vecMonster);
     m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
+    m_pPlayer->Setup();
 
     //  CAMERA SETUP
     if (!m_pCamera)
@@ -174,11 +175,29 @@ HRESULT cPlayScene::Start()
     }
 
     //  파티클 세팅
-    if (!m_pParticle)
+    if (!m_pParticleFrost)
     {
-        m_pParticle = new cParticle;
-        ST_PARTICLE_ATTR stParticleFrost;
-        //stParticleFrost.
+        float power = 1.0f;
+        Vector3 pos = m_pPlayer != NULL ? m_pPlayer->GetPosition() : Vector3(0, 0, 0);
+        pos.x += OFFSET_X;
+        pos.y += OFFSET_Y;
+        pos.z += OFFSET_Z;
+        m_pParticleFrost = new cParticle(&pos, 1, 100);
+        m_pParticleFrost->Init("snow");
+        ST_PARTICLE_ATTR attr;
+        attr.fGravity = 0.01f;
+        attr.isLoop = true;
+        attr.deltaAccelMin = Vector3(-power * 0.1f, -power * 0.5f, -power * 0.1f);
+        attr.deltaAccelMax = Vector3(power * 0.1f, -power * 1.5f, power * 0.1f);
+        attr.life = 3.0f;
+        attr.fSpeed = 1.0f;
+        attr.fMinLife = 5.0f;
+        attr.fMaxLife = 10.0f;
+        attr.color = XColor(1.0f, 1.0f, 1.0f, 1.0f);
+        attr.isFade = false;
+        m_pParticleFrost->SetSize(0.5f);
+        m_pParticleFrost->SetGenTerm(1.0f);
+        m_pParticleFrost->Reset(attr);
     }
 
     return S_OK;
@@ -201,6 +220,17 @@ HRESULT cPlayScene::Update()
     //  PLAYER UPDATE
     m_pPlayer->Update();
 
+    if (m_pParticleFrost)
+    {
+        Matrix4 mat;
+        m_pPlayer->GetSwordMatrix(mat);
+        cout << to_string(mat._41) << ", " << to_string(mat._42) << ", " << to_string(mat._43) << endl;
+        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
+
+        m_pParticleFrost->SetPosition(pos);
+        m_pParticleFrost->Update();
+    }
+    
     // 위치 체크
     Vector3 Pos = m_pPlayer->GetPosition();
     m_pGameMap->GetHeight(Pos);
@@ -441,6 +471,11 @@ HRESULT cPlayScene::Render()
         m_pShop->Render();
     }
 
+    if (m_pParticleFrost)
+    {
+        m_pParticleFrost->Render();
+    }
+
 #ifdef _DEBUG
 
     // 장애물, 이벤트 트랩 출력
@@ -462,12 +497,10 @@ ULONG cPlayScene::Release()
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pPlayerStatUILayer);
     SAFE_DELETE(m_pHPUILayer);
-    SAFE_DELETE(m_pParticle);
+    SAFE_DELETE(m_pParticleFrost);
     SAFE_RELEASE(m_pShop);
 
-    cObject::Release();
-
-    return 0;
+    return cObject::Release();
 }
 
 void cPlayScene::SetUI()
