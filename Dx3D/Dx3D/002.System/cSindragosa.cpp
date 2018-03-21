@@ -251,7 +251,7 @@ void cSindragosa::Update()
     {
     }
 
-    m_pMesh->SetScale(8.0f);
+    m_pMesh->SetScale(10.0f);
     m_pMesh->SetPosition(m_vPosition);
     m_pMesh->SetRotation(m_vRotation);
     // p = Vector3(0, D3DXToDegree(m_fRotY) + 56.0f, 0);

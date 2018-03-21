@@ -11,6 +11,10 @@
 #include "cSkyBoxShader.h"
 #include "cSindragosa.h"
 #include "cSkinnedMesh.h"
+#include "cUILayer.h"
+#include "cUIImageView.h"
+
+#define ARTHUS  1.27f
 class cTitleScene : public iSceneObject
 {
 private:
@@ -24,15 +28,21 @@ private:
     cPlayer*            m_pPlayer;
     cFrustum*           m_pFrustum;
     cSindragosa*        m_pSindragosa;
-
+    cUILayer*           m_pBGLayer;
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
     cSkinnedMesh*       m_pArthus;
+    //=================================== 바닥..
+    LPMESH              m_pBlackMesh;
+    vector<ST_PNT_VERTEX>       m_vecWPNTVertex;
+    vector<int>                 m_vecWVertexIndex;
     // 무비스타트, 게임 스타트
     bool                m_isMovieStart;
     bool                m_isStart;
     bool                m_isArthusMove;
+    bool                m_isArthusRender;
+    bool                m_isReady;
     //갱신되는 포지션
     Vector3             m_vSindraPos;
     Vector3             m_vArtuhsPos;
@@ -41,6 +51,7 @@ private:
     Vector3             m_vCameraPos;
     Vector3             m_vArthusStartPos;
     Vector3             m_vArthusLastPos;
+    Vector3             m_vFlyRotation;
 
     vector<Vector3>     m_vecSindraJumpTarget;
     vector<Vector3>     m_vecSindraJumpBezier;
@@ -63,13 +74,10 @@ public:
     virtual ULONG Release() override;
     virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
-    // json의 인덱스 순서대로임
-    void SetSindraAni(int n);  
     // 한점 한점의 이동 데스 int는 이동 점 인덱스
     void MoveSindra(Vector3 vSpot, int n);
     void MoveArthus();
     void MoveSindraAllRoute();
-
+    
     void SetSindragosa();
 };
-

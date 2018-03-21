@@ -16,15 +16,18 @@ cTitleScene::cTitleScene()
     , m_isRoar(false)
     , m_isStart(false)
     , m_isArthusMove(false)
+    , m_isArthusRender(false)
+    , m_isReady(false)
     , m_ft(0)
     , m_vStartPos(0,0,0)
     , m_fWorldTime(0)
     , m_isMovieStart(false)
+    , m_vFlyRotation(0, -90, -75)
 {
     m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
     m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
     m_vecSindraJumpTarget.push_back(Vector3(230.0f, 400.0f, 242.0f));
-    m_vecSindraJumpTarget.push_back(Vector3(280.0f, -88.0f, 540.0f));
+    m_vecSindraJumpTarget.push_back(Vector3(280.0f, -88.0f, 630.0f));
    
     for (int i = 0; i < m_vecSindraJumpTarget.size(); ++i)
     {
@@ -147,7 +150,15 @@ HRESULT cTitleScene::Update()
     // 위치 체크
 
     //신드라곳아 움직임 셋팅
-    if (g_pKeyManager->isOnceKeyDown('8'))
+    if (g_pKeyManager->isOnceKeyDown('6'))
+    {
+        m_isArthusRender = false;
+    }
+    else if (g_pKeyManager->isOnceKeyDown('7'))
+    {
+        m_isArthusRender = true;
+    }
+    if (g_pKeyManager->isOnceKeyDown(VK_SPACE) &&  m_isReady)
     {
         m_isStart = true;
     }
@@ -160,13 +171,15 @@ HRESULT cTitleScene::Update()
         m_isMovieStart = false;
         m_isStart = false;
         m_isArthusMove = false;
-        m_vSindraPos = Vector3(229, 199, 242);
         m_isRoar = false;
+        m_isReady = false;
+        m_vSindraPos = Vector3(229, 199, 242);
         m_pSindragosa->IdleAnim();
         m_nCurrIndex = 0;
         m_pArthus->SetAnimationIndex(1);
         m_vArtuhsPos = Vector3(261, 88, 482);
-        m_ft = 0;      
+        m_ft = 0;     
+        m_pSindragosa->SetRotation(Vector3(0, -90, 0));
         for (int n = 0; n <m_vecIsArriveSindra.size(); ++n)
         {
             m_vecIsArriveSindra[n] = false;
@@ -205,7 +218,7 @@ HRESULT cTitleScene::Render()
     g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
     g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
     g_pDevice->LightEnable(0, true);
-
+    
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
     Vector4 vP(g_vCameraPos, 1.0f);
@@ -214,8 +227,10 @@ HRESULT cTitleScene::Render()
     {
         m_pSkyBoxShader->Render(vP);
     }
-
-    m_pArthus->UpdateAndRender();
+    if (m_isArthusRender)
+    {
+        m_pArthus->UpdateAndRender();
+    }
     m_pSindragosa->Render();
   
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
@@ -260,52 +275,6 @@ void cTitleScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 }
 
-void cTitleScene::SetSindraAni(int n)
-{
-    switch (n)
-    {
-        case 0:
-            m_pSindragosa->FlySitDownAnim();
-        break;
-        case 1:
-            m_pSindragosa->FlyWalkAnim();
-        break;
-
-        case 2:
-            m_pSindragosa->FlySitUpAnim();
-        break;
-
-        case 3:
-            m_pSindragosa->FlySitAnim();
-        break;
-
-        case 7:
-            m_pSindragosa->RoarAnim();
-        break;
-
-        case 8:
-            m_pSindragosa->DeadAnim();
-        break;
-
-        case 9:
-            m_pSindragosa->RunAnim();
-        break;
-
-        case 10:
-            m_pSindragosa->WalkAnim();
-        break;
-
-        case 11:
-            m_pSindragosa->IdleAnim();
-        break;
-
-        default:
-        break;
-
-    }
-
-}
-
 void cTitleScene::MoveSindra(Vector3 vSpot, int n)
 {
     if (!m_vecIsArriveSindra.at(n) && m_nCurrIndex == n)
@@ -329,7 +298,7 @@ void cTitleScene::MoveArthus()
 {
     if (!m_isArthusMove)
     {
-        m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.0f;
         m_isArthusMove = true;
     }
     if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusMove)
@@ -370,8 +339,18 @@ void cTitleScene::MoveSindraAllRoute()
     if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 2)
     {
         m_pSindragosa->FlyWalkAnim();
-        m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + ARTHUS;
         m_nCurrIndex++;
+        m_pSindragosa->SetRotation(m_vFlyRotation);
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 3 && !m_isArthusRender)
+    {
+        m_isArthusRender = true;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.0f;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusRender)
+    {
+        m_isReady = true;
     }
     MoveSindra(m_vecSindraJumpTarget[0], 0);
     MoveSindra(m_vecSindraJumpTarget[1], 1);
