@@ -9,7 +9,6 @@
 #include "cWaveShader.h"
 #include "cTextureShader.h"
 #include "cSkyBoxShader.h"
-#include "cSindragosa.h"
 #include "cSkinnedMesh.h"
 #include "cUILayer.h"
 #include "cUIImageView.h"
