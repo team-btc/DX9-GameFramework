@@ -132,7 +132,6 @@
     <ClInclude Include="003.Object\cCharacterObject.h" />
     <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
     <ClInclude Include="002.System\cMonster.h" />
-    <ClInclude Include="cNonPlayer.h" />
     <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />

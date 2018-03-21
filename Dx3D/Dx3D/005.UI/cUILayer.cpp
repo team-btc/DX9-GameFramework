@@ -18,6 +18,14 @@ cUILayer::cUILayer()
     , m_isVertexBackground(false)
     , m_isMove(false)
     , m_isActive(false)
+    , m_isTransparent(false)
+    , m_fDeltaInterval(0)
+    , m_nAlphaInterval(0)
+    , m_isRenderGuided(false)
+    , m_nTwinkleCount(0)
+    , m_fTime(0)
+    , m_nAlpha(0)
+    , m_isMaxAlpha(false)
 {
     D3DXMatrixIdentity(&m_matWorld);			// 메트릭스 초기화 
     SetRect(&m_rtLayer, 0, 0, 0, 0);			// 렉트 초기화 
@@ -56,6 +64,11 @@ HRESULT cUILayer::Update()
 {
     UpdateWorldMatrix();			// 월드 매트릭스 갱신
     UpdateChildren();				// 자식 갱신
+
+    if (m_isTransparent)
+    {
+        ChangeTransparent();
+    }
 
     if (m_pUIobjectRoot)
         m_pUIobjectRoot->Update();
@@ -377,6 +390,43 @@ string cUILayer::GetClickButtonName()
     }
 
     return szName;
+}
+
+void cUILayer::SetTransparent(bool trans)
+{
+    if (trans)
+    {
+        SetBackGroundColor(D3DCOLOR_RGBA(0, 0, 0, 0));
+    }
+    m_isTransparent = trans;
+
+    if (!m_vecUILayerChilds.empty())
+    {
+        for (int i = 0; i < m_vecUILayerChilds.size(); i++)
+        {
+            m_vecUILayerChilds[i]->SetTransparent(trans);
+        }
+    }
+}
+
+void cUILayer::ChangeTransparent()
+{
+    m_fTime += g_pTimerManager->GetDeltaTime();
+
+    if (m_fTime >= m_fDeltaInterval)
+    {
+        m_fTime = 0;
+        m_nAlpha += m_nAlphaInterval;
+    }
+
+    if (m_nAlpha > 255)
+    {
+        m_nTwinkleCount += 1;
+        m_nAlpha = 0;
+        m_isMaxAlpha = true;
+    }
+
+    SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, m_nAlpha));
 }
 
 // 입력받은 너비와 높이로 레이어의 크기를 설정한다.

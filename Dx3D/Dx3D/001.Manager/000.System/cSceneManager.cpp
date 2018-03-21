@@ -158,12 +158,13 @@ HRESULT cSceneManager::ChangeScene(IN string szName)
         {
             m_szPrevScene = m_pCurrScene->GetName();
             g_pLogManager->WriteLog(EL_INFO, "Scene release : " + m_szPrevScene);
-            m_pCurrScene->Release();
+            //m_pCurrScene->Release();
             hr = S_OK;
         }
 
         m_pCurrScene = iter->second;
         hr = m_pCurrScene->Start();
+        m_pCurrScene->Update();
     }
     else
     {

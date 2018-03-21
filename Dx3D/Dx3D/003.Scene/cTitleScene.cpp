@@ -14,6 +14,7 @@ cTitleScene::cTitleScene()
     , m_vArthasPos(243.59f, 97.0f, 450.0f)
     , m_vSindraPos(229.0f, 199.0f, 242.0f)
     , m_fWorldTime(-1.0f)
+    , m_isPressSpace(false)
     , m_isPopup(false)
 {
 }
@@ -21,6 +22,8 @@ cTitleScene::cTitleScene()
 
 cTitleScene::~cTitleScene()
 {
+    SAFE_DELETE(m_pSCLayer);
+    SAFE_DELETE(m_pBGLayer);
 }
 
 HRESULT cTitleScene::Start()
@@ -44,6 +47,7 @@ HRESULT cTitleScene::Start()
     g_pTextureManager->AddTexture("icecrown-tex1", "Assets\\Texture\\Ice.jpg");
     g_pTextureManager->AddTexture("icecrown-tex2", "Assets\\Texture\\Ice3.jpg");
     g_pTextureManager->AddTexture("icecrown-tex3", "Assets\\Texture\\Snow2.jpg");
+    g_pTextureManager->AddTexture("icecrown-alphamap", "Assets\\Map\\IceCrown\\IceCrown.png");
 
     float fBgDensity, fTex1Density, fTex2Density, fTex3Density;
     fBgDensity = 130.0f;
@@ -52,6 +56,7 @@ HRESULT cTitleScene::Start()
     fTex3Density = 58.0f;
     m_pTextureShader = m_pTextureShader == NULL ? new cTextureShader : m_pTextureShader;
     m_pTextureShader->SetMesh(m_pTerrain);
+    m_pTextureShader->SetAlphaDraw((LPTEXTURE9)g_pTextureManager->GetTexture("icecrown-alphamap"));
     m_pTextureShader->SetBGTexture((LPTEXTURE9)g_pTextureManager->GetTexture("icecrown-bg"), fBgDensity);
     m_pTextureShader->SetTexture1((LPTEXTURE9)g_pTextureManager->GetTexture("icecrown-tex1"), fTex1Density);
     m_pTextureShader->SetTexture2((LPTEXTURE9)g_pTextureManager->GetTexture("icecrown-tex2"), fTex2Density);
@@ -110,11 +115,22 @@ HRESULT cTitleScene::Start()
     m_pBGLayer->Setup();
     m_pBGLayer->Update();
 
+    sz = "Assets\\Texture\\blue.png";
+    g_pTextureManager->AddTexture("blue", sz, true);
+    m_pSCLayer = new cUILayer;
+    m_pSCLayer->SetLayer("press", Vector3(0.0f, 0.0f, 0.0f), ST_SIZE(W_WIDTH, W_HEIGHT), true, D3DCOLOR_RGBA(255,255,255,255), "blue");
+    m_pSCLayer->SetTransparent(true);
+    m_pSCLayer->SetAlphaInterval(2);
+    m_pSCLayer->SetDeltaInterval(0.01f);
+    m_pSCLayer->SetActive(true);
+
     return S_OK;
 }
 
 HRESULT cTitleScene::Update()
 {
+
+    //m_pSCLayer->Update();
     if (m_fWorldTime < 0.0f)
     {
         m_pSindragosa->SetAnimationByName("Stand");
@@ -178,20 +194,32 @@ HRESULT cTitleScene::Update()
     }
     else if (m_nCurrIndex == 4)
     {
-        //  WAIT
+                    
     }
     else if (m_nCurrIndex == 5)
     {
         Vector3 pos = m_pArthas->GetPosition();
         pos.x += 10.0f * g_pTimerManager->GetDeltaTime();
-        pos.z += 25.0f * g_pTimerManager->GetDeltaTime();
+        pos.z += 30.0f * g_pTimerManager->GetDeltaTime();
         pos.y += 2.0f * g_pTimerManager->GetDeltaTime();
         m_pArthas->SetPosition(pos);
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
             //  SET BLACK SCREEN
+            m_nCurrIndex = 6;
+        }
+    }
+    else if (m_nCurrIndex == 6)
+    {
+        m_pSCLayer->Update();
+        if (m_pSCLayer->GetTwinkleCount() == 1)
+        {
+            m_pSCLayer->SetTransparent(false);
+            m_pSCLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 255));
             m_nCurrIndex = 10;
         }
+
+
     }
     else if (m_nCurrIndex == 10)
     {
@@ -205,6 +233,7 @@ HRESULT cTitleScene::Update()
         m_pArthas->SetAnimationSpeed(1.0f);
         m_pArthas->SetRotation(Vector3(0.0f, -80.0f, 0.0f));
         m_nCurrIndex = 5;
+        m_isPressSpace = true;
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.7f;
     }
 
@@ -256,7 +285,7 @@ HRESULT cTitleScene::Render()
     {
         m_pBGLayer->Render();
     }
-
+    m_pSCLayer->Render();
     return S_OK;
 }
 
