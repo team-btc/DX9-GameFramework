@@ -8,6 +8,8 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
     , m_vDest(0, 0, 0)
     , m_fMoveCount(0.0f)
     , m_fAggroTime(9999.0f)
+    , m_fScale(0.0f)
+    , m_fCenter(0.0f)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -52,6 +54,8 @@ cMonster::cMonster(string szKey)
     , m_vDest(0,0,0)
     , m_fMoveCount(0.0f)
     , m_fAggroTime(9999.0f)
+    , m_fScale(0.0f)
+    , m_fCenter(0.0f)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -63,28 +67,11 @@ cMonster::cMonster(string szKey)
     m_stStat.szName = szKey;
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
-    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
-
-    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
-    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fCurMP = 0.0f;
-    m_stStat.fMaxMP = 0.0f;
-    m_stStat.fSpeed = 1.0f;
-    m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = 3.0f;
-    m_stStat.fMPGen = 3.0f;
-    m_stStat.nCoolTime = 0;
-    m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
     IdleAnim();
 
     m_fMoveRadius = 30.0f;
-    m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
 
@@ -115,18 +102,10 @@ void cMonster::Setup()
 
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
-    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
-
-    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
-    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
+    SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
     IdleAnim();
 
-    m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 }
 
@@ -259,7 +238,7 @@ void cMonster::Update()
     {
     }
 
-    m_pMesh->SetScale(8.0f);
+    m_pMesh->SetScale(m_fScale);
     m_pMesh->SetPosition(m_vPosition);
     m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
 }
@@ -271,7 +250,7 @@ void cMonster::Render()
 #ifdef _DEBUG
     Matrix4 matT, matW;
     D3DXMatrixScaling(&m_MatScale, m_stSphere.fRadius, m_stSphere.fRadius, m_stSphere.fRadius);
-    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + 4.0f, m_stSphere.vCenter.z);
+    D3DXMatrixTranslation(&matT, m_stSphere.vCenter.x, m_stSphere.vCenter.y + m_fCenter, m_stSphere.vCenter.z);
     matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -283,4 +262,33 @@ void cMonster::Render()
 ULONG cMonster::Release()
 {
     return cObject::Release();
+}
+
+void cMonster::SetLevelToStatus(string szKey, int Level)
+{
+    json status = g_pMeshManager->GetJson("Status");
+
+    m_stStat.fSTR = (float)status[szKey]["STR"] + m_stStat.Level * (float)status[szKey]["UPSTR"];
+    m_stStat.fDEX = (float)status[szKey]["DEX"] + m_stStat.Level * (float)status[szKey]["UPDEX"];
+    m_stStat.fINT = (float)status[szKey]["INT"] + m_stStat.Level * (float)status[szKey]["UPINT"];
+
+    m_stStat.fATK = (float)status[szKey]["ATK"] + m_stStat.Level * (float)status[szKey]["UPATK"];
+    m_stStat.fDEF = (float)status[szKey]["DEF"] + m_stStat.Level * (float)status[szKey]["UPDEF"];
+    m_stStat.fCurHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
+    m_stStat.fMaxHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
+    m_stStat.fCurMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
+    m_stStat.fMaxMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
+
+    m_stStat.fHPGen = (float)status[szKey]["HPGEN"];
+    m_stStat.fMPGen = (float)status[szKey]["MPGEN"];
+
+    m_stStat.fSpeed = (float)status[szKey]["SPEED"];
+    m_stStat.fCritical = (float)status[szKey]["CRITICAL"];
+    m_stStat.nCoolTime = status[szKey]["COOLTIME"];
+    m_stStat.nCurEXP = 0;
+    m_stStat.nMaxEXP = status[szKey]["EXP"];
+
+    m_fScale = (float)status[szKey]["SIZE"];
+    m_stSphere.fRadius = (float)status[szKey]["PICKINGRADIUS"];
+    m_fCenter = (float)status[szKey]["CENTERPOS"];
 }

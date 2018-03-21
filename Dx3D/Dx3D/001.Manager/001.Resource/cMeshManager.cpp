@@ -153,6 +153,11 @@ void cMeshManager::LoadJSON()
     m_fileJson >> newJson;
     m_mapJson.insert(make_pair("Boar", newJson));
     m_fileJson.close();
+
+    m_fileJson.open("CharacterStatus.json");
+    m_fileJson >> newJson;
+    m_mapJson.insert(make_pair("Status", newJson));
+    m_fileJson.close();
 }
 
 cSkinnedMesh* cMeshManager::GetSkinnedMesh(string szKey)

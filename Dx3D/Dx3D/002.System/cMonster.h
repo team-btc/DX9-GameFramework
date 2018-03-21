@@ -9,6 +9,8 @@ private:
     float       m_fMoveRadius;
     float       m_fMoveCount;
     float       m_fAggroTime;
+    float       m_fScale;
+    float       m_fCenter;
 
 public:
     cMonster(string szKey, string szFolder, string szFilename);
@@ -24,6 +26,7 @@ public:
     void SetStartPoint(Vector3 startpos) { m_vStartPoint = startpos;
                                             m_vPosition = startpos; }
     void SetAggroTime(float Aggro) { m_fAggroTime = Aggro; }
+    void SetLevelToStatus(string szKey, int Level);
 
 };
 

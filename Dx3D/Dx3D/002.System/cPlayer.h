@@ -13,6 +13,9 @@ private:
 
     Vector3 DestPoint;
 
+    float m_fScale;
+    float m_fCenter;
+
     bool m_isMoveToPoint;
     bool m_isPoint;
     bool m_isPickMonster;
@@ -37,7 +40,7 @@ public:
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
     void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
     void SetTerrain(LPMESH Terrain) { m_pTerrain = Terrain; }
-    void SetLevelToStatus(int Level);
+    void SetLevelToStatus(string szKey, int Level);
 
     bool GetMoveToPoint() { return m_isMoveToPoint; }
 

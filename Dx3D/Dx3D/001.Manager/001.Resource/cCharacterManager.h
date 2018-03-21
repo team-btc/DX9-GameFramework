@@ -29,6 +29,6 @@ public:
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster(string szMap);
     cBoss*  GetBoss();
-    int     GetVectorSize() { return m_vMonster.size(); }
+    int     GetVectorSize() { return (int)m_vMonster.size(); }
 };
 

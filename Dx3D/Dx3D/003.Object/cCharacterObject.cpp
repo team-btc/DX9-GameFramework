@@ -94,7 +94,7 @@ void cCharacterObject::Attack(float ATK)
 
 void cCharacterObject::Heal(float Value)
 {
-    m_stStat.fCurHP += Value;
+    m_stStat.fCurHP+Value >m_stStat.fMaxHP ? m_stStat.fCurHP=m_stStat.fMaxHP : m_stStat.fCurHP += Value;
 }
 
 void cCharacterObject::AttackAnim()
@@ -203,7 +203,7 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.03f;
+    m_fRotY -= 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 
     m_vDir.x = sin(m_fRotY);
@@ -213,7 +213,7 @@ void cCharacterObject::RotateLeft()
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.03f;
+    m_fRotY += 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
 
     m_vDir.x = sin(m_fRotY);
