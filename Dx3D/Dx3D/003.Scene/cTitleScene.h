@@ -29,6 +29,7 @@ private:
     cFrustum*           m_pFrustum;
     cSindragosa*        m_pSindragosa;
     cUILayer*           m_pBGLayer;
+    cUILayer*           m_pSGLayer;
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
@@ -63,6 +64,8 @@ private:
     // 베지어곡선용
     float               m_ft;
     float               m_fWorldTime;
+
+
 public:
     cTitleScene();
     ~cTitleScene();

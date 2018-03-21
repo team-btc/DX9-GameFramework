@@ -43,6 +43,7 @@ cTitleScene::~cTitleScene()
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pBGLayer);
+    SAFE_DELETE(m_pSGLayer);
 }
 
 HRESULT cTitleScene::Start()
@@ -136,20 +137,27 @@ HRESULT cTitleScene::Start()
 
 
     g_pTextureManager->AddTexture("Black", "./Assets/UI/black.png", true);
-    m_pBGLayer = new cUILayer;
-    m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "Black");
-    m_pBGLayer->SetTransparent(true);
-    m_pBGLayer->SetDeltaInterval(1);
-    m_pBGLayer->SetAlphaInterval(15);
-    m_pBGLayer->SetActive(true);
+    //m_pBGLayer = new cUILayer;
+    //m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "Black");
+    //m_pBGLayer->SetTransparent(true);
+    //m_pBGLayer->SetDeltaInterval(0.3f);
+    //m_pBGLayer->SetAlphaInterval(5);
+    //m_pBGLayer->SetActive(true);
 
-    g_pTextureManager->AddTexture("press-tex", "Assets/Splash/press-space-to-start.png", true);    
-    cUILayer* m_pBGLayer2 = new cUILayer;
-    m_pBGLayer2->SetLayer("press_text", Vector3(0, 0, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "press-tex");
-    m_pBGLayer->AddUILayerChild(m_pBGLayer2);
-    m_pBGLayer2->SetTransparent(true);
-    m_pBGLayer2->SetDeltaInterval(1);
-    m_pBGLayer2->SetAlphaInterval(15);
+    //g_pTextureManager->AddTexture("press-tex", "Assets/Splash/press-space-to-start.png", true);    
+    //cUILayer* m_pBGLayer2 = new cUILayer;
+    //m_pBGLayer2->SetLayer("press_text", Vector3(0, 0, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "press-tex");
+    //m_pBGLayer->AddUILayerChild(m_pBGLayer2);
+    //m_pBGLayer2->SetTransparent(true);
+    //m_pBGLayer2->SetDeltaInterval(0.3f);
+    //m_pBGLayer2->SetAlphaInterval(5);
+
+    m_pSGLayer = new cUILayer;
+    m_pSGLayer->SetLayer("test", Vector3(0, 0, 0), ST_SIZE(300, 300), true, D3DCOLOR_RGBA(0, 0, 0, 0), "Black");
+    m_pSGLayer->SetTransparent(true);
+    m_pSGLayer->SetDeltaInterval(0.3f);
+    m_pSGLayer->SetAlphaInterval(15);
+    m_pSGLayer->SetActive(true);
 
     return S_OK;
 }
@@ -214,7 +222,31 @@ HRESULT cTitleScene::Update()
     if (m_pBGLayer)
     {
         m_pBGLayer->Update();
+
+    /*    if (m_pBGLayer->GetTwinkleCount() == 1)
+        {
+            m_pBGLayer->SetTransparent(false);
+            m_pBGLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 0));
+        }*/
     }
+
+    if (m_pSGLayer)
+    {
+        m_pSGLayer->Update();
+
+        if (m_pSGLayer->GetMaxAlpha())
+        {
+            m_pSGLayer->SetTransparent(false);
+            m_pSGLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 0));
+        }
+    }
+    /*    if (m_pSGLayer->GetAlpha() == 255)
+        {
+            m_pSGLayer->SetTransparent(false);
+            m_pSGLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 0));
+        }*/
+
+   
 
     return S_OK;
 }
@@ -274,7 +306,10 @@ HRESULT cTitleScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    m_pBGLayer->Render();
+    m_pSGLayer->Render();
+  
+    if(m_pBGLayer)
+      m_pBGLayer->Render();
 
 
 #ifdef _DEBUG

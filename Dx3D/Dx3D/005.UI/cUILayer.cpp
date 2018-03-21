@@ -22,6 +22,10 @@ cUILayer::cUILayer()
     , m_fDeltaInterval(DELTA_INTERVAL)
     , m_nAlphaInterval(ALPHA_INTERVAL)
     , m_isRenderGuided(false)
+    , m_nTwinkleCount(0)
+    , m_fTime(0)
+    , m_nAlpha(0)
+    , m_isMaxAlpha(false)
 {
     D3DXMatrixIdentity(&m_matWorld);			// 메트릭스 초기화 
     SetRect(&m_rtLayer, 0, 0, 0, 0);			// 렉트 초기화 
@@ -352,25 +356,42 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
     return S_OK;
 }
 
-void cUILayer::ChangeTransparent()
+void cUILayer::SetTransparent(bool trans)
 {
-    static float time = 0;
-    static int alpha = 0;
-
-    time += g_pTimerManager->GetDeltaTime();
-
-    if (time >= m_fDeltaInterval)
+    if (trans)
     {
-        time = 0;
-        alpha += m_nAlphaInterval;
-        
-        if (alpha > 255)
-        {
-            alpha = 0;
-        }
+        SetBackGroundColor(D3DCOLOR_RGBA(0, 0, 0, 0));
     }
 
-    SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, alpha));
+    m_isTransparent = trans;
+
+
+    if (!m_vecUILayerChilds.empty())
+    {
+        for (int i = 0; i < m_vecUILayerChilds.size(); i++)
+        {
+            m_vecUILayerChilds[i]->SetTransparent(trans);
+        }
+    }
+}
+void cUILayer::ChangeTransparent()
+{
+    m_fTime += g_pTimerManager->GetDeltaTime();
+
+    if (m_fTime >= m_fDeltaInterval)
+    {
+        m_fTime = 0;
+        m_nAlpha += m_nAlphaInterval;
+    }
+
+    if (m_nAlpha > 255)
+    {
+        m_nTwinkleCount += 1;
+        m_nAlpha = 0;
+        m_isMaxAlpha = true;
+    }
+
+    SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, m_nAlpha));
 }
 
 // 입력받은 너비와 높이로 레이어의 크기를 설정한다.

@@ -34,12 +34,16 @@ private:
     bool                m_isMove;                   // 뭔가를 따라가는 거라면 필요 
     bool                m_isActive;                 // 활성(true) / 비활성(false)
     bool                m_isSelect;                 // 선택
-    
+
     // added
     bool                m_isTransparent;            // 시간에 따라 투명도 변화 
     float               m_fDeltaInterval;           // 델타 타임 간격
     int                 m_nAlphaInterval;           // 알파값 증가폭 
     bool                m_isRenderGuided;
+    int                 m_nTwinkleCount;            // 반짝이는 횟수;
+    float               m_fTime;
+    int                 m_nAlpha;
+    bool                m_isMaxAlpha;
 private:
     // cUILayer private function
     HRESULT RenderGuideLine();
@@ -76,9 +80,19 @@ public:
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
         IN bool useBackground = false, IN Color colerBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*빈 스트링*/) override;
 
-    void SetTransparent(bool trans) { m_isTransparent = trans; }
-    void SetDeltaInterval(float fDeltaInter) {m_fDeltaInterval = fDeltaInter;}
+    void SetTransparent(bool trans);
+    void SetDeltaInterval(float fDeltaInter) { m_fDeltaInterval = fDeltaInter; }
     void SetAlphaInterval(int nAlphaInter) { m_nAlphaInterval = nAlphaInter; }
     void ChangeTransparent();
     void SetRenderGuidedLine(bool guided) { m_isRenderGuided = guided; }
+    int  GetTwinkleCount() { return m_nTwinkleCount; }
+    int  GetAlpha() { return m_nAlpha; }
+    bool GetMaxAlpha() 
+    { 
+        if (m_isMaxAlpha)
+        {
+            m_isMaxAlpha = false;
+            return true;
+        }
+    }
 };
