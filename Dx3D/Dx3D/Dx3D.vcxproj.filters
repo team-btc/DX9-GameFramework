@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="000.Interface\iCharacterObject.cpp" />
     <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cEventManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cKeyManager.cpp" />
@@ -54,251 +53,17 @@
     <ClCompile Include="003.Object\cCharacterObject.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp" />
     <ClCompile Include="002.System\cMonster.cpp" />
-    <ClCompile Include="cNonPlayer.cpp" />
     <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
-    <ClCompile Include="cShop.cpp" />
-    <ClCompile Include="002.System\cSindragosa.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="cGear.cpp" />
+    <ClCompile Include="002.System\cBoss.cpp" />
+    <ClCompile Include="003.Object\cNonPlayer.cpp" />
+    <ClCompile Include="003.Object\cShop.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Dx3D.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cDeviceManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cEventManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cKeyManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cLogManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cSceneManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cTimerManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cFontManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cMeshManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cObjectManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cShaderManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cSoundManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cTextureManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Assets\MultiAnimation.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="004.ExtLib\json.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iCamera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iCharacterObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iGameObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iMap.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iObserver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iProjectileObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iSceneObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iUIObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cLightManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cCameraManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUIButton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUIImageView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUILayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUiLayerConversation.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUIObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUIProgressBar.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="005.UI\cUITextView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iUILayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Define-Macros\DefineMacro.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Define-Macros\DataStructure.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Define-Macros\InlineMacro.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="000.Interface\iSingletonManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cAdo.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cAllocateHierarchy.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cAutoReleasePool.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cCamera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cMainGame.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cFrustum.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cGameObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cRay.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cSkinnedMesh.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cSoundObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Repository\000.Model\cCharacterModel.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cDbManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cMapLoader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cMapManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.Shader\cTextureShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.Shader\cWaveShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.Shader\cSkyBoxShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cMeshLoader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cParticle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cBoundingBox.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Object\cCharacterObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cMonster.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="cNonPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Scene\cTitleScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Scene\cEndingScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Scene\cPlayScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="003.Scene\cLoadingScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cGameMap.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="cShop.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="001.Manager\000.System\cGameManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cSindragosa.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="002.System\cBoss.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
     <ClInclude Include="000.Define-Macros\DefineMacro.h" />
     <ClInclude Include="000.Define-Macros\InlineMacro.h" />
@@ -378,6 +143,83 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="cGear.h" />
+    <ClInclude Include="000.Define-Macros\DataStructure.h" />
+    <ClInclude Include="000.Define-Macros\DefineMacro.h" />
+    <ClInclude Include="000.Define-Macros\InlineMacro.h" />
+    <ClInclude Include="000.Interface\iCamera.h" />
+    <ClInclude Include="000.Interface\iCharacterObject.h" />
+    <ClInclude Include="000.Interface\iGameObject.h" />
+    <ClInclude Include="000.Interface\iSingletonManager.h" />
+    <ClInclude Include="000.Interface\iMap.h" />
+    <ClInclude Include="000.Interface\iObject.h" />
+    <ClInclude Include="000.Interface\iObserver.h" />
+    <ClInclude Include="000.Interface\iProjectileObject.h" />
+    <ClInclude Include="000.Interface\iSceneObject.h" />
+    <ClInclude Include="000.Interface\iUILayer.h" />
+    <ClInclude Include="000.Interface\iUIObject.h" />
+    <ClInclude Include="001.Manager\000.System\cDeviceManager.h" />
+    <ClInclude Include="001.Manager\000.System\cEventManager.h" />
+    <ClInclude Include="001.Manager\000.System\cKeyManager.h" />
+    <ClInclude Include="001.Manager\000.System\cLogManager.h" />
+    <ClInclude Include="001.Manager\000.System\cSceneManager.h" />
+    <ClInclude Include="001.Manager\000.System\cTimerManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cFontManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cMeshManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cObjectManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cShaderManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cSoundManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cTextureManager.h" />
+    <ClInclude Include="002.Shader\cSkyBoxShader.h" />
+    <ClInclude Include="002.Shader\cTextureShader.h" />
+    <ClInclude Include="002.Shader\cWaveShader.h" />
+    <ClInclude Include="003.Object\cFrustum.h" />
+    <ClInclude Include="003.Object\cGameObject.h" />
+    <ClInclude Include="003.Object\cMeshLoader.h" />
+    <ClInclude Include="003.Object\cObject.h" />
+    <ClInclude Include="003.Object\cRay.h" />
+    <ClInclude Include="003.Object\cSkinnedMesh.h" />
+    <ClInclude Include="003.Object\cSoundObject.h" />
+    <ClInclude Include="002.System\cAdo.h" />
+    <ClInclude Include="002.System\cAllocateHierarchy.h" />
+    <ClInclude Include="002.System\cAutoReleasePool.h" />
+    <ClInclude Include="002.System\cCamera.h" />
+    <ClInclude Include="004.ExtLib\json.hpp" />
+    <ClInclude Include="005.UI\cUIButton.h" />
+    <ClInclude Include="005.UI\cUIImageView.h" />
+    <ClInclude Include="005.UI\cUILayer.h" />
+    <ClInclude Include="005.UI\cUiLayerConversation.h" />
+    <ClInclude Include="005.UI\cUIObject.h" />
+    <ClInclude Include="005.UI\cUIProgressBar.h" />
+    <ClInclude Include="005.UI\cUITextView.h" />
+    <ClInclude Include="Assets\MultiAnimation.hpp" />
+    <ClInclude Include="002.System\cMainGame.h" />
+    <ClInclude Include="001.Manager\001.Resource\cLightManager.h" />
+    <ClInclude Include="001.Manager\000.System\cCameraManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h" />
+    <ClInclude Include="003.Repository\000.Model\cCharacterModel.h" />
+    <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h" />
+    <ClInclude Include="001.Manager\000.System\cDbManager.h" />
+    <ClInclude Include="002.System\cMapLoader.h" />
+    <ClInclude Include="001.Manager\000.System\cMapManager.h" />
+    <ClInclude Include="003.Scene\cEndingScene.h" />
+    <ClInclude Include="002.System\cGameMap.h" />
+    <ClInclude Include="003.Scene\cLoadingScene.h" />
+    <ClInclude Include="001.Manager\000.System\cGameManager.h" />
+    <ClInclude Include="002.System\cBoss.h" />
+    <ClInclude Include="002.System\cParticle.h" />
+    <ClInclude Include="003.Object\cBoundingBox.h" />
+    <ClInclude Include="003.Object\cCharacterObject.h" />
+    <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
+    <ClInclude Include="002.System\cMonster.h" />
+    <ClInclude Include="002.System\cPlayer.h" />
+    <ClInclude Include="003.Scene\cTitleScene.h" />
+    <ClInclude Include="003.Scene\cPlayScene.h" />
+    <ClInclude Include="Dx3D.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="003.Object\cNonPlayer.h" />
+    <ClInclude Include="003.Object\cShop.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />
@@ -556,9 +398,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="002.System\cSindragosa.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="002.System\cBoss.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

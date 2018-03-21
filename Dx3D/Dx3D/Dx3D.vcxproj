@@ -182,8 +182,10 @@
     <ClInclude Include="003.Object\cFrustum.h" />
     <ClInclude Include="003.Object\cGameObject.h" />
     <ClInclude Include="003.Object\cMeshLoader.h" />
+    <ClInclude Include="003.Object\cNonPlayer.h" />
     <ClInclude Include="003.Object\cObject.h" />
     <ClInclude Include="003.Object\cRay.h" />
+    <ClInclude Include="003.Object\cShop.h" />
     <ClInclude Include="003.Object\cSkinnedMesh.h" />
     <ClInclude Include="003.Object\cSoundObject.h" />
     <ClInclude Include="002.System\cAdo.h" />
@@ -220,12 +222,9 @@
     <ClInclude Include="003.Object\cCharacterObject.h" />
     <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
     <ClInclude Include="002.System\cMonster.h" />
-    <ClInclude Include="cNonPlayer.h" />
     <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
-    <ClInclude Include="cShop.h" />
-    <ClInclude Include="002.System\cSindragosa.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -250,8 +249,10 @@
     <ClCompile Include="003.Object\cFrustum.cpp" />
     <ClCompile Include="003.Object\cGameObject.cpp" />
     <ClCompile Include="003.Object\cMeshLoader.cpp" />
+    <ClCompile Include="003.Object\cNonPlayer.cpp" />
     <ClCompile Include="003.Object\cObject.cpp" />
     <ClCompile Include="003.Object\cRay.cpp" />
+    <ClCompile Include="003.Object\cShop.cpp" />
     <ClCompile Include="003.Object\cSkinnedMesh.cpp" />
     <ClCompile Include="003.Object\cSoundObject.cpp" />
     <ClCompile Include="002.System\cAdo.cpp" />
@@ -286,12 +287,9 @@
     <ClCompile Include="003.Object\cCharacterObject.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp" />
     <ClCompile Include="002.System\cMonster.cpp" />
-    <ClCompile Include="cNonPlayer.cpp" />
     <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
-    <ClCompile Include="cShop.cpp" />
-    <ClCompile Include="002.System\cSindragosa.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

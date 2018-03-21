@@ -542,10 +542,10 @@ HRESULT cPlayScene::Render()
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
     g_pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-   // for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
-   // {
-   //     m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
-   // }
+    for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
+    {
+        m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
+    }
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 
