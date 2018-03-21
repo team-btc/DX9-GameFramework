@@ -428,8 +428,6 @@
     <ClCompile Include="002.System\cSindragosa.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc">
