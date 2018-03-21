@@ -26,6 +26,20 @@ struct ST_INVENTORY
     }
 };
 
+struct ST_GEAR
+{
+    int swordId;
+    int helmId;
+    int chestPlateId;
+
+    ST_GEAR()
+    {
+        swordId = -1;
+        helmId = -1;
+        chestPlateId = -1;
+    }
+};
+
 class cGameManager : public iSingletonManager
 {
 private:
@@ -34,6 +48,7 @@ private:
 
     vector<ST_ITEM_INFO*>       m_vecItemInfo;
     ST_INVENTORY                m_stInventory;
+    ST_GEAR                     m_stGear;
 
 private:
     SINGLETON(cGameManager);

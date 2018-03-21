@@ -18,6 +18,9 @@ private:
     SYNTHESIZE(bool, m_isClickGear, IsClickGear);
     SYNTHESIZE(bool, m_isOpen, IsOpen);
 
+private:
+    void SetGearUI();
+
 public:
     cGear();
     ~cGear();
