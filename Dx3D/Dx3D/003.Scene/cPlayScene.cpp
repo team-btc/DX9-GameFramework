@@ -10,7 +10,7 @@ cPlayScene::cPlayScene()
     , m_pWaveShader(NULL)
     , m_szMapKey("start")
     , m_pPlayer(NULL)
-    , m_pBoss(NULL)
+    , m_isRoar(false)
 {
 }
 
@@ -111,6 +111,7 @@ HRESULT cPlayScene::Start()
         }
     }
   
+    //몬스터가 존재한다면 몬스터 회수
     if (!m_vecMonster)
     {
         m_vecMonster = new vector<iCharacterObject*>;
@@ -119,28 +120,37 @@ HRESULT cPlayScene::Start()
     {
         for (auto iter = m_vecMonster->begin(); iter != m_vecMonster->end(); iter++)
         {
-            g_pCharacterManager->PushMonster(*iter);
+            if ((*iter)->GetName() != "Deathwing")
+            {
+                g_pCharacterManager->PushMonster(*iter);
+            }
+            else
+            {
+                g_pCharacterManager->PushBoss((cBoss*)(*iter));
+            }
         }
     }
     m_vecMonster->clear();
 
-   
+   //몬스터 생성
     for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
     {
         if (m_stMapInfo->vecEventInfo[i].szName == "monster")
         {
-           /* cMonster* Enermy = g_pCharacterManager->GetMonster(m_szMapKey);
+            cMonster* Enermy = g_pCharacterManager->GetMonster(m_szMapKey);
             Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
             Enermy->SetActive(true);
-            (*m_vecMonster).push_back(Enermy);*/
-            m_pBoss = g_pCharacterManager->GetBoss();
-            m_pBoss->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            break;
+            (*m_vecMonster).push_back(Enermy);
+          /*  cBoss* Enermy = g_pCharacterManager->GetBoss();
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            (*m_vecMonster).push_back(Enermy);
+            break;*/
         }
         else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
         {
-            m_pBoss = g_pCharacterManager->GetBoss();
-            m_pBoss->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            cBoss* Enermy = g_pCharacterManager->GetBoss();
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            (*m_vecMonster).push_back(Enermy);
         }
     }
 
@@ -183,16 +193,6 @@ HRESULT cPlayScene::Update()
     if (m_pPlayer)
     {
         m_pPlayer->Update();
-
-        if (g_pKeyManager->isStayKeyDown(VK_RBUTTON))
-        {
-            cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
-
-            if (ray.IsPicked(&m_pBoss->GetSphere()))
-            {
-                m_pBoss->SetTarget(m_pPlayer);
-            }
-        }
     }
 
     // 위치 체크
@@ -200,35 +200,8 @@ HRESULT cPlayScene::Update()
     m_pGameMap->GetHeight(Pos);
     m_pPlayer->SetPosition(Pos);
 
-    // BOSS UPDATE
-    if (m_pBoss)
-    {
-        m_pBoss->Update();
-
-        Vector3 Pos = m_pBoss->GetPosition();
-        m_pGameMap->GetHeight(Pos);
-        m_pBoss->SetPosition(Pos);
-
-        if (m_pBoss->GetRoar())
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                Vector3 SummonsPos = m_pBoss->GetPosition() + GetRandomVector3(Vector3(-10, 0, -10), Vector3(10, 0, 10));//임시좌표
-
-                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
-                m_pEnermy->SetStartPoint(SummonsPos);
-                m_pEnermy->SetActive(true);
-                m_pEnermy->SetTarget(m_pPlayer);
-                m_pEnermy->RunAnim();
-                (*m_vecMonster).push_back(m_pEnermy);
-            }
-
-            m_pBoss->SetRoar(false);
-        }
-    }
-
     //REGEN
-   /* if (m_vecMonster->size() == 0)
+    if (m_vecMonster->size() == 0)
     {
         for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
         {
@@ -240,7 +213,37 @@ HRESULT cPlayScene::Update()
                 (*m_vecMonster).push_back(m_pEnermy);
             }
         }
-    }*/
+    }
+
+    //MONSTER SUMMON
+    if (m_isRoar)
+    {
+        cBoss* Boss = NULL;
+        for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+        {
+            if ((*iter)->GetName() == "Deathwing")
+                Boss = (cBoss*)(*iter);
+        }
+
+        if (Boss->GetIsRoar())
+        {
+            for (int i = 0; i < 1; i++)
+            {
+                Vector3 SummonsPos = Boss->GetPosition() + GetRandomVector3(Vector3(-10, 0, -10), Vector3(10, 0, 10));//임시좌표
+
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
+                m_pEnermy->SetStartPoint(SummonsPos);
+                m_pEnermy->SetActive(true);
+                m_pEnermy->SetTarget(m_pPlayer);
+                m_pEnermy->RunAnim();
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+
+            Boss->SetRoar(false);
+            Boss->SetIsRoar(false);
+            m_isRoar = false;
+        }
+    }
 
     //MONSTER UPDATE
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
@@ -270,6 +273,11 @@ HRESULT cPlayScene::Update()
             {
                 (*iter)->SetMoveSpeed(0.08f);
             }
+        }
+
+        if ((*iter)->GetRoar())
+        {
+            m_isRoar = true;
         }
     }
 
@@ -349,11 +357,6 @@ HRESULT cPlayScene::Render()
     }
 
     m_pPlayer->Render();
-
-    if(m_pBoss)
-    { 
-        m_pBoss->Render();
-    }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {

@@ -21,7 +21,6 @@ private:
     cGameMap*           m_pGameMap;
 
     cPlayer*                m_pPlayer;
-    cBoss*                  m_pBoss;
     cFrustum*               m_pFrustum;
     vector<iCharacterObject*>*      m_vecMonster;
 
@@ -29,6 +28,7 @@ private:
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
 
+    bool                m_isRoar;
 public:
     cPlayScene();
     ~cPlayScene();

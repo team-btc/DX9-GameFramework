@@ -24,9 +24,11 @@ public:
     void Destroy();
 
     void PushMonster(iCharacterObject* monster);
+    void PushBoss(cBoss* boss) { m_pBoss = boss; }
 
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster(string szMap);
     cBoss*  GetBoss();
+    int     GetVectorSize() { return m_vMonster.size(); }
 };
 

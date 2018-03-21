@@ -4,6 +4,10 @@
 
 
 cMonster::cMonster(string szKey, string szFolder, string szFilename)
+    : m_vStartPoint(0, 0, 0)
+    , m_vDest(0, 0, 0)
+    , m_fMoveCount(0.0f)
+    , m_fAggroTime(9999.0f)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -44,6 +48,10 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
 }
 
 cMonster::cMonster(string szKey)
+    : m_vStartPoint(0,0,0)
+    , m_vDest(0,0,0)
+    , m_fMoveCount(0.0f)
+    , m_fAggroTime(9999.0f)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -75,10 +83,7 @@ cMonster::cMonster(string szKey)
 
     IdleAnim();
 
-    m_vDest = Vector3(0, 0, 0);
     m_fMoveRadius = 30.0f;
-    m_fMoveCount = 0.0f;
-    m_fAggroTime = 9999.0f;
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
@@ -137,7 +142,9 @@ void cMonster::Update()
     {
         isActive = false;
 
-        int EXP = m_pTarget->GetStatus().nCurEXP + m_stStat.nMaxEXP;
+        ST_STATUS TargetStatus = m_pTarget->GetStatus();
+        TargetStatus.nCurEXP += m_stStat.nMaxEXP;
+        m_pTarget->SetStatus(TargetStatus);
 
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;
@@ -177,7 +184,8 @@ void cMonster::Update()
                 {
                     AttackAnim();
                     m_pMesh->SetDescZeroPos();
-                    Action("Attack", m_stStat.fATK);
+                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+                    Action("Attack", ATK);
                 }
             }
             else

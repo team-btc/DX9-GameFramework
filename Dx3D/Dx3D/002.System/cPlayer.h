@@ -37,6 +37,7 @@ public:
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
     void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
     void SetTerrain(LPMESH Terrain) { m_pTerrain = Terrain; }
+    void SetLevelToStatus(int Level);
 
     bool GetMoveToPoint() { return m_isMoveToPoint; }
 

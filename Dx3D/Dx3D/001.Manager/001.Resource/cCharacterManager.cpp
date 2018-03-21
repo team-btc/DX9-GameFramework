@@ -20,7 +20,6 @@ void cCharacterManager::Setup()
 
     m_pBoss = new cBoss("Deathwing");
     g_pAutoReleasePool->AddObject(m_pBoss);
-    m_vMonster.push_back(m_pBoss);
 
     for (int i = 0; i < limitMonster; i++)
     {
@@ -31,11 +30,6 @@ void cCharacterManager::Setup()
         newMonster = new cMonster("Bear");
         g_pAutoReleasePool->AddObject(newMonster);
         m_vMonster.push_back(newMonster);
-
-        //newMonster = new cMonster("Deathwing");
-        //g_pAutoReleasePool->AddObject(newMonster);
-        ////m_listMonster.push_back(newMonster);
-        //m_vMonster.push_back(newMonster);
     }
 }
 
@@ -66,6 +60,13 @@ cMonster* cCharacterManager::GetMonster(string szMap)
         }
     }
     else if (szMap == "badland")
+    {
+        int randNum = rand() % m_vMonster.size();
+        returnMonster = (cMonster*)m_vMonster[randNum];
+        returnMonster->Setup();
+        m_vMonster.erase(m_vMonster.begin() + randNum);
+    }
+    else
     {
         int randNum = rand() % m_vMonster.size();
         returnMonster = (cMonster*)m_vMonster[randNum];

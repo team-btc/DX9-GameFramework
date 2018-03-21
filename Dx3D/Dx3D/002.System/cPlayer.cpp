@@ -63,23 +63,13 @@ cPlayer::cPlayer(string szKey)
     m_stStat.szName = "ChiChi";
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
-    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
-    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
-
-    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
-    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
-    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
-    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
-    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
+    SetLevelToStatus(m_stStat.Level);
+   
     m_stStat.fSpeed = 1.0f;
     m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
-    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
     m_stStat.nCoolTime = 0;
     m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    m_stStat.nMaxEXP = 50;
 
     IdleAnim();
 
@@ -107,6 +97,21 @@ void cPlayer::Update()
     if (g_pKeyManager->isOnceKeyDown(VK_ESCAPE))
     {
         m_pTarget = NULL;
+    }
+
+    if (g_pKeyManager->isOnceKeyDown('C'))
+    {
+        cout << "공격력:" << m_stStat.fATK << endl;
+    }
+
+    //레벨업
+    if (m_stStat.nCurEXP >= m_stStat.nMaxEXP)
+    {
+        m_stStat.nCurEXP -= m_stStat.nMaxEXP;
+        m_stStat.Level++;
+        SetLevelToStatus(m_stStat.Level);
+        cout << "레벨업 " << endl;
+        cout << "현재 레벨:" << m_stStat.Level << endl;
     }
 
     if (!isAttack)
@@ -205,10 +210,11 @@ void cPlayer::Update()
             if (m_isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack"].mapPosition["attack"])
             {
                 m_isPoint = false;
-                //데미지 계산식을 넣어야함
-                Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
                 {
+                    //데미지 계산식을 넣어야함
+                    Action("Attack", m_stStat.fATK + (m_stStat.fSTR * 2)-m_pTarget->GetStatus().fDEF);
+
                     m_pTarget->RayCast(this); // 어그로 주고
                     if (m_pTarget->GetTag() == MONSTER)
                     {
@@ -227,9 +233,12 @@ void cPlayer::Update()
         {
             if (m_pMesh->GetCurPos() >= 1.0f)
             {
-                Action("Attack", m_stStat.fATK);// 다시해야함
                 if (m_pTarget)
                 {
+                    //데미지 계산식을 넣어야함
+                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+                    Action("Attack", ATK);
+
                     m_pTarget->RayCast(this); // 어그로 주고
                     if (m_pTarget->GetTag() == MONSTER)
                     {
@@ -242,8 +251,8 @@ void cPlayer::Update()
         }
     }
 
-    //쉬프트 누를시
-    // 타켓만 정해준다. 닷프로덕트 이용해서 만들자
+    // 쉬프트 누를시
+    // 타켓을 정해준다
     if (g_pKeyManager->isOnceKeyDown(VK_TAB))
     {
         if ((*m_vecMonster).size() > 0)
@@ -265,8 +274,8 @@ void cPlayer::Update()
     }
 
     m_pMesh->SetScale(8.0f);
-    m_pMesh->SetPosition(m_vPosition);
     m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
+    m_pMesh->SetPosition(m_vPosition);
 }
 
 void cPlayer::Render()
@@ -391,6 +400,23 @@ void cPlayer::Move()
         m_isMoveToPoint = false;
         DestPoint = Vector3(0, 0, 0);
     }
+}
+
+void cPlayer::SetLevelToStatus(int Level)
+{
+    m_stStat.fSTR = 20.0f + m_stStat.Level * 5.0f;
+    m_stStat.fDEX = 15.0f + m_stStat.Level * 5.0f;
+    m_stStat.fINT = 15.0f + m_stStat.Level * 5.0f;
+
+    m_stStat.fATK = 35.0f + m_stStat.Level * 20.0f;
+    m_stStat.fDEF = 10.0f + m_stStat.Level * 5.0f;
+    m_stStat.fCurHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fMaxHP = 500.0f + m_stStat.Level * 100.0f;
+    m_stStat.fCurMP = 300.0f + m_stStat.Level * 50.0f;
+    m_stStat.fMaxMP = 300.0f + m_stStat.Level * 50.0f;
+
+    m_stStat.fHPGen = m_stStat.fMaxHP * 0.01f + m_stStat.Level * 0.5f;
+    m_stStat.fMPGen = m_stStat.fMaxMP * 0.01f + m_stStat.Level * 0.5f;
 }
 
 ULONG cPlayer::Release()

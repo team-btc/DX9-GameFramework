@@ -68,14 +68,15 @@ void cBoss::Update()
     if (m_pTarget)
     {
         m_fRoarTime += g_pTimerManager->GetDeltaTime();
-        if (m_fRoarTime > 10.0f)
+        if (m_fRoarTime > 20.0f && g_pCharacterManager->GetVectorSize() > 0)
         {
-            if (!m_isRoar)
+            if (!isRoar)
             {
                 m_fRoarTime = 0.0f;
-                m_isRoar = true;
                 RoarAnim();
-                //playSyene에서 구현해야함
+                isAttack = true;
+                isMove = false;
+                m_fMoveSpeed = 0.0f;
             }
         }
 
@@ -98,6 +99,13 @@ void cBoss::Update()
                 RunAnim();
             }
         }
+
+        D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
+        D3DXMatrixTranspose(&m_MatRotate, &m_MatRotate);
+        if (m_vDir.z >0)
+            m_fRotY = atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
+        else
+            m_fRotY = D3DX_PI - atan2(m_MatRotate._31, sqrt(pow(m_MatRotate._32, 2) + pow(m_MatRotate._33, 2)));
     }
 
     if (isAttack)
@@ -110,9 +118,21 @@ void cBoss::Update()
         MoveToTarget();
     }
 
+    if (isRoar)
+    {
+        if (m_pMesh->GetCurPos() > 1.0f)
+        {
+            m_isRoar = true;
+            isMove = true;
+            isRoar = false;
+            isAttack = false;
+            isMoveToTarget = false;
+        }
+    }
+
     m_pMesh->SetScale(6.0f);
+    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
     m_pMesh->SetPosition(m_vPosition);
-    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 180.0f, 0));
 }
 
 void cBoss::Render()
@@ -138,6 +158,13 @@ ULONG cBoss::Release()
 
 void cBoss::Attack()
 {
+    if (m_pMesh->GetCurPos() >= 1.0f)
+    {
+        //데미지 계산식을 넣어야함
+        float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+        Action("Attack", ATK);
+        m_pMesh->SetDescZeroPos();
+    }
 }
 
 void cBoss::Roar()

@@ -27,5 +27,8 @@ public:
         m_vStartPoint = startpos;
         m_vPosition = startpos;
     }
+    void SetIsRoar(bool Roar) { m_isRoar = Roar; }
+
+    bool GetIsRoar() { return m_isRoar; }
 };
 

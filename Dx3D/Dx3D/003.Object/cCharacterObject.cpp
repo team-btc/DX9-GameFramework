@@ -205,13 +205,20 @@ void cCharacterObject::RotateLeft()
 {
     m_fRotY -= 0.03f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
-    
+
+    m_vDir.x = sin(m_fRotY);
+    m_vDir.z = cos(m_fRotY);
+    D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
 void cCharacterObject::RotateRight()
 {
     m_fRotY += 0.03f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+
+    m_vDir.x = sin(m_fRotY);
+    m_vDir.z = cos(m_fRotY);
+    D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
 void cCharacterObject::NearestSearch(vector<iCharacterObject*> _vec)
@@ -219,6 +226,11 @@ void cCharacterObject::NearestSearch(vector<iCharacterObject*> _vec)
     float nearDist = FLT_MAX;
     for (auto iter = _vec.begin(); iter != _vec.end(); iter++)
     {
+        Vector3 _Dir = (*iter)->GetPosition() - m_vPosition;
+        D3DXVec3Normalize(&_Dir, &_Dir);
+        if (D3DXVec3Dot(&_Dir, &m_vDir) < 0)
+            continue;
+
         if (D3DXVec3Length(&(*iter)->GetPosition()) < nearDist)
         {
             nearDist = D3DXVec3Length(&(*iter)->GetPosition());
