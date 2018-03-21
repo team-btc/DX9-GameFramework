@@ -87,6 +87,7 @@ public:
     void SetRenderGuidedLine(bool guided) { m_isRenderGuided = guided; }
     int  GetTwinkleCount() { return m_nTwinkleCount; }
     int  GetAlpha() { return m_nAlpha; }
+   
     bool GetMaxAlpha() 
     { 
         if (m_isMaxAlpha)
