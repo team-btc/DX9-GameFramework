@@ -189,9 +189,6 @@
     <ClInclude Include="001.Manager\000.System\cMapManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cMapLoad.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="002.Shader\cTextureShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -366,9 +363,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\000.System\cMapManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cMapLoad.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="002.Shader\cTextureShader.cpp">
