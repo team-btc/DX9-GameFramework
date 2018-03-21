@@ -16,11 +16,11 @@ private:
     Matrix4         m_matView;
     Matrix4         m_matProj;
 
-    Vector3         m_vRotation;
     POINT           m_ptPrevMouse;
     bool            m_isRButtonDown;
     bool            m_isFocus;
     bool            m_isControl;
+    bool            m_isMovable;
     float           m_fFov;
     float           m_fMaxDist;
     float           m_fMinDist;
@@ -41,15 +41,20 @@ public:
     float GetLength() { return m_fDistance; }
     Vector3 GetEye() { return m_vEye; }
     void SetEye(Vector3 pos) { m_vEye = pos; }
-    Vector3 GetLookat() { return m_vLookAt; }
+    Vector3 GetLookAt() { return m_vLookAt; }
+    void SetLookAt(Vector3 pos) { m_vLookAt = pos; }
 
+    void ToggleControl() { m_isControl = !m_isControl; }
     void EnableControl() { m_isControl = true; }
     void DisableControl() { m_isControl = false; }
-    void ToggleControl() { m_isControl = !m_isControl; }
 
     void ToggleFocus() { m_isFocus = !m_isFocus; }
-    void EnableFocus() { m_isFocus = true; }
+    void EnableFocus() { m_isFocus = true; m_isMovable = false; }
     void DisableFocus() { m_isFocus = false; }
+
+    void ToggleMove() { m_isMovable = !m_isMovable; }
+    void EnableMove() { m_isMovable = true; m_isFocus = false; }
+    void DisableMove() { m_isMovable = false; }
 
     float GetLookatOffset() { return m_fLookatOffset; }
     void SetLookatOffset(float val) { m_fLookatOffset = val; }

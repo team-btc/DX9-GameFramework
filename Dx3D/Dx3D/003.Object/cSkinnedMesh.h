@@ -47,6 +47,7 @@ public:
 
     void SetRandomTrackPosition();  // 테스트용
     void SetPosition(Vector3 v){ m_vPosition = v; }
+    Vector3 GetPosition() { return m_vPosition; }
     void SetWorldMatrix(Matrix4 matW) { m_matWorld = matW; }
     void SetAnimationIndex(int nIndex, bool isBlend = true);
     void SetDescZeroPos();
@@ -59,6 +60,10 @@ public:
     float GetdescPos();
     float GetCurPos();
     string GetAnimName();
+    void SetAnimationByName(string szAnimName);
+    float GetAnimationSpeed();
+    void SetAnimationSpeed(float fSpeed);
+    void SetBlendDuration(float fDuration) { m_fBlendDuration = fDuration; }
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }
 

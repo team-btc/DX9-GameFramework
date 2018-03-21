@@ -32,6 +32,6 @@ void cUIImageView::Render(LPSPRITE pSprite)
 
 void cUIImageView::SetScale(float width, float height)
 {
-    m_matWorld._11 = width / m_stSize.x;
-    m_matWorld._22 = height / m_stSize.y;
+    m_matWorld._11 = width;
+    m_matWorld._22 = height;
 }

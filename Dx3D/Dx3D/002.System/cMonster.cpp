@@ -30,7 +30,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
 cMonster::cMonster(string szKey)
 {
     m_pMesh = new cSkinnedMesh(szKey);
-    g_pAutoReleasePool->AddObject(m_pMesh);
+    //g_pAutoReleasePool->AddObject(m_pMesh);
 
     m_eTag = MONSTER;
 
@@ -59,6 +59,7 @@ cMonster::cMonster()
 
 cMonster::~cMonster()
 {
+    SAFE_RELEASE(m_pMesh);
     SAFE_DELETE(m_pUILayer);
 }
 

@@ -55,7 +55,7 @@ HRESULT cCameraManager::Update()
         {
             if (m_pCollisionMesh)
             {
-                m_pRay->m_vOrg = m_pCurrCamera->GetLookat();
+                m_pRay->m_vOrg = m_pCurrCamera->GetLookAt();
                 m_pRay->m_vDir = m_pCurrCamera->GetEye() - m_pRay->m_vOrg;
                 D3DXVec3Normalize(&m_pRay->m_vDir, &m_pRay->m_vDir);
                 D3DXIntersectSubset(m_pCollisionMesh,
@@ -103,7 +103,7 @@ HRESULT cCameraManager::Render()
     //  PRINT LOOK AT POS
     rt.top += 15;
     sprintf_s(m_szBuffer, -1, "LOOKAT POS : %.2f, %.2f, %.2f",
-        m_pCurrCamera->GetLookat().x, m_pCurrCamera->GetLookat().y, m_pCurrCamera->GetLookat().z);
+        m_pCurrCamera->GetLookAt().x, m_pCurrCamera->GetLookAt().y, m_pCurrCamera->GetLookAt().z);
     szLookatPos = m_szBuffer;
     g_pFontManager->GetFont(
         cFontManager::E_DEBUG)->DrawTextA(
