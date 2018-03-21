@@ -11,19 +11,11 @@ cTitleScene::cTitleScene()
     , m_nCurrIndex(0)
     , m_vStartPos(0.0f, 0.0f, 0.0f)
     , m_vCameraPos(259.47f, 171.95f, 279.68f)
-    , m_vArthasPos(261.0f, 88.0f, 482.0f)
+    , m_vArthasPos(243.59f, 97.0f, 450.0f)
     , m_vSindraPos(229.0f, 199.0f, 242.0f)
     , m_fWorldTime(-1.0f)
+    , m_isPopup(false)
 {
-    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
-    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
-    m_vecSindraJumpTarget.push_back(Vector3(230.0f, 400.0f, 242.0f));
-    m_vecSindraJumpTarget.push_back(Vector3(280.0f, -88.0f, 630.0f));
-   
-    for (int i = 0; i < m_vecSindraJumpTarget.size(); ++i)
-    {
-        m_vecIsArriveSindra.push_back(false);
-    }
 }
 
 
@@ -33,6 +25,8 @@ cTitleScene::~cTitleScene()
 
 HRESULT cTitleScene::Start()
 {
+    m_fSpeed = 60.0f;
+
     //  LOAD TERRAIN MESH
     D3DXLoadMeshFromXA("Assets\\Map\\icecrown\\icecrown.x", D3DXMESH_32BIT | D3DXMESH_MANAGED,
         g_pDevice, NULL, NULL, NULL, NULL, &m_pTerrain);
@@ -72,10 +66,11 @@ HRESULT cTitleScene::Start()
     //  Arthas ¼¼ÆÃ
     m_pArthas = m_pArthas == NULL ? new cSkinnedMesh("arthaslichking") : m_pArthas;
     m_pArthas->SetPosition(m_vArthasPos);
-    m_pArthas->SetScale(8.0f);
-    m_pArthas->SetRotation(Vector3(0.0f, -90.0f, 0.0f));
+    m_pArthas->SetScale(22.0f);
+    m_pArthas->SetRotation(Vector3(0.0f, -70.0f, -15.0f));
     //m_pArthas->SetAnimationIndex(1);
-    m_pArthas->SetAnimationByName("Stand");
+    m_pArthas->SetAnimationByName("CastChanneling");
+    m_pArthas->SetAnimationSpeed(m_pArthas->GetAnimationSpeed() * 0.5f);
     g_pAutoReleasePool->AddObject(m_pArthas);
 
     m_pSindragosa = m_pSindragosa == NULL ? new cSkinnedMesh("sindragosa") : m_pSindragosa;
@@ -83,15 +78,17 @@ HRESULT cTitleScene::Start()
     m_pSindragosa->SetPosition(m_vSindraPos);
     m_pSindragosa->SetRotation(Vector3(0.0f, -90.0f, 0.0f));
     m_pSindragosa->SetAnimationByName("Stand");
+    g_pAutoReleasePool->AddObject(m_pSindragosa);
 
     //  CAMERA SETUP
     m_pCamera = m_pCamera == NULL ? new cCamera : m_pCamera;
-    m_pCamera->EnableFocus();
-    m_pCamera->SetMaxDist(400.0f);
-    m_pCamera->SetMinDist(5.0f);
     m_pCamera->Setup();
-    m_pCamera->SetPosition(m_vCameraPos);
-    m_pCamera->SetTargetPos(m_vSindraPos);
+    m_pCamera->SetLookAt(Vector3(256.0f, 104.0f, 481.0f));
+    m_pCamera->SetEye(Vector3(255.77f, 101.21f, 490.6f));
+    m_pCamera->SetRotation(Vector3(14.0f, -0.4f, 0.0f));
+    m_pCamera->SetDist(10.0f);
+    m_pCamera->EnableMove();
+    g_pCameraManager->SetCollisionMesh(m_pTerrain);
     g_pCameraManager->AddCamera("title", m_pCamera);
     g_pCameraManager->DisableCollider();
     g_pCameraManager->SetCurrCamera("title");
@@ -118,11 +115,97 @@ HRESULT cTitleScene::Start()
 
 HRESULT cTitleScene::Update()
 {
-    if (m_nCurrIndex == -1 &&
-        g_pKeyManager->isOnceKeyDown(VK_SPACE))
+    if (m_fWorldTime < 0.0f)
     {
-        g_pScnManager->SetNextSceneName("play");
-        g_pScnManager->ChangeScene("loading");
+        m_pSindragosa->SetAnimationByName("Stand");
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+    }
+
+    if (m_nCurrIndex == 0)
+    {
+        if (m_fWorldTime < g_pTimerManager->GetWorldTime())
+        {
+            m_nCurrIndex++;
+            m_pSindragosa->SetAnimationByName("Roar");
+            //g_pSndManager->Play("sindragosa-roar");
+            m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.8f;
+        }
+    }
+    else if (m_nCurrIndex == 1)
+    {
+        if (m_fWorldTime < g_pTimerManager->GetWorldTime())
+        {
+            m_nCurrIndex++;
+            m_pSindragosa->SetAnimationByName("FlySitGroundUp");
+            m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+        }
+    }
+    else if (m_nCurrIndex == 2)
+    {
+        Vector3 rot = m_pSindragosa->GetRotation();
+        rot.z -= 5.0f * g_pTimerManager->GetDeltaTime();
+        m_pSindragosa->SetRotation(rot);
+        Vector3 pos = m_pSindragosa->GetPosition();
+        pos.y += m_fSpeed * g_pTimerManager->GetDeltaTime();
+        m_fSpeed += 1.0f;
+        m_pSindragosa->SetPosition(pos);
+        if (m_fWorldTime < g_pTimerManager->GetWorldTime())
+        {
+            m_nCurrIndex++;
+            Vector3 pos(255.77f, 400.0f, 320.00f);
+            m_pSindragosa->SetPosition(pos);
+            m_pSindragosa->SetRotation(Vector3(0.0f, -90.0f, -60.0f));
+            m_pSindragosa->SetScale(20.0f);
+            m_fSpeed = 100.0f;
+            m_pSindragosa->SetAnimationByName("FlyWalk");
+            m_fWorldTime = g_pTimerManager->GetWorldTime() + 15.0f;
+        }
+    }
+    else if (m_nCurrIndex == 3)
+    {
+        Vector3 pos = m_pSindragosa->GetPosition();
+        pos.y -= m_fSpeed * g_pTimerManager->GetDeltaTime();
+        pos.z += m_fSpeed * 0.4f * g_pTimerManager->GetDeltaTime();
+        m_pSindragosa->SetPosition(pos);
+        if (m_fWorldTime < g_pTimerManager->GetWorldTime())
+        {
+            m_nCurrIndex++;
+        }
+        if (g_pTimerManager->GetWorldTime() > 17.0f)
+        {
+            m_isPopup = true;
+        }
+    }
+    else if (m_nCurrIndex == 4)
+    {
+        //  WAIT
+    }
+    else if (m_nCurrIndex == 5)
+    {
+        Vector3 pos = m_pArthas->GetPosition();
+        pos.x += 10.0f * g_pTimerManager->GetDeltaTime();
+        pos.z += 25.0f * g_pTimerManager->GetDeltaTime();
+        pos.y += 2.0f * g_pTimerManager->GetDeltaTime();
+        m_pArthas->SetPosition(pos);
+        if (m_fWorldTime < g_pTimerManager->GetWorldTime())
+        {
+            //  SET BLACK SCREEN
+            m_nCurrIndex = 10;
+        }
+    }
+    else if (m_nCurrIndex == 10)
+    {
+        //g_pScnManager->SetNextSceneName("play");
+        g_pScnManager->ChangeScene("play");
+    }
+
+    if (m_isPopup && g_pKeyManager->isOnceKeyDown(VK_SPACE))
+    {
+        m_pArthas->SetAnimationByName("Walk");
+        m_pArthas->SetAnimationSpeed(1.0f);
+        m_pArthas->SetRotation(Vector3(0.0f, -80.0f, 0.0f));
+        m_nCurrIndex = 5;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.7f;
     }
 
     return S_OK;
@@ -142,7 +225,7 @@ HRESULT cTitleScene::Render()
         m_pSkyBoxShader->Render(vP);
     }
 
-    if (m_pArthas)
+    if (m_isPopup && m_pArthas)
     {
         m_pArthas->UpdateAndRender();
     }
@@ -169,7 +252,7 @@ HRESULT cTitleScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    if (m_pBGLayer)
+    if (m_isPopup && m_pBGLayer)
     {
         m_pBGLayer->Render();
     }
@@ -179,6 +262,8 @@ HRESULT cTitleScene::Render()
 
 ULONG cTitleScene::Release()
 {
+    SAFE_RELEASE(m_pTerrain);
+    SAFE_RELEASE(m_pWater);
     SAFE_DELETE(m_pTextureShader);
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);

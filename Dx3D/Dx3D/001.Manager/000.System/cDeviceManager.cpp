@@ -47,7 +47,8 @@ HRESULT cDeviceManager::Setup()
     m_stPParam.BackBufferFormat = D3DFMT_X8R8G8B8;     // ÇÈ¼¿ Æ÷¸Ë p79
     m_stPParam.EnableAutoDepthStencil = true;          // ±íÀÌ ¹öÆÛ ÀÚµ¿ °ü¸®
     m_stPParam.AutoDepthStencilFormat = D3DFMT_D16;    // ±íÀÌ ¹öÆÛ p82
-    m_stPParam.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+    m_stPParam.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+    //m_stPParam.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
     hr = m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
         D3DDEVTYPE_HAL,

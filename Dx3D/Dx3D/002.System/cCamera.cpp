@@ -9,10 +9,10 @@ cCamera::cCamera()
     , m_vUp(0.0f, 1.0f, 0.0f)
     , m_isFocus(false)
     , m_isControl(true)
+    , m_isMovable(false)
     , m_fFov(45.0f)
     , m_fMaxDist(10.0f)
     , m_fMinDist(2.0f)
-    , m_vRotation(0.0f, 0.0f, 0.0f)
     , m_vTargetPos(0.0f, 0.0f, 0.0f)
     , m_fLookatOffset(LOOKAT_POS)
 {
@@ -64,6 +64,46 @@ HRESULT cCamera::Update()
 
     m_fDistance = min(m_fDistance, m_fMaxDist);
     m_fDistance = max(m_fDistance, m_fMinDist);
+
+    if (m_isMovable)
+    {
+        m_isFocus = false;
+        if (g_pKeyManager->isStayKeyDown(VK_LEFT))
+        {
+            m_vLookAt.x -= 1.0f;
+        }
+        else if (g_pKeyManager->isStayKeyDown(VK_RIGHT))
+        {
+            m_vLookAt.x += 1.0f;
+        }
+
+        if (g_pKeyManager->isStayKeyDown(VK_UP))
+        {
+            m_vLookAt.z += 1.0f;
+        }
+        else if (g_pKeyManager->isStayKeyDown(VK_DOWN))
+        {
+            m_vLookAt.z -= 1.0f;
+        }
+
+        if (g_pKeyManager->isStayKeyDown('Z'))
+        {
+            m_vLookAt.y -= 1.0f;
+        }
+        else if (g_pKeyManager->isStayKeyDown('X'))
+        {
+            m_vLookAt.y += 1.0f;
+        }
+
+        Vector3 pos = Vector3(0, 0, m_fDistance);
+        Matrix4 matR;
+        D3DXMatrixRotationYawPitchRoll(&matR,
+            D3DXToRadian(m_vRotation.y),
+            D3DXToRadian(m_vRotation.x),
+            D3DXToRadian(m_vRotation.z));
+        D3DXVec3TransformCoord(&pos, &pos, &matR);
+        m_vEye = m_vLookAt + pos;
+    }
 
     if (m_isFocus)
     {

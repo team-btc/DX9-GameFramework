@@ -24,9 +24,6 @@ void cCharacterManager::Setup()
        
         m_listMonster.push_back(newMonster);
     }
-  
-    //m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
-    //g_pAutoReleasePool->AddObject(m_pSindragosa);
 
 }
 

@@ -34,7 +34,6 @@ private:
     vector<ST_PNT_VERTEX>       m_vecWPNTVertex;
     vector<int>                 m_vecWVertexIndex;
     
-    //갱신되는 포지션
     Vector3             m_vSindraPos;
     Vector3             m_vArthasPos;
 
@@ -43,14 +42,12 @@ private:
     Vector3             m_vArthusStartPos;
     Vector3             m_vArthusLastPos;
 
-    vector<Vector3>     m_vecSindraJumpTarget;
-    vector<Vector3>     m_vecSindraJumpBezier;
-
-    //  목적지에 도착했는감
-    vector<bool>        m_vecIsArriveSindra;
     int                 m_nCurrIndex;
 
     float               m_fWorldTime;
+    float               m_fSpeed;
+
+    bool                m_isPopup;
 
 public:
     cTitleScene();

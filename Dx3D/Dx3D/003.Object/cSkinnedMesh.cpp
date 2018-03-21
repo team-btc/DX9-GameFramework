@@ -486,13 +486,29 @@ void cSkinnedMesh::SetAnimationByName(string szAnimName)
 {
     LPANIMATIONSET pAnimSet = NULL;
     m_pAnimController->GetAnimationSetByName(szAnimName.c_str(), &pAnimSet);
-    m_pAnimController->SetTrackAnimationSet(1, pAnimSet);
+    m_pAnimController->SetTrackAnimationSet(0, pAnimSet);
+    m_pAnimController->SetTrackEnable(0, TRUE);
     UINT idx = -1;
     pAnimSet->GetAnimationIndexByName(szAnimName.c_str(), &idx);
     if (idx != -1)
     {
         SetAnimationIndex(idx);
     }
+}
+
+float cSkinnedMesh::GetAnimationSpeed()
+{
+    TRACK_DESC trackDesc;
+    m_pAnimController->GetTrackDesc(0, &trackDesc);
+    return trackDesc.Speed;
+}
+
+void cSkinnedMesh::SetAnimationSpeed(float fSpeed)
+{
+    TRACK_DESC trackDesc;
+    m_pAnimController->GetTrackDesc(0, &trackDesc);
+    trackDesc.Speed = fSpeed;
+    m_pAnimController->SetTrackDesc(0, &trackDesc);
 }
 
 void cSkinnedMesh::GetMatrixByName(OUT Matrix4& mat, IN string szBoneName)

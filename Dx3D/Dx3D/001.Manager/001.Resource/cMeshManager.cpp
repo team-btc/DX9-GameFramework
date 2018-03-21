@@ -148,7 +148,6 @@ void cMeshManager::LoadSkinnedMesh()
 
     pNewMesh = new cSkinnedMesh;
     pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
-    g_pAutoReleasePool->AddObject(pNewMesh);
     m_mapSkinnedMesh.insert(make_pair("sindragosa", pNewMesh));
 }
 
