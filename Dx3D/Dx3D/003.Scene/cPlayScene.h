@@ -15,6 +15,7 @@
 
 class cUILayer;
 class cShop;
+class cInventory;
 
 class cPlayScene : public iSceneObject
 {
@@ -30,13 +31,14 @@ private:
 
     cPlayer*                        m_pPlayer;
     cFrustum*                       m_pFrustum;
+    vector<iCharacterObject*>*      m_vecMonster;
 
-    cTextureShader*    	            m_pTextureShader;
+    cTextureShader*                 m_pTextureShader;
     cSkyBoxShader*                  m_pSkyBoxShader;
     cWaveShader*                    m_pWaveShader;
     
     cShop*                          m_pShop;
-    vector<iCharacterObject*>*      m_vecMonster;
+    cInventory*                     m_pInventory;
 
     cParticle*                      m_pParticleFrost;
 

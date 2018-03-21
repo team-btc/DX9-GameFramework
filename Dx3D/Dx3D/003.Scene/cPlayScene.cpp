@@ -3,6 +3,7 @@
 #include "005.UI//cUILayer.h"
 #include "005.UI//cUIProgressBar.h"
 #include "cShop.h"
+#include "cInventory.h"
 
 cPlayScene::cPlayScene()
     : m_pPlayerStatUILayer(NULL)
@@ -15,6 +16,7 @@ cPlayScene::cPlayScene()
     , m_pWaveShader(NULL)
     , m_szMapKey("start")
     , m_pShop(NULL)
+    , m_pInventory(NULL)
     , m_pParticleFrost(NULL)
     , m_pPlayer(NULL)
     , m_isRoar(false)
@@ -92,7 +94,12 @@ HRESULT cPlayScene::Start()
         m_pShop = new cShop;
         m_pShop->Setup();
     }
-
+    //  LOAD INVENTORY
+    if (!m_pInventory)
+    {
+        m_pInventory = new cInventory;
+        m_pInventory->Setup();
+    }
 
     if (!m_pFrustum)
     {
@@ -234,14 +241,30 @@ HRESULT cPlayScene::Update()
     // == 수정 해야 하는 부분!!! 상점 활성화!!
     if (g_pKeyManager->isOnceKeyDown('O'))
     {
-        m_pShop->SetIsOpen(true);
         m_pShop->OpenShop();
+    }
+    // == 수정 해야 하는 부분!!! 인벤 활성화!!
+    if (g_pKeyManager->isOnceKeyDown('I'))
+    {
+        m_pInventory->OpenInventory();
     }
 
     // SHOP UPDATE -> 상점 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
     if (m_pShop && m_pShop->GetIsOpen())
     {
-        m_pShop->Update(123456789);//== 수정해야 하는 부분!! 플레이어 소지금으로 변경하기!!
+        m_pShop->Update();
+
+        // 아이템 구입을 했다면 인벤 오픈
+        if (m_pShop->GetIsBuyItem() && m_pInventory)
+        {
+            m_pShop->SetIsBuyItem(false);
+            m_pInventory->OpenInventory();
+        }
+    }
+    // INVENTORY UPDATE -> 인벤 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
+    if (m_pInventory && m_pInventory->GetIsOpen())
+    {
+        m_pInventory->Update();
     }
 
     //  UPDATE CAMERA
@@ -250,7 +273,14 @@ HRESULT cPlayScene::Update()
         if (m_pShop)
         {
             // 마우스 컨트롤 가능 여부 셋팅
-            m_pCamera->SetControl(!m_pShop->GetClickShop());
+            if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
+            {
+                m_pCamera->SetControl(false);
+            }
+            else
+            {
+                m_pCamera->SetControl(true);
+            }
         }
 
         if (m_pPlayer)
@@ -535,6 +565,11 @@ HRESULT cPlayScene::Render()
     {
         m_pShop->Render();
     }
+    // INVENTORY RENDER
+    if (m_pInventory && m_pInventory->GetIsOpen())
+    {
+        m_pInventory->Render();
+    }
 
     if (m_pParticleFrost)
     {
@@ -564,6 +599,7 @@ ULONG cPlayScene::Release()
     SAFE_DELETE(m_pHPUILayer);
     SAFE_DELETE(m_pParticleFrost);
     SAFE_RELEASE(m_pShop);
+    SAFE_RELEASE(m_pInventory);
 
     return cObject::Release();
 }

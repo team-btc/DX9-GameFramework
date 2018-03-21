@@ -260,7 +260,6 @@ struct ST_ITEM_INFO
 {
     string          szName;
     string          szPath;
-    int             nCount;
     int             nPrice;
     ST_STATUS       stStat;
     float           fPlusValue;

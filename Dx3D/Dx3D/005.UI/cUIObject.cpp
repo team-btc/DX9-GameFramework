@@ -76,7 +76,7 @@ void cUIObject::UpdateChildren()
 
 void cUIObject::Render(LPSPRITE pSprite)
 {
-    if (m_isDebugRender)
+    if (m_isDebugRender && m_isAxtive)
     {
         g_pDevice->SetFVF(VertexRHWC::FVF);
         g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &m_vecVertex[0], sizeof(VertexRHWC));
@@ -137,6 +137,14 @@ cUIObject * cUIObject::GetChildByName(string strChildName)
                 if (vPos->m_szName == strChildName)
                 {
                     return vPos;
+                }
+                else
+                {
+                    cUIObject* pFind = vPos->GetChildByName(strChildName);
+                    if (pFind != NULL)
+                    {
+                        return pFind;
+                    }
                 }
             }
         }

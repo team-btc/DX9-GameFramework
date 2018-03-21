@@ -22,18 +22,38 @@ struct ST_INVENTORY
 
     ST_INVENTORY()
     {
-        gold = 0;
+        gold = 123456;
+    }
+};
+
+struct ST_GEAR
+{
+    int swordId;
+    int helmId;
+    int chestPlateId;
+
+    ST_GEAR()
+    {
+        swordId = -1;
+        helmId = -1;
+        chestPlateId = -1;
     }
 };
 
 class cGameManager : public iSingletonManager
 {
 private:
-    json        m_jPlayerInfo;
-    bool        m_isLoadData;
+    json                        m_jPlayerInfo;
+    bool                        m_isLoadData;
+
+    vector<ST_ITEM_INFO*>       m_vecItemInfo;
+    ST_INVENTORY                m_stInventory;
+    ST_GEAR                     m_stGear;
 
 private:
     SINGLETON(cGameManager);
+
+    int FindItem(int id);
 
 public:
     // iSingletonManager을(를) 통해 상속됨
@@ -54,5 +74,12 @@ public:
     void PullItem(int id);
 
     void Pay(int gold);
+    
+    void LoadItemInfo();
+    
+    ST_ITEM_INFO* GetItemInfoById(int id);
+    vector<ST_ITEM_INFO*> GetItemInfo() { return m_vecItemInfo; }
+    int GetCurrGold() { return m_stInventory.gold; }
+    vector<ST_ITEM> GetInvetoryInfo() { return m_stInventory.items; }
 };
 

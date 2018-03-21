@@ -3,28 +3,16 @@
 
 class cUILayer;
 
-enum E_ITEM_TYPE
-{
-    E_ITEM_SWORD1,
-    E_ITEM_SWORD2,
-    E_ITEM_HELM1,
-    E_ITEM_HELM2,
-    E_ITEM_CHEST_PLATE1,
-    E_ITEM_CHEST_PLATE_2,
-    E_ITEM_POTION_HEAL,
-    E_ITEM_POTION_MANA
-};
-
 class cShop : public cObject
 {
 private:
-    vector<ST_ITEM_INFO>        m_vecItemInfo;
+    vector<ST_ITEM_INFO*>       m_vecItemInfo;
 
     cUILayer*                   m_pShopLayer;
 
     vector<string>              m_vecSzHumanSound;
 
-    E_ITEM_TYPE                 m_eCurrSelectItem;
+    int                         m_nCurrSelectItem;
 
     RECT                        m_rtShopSize;
 
@@ -32,6 +20,7 @@ private:
 
     SYNTHESIZE(bool, m_isOpen, IsOpen);
     SYNTHESIZE(bool, m_isClickShop, ClickShop);
+    SYNTHESIZE(bool, m_isBuyItem, IsBuyItem);
 
 private:
     void SetShopUI();
@@ -42,7 +31,7 @@ public:
     ~cShop();
 
     void Setup();
-    void Update(int nPlayerMoney);
+    void Update();
     void Render();
 
     void OpenShop();

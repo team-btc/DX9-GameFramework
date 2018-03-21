@@ -1,18 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
+    <ClCompile Include="000.Interface\iCharacterObject.cpp" />
+    <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cEventManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cKeyManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cLogManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cSceneManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cTimerManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cFontManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cMeshManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cObjectManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cShaderManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cSoundManager.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cTextureManager.cpp" />
+    <ClCompile Include="002.Shader\cSkyBoxShader.cpp" />
+    <ClCompile Include="002.Shader\cTextureShader.cpp" />
+    <ClCompile Include="002.Shader\cWaveShader.cpp" />
+    <ClCompile Include="003.Object\cFrustum.cpp" />
+    <ClCompile Include="003.Object\cGameObject.cpp" />
+    <ClCompile Include="003.Object\cMeshLoader.cpp" />
+    <ClCompile Include="003.Object\cObject.cpp" />
+    <ClCompile Include="003.Object\cRay.cpp" />
+    <ClCompile Include="003.Object\cSkinnedMesh.cpp" />
+    <ClCompile Include="003.Object\cSoundObject.cpp" />
+    <ClCompile Include="002.System\cAdo.cpp" />
+    <ClCompile Include="002.System\cAllocateHierarchy.cpp" />
+    <ClCompile Include="002.System\cAutoReleasePool.cpp" />
+    <ClCompile Include="002.System\cCamera.cpp" />
+    <ClCompile Include="002.System\cMainGame.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cLightManager.cpp" />
+    <ClCompile Include="001.Manager\000.System\cCameraManager.cpp" />
+    <ClCompile Include="005.UI\cUIButton.cpp" />
+    <ClCompile Include="005.UI\cUIImageView.cpp" />
+    <ClCompile Include="005.UI\cUILayer.cpp" />
+    <ClCompile Include="005.UI\cUiLayerConversation.cpp" />
+    <ClCompile Include="005.UI\cUIObject.cpp" />
+    <ClCompile Include="005.UI\cUIProgressBar.cpp" />
+    <ClCompile Include="005.UI\cUITextView.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cMaterialManager.cpp" />
+    <ClCompile Include="003.Repository\000.Model\cCharacterModel.cpp" />
+    <ClCompile Include="003.Repository\001.Repository\cCharacterRepository.cpp" />
+    <ClCompile Include="001.Manager\000.System\cDbManager.cpp" />
+    <ClCompile Include="002.System\cMapLoader.cpp" />
+    <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
+    <ClCompile Include="003.Scene\cEndingScene.cpp" />
+    <ClCompile Include="002.System\cGameMap.cpp" />
+    <ClCompile Include="003.Scene\cLoadingScene.cpp" />
+    <ClCompile Include="001.Manager\000.System\cGameManager.cpp" />
+    <ClCompile Include="cInventory.cpp" />
+    <ClCompile Include="002.System\cParticle.cpp" />
+    <ClCompile Include="003.Object\cBoundingBox.cpp" />
+    <ClCompile Include="003.Object\cCharacterObject.cpp" />
+    <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp" />
+    <ClCompile Include="002.System\cMonster.cpp" />
+    <ClCompile Include="cNonPlayer.cpp" />
+    <ClCompile Include="002.System\cPlayer.cpp" />
+    <ClCompile Include="003.Scene\cTitleScene.cpp" />
+    <ClCompile Include="003.Scene\cPlayScene.cpp" />
+    <ClCompile Include="cShop.cpp" />
+    <ClCompile Include="002.System\cSindragosa.cpp" />
+    <ClCompile Include="Dx3D.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="cGear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -249,8 +299,88 @@
     <ClInclude Include="002.System\cBoss.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="000.Define-Macros\DataStructure.h" />
+    <ClInclude Include="000.Define-Macros\DefineMacro.h" />
+    <ClInclude Include="000.Define-Macros\InlineMacro.h" />
+    <ClInclude Include="000.Interface\iCamera.h" />
+    <ClInclude Include="000.Interface\iCharacterObject.h" />
+    <ClInclude Include="000.Interface\iGameObject.h" />
+    <ClInclude Include="000.Interface\iSingletonManager.h" />
+    <ClInclude Include="000.Interface\iMap.h" />
+    <ClInclude Include="000.Interface\iObject.h" />
+    <ClInclude Include="000.Interface\iObserver.h" />
+    <ClInclude Include="000.Interface\iProjectileObject.h" />
+    <ClInclude Include="000.Interface\iSceneObject.h" />
+    <ClInclude Include="000.Interface\iUILayer.h" />
+    <ClInclude Include="000.Interface\iUIObject.h" />
+    <ClInclude Include="001.Manager\000.System\cDeviceManager.h" />
+    <ClInclude Include="001.Manager\000.System\cEventManager.h" />
+    <ClInclude Include="001.Manager\000.System\cKeyManager.h" />
+    <ClInclude Include="001.Manager\000.System\cLogManager.h" />
+    <ClInclude Include="001.Manager\000.System\cSceneManager.h" />
+    <ClInclude Include="001.Manager\000.System\cTimerManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cFontManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cMeshManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cObjectManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cShaderManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cSoundManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cTextureManager.h" />
+    <ClInclude Include="002.Shader\cSkyBoxShader.h" />
+    <ClInclude Include="002.Shader\cTextureShader.h" />
+    <ClInclude Include="002.Shader\cWaveShader.h" />
+    <ClInclude Include="003.Object\cFrustum.h" />
+    <ClInclude Include="003.Object\cGameObject.h" />
+    <ClInclude Include="003.Object\cMeshLoader.h" />
+    <ClInclude Include="003.Object\cObject.h" />
+    <ClInclude Include="003.Object\cRay.h" />
+    <ClInclude Include="003.Object\cSkinnedMesh.h" />
+    <ClInclude Include="003.Object\cSoundObject.h" />
+    <ClInclude Include="002.System\cAdo.h" />
+    <ClInclude Include="002.System\cAllocateHierarchy.h" />
+    <ClInclude Include="002.System\cAutoReleasePool.h" />
+    <ClInclude Include="002.System\cCamera.h" />
+    <ClInclude Include="004.ExtLib\json.hpp" />
+    <ClInclude Include="005.UI\cUIButton.h" />
+    <ClInclude Include="005.UI\cUIImageView.h" />
+    <ClInclude Include="005.UI\cUILayer.h" />
+    <ClInclude Include="005.UI\cUiLayerConversation.h" />
+    <ClInclude Include="005.UI\cUIObject.h" />
+    <ClInclude Include="005.UI\cUIProgressBar.h" />
+    <ClInclude Include="005.UI\cUITextView.h" />
+    <ClInclude Include="Assets\MultiAnimation.hpp" />
+    <ClInclude Include="002.System\cMainGame.h" />
+    <ClInclude Include="001.Manager\001.Resource\cLightManager.h" />
+    <ClInclude Include="001.Manager\000.System\cCameraManager.h" />
+    <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h" />
+    <ClInclude Include="003.Repository\000.Model\cCharacterModel.h" />
+    <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h" />
+    <ClInclude Include="001.Manager\000.System\cDbManager.h" />
+    <ClInclude Include="002.System\cMapLoader.h" />
+    <ClInclude Include="001.Manager\000.System\cMapManager.h" />
+    <ClInclude Include="003.Scene\cEndingScene.h" />
+    <ClInclude Include="002.System\cGameMap.h" />
+    <ClInclude Include="003.Scene\cLoadingScene.h" />
+    <ClInclude Include="001.Manager\000.System\cGameManager.h" />
+    <ClInclude Include="cInventory.h" />
+    <ClInclude Include="002.System\cParticle.h" />
+    <ClInclude Include="003.Object\cBoundingBox.h" />
+    <ClInclude Include="003.Object\cCharacterObject.h" />
+    <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
+    <ClInclude Include="002.System\cMonster.h" />
+    <ClInclude Include="cNonPlayer.h" />
+    <ClInclude Include="002.System\cPlayer.h" />
+    <ClInclude Include="003.Scene\cTitleScene.h" />
+    <ClInclude Include="003.Scene\cPlayScene.h" />
+    <ClInclude Include="cShop.h" />
+    <ClInclude Include="002.System\cSindragosa.h" />
+    <ClInclude Include="Dx3D.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="cGear.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="Dx3D.rc" />
     <ClCompile Include="Dx3D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -433,17 +563,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Dx3D.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="Dx3D.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
+    <Image Include="Dx3D.ico" />
+    <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
