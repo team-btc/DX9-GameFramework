@@ -3,6 +3,7 @@
 #include "cCamera.h"
 #include "cPlayer.h"
 #include "cMonster.h"
+#include "cBoss.h"
 #include "cFrustum.h"
 #include "cMapLoader.h"
 #include "cGameMap.h"
@@ -29,13 +30,13 @@ private:
 
     cPlayer*                        m_pPlayer;
     cFrustum*                       m_pFrustum;
-    vector<cMonster*>*              m_vecMonster;
 
     cTextureShader*    	            m_pTextureShader;
     cSkyBoxShader*                  m_pSkyBoxShader;
     cWaveShader*                    m_pWaveShader;
     
     cShop*                          m_pShop;
+    vector<iCharacterObject*>*      m_vecMonster;
 
     cParticle*                      m_pParticleFrost;
 
@@ -43,6 +44,7 @@ private:
     void SetUI();
     void UpdateUI();
 
+    bool                m_isRoar;
 public:
     cPlayScene();
     ~cPlayScene();

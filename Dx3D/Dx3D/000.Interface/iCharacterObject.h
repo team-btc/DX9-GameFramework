@@ -35,10 +35,12 @@ protected:
 
 
     bool            isAttack; //공격중이냐
+    bool            isMove;
     bool            isRun;
     bool            isWalk;
     bool            isIdle;
     bool            isHeal;
+    bool            isRoar;
     bool            isStatic; //
     bool            isActive; // 
     bool            isAlive; // 살아있는 유무체크
@@ -68,10 +70,12 @@ public:
     virtual void SetState(E_STATE State) PURE;
 
     virtual void SetAttack(bool Attack) PURE;
+    virtual void SetMove(bool Move) PURE;
     virtual void SetRun(bool Run) PURE;
     virtual void SetWalk(bool Walk)PURE;
     virtual void SetIdle(bool Idle) PURE;
     virtual void SetHeal(bool Heal) PURE;
+    virtual void SetRoar(bool Roar) PURE;
     virtual void SetStatic(bool Static) PURE;
     virtual void SetActive(bool Active) PURE;
     virtual void SetAlive(bool Alive) PURE;
@@ -97,10 +101,12 @@ public:
     virtual E_STATE GetState() PURE;
 
     virtual bool GetAttak() PURE;
+    virtual bool GetMove() PURE;
     virtual bool GetRun() PURE;
     virtual bool GetWalk() PURE;
     virtual bool GetIdle() PURE;
     virtual bool GetHeal() PURE;
+    virtual bool GetRoar() PURE;
     virtual bool GetStatic() PURE;
     virtual bool GetActive() PURE;
     virtual bool GetAlive() PURE;
@@ -120,6 +126,7 @@ public:
     virtual void RunAnim() PURE;
     virtual void WalkAnim() PURE;
     virtual void IdleAnim() PURE;
+    virtual void RoarAnim() PURE;
     virtual void LeftAnim() PURE;
     virtual void RightAnim() PURE;
     virtual void DeadAnim() PURE;
@@ -127,7 +134,6 @@ public:
     virtual void FlySitUpAnim() PURE;
     virtual void FlySitAnim() PURE;
     virtual void FlySitDownAnim() PURE;
-    virtual void RoarAnim() PURE;
     virtual void FalseAnim() PURE;
 
     //컨트롤러 함수
@@ -137,12 +143,6 @@ public:
     virtual void RotateRight() PURE;
 
     // 거리체크 함수
-    virtual void NearestSearch(vector<cMonster*> _vec) PURE;
+    virtual void NearestSearch(vector<iCharacterObject*> _vec) PURE;
     virtual float Distance(Vector3 Pos) PURE;
-
-    //  레벨업
-    virtual void SumExp(int exp) PURE;
-
-    //  스탯 갱신
-    virtual void UpdateStatus() PURE;
 };

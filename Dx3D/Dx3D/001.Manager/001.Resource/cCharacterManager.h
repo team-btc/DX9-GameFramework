@@ -1,35 +1,37 @@
 #pragma once
 
 #define g_pCharacterManager cCharacterManager::GetInstance()
-#define limitMonster 20
+#define limitMonster 10
 
 class cPlayer;
 class cMonster;
-//class cSindragosa;
+class cBoss;
+struct iCharacterObject;
 
 class cCharacterManager
 {
     SINGLETON(cCharacterManager);
 
 private:
-
-    cPlayer*            m_pPlayer;
-    list<cMonster*>     m_listMonster;
-//    cSindragosa * m_pSindragosa;
+    cPlayer* m_pPlayer;
+    cBoss*  m_pBoss;
+    vector<iCharacterObject*>     m_vMonster;
 
 public:
 
     void Setup();
     void Destroy();
 
-    void PushMonster(cMonster* monster);
+    void PushMonster(iCharacterObject* monster);
+    void PushBoss(cBoss* boss) { m_pBoss = boss; }
 
     cPlayer* GetPlayer() { return m_pPlayer; }
-    cMonster* GetMonster();
 
     json GetPlayerData();
     void SetPlayerData(json playerData);
 
-    //cSindragosa* GetSindragosa() { return m_pSindragosa; };
+    cMonster* GetMonster(string szMap);
+    cBoss*  GetBoss();
+    int     GetVectorSize() { return (int)m_vMonster.size(); }
 };
 

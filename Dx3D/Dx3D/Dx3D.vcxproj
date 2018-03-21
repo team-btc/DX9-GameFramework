@@ -212,6 +212,7 @@
     <ClInclude Include="002.System\cGameMap.h" />
     <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="001.Manager\000.System\cGameManager.h" />
+    <ClInclude Include="002.System\cBoss.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
@@ -229,7 +230,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="000.Interface\iCharacterObject.cpp" />
     <ClCompile Include="001.Manager\000.System\cDeviceManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cEventManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cKeyManager.cpp" />
@@ -276,6 +276,7 @@
     <ClCompile Include="002.System\cGameMap.cpp" />
     <ClCompile Include="003.Scene\cLoadingScene.cpp" />
     <ClCompile Include="001.Manager\000.System\cGameManager.cpp" />
+    <ClCompile Include="002.System\cBoss.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="003.Object\cCharacterObject.cpp" />

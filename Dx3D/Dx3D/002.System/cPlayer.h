@@ -5,16 +5,19 @@
 class cPlayer : public cCharacterObject
 {
 private:
-    vector<cMonster*>* m_vecMonster;
+    vector<iCharacterObject*>* m_vecMonster;
 
     LPMESH m_pTerrain;
 
     Vector3 DestPoint;
 
+    float m_fScale;
+    float m_fCenter;
+
     bool m_isMoveToPoint;
     bool m_isPoint;
     bool m_isPickMonster;
-    bool m_isMove;
+    bool m_isMouse;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
@@ -25,23 +28,22 @@ public:
     void Setup();
     void Update();
     void Render();
+
     ULONG Release() override;
+    
+    void PickMonster(cRay ray);
+    void PickGround(cRay ray);
+    void Attack();
+    void Move();
 
     void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
-    void SetVecMonster(vector<cMonster*>* monster) { m_vecMonster = monster; }
-    void SetMove(bool Move) { m_isMove = Move; }
+    void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
     void SetTerrain(LPMESH Terrain) { m_pTerrain = Terrain; }
+    void SetLevelToStatus(string szKey, int Level);
 
     bool GetMoveToPoint() { return m_isMoveToPoint; }
-    bool GetMove() { return m_isMove; }
 
     void GetSwordMatrix(Matrix4& mat);
-
-    //  레벨업
-    virtual void SumExp(int exp) override;
-
-    //  스탯 갱신
-    virtual void UpdateStatus() override;
 };
 

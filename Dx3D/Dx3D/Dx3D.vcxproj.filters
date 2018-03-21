@@ -246,6 +246,9 @@
     <ClInclude Include="002.System\cSindragosa.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="002.System\cBoss.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -422,10 +425,10 @@
     <ClCompile Include="001.Manager\000.System\cGameManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="000.Interface\iCharacterObject.cpp">
+    <ClCompile Include="002.System\cSindragosa.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="002.System\cSindragosa.cpp">
+    <ClCompile Include="002.System\cBoss.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

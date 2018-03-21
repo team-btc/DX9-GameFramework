@@ -111,44 +111,27 @@ void cMeshManager::LoadSkinnedMesh()
     {
         pNewMesh->LoadJSON("Deathwing");
     }
-
-    m_mapSkinnedMesh.insert(make_pair("deathwing", pNewMesh));
-
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
-    if (GetJson("Frostwurmnorthlend") != NULL)
-    {
-        string str = GetJson("Frostwurmnorthlend")["Scale"];
-        float scale = (float)atof(str.c_str());
-        if (scale < D3DX_16F_EPSILON)
-        {
-            scale = 1.0f;
-        }
-
-        pNewMesh->SetRotation(Vector3(0, 0, 0));
-        pNewMesh->SetScale(scale);
-
-        for (int i = 0; i <GetJson("Frostwurmnorthlend")["State"].size(); i++)
-        {
-            ST_STATE state;
-            string str1 = GetJson("Frostwurmnorthlend")["State"][i]["index"];
-            state.nStateNum = atoi(str1.c_str());
-            for (int j = 0; j < GetJson("Frostwurmnorthlend")["State"][i]["Position"].size(); j++)
-            {
-                string str1 = GetJson("Frostwurmnorthlend")["State"][i]["Position"][j]["Name"];
-                string str2 = GetJson("Frostwurmnorthlend")["State"][i]["Position"][j]["Value"];
-                float pos = (float)atof(str2.c_str());
-                state.mapPosition.insert(make_pair(str1, pos));
-            }
-            string str = GetJson("Frostwurmnorthlend")["State"][i]["Name"];
-            pNewMesh->m_mapStateInfo.insert(make_pair(str, state));
-        }
-    }
-    m_mapSkinnedMesh.insert(make_pair("frostwurmnorthlend", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
 
     pNewMesh = new cSkinnedMesh;
     pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
     m_mapSkinnedMesh.insert(make_pair("sindragosa", pNewMesh));
+
+    pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Enemy", "Bear.X");
+    if (GetJson("Bear") != NULL)
+    {
+        pNewMesh->LoadJSON("Bear");
+    }
+    m_mapSkinnedMesh.insert(make_pair("Bear", pNewMesh));
+
+    pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Enemy", "Boar.X");
+    if (GetJson("Boar") != NULL)
+    {
+        pNewMesh->LoadJSON("Boar");
+    }
+    m_mapSkinnedMesh.insert(make_pair("Boar", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()
@@ -165,9 +148,20 @@ void cMeshManager::LoadJSON()
     m_mapJson.insert(make_pair("Deathwing", newJson));
     m_fileJson.close();
 
-    m_fileJson.open("Assets\\Enemy\\Frostwurmnorthlend.json");
+    m_fileJson.open("Assets\\Enemy\\Bear.json");
     m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Frostwurmnorthlend", newJson));
+    m_mapJson.insert(make_pair("Bear", newJson));
+    m_fileJson.close();
+
+    m_fileJson.open("Assets\\Enemy\\Boar.json");
+    m_fileJson >> newJson;
+    m_mapJson.insert(make_pair("Boar", newJson));
+    m_fileJson.close();
+
+    m_fileJson.open("CharacterStatus.json");
+    m_fileJson >> newJson;
+    m_mapJson.insert(make_pair("Status", newJson));
+
     m_fileJson.close();
 }
 

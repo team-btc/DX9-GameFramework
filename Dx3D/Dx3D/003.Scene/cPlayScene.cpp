@@ -16,6 +16,8 @@ cPlayScene::cPlayScene()
     , m_szMapKey("start")
     , m_pShop(NULL)
     , m_pParticleFrost(NULL)
+    , m_pPlayer(NULL)
+    , m_isRoar(false)
 {
 }
 
@@ -118,29 +120,42 @@ HRESULT cPlayScene::Start()
         }
     }
   
+    //몬스터가 존재한다면 몬스터 회수
     if (!m_vecMonster)
     {
-        m_vecMonster = new vector<cMonster*>;
+        m_vecMonster = new vector<iCharacterObject*>;
     }
     else
     {
         for (auto iter = m_vecMonster->begin(); iter != m_vecMonster->end(); iter++)
         {
-            g_pCharacterManager->PushMonster(*iter);
+            if ((*iter)->GetName() != "Deathwing")
+            {
+                g_pCharacterManager->PushMonster(*iter);
+            }
+            else
+            {
+                g_pCharacterManager->PushBoss((cBoss*)(*iter));
+            }
         }
     }
     m_vecMonster->clear();
 
-   
+   //몬스터 생성
     for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
     {
         if (m_stMapInfo->vecEventInfo[i].szName == "monster")
         {
-            cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-            m_pEnermy->Setup();
-            m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            m_pEnermy->SetActive(true);
-            (*m_vecMonster).push_back(m_pEnermy);
+            cMonster* Enermy = g_pCharacterManager->GetMonster(m_szMapKey);
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            Enermy->SetActive(true);
+            (*m_vecMonster).push_back(Enermy);
+        }
+        else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
+        {
+            cBoss* Enermy = g_pCharacterManager->GetBoss();
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            (*m_vecMonster).push_back(Enermy);
         }
     }
 
@@ -248,7 +263,10 @@ HRESULT cPlayScene::Update()
     m_pFrustum->Update();
 
     //  PLAYER UPDATE
-    m_pPlayer->Update();
+    if (m_pPlayer)
+    {
+        m_pPlayer->Update();
+    }
 
     if (m_pParticleFrost)
     {
@@ -265,13 +283,14 @@ HRESULT cPlayScene::Update()
     m_pGameMap->GetHeight(Pos);
     m_pPlayer->SetPosition(Pos);
 
+    //REGEN
     if (m_vecMonster->size() == 0)
     {
         for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
         {
             if (m_stMapInfo->vecEventInfo[i].szName == "monster")
             {
-                cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
                 m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
                 m_pEnermy->SetActive(true);
                 (*m_vecMonster).push_back(m_pEnermy);
@@ -279,6 +298,37 @@ HRESULT cPlayScene::Update()
         }
     }
 
+    //MONSTER SUMMON
+    if (m_isRoar)
+    {
+        cBoss* Boss = NULL;
+        for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+        {
+            if ((*iter)->GetName() == "Deathwing")
+                Boss = (cBoss*)(*iter);
+        }
+
+        if (Boss->GetIsRoar())
+        {
+            for (int i = 0; i < 1; i++)
+            {
+                Vector3 SummonsPos = Boss->GetPosition() + GetRandomVector3(Vector3(-10, 0, -10), Vector3(10, 0, 10));//임시좌표
+
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
+                m_pEnermy->SetStartPoint(SummonsPos);
+                m_pEnermy->SetActive(true);
+                m_pEnermy->SetTarget(m_pPlayer);
+                m_pEnermy->RunAnim();
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+
+            Boss->SetRoar(false);
+            Boss->SetIsRoar(false);
+            m_isRoar = false;
+        }
+    }
+
+    //MONSTER UPDATE
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
     {
         (*iter)->Update();
@@ -307,6 +357,11 @@ HRESULT cPlayScene::Update()
                 (*iter)->SetMoveSpeed(0.08f);
             }
         }
+
+        if ((*iter)->GetRoar())
+        {
+            m_isRoar = true;
+        }
     }
 
     for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end();)
@@ -333,14 +388,10 @@ HRESULT cPlayScene::Update()
         {
             // 문제가 있다.
             m_pPlayer->SetMoveSpeed(0.0f);
-            //m_pPlayer->SetMove(false);
-            //m_pPlayer->SetMoveToPoint(false);
-            //m_pPlayer->SetMoveToTarget(false);
-            //m_pPlayer->IdleAnim();
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.1f);
+            m_pPlayer->SetMoveSpeed(0.3f);
         }
     }
 

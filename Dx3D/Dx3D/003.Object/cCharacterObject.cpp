@@ -27,6 +27,7 @@ cCharacterObject::cCharacterObject()
    m_eState = END_STATE;
 
    isAttack = false;
+   isMove = false;
    isRun = false;
    isWalk = false;
    isIdle = false;
@@ -57,6 +58,7 @@ void cCharacterObject::Render()
 bool cCharacterObject::RayCast(iCharacterObject * Charater)
 {
     m_pTarget = Charater;
+
     return false;
 }
 
@@ -92,25 +94,33 @@ void cCharacterObject::Attack(float ATK)
 
 void cCharacterObject::Heal(float Value)
 {
-    m_stStat.fCurHP += Value;
+    m_stStat.fCurHP+Value >m_stStat.fMaxHP ? m_stStat.fCurHP=m_stStat.fMaxHP : m_stStat.fCurHP += Value;
 }
 
 void cCharacterObject::AttackAnim()
 {
     FalseAnim();
     isAttack = true;
-    int RandomNum = rand() % 3;
-    if (RandomNum == 0)
+
+    if (m_eTag == PLAYER)
+    {
+        int RandomNum = rand() % 3;
+        if (RandomNum == 0)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
+        }
+        else if (RandomNum == 1)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
+        }
+        else if (RandomNum == 2)
+        {
+            m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
+        }
+    }
+    else
     {
         m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack0")->second.nStateNum);
-    }
-    else if (RandomNum == 1)
-    {
-        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack1")->second.nStateNum);
-    }
-    else if (RandomNum == 2)
-    {
-        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Attack2")->second.nStateNum);
     }
 
 }
@@ -134,6 +144,13 @@ void cCharacterObject::IdleAnim()
     FalseAnim();
     isIdle = true;
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Stand")->second.nStateNum);
+}
+
+void cCharacterObject::RoarAnim()
+{
+    FalseAnim();
+    isRoar = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Roar")->second.nStateNum);
 }
 
 void cCharacterObject::LeftAnim()
@@ -174,11 +191,6 @@ void cCharacterObject::FlySitDownAnim()
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("FlySitGroundDown")->second.nStateNum);
 }
 
-void cCharacterObject::RoarAnim()
-{
-    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Roar")->second.nStateNum);
-}
-
 void cCharacterObject::FalseAnim()
 {
    isAttack = false;
@@ -186,6 +198,7 @@ void cCharacterObject::FalseAnim()
    isWalk = false;
    isIdle = false;
    isHeal = false;
+   isRoar = false;
 }
 
 void cCharacterObject::MoveForword()
@@ -210,22 +223,34 @@ void cCharacterObject::MoveBackword()
 
 void cCharacterObject::RotateLeft()
 {
-    m_fRotY -= 0.05f;
+    m_fRotY -= 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
-    
+
+    m_vDir.x = sin(m_fRotY);
+    m_vDir.z = cos(m_fRotY);
+    D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
 void cCharacterObject::RotateRight()
 {
-    m_fRotY += 0.05f;
+    m_fRotY += 0.005f;
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
+
+    m_vDir.x = sin(m_fRotY);
+    m_vDir.z = cos(m_fRotY);
+    D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
-void cCharacterObject::NearestSearch(vector<cMonster*> _vec)
+void cCharacterObject::NearestSearch(vector<iCharacterObject*> _vec)
 {
     float nearDist = FLT_MAX;
     for (auto iter = _vec.begin(); iter != _vec.end(); iter++)
     {
+        Vector3 _Dir = (*iter)->GetPosition() - m_vPosition;
+        D3DXVec3Normalize(&_Dir, &_Dir);
+        if (D3DXVec3Dot(&_Dir, &m_vDir) < 0)
+            continue;
+
         if (D3DXVec3Length(&(*iter)->GetPosition()) < nearDist)
         {
             nearDist = D3DXVec3Length(&(*iter)->GetPosition());
