@@ -169,21 +169,18 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
             {
             case E_PROGRESSBAR_TEXTURE_FRONT:
             {
-                float fDefWidth = vPos->GetSize().x * vPos->GetMatWorld()._11;
-
                 // 넓이 계산 및 설정
-                float width = (fCurrentGuage / m_fMaxGuage) * fDefWidth;
+                float width = (fCurrentGuage / m_fMaxGuage) * m_stFrontSize.w;
 
                 if (width <= 0.0f)
                 {
                     width = 0.0f;
                 }
-                else if (width >= fDefWidth)
+                else if (width > m_stFrontSize.w)
                 {
-                    width = fDefWidth;
+                    width = m_stFrontSize.w;
                 }
-                ((cUIImageView*)vPos)->SetScale(width / vPos->GetSize().x,
-                    (vPos->GetSize().y * vPos->GetMatWorld()._22) / vPos->GetSize().y);
+                ((cUIImageView*)vPos)->SetScale(width / vPos->GetSize().x, m_stFrontSize.h / vPos->GetSize().y);
             }
                 break;
             }

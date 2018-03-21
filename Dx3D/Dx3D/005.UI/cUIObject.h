@@ -7,16 +7,14 @@ protected:
     Matrix4                 m_matWorldInv;
     vector<cUIObject*>      m_vecChild;
     vector<ST_RHWC_VERTEX>  m_vecVertex;
+    Vector2					m_stSize;
 
     SYNTHESIZE(Matrix4, m_matWorld, MatWorld);
     SYNTHESIZE(bool, m_isAxtive, Axtive);
     SYNTHESIZE(Vector3, m_vLocalPos, LocalPos);
     SYNTHESIZE(cUIObject*, m_pParent, Parent);
-    //SYNTHESIZE(Vector2, m_stSize, Size);
-    Vector2					m_stSize;
     SYNTHESIZE(bool, m_isDebugRender, DebugRender);
     SYNTHESIZE(int, m_nTag, Tag);
-    //SYNTHESIZE(string, m_szName, Name);
     SYNTHESIZE(RECT, m_rtBody, RectBody);
 
 public:
