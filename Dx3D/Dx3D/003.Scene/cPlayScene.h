@@ -10,10 +10,7 @@
 #include "cTextureShader.h"
 #include "cSkyBoxShader.h"
 #include "cParticle.h"
-
-#define OFFSET_X (0.5f)
-#define OFFSET_Y (3.0f)
-#define OFFSET_Z (4.0f)
+#include "cUILayer.h"
 
 class cUILayer;
 class cShop;

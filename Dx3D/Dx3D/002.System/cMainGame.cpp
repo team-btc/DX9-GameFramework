@@ -19,6 +19,7 @@ cMainGame::cMainGame()
 
     g_pScnManager->Setup();
     g_pCharacterManager->Setup();
+    g_pGameManager->Setup();
 }
 
 
@@ -26,6 +27,7 @@ cMainGame::~cMainGame()
 {
     HRESULT hr = S_OK;
 
+    g_pGameManager->Destroy();
     g_pScnManager->Destroy();
     //  CUSTOM RESOURCE ÇØÁ¦
     g_pFontManager->Destroy();

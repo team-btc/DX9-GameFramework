@@ -67,6 +67,7 @@ void cShop::Setup()
         char szBuf[10];
         sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
         stItem.stStat.szName = szBuf;
+        ZeroMemory(&stItem.stStat, sizeof(ST_STATUS));
         stItem.fPlusValue = jItem[i]["item-plus-value"];
 
         m_vecItemInfo.push_back(stItem);

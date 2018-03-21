@@ -28,6 +28,7 @@ protected:
 
     // 스탯
     ST_STATUS       m_stStat;
+    ST_STATUS       m_stGrowthStat;
    
     E_TAG           m_eTag;
     E_STATE         m_eState;
@@ -133,4 +134,10 @@ public:
     // 거리체크 함수
     virtual void NearestSearch(vector<cMonster*> _vec) PURE;
     virtual float Distance(Vector3 Pos) PURE;
+
+    //  레벨업
+    virtual void SumExp(int exp) PURE;
+
+    //  스탯 갱신
+    virtual void UpdateStatus() PURE;
 };

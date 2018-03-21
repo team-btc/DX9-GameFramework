@@ -99,4 +99,8 @@ void cTextureShader::SetTargetPos(Vector3* target)
         m_pTextureShader->SetVector("TargetColor", &Vector4(255, 10, 10, 255));
         m_pTextureShader->SetFloat("TargetScale", 0.02f);
     }
+    else
+    {
+        m_pTextureShader->SetVector("TargetColor", &Vector4(0, 0, 0, 0));
+    }
 }
