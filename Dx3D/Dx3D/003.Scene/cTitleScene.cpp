@@ -42,6 +42,7 @@ cTitleScene::~cTitleScene()
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
+    SAFE_DELETE(m_pBGLayer);
 }
 
 HRESULT cTitleScene::Start()
@@ -133,7 +134,20 @@ HRESULT cTitleScene::Start()
     m_pCamera->SetTargetPos(m_vCameraPos);
     g_pCameraManager->SetCurrCamera("title");
 
+    m_pBGLayer = new cUILayer;
+    m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150));
+    string sz = (string)"Assets/Splash/" + (string)"press-space-to-start.png";
+    g_pTextureManager->AddTexture("press-tex", sz, true);
+    cUIImageView* pUIBG = new cUIImageView;
+    pUIBG->SetName("press");
+    pUIBG->SetLocalPos(Vector3(0, 0, 0));
+    IMAGE_INFO imageInfo;
+    pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("press-tex", &imageInfo));
+    pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pUIBG->SetScale(1300, 150);
+    m_pBGLayer->AddUIObject(pUIBG);
    
+    m_pBGLayer->SetActive(true);
     return S_OK;
 }
 
@@ -251,7 +265,7 @@ HRESULT cTitleScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    
+    m_pBGLayer->Render();
 
 
 #ifdef _DEBUG
@@ -375,3 +389,20 @@ void cTitleScene::SetSindragosa()
     m_pSindragosa->IdleAnim();
     
 }
+/*
+    // ¹è°æ
+    m_pBGLayer = new cUILayer;
+    m_pBGLayer->SetLayer("bg", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
+    string sz = INTERFACE_PATH + (string)"Loading/loadscreen.png";
+    g_pTextureManager->AddTexture("loadscreen", sz, true);
+    cUIImageView* pUIBG = new cUIImageView;
+    pUIBG->SetName("bg");
+    pUIBG->SetLocalPos(Vector3(0, 0, 0));
+    IMAGE_INFO imageInfo;
+    pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("loadscreen", &imageInfo));
+    pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pUIBG->SetScale(W_WIDTH, W_HEIGHT);
+    m_pBGLayer->AddUIObject(pUIBG);
+    
+    m_pBGLayer->SetActive(true);
+*/
