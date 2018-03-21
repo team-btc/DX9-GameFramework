@@ -134,20 +134,23 @@ HRESULT cTitleScene::Start()
     m_pCamera->SetTargetPos(m_vCameraPos);
     g_pCameraManager->SetCurrCamera("title");
 
+
+    g_pTextureManager->AddTexture("Black", "./Assets/UI/black.png", true);
     m_pBGLayer = new cUILayer;
-    m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150));
-    string sz = (string)"Assets/Splash/" + (string)"press-space-to-start.png";
-    g_pTextureManager->AddTexture("press-tex", sz, true);
-    cUIImageView* pUIBG = new cUIImageView;
-    pUIBG->SetName("press");
-    pUIBG->SetLocalPos(Vector3(0, 0, 0));
-    IMAGE_INFO imageInfo;
-    pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("press-tex", &imageInfo));
-    pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pUIBG->SetScale(1300, 150);
-    m_pBGLayer->AddUIObject(pUIBG);
-   
+    m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "Black");
+    m_pBGLayer->SetTransparent(true);
+    m_pBGLayer->SetDeltaInterval(1);
+    m_pBGLayer->SetAlphaInterval(15);
     m_pBGLayer->SetActive(true);
+
+    g_pTextureManager->AddTexture("press-tex", "Assets/Splash/press-space-to-start.png", true);    
+    cUILayer* m_pBGLayer2 = new cUILayer;
+    m_pBGLayer2->SetLayer("press_text", Vector3(0, 0, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "press-tex");
+    m_pBGLayer->AddUILayerChild(m_pBGLayer2);
+    m_pBGLayer2->SetTransparent(true);
+    m_pBGLayer2->SetDeltaInterval(1);
+    m_pBGLayer2->SetAlphaInterval(15);
+
     return S_OK;
 }
 
@@ -207,6 +210,12 @@ HRESULT cTitleScene::Update()
     {
         MoveArthus();
     }
+
+    if (m_pBGLayer)
+    {
+        m_pBGLayer->Update();
+    }
+
     return S_OK;
 }
 

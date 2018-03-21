@@ -18,6 +18,10 @@ cUILayer::cUILayer()
     , m_isVertexBackground(false)
     , m_isMove(false)
     , m_isActive(false)
+    , m_isTransparent(false)
+    , m_fDeltaInterval(DELTA_INTERVAL)
+    , m_nAlphaInterval(ALPHA_INTERVAL)
+    , m_isRenderGuided(false)
 {
     D3DXMatrixIdentity(&m_matWorld);			// 메트릭스 초기화 
     SetRect(&m_rtLayer, 0, 0, 0, 0);			// 렉트 초기화 
@@ -51,6 +55,11 @@ HRESULT cUILayer::Update()
     UpdateWorldMatrix();			// 월드 매트릭스 갱신
     UpdateChildren();				// 자식 갱신
 
+    if (m_isTransparent)
+    {
+        ChangeTransparent();
+    }
+
     if (m_pUIobjectRoot)
         m_pUIobjectRoot->Update();
 
@@ -77,7 +86,10 @@ HRESULT cUILayer::Render()
             }
         }
         // 가이드라인 그리기
-        hr = RenderGuideLine();
+        if (m_isRenderGuided)
+        {
+            hr = RenderGuideLine();
+        }
 
         if (m_pUIobjectRoot)
         {
@@ -338,6 +350,27 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
     m_pUIobjectRoot->SetRectBody(m_rtLayer);
 
     return S_OK;
+}
+
+void cUILayer::ChangeTransparent()
+{
+    static float time = 0;
+    static int alpha = 0;
+
+    time += g_pTimerManager->GetDeltaTime();
+
+    if (time >= m_fDeltaInterval)
+    {
+        time = 0;
+        alpha += m_nAlphaInterval;
+        
+        if (alpha > 255)
+        {
+            alpha = 0;
+        }
+    }
+
+    SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, alpha));
 }
 
 // 입력받은 너비와 높이로 레이어의 크기를 설정한다.

@@ -1,6 +1,9 @@
 #pragma once
 #include "iUILayer.h"
 
+#define ALPHA_INTERVAL (15)
+#define DELTA_INTERVAL (1)
+
 class cUIObject;
 class cUILayer : public iUILayer // 선생님 UIDraw 같은 역활
 {
@@ -9,6 +12,7 @@ private:
     {
         E_UI_BACKGROUND_ON = 0, E_UI_BACKGROUND_OFF
     };
+
 private:
     LPD3DXSPRITE        m_pSprite;
     ST_SIZE             m_stLayerSize;
@@ -30,7 +34,12 @@ private:
     bool                m_isMove;                   // 뭔가를 따라가는 거라면 필요 
     bool                m_isActive;                 // 활성(true) / 비활성(false)
     bool                m_isSelect;                 // 선택
-
+    
+    // added
+    bool                m_isTransparent;            // 시간에 따라 투명도 변화 
+    float               m_fDeltaInterval;           // 델타 타임 간격
+    int                 m_nAlphaInterval;           // 알파값 증가폭 
+    bool                m_isRenderGuided;
 private:
     // cUILayer private function
     HRESULT RenderGuideLine();
@@ -66,4 +75,10 @@ public:
     virtual HRESULT SetWorldMatrix(IN Matrix4 matWorld) override;
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
         IN bool useBackground = false, IN Color colerBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*빈 스트링*/) override;
+
+    void SetTransparent(bool trans) { m_isTransparent = trans; }
+    void SetDeltaInterval(float fDeltaInter) {m_fDeltaInterval = fDeltaInter;}
+    void SetAlphaInterval(int nAlphaInter) { m_nAlphaInterval = nAlphaInter; }
+    void ChangeTransparent();
+    void SetRenderGuidedLine(bool guided) { m_isRenderGuided = guided; }
 };
