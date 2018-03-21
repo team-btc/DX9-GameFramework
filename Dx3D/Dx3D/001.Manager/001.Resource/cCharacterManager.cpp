@@ -19,7 +19,7 @@ void cCharacterManager::Setup()
 
     for (int i = 0; i < limitMonster; i++)
     {
-        cMonster* newMonster = new cMonster("Frostwurmnorthlend");
+        cMonster* newMonster = new cMonster("frostwurmnorthlend");
         g_pAutoReleasePool->AddObject(newMonster);
        
         m_listMonster.push_back(newMonster);

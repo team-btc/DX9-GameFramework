@@ -21,10 +21,10 @@ public:
     HRESULT NextScene();
     HRESULT ChangeScene(IN string szName);
 
-    HRESULT GetNextScene(OUT string& szName, OUT iSceneObject* pScene = NULL);
-    HRESULT SetNextScene(IN const string szName);
-    HRESULT GetPrevScene(OUT string& szName, OUT iSceneObject* pScene = NULL);
-    HRESULT SetPrevScene(IN const string szName);
+    string GetNextSceneName();
+    void SetNextSceneName(IN const string szName);
+    string GetPrevSceneName();
+    void SetPrevSceneName(IN const string szName);
 
     // iSingletonManager을(를) 통해 상속됨
     virtual HRESULT Setup() override;

@@ -59,6 +59,8 @@ public:
     float GetdescPos();
     float GetCurPos();
     string GetAnimName();
+    void SetAnimationByName(string szAnimName);
+    void SetBlendDuration(float fDuration) { m_fBlendDuration = fDuration; }
 
     ST_BONE* GetRootFrame() { return m_pRootFrame; }
 

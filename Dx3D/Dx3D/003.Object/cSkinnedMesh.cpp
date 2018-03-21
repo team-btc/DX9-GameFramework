@@ -482,6 +482,19 @@ string cSkinnedMesh::GetAnimName()
     return (string)pAnimSet->GetName();
 }
 
+void cSkinnedMesh::SetAnimationByName(string szAnimName)
+{
+    LPANIMATIONSET pAnimSet = NULL;
+    m_pAnimController->GetAnimationSetByName(szAnimName.c_str(), &pAnimSet);
+    m_pAnimController->SetTrackAnimationSet(1, pAnimSet);
+    UINT idx = -1;
+    pAnimSet->GetAnimationIndexByName(szAnimName.c_str(), &idx);
+    if (idx != -1)
+    {
+        SetAnimationIndex(idx);
+    }
+}
+
 void cSkinnedMesh::GetMatrixByName(OUT Matrix4& mat, IN string szBoneName)
 {
     ST_BONE* pBone = (ST_BONE*)D3DXFrameFind(m_pRootFrame, szBoneName.c_str());

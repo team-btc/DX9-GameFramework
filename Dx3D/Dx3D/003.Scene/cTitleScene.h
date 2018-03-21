@@ -21,44 +21,37 @@ private:
     cCamera*            m_pCamera;
 
     LPMESH              m_pTerrain;
+    LPMESH              m_pWater;
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
 
     cUILayer*           m_pBGLayer;
     
-    cSkinnedMesh*       m_pArthus;
+    cSkinnedMesh*       m_pArthas;
     cSkinnedMesh*       m_pSindragosa;
 
     vector<ST_PNT_VERTEX>       m_vecWPNTVertex;
     vector<int>                 m_vecWVertexIndex;
     
-    // 무비스타트, 게임 스타트
-    bool                m_isMovieStart;
-    bool                m_isStart;
-    bool                m_isArthusMove;
-    bool                m_isArthusRender;
-    bool                m_isReady;
     //갱신되는 포지션
     Vector3             m_vSindraPos;
-    Vector3             m_vArtuhsPos;
+    Vector3             m_vArthasPos;
 
     Vector3             m_vStartPos;
     Vector3             m_vCameraPos;
     Vector3             m_vArthusStartPos;
     Vector3             m_vArthusLastPos;
-    Vector3             m_vFlyRotation;
 
     vector<Vector3>     m_vecSindraJumpTarget;
     vector<Vector3>     m_vecSindraJumpBezier;
+
     //  목적지에 도착했는감
     vector<bool>        m_vecIsArriveSindra;
     int                 m_nCurrIndex;
 
-    bool                m_isRoar;
-    // 베지어곡선용
-    float               m_ft;
     float               m_fWorldTime;
+
 public:
     cTitleScene();
     ~cTitleScene();
@@ -70,10 +63,5 @@ public:
     virtual ULONG Release() override;
     virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
-    // 한점 한점의 이동 데스 int는 이동 점 인덱스
-    void MoveSindra(Vector3 vSpot, int n);
-    void MoveArthus();
-    void MoveSindraAllRoute();
-    
-    void SetSindragosa();
+    void SetAnimation(string szAnimName, cSkinnedMesh* pMesh);
 };

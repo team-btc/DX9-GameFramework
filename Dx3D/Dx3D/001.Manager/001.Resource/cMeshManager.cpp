@@ -144,7 +144,12 @@ void cMeshManager::LoadSkinnedMesh()
             pNewMesh->m_mapStateInfo.insert(make_pair(str, state));
         }
     }
-    m_mapSkinnedMesh.insert(make_pair("Frostwurmnorthlend", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair("frostwurmnorthlend", pNewMesh));
+
+    pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
+    g_pAutoReleasePool->AddObject(pNewMesh);
+    m_mapSkinnedMesh.insert(make_pair("sindragosa", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()

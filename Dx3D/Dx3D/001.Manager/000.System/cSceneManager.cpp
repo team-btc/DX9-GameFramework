@@ -172,3 +172,23 @@ HRESULT cSceneManager::ChangeScene(IN string szName)
 
     return hr;
 }
+
+string cSceneManager::GetNextSceneName()
+{
+    return m_szNextScene;
+}
+
+void cSceneManager::SetNextSceneName(IN const string szName)
+{
+    m_szNextScene = szName;
+}
+
+string cSceneManager::GetPrevSceneName()
+{
+    return m_szPrevScene;
+}
+
+void cSceneManager::SetPrevSceneName(IN const string szName)
+{
+    m_szPrevScene = szName;
+}
