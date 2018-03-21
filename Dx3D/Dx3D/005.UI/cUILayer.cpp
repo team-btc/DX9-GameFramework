@@ -77,7 +77,7 @@ HRESULT cUILayer::Render()
             }
         }
         // 가이드라인 그리기
-        hr = RenderGuideLine();
+        //hr = RenderGuideLine();
 
         if (m_pUIobjectRoot)
         {

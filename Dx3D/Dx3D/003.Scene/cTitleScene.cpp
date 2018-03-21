@@ -135,12 +135,12 @@ HRESULT cTitleScene::Start()
     g_pCameraManager->SetCurrCamera("title");
 
     m_pBGLayer = new cUILayer;
-    m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150));
+    m_pBGLayer->SetLayer("press", Vector3(0, 0, 0), ST_SIZE(1300, 150));
     string sz = (string)"Assets/Splash/" + (string)"press-space-to-start.png";
     g_pTextureManager->AddTexture("press-tex", sz, true);
     cUIImageView* pUIBG = new cUIImageView;
     pUIBG->SetName("press");
-    pUIBG->SetLocalPos(Vector3(0, 0, 0));
+    pUIBG->SetLocalPos(Vector3(150, 650, 0));
     IMAGE_INFO imageInfo;
     pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("press-tex", &imageInfo));
     pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
@@ -148,6 +148,10 @@ HRESULT cTitleScene::Start()
     m_pBGLayer->AddUIObject(pUIBG);
    
     m_pBGLayer->SetActive(true);
+
+    m_pBGLayer->Setup();
+    m_pBGLayer->Update();
+    
     return S_OK;
 }
 
