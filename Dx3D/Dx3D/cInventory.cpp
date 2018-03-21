@@ -197,7 +197,7 @@ void cInventory::SetInvenUI()
     pBackPackImage->SetLocalPos(Vector3(vInvenPos.x + 10, vInvenPos.y + 5, 0));
     pBackPackImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("Inven-backpack-img", &imageInfo));
     pBackPackImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pBackPackImage->SetScale(70, 70);
+    pBackPackImage->SetScale(70 / (float)imageInfo.Width, 70 / (float)imageInfo.Height);
     m_pInvenLayer->AddUIObject(pBackPackImage);
 
     // 인벤 배경
@@ -208,7 +208,7 @@ void cInventory::SetInvenUI()
     pBGImage->SetLocalPos(vInvenPos);
     pBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("Inven-bg-img", &imageInfo));
     pBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pBGImage->SetScale(stInvenSize.w, stInvenSize.h);
+    pBGImage->SetScale(stInvenSize.w / (float)imageInfo.Width, stInvenSize.h / (float)imageInfo.Height);
     m_pInvenLayer->AddUIObject(pBGImage);
 
     // 인벤 이름
@@ -281,7 +281,7 @@ void cInventory::SetInvenUI()
     pCoinImage->SetLocalPos(Vector3(vInvenPos.x + 140, vInvenPos.y + stInvenSize.h - 24, 0));
     pCoinImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("Inven-coin-img", &imageInfo));
     pCoinImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pCoinImage->SetScale(18, 18);
+    pCoinImage->SetScale(18 / (float)imageInfo.Width, 18 / (float)imageInfo.Height);
     m_pInvenLayer->AddUIObject(pCoinImage);
 
     SetItemUI(vInvenPos);
@@ -323,7 +323,7 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         IMAGE_INFO imageInfo;
         pSlotImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szItemSlotName, &imageInfo));
         pSlotImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pSlotImage->SetScale(stItemSize.w, stItemSize.h);
+        pSlotImage->SetScale(stItemSize.w / (float)imageInfo.Width, stItemSize.h / (float)imageInfo.Height);
         m_pInvenLayer->AddUIObject(pSlotImage);
 
         // 아이템 이미지
@@ -345,7 +345,7 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
             IMAGE_INFO imageInfo;
             pItemImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szTexKey, &imageInfo));
             pItemImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-            pItemImage->SetScale(stItemSize.w, stItemSize.h);
+            pItemImage->SetScale(stItemSize.w / (float)imageInfo.Width, stItemSize.h / (float)imageInfo.Height);
             pItemImage->SetAxtive(true);
         }
 
@@ -373,7 +373,7 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         pItemSelectImage->SetLocalPos(Vector3(0, 0, 0));
         pItemSelectImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("item-select", &imageInfo));
         pItemSelectImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pItemSelectImage->SetScale(stItemSize.w + 4, stItemSize.h + 4);
+        pItemSelectImage->SetScale((stItemSize.w + 4) / (float)imageInfo.Width, (stItemSize.h + 4) / (float)imageInfo.Height);
         pItemSelectImage->SetAxtive(false);
         if (i == m_nCurrSelectItem)
         {
@@ -443,7 +443,7 @@ void cInventory::UpdateItemUI()
             IMAGE_INFO imageInfo;
             m_vecItemUI[i]->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szTexKey, &imageInfo));
             m_vecItemUI[i]->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-            m_vecItemUI[i]->SetScale(m_stItemSize.w, m_stItemSize.h);
+            m_vecItemUI[i]->SetScale(m_stItemSize.w / (float)imageInfo.Width, m_stItemSize.h / (float)imageInfo.Height);
             m_vecItemUI[i]->SetAxtive(true);
 
             // 아이템 버튼 

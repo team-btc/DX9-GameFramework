@@ -221,7 +221,7 @@ void cShop::SetShopUI()
     pHumanImage->SetLocalPos(Vector3(vShopPos.x + 10, vShopPos.y + 8, 0));
     pHumanImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("shop-human-img", &imageInfo));
     pHumanImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pHumanImage->SetScale(70, 70);
+    pHumanImage->SetScale(70.0f / (float)imageInfo.Width, 70.0f / (float)imageInfo.Height);
     m_pShopLayer->AddUIObject(pHumanImage);
 
     // 상점 배경
@@ -232,7 +232,7 @@ void cShop::SetShopUI()
     pBGImage->SetLocalPos(vShopPos);
     pBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("shop-bg-img", &imageInfo));
     pBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pBGImage->SetScale(stShopSize.w, stShopSize.h);
+    pBGImage->SetScale(stShopSize.w / (float)imageInfo.Width, stShopSize.h / (float)imageInfo.Height);
     m_pShopLayer->AddUIObject(pBGImage);
 
     // 상점 이름
@@ -305,7 +305,7 @@ void cShop::SetShopUI()
     pCoinImage->SetLocalPos(Vector3(vShopPos.x + 200, vShopPos.y + stShopSize.h - 27, 0));
     pCoinImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("shop-coin-img", &imageInfo));
     pCoinImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pCoinImage->SetScale(18, 18);
+    pCoinImage->SetScale(18 / (float)imageInfo.Width, 18 / (float)imageInfo.Height);
     m_pShopLayer->AddUIObject(pCoinImage);
 
     SetShopItemUI(vShopPos);
@@ -352,7 +352,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         IMAGE_INFO imageInfo;
         pItemImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szTexKey, &imageInfo));
         pItemImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pItemImage->SetScale(stItemSize.w, stItemSize.h);
+        pItemImage->SetScale(stItemSize.w / (float)imageInfo.Width, stItemSize.h / (float)imageInfo.Height);
         m_pShopLayer->AddUIObject(pItemImage);
 
         // 선택 버튼
@@ -372,7 +372,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pItemSelectImage->SetLocalPos(Vector3(-3, -3, 0));
         pItemSelectImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("item-select", &imageInfo));
         pItemSelectImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pItemSelectImage->SetScale(stItemSize.w + 6, stItemSize.h + 6);
+        pItemSelectImage->SetScale((stItemSize.w + 6) / (float)imageInfo.Width, (stItemSize.h + 6) / (float)imageInfo.Height);
         pItemSelectImage->SetAxtive(false);
         if (i == m_nCurrSelectItem)
         {
@@ -386,7 +386,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pItemContentsImage->SetLocalPos(Vector3(80, 0, 0));
         pItemContentsImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szItemContentsName, &imageInfo));
         pItemContentsImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pItemContentsImage->SetScale(stItemContentsSize.w, stItemContentsSize.h);
+        pItemContentsImage->SetScale(stItemContentsSize.w / (float)imageInfo.Width, stItemContentsSize.h / (float)imageInfo.Height);
         pItemImage->AddChild(pItemContentsImage);
 
         // 아이템명 텍스트
@@ -421,7 +421,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pCoinImage->SetLocalPos(Vector3(95, 50, 0));
         pCoinImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("shop-coin-img", &imageInfo));
         pCoinImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-        pCoinImage->SetScale(18, 18);
+        pCoinImage->SetScale(18 / (float)imageInfo.Width, 18 / (float)imageInfo.Height);
         pItemImage->AddChild(pCoinImage);
 
         // 가격 텍스트

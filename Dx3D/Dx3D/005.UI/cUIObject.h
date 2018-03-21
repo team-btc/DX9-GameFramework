@@ -4,11 +4,11 @@
 class cUIObject : public cObject
 {
 protected:
-    Matrix4                 m_matWorld;
     Matrix4                 m_matWorldInv;
     vector<cUIObject*>      m_vecChild;
     vector<ST_RHWC_VERTEX>  m_vecVertex;
 
+    SYNTHESIZE(Matrix4, m_matWorld, MatWorld);
     SYNTHESIZE(bool, m_isAxtive, Axtive);
     SYNTHESIZE(Vector3, m_vLocalPos, LocalPos);
     SYNTHESIZE(cUIObject*, m_pParent, Parent);

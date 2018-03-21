@@ -82,7 +82,7 @@ HRESULT cUIProgressBar::AddGuageTexture(IN string GuageImgPath, IN int imgType, 
     pImgView->SetSize(Vector2((float)imgInfo.Width, (float)imgInfo.Height));
     pImgView->SetTexture(pTexture);
     pImgView->SetColor(color);
-    pImgView->SetScale(stSize.w, stSize.h);
+    pImgView->SetScale(stSize.w / imgInfo.Width, stSize.h / imgInfo.Height);
 
     // 종류별 타입  
     if (imgType == 0)
@@ -169,28 +169,21 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
             {
             case E_PROGRESSBAR_TEXTURE_FRONT:
             {
+                float fDefWidth = vPos->GetSize().x * vPos->GetMatWorld()._11;
+
                 // 넓이 계산 및 설정
-                float width = fCurrentGuage / m_fMaxGuage * m_stFrontSize.w;
+                float width = (fCurrentGuage / m_fMaxGuage) * fDefWidth;
 
                 if (width <= 0.0f)
                 {
                     width = 0.0f;
                 }
-                else if (width >= m_stFrontSize.w)
+                else if (width >= fDefWidth)
                 {
-                    width = m_stFrontSize.w;
+                    width = fDefWidth;
                 }
-                ((cUIImageView*)vPos)->SetScale(width, m_stSize.y);
-            }
-                break;
-            case E_PROGRESSBAR_TEXTURE_BACK:
-            {
-                ((cUIImageView*)vPos)->SetScale(m_stSize.x, m_stSize.y);
-            }
-                break;
-            case E_PROGRESSBAR_TEXT:
-            {
-                ((cUITextView*)vPos)->SetSize(m_stSize);
+                ((cUIImageView*)vPos)->SetScale(width / vPos->GetSize().x,
+                    (vPos->GetSize().y * vPos->GetMatWorld()._22) / vPos->GetSize().y);
             }
                 break;
             }
