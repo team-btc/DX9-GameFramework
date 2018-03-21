@@ -5,6 +5,7 @@
 
 class cPlayer;
 class cMonster;
+//class cSindragosa;
 
 class cCharacterManager
 {
@@ -14,6 +15,7 @@ private:
 
     cPlayer*            m_pPlayer;
     list<cMonster*>     m_listMonster;
+//    cSindragosa * m_pSindragosa;
 
 public:
 
@@ -27,5 +29,7 @@ public:
 
     json GetPlayerData();
     void SetPlayerData(json playerData);
+
+    //cSindragosa* GetSindragosa() { return m_pSindragosa; };
 };
 

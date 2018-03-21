@@ -48,7 +48,7 @@ cMonster::cMonster(string szKey)
     m_stSphere.fRadius = 10.0f;
     m_stSphere.vCenter = m_vPosition;
 
-
+    m_vRotation = Vector3(0, 0, 0);
     m_pPikingMesh = g_pMeshManager->GetBasicMesh("sphere");
 }
 
@@ -204,17 +204,18 @@ void cMonster::Update()
                 m_isMove = true;
                 m_fMoveCount = 0.0f;
                 m_vDest = m_vStartPoint + GetRandomVector3(Vector3(-m_fMoveRadius, 0, -m_fMoveRadius), Vector3(m_fMoveRadius, 0, m_fMoveRadius));
-                WalkAnim();
+                //WalkAnim();
             }
         }
     }
     else
     {
     }
-
-    m_pMesh->SetScale(1.0f);
+   
+    m_pMesh->SetScale(8.0f);
     m_pMesh->SetPosition(m_vPosition);
-    m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
+    m_pMesh->SetRotation(m_vRotation);
+    // p = Vector3(0, D3DXToDegree(m_fRotY) + 56.0f, 0);
 }
 
 void cMonster::Render()

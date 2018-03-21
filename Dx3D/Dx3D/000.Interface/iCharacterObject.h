@@ -123,6 +123,11 @@ public:
     virtual void LeftAnim() PURE;
     virtual void RightAnim() PURE;
     virtual void DeadAnim() PURE;
+    virtual void FlyWalkAnim() PURE;
+    virtual void FlySitUpAnim() PURE;
+    virtual void FlySitAnim() PURE;
+    virtual void FlySitDownAnim() PURE;
+    virtual void RoarAnim() PURE;
     virtual void FalseAnim() PURE;
 
     //컨트롤러 함수

@@ -85,7 +85,7 @@ HRESULT cUILayer::Render()
 #ifdef _DEBUG
 
         // 가이드라인 그리기
-        hr = RenderGuideLine();
+        //hr = RenderGuideLine();
 
 #endif // _DEBUG
 
