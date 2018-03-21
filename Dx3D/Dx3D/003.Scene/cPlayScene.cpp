@@ -40,7 +40,7 @@ HRESULT cPlayScene::Start()
         {
             mapLoader.LoadObject(i);
         }
-
+        m_szMapKey = g_pMapManager->GetCurrKey();
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
 
         // 현재 맵 셋팅
@@ -149,22 +149,7 @@ HRESULT cPlayScene::Start()
     m_vecMonster->clear();
 
    //몬스터 생성
-    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
-    {
-        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
-        {
-            cMonster* Enermy = g_pCharacterManager->GetMonster(m_szMapKey);
-            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            Enermy->SetActive(true);
-            (*m_vecMonster).push_back(Enermy);
-        }
-        else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
-        {
-            cBoss* Enermy = g_pCharacterManager->GetBoss();
-            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            (*m_vecMonster).push_back(Enermy);
-        }
-    }
+    CreateMonster();
 
     if (!m_pPlayer)
     {
@@ -316,16 +301,7 @@ HRESULT cPlayScene::Update()
     //REGEN
     if (m_vecMonster->size() == 0)
     {
-        for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
-        {
-            if (m_stMapInfo->vecEventInfo[i].szName == "monster")
-            {
-                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
-                m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-                m_pEnermy->SetActive(true);
-                (*m_vecMonster).push_back(m_pEnermy);
-            }
-        }
+        CreateMonster();
     }
 
     //MONSTER SUMMON
@@ -421,7 +397,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.3f);
+            m_pPlayer->SetMoveSpeed(15.0f);
         }
     }
 
@@ -712,4 +688,25 @@ void cPlayScene::TransportMap(string szMap)
     m_stMapInfo = NULL;
     Start();
     Update();
+}
+
+void cPlayScene::CreateMonster()
+{
+    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+    {
+        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+        {
+            cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
+            m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            m_pEnermy->SetActive(true);
+            (*m_vecMonster).push_back(m_pEnermy);
+        }
+        else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
+        {
+            cBoss* Enermy = g_pCharacterManager->GetBoss();
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            Enermy->SetActive(true);
+            (*m_vecMonster).push_back(Enermy);
+        }
+    }
 }

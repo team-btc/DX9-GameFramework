@@ -42,11 +42,50 @@ cBoss::~cBoss()
 
 void cBoss::Setup()
 {
+    m_pTarget = NULL;
+
+    isAttack = false;
+    isRun = false;
+    isIdle = false;
+    isHeal = false;
+    isStatic = false;
+    isActive = true;
+    isAlive = true;
+    isMoveToTarget = false;
+
+    m_stStat.Level = 16;
+
+    SetLevelToStatus(m_stStat.szName, m_stStat.Level);
+
+    IdleAnim();
+
+    m_stSphere.vCenter = m_vPosition;
 }
 
 void cBoss::Update()
 {
     //죽음정의
+    if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
+    {
+        isAlive = false;
+        g_pCharacterManager->PushBoss(this);
+    }
+
+    if (m_stStat.fCurHP <= 0 && isActive)
+    {
+        isActive = false;
+
+        ST_STATUS TargetStatus = m_pTarget->GetStatus();
+        TargetStatus.nCurEXP += m_stStat.nMaxEXP;
+        m_pTarget->SetStatus(TargetStatus);
+        cout << "얻은경험치:" << m_stStat.nMaxEXP << endl;
+        cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
+
+        m_pTarget->SetTarget(NULL);
+        m_pTarget = NULL;
+        m_stSphere.fRadius = 0;
+        DeadAnim();
+    }
 
 
     //공격부터 스킬까지 정의
@@ -59,32 +98,35 @@ void cBoss::Update()
             {
                 m_fRoarTime = 0.0f;
                 RoarAnim();
-                isAttack = true;
+                isAttack = false;
                 isMove = false;
                 m_fMoveSpeed = 0.0f;
             }
         }
 
-        m_vDir = m_pTarget->GetPosition() - m_vPosition;
-        float Distance = D3DXVec3Length(&m_vDir);
-        D3DXVec3Normalize(&m_vDir, &m_vDir);
-        if (Distance < m_pTarget->GetSphere().fRadius + m_stSphere.fRadius)
+        if (!isRoar)
         {
-            if (!isAttack)
+            m_vDir = m_pTarget->GetPosition() - m_vPosition;
+            float Distance = D3DXVec3Length(&m_vDir);
+            D3DXVec3Normalize(&m_vDir, &m_vDir);
+            if (Distance < m_pTarget->GetSphere().fRadius + m_stSphere.fRadius)
             {
-                isMoveToTarget = false;
-                isAttack = true;
-                AttackAnim();
+                if (!isAttack)
+                {
+                    isMoveToTarget = false;
+                    isAttack = true;
+                    AttackAnim();
+                }
             }
-        }
-        else
-        {
-            if (!isMoveToTarget)
+            else
             {
-                isMove = true;
-                isAttack = false;
-                isMoveToTarget = true;
-                RunAnim();
+                if (!isMoveToTarget)
+                {
+                    isMove = true;
+                    isAttack = false;
+                    isMoveToTarget = true;
+                    RunAnim();
+                }
             }
         }
     }
@@ -104,9 +146,7 @@ void cBoss::Update()
         if (m_pMesh->GetCurPos() > 1.0f)
         {
             m_isRoar = true;
-            isMove = true;
             isRoar = false;
-            isAttack = false;
             isMoveToTarget = false;
         }
     }
@@ -171,16 +211,18 @@ void cBoss::SetLevelToStatus(string szKey, int Level)
 {
     json status = g_pMeshManager->GetJson("Status");
 
-    m_stStat.fSTR = (float)status[szKey]["STR"] + m_stStat.Level * (float)status[szKey]["UPSTR"];
-    m_stStat.fDEX = (float)status[szKey]["DEX"] + m_stStat.Level * (float)status[szKey]["UPDEX"];
-    m_stStat.fINT = (float)status[szKey]["INT"] + m_stStat.Level * (float)status[szKey]["UPINT"];
+    m_stStat.szName = szKey;
+    m_stStat.Level = Level;
+    m_stStat.fSTR = (float)status[szKey]["STR"] + Level * (float)status[szKey]["UPSTR"];
+    m_stStat.fDEX = (float)status[szKey]["DEX"] + Level * (float)status[szKey]["UPDEX"];
+    m_stStat.fINT = (float)status[szKey]["INT"] + Level * (float)status[szKey]["UPINT"];
 
-    m_stStat.fATK = (float)status[szKey]["ATK"] + m_stStat.Level * (float)status[szKey]["UPATK"];
-    m_stStat.fDEF = (float)status[szKey]["DEF"] + m_stStat.Level * (float)status[szKey]["UPDEF"];
-    m_stStat.fCurHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fMaxHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fCurMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
-    m_stStat.fMaxMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
+    m_stStat.fATK = (float)status[szKey]["ATK"] + Level * (float)status[szKey]["UPATK"];
+    m_stStat.fDEF = (float)status[szKey]["DEF"] + Level * (float)status[szKey]["UPDEF"];
+    m_stStat.fCurHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fMaxHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fCurMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
+    m_stStat.fMaxMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
 
     m_stStat.fHPGen = (float)status[szKey]["HPGEN"];
     m_stStat.fMPGen = (float)status[szKey]["MPGEN"];

@@ -60,5 +60,6 @@ public:
 
     void ParseEvent(string szCommand);
     void TransportMap(string szMap);
+    void CreateMonster();
 };
 

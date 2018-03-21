@@ -207,7 +207,7 @@ void cCharacterObject::MoveForword()
     m_vDir.z = cos(m_fRotY);
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition += m_vDir* m_fMoveSpeed;
+    m_vPosition += m_vDir* m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 }
 
