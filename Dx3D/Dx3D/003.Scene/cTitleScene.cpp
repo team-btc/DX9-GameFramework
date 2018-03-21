@@ -323,18 +323,18 @@ void cTitleScene::MoveSindraAllRoute()
 
 void cTitleScene::SetSindragosa()
 {
-    Vector3 v = Vector3(0, -90, 0);
-    Matrix4 matS;
-    D3DXMatrixScaling(&matS, 0.5f, 0.5f, 0.5f);
-    m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
-    g_pAutoReleasePool->AddObject(m_pSindragosa);
-    m_pSindragosa->SetPosition(m_vSindraPos);
-    m_pSindragosa->SetRotation(v);
+    //Vector3 v = Vector3(0, -90, 0);
+    //Matrix4 matS;
+    //D3DXMatrixScaling(&matS, 0.5f, 0.5f, 0.5f);
+    //m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
+    //g_pAutoReleasePool->AddObject(m_pSindragosa);
+    //m_pSindragosa->SetPosition(m_vSindraPos);
+    //m_pSindragosa->SetRotation(v);
 
-    m_pSindragosa->SetScale(matS);
-    m_pSindragosa->SetActive(true);
-    m_pSindragosa->IdleAnim();
-    
+    //m_pSindragosa->SetScale(matS);
+    //m_pSindragosa->SetActive(true);
+    //m_pSindragosa->IdleAnim();
+    //
 }
 /*
     // ¹è°æ

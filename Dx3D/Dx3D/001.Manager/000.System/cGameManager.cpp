@@ -78,6 +78,66 @@ void cGameManager::MakeSaveData()
     m_jPlayerInfo["map"] = mapData;
 }
 
+int cGameManager::FindItem(int id)
+{
+    int nIndex = -1;
+
+    for (int i = 0; i < m_stInventory.items.size(); ++i)
+    {
+        if (m_stInventory.items[i].id == id)
+        {
+            nIndex = i;
+            break;
+        }
+    }
+
+    return nIndex;
+}
+
+void cGameManager::PushItem(int id)
+{
+    int nIndex = FindItem(id);
+
+    // 있는 아이템이면
+    if (nIndex != -1)
+    {
+        m_stInventory.items[nIndex].count += 1;
+    }
+    // 새로운 아이템이면
+    else
+    {
+        ST_ITEM stItem;
+        stItem.id = id;
+        stItem.count = 1;
+        m_stInventory.items.push_back(stItem);
+    }
+}
+
+void cGameManager::PullItem(int id)
+{
+    int nIndex = FindItem(id);
+
+    // 있는 아이템이면
+    if (nIndex != -1)
+    {
+        m_stInventory.items[nIndex].count -= 1;
+        if (m_stInventory.items[nIndex].count <= 0)
+        {
+            m_stInventory.items.erase(m_stInventory.items.begin() + nIndex);
+        }
+    }
+    // 새로운 아이템이면
+    else
+    {
+        return;
+    }
+}
+
+void cGameManager::Pay(int gold)
+{
+    m_stInventory.gold += gold;
+}
+
 void cGameManager::LoadItemInfo()
 {
     json jLoad;
@@ -105,13 +165,13 @@ void cGameManager::LoadItemInfo()
     }
 }
 
-ST_ITEM_INFO* cGameManager::GetItemInfoById(int nId)
+ST_ITEM_INFO* cGameManager::GetItemInfoById(int id)
 {
     ST_ITEM_INFO* stItemInfo = NULL;
 
-    if (nId < m_vecItemInfo.size())
+    if (id < m_vecItemInfo.size())
     {
-        stItemInfo = m_vecItemInfo[nId];
+        stItemInfo = m_vecItemInfo[id];
     }
 
     return stItemInfo;

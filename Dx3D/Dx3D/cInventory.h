@@ -12,15 +12,15 @@ class cInventory : public cObject
     RECT                        m_rtInvenSize;
     ST_SIZE                     m_stItemSize;
 
-    vector<ST_ITEM_INFO>        m_vecPlayerItemInfo;
+    vector<ST_ITEM>             m_vecInvenItem;
 
     int                         m_nPlayerMoney;
 
     int                         m_nCurrSelectItem;
-
     int                         m_nSlotMaxNum;
 
-    bool                        m_isClickInven;
+    SYNTHESIZE(bool, m_isClickInven, IsClickInven);
+    SYNTHESIZE(bool, m_isOpen, IsOpen);
 
 private:
     void SetInvenUI();
@@ -32,7 +32,7 @@ public:
     ~cInventory();
 
     void Setup();
-    void Update(int nPlayerMoney);
+    void Update();
     void Render();
 
     void OpenInventory();

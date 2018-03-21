@@ -7,10 +7,11 @@
 
 cInventory::cInventory()
     : m_pInvenLayer(NULL)
-    , m_nPlayerMoney(0)
+    , m_nPlayerMoney(g_pGameManager->GetCurrGold())
     , m_nCurrSelectItem(-1)
-    , m_isClickInven(false)
     , m_nSlotMaxNum(12)
+    , m_isClickInven(false)
+    , m_isOpen(false)
 {
     m_rtInvenSize.left = W_WIDTH - (LONG)(W_WIDTH * 0.18f) - 300;
     m_rtInvenSize.top = W_HEIGHT - (LONG)(W_HEIGHT * 0.35f) - 250;
@@ -27,11 +28,11 @@ cInventory::~cInventory()
 
 void cInventory::Setup()
 {
-    m_vecItemInfo.clear();
-
     m_pInvenLayer = new cUILayer;
     m_pInvenLayer->SetLayer("Inven", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
     m_pInvenLayer->SetActive(true);
+
+    m_vecInvenItem = g_pGameManager->GetInvetoryInfo();
 
     SetInvenUI();
 
@@ -41,7 +42,7 @@ void cInventory::Setup()
     }
 }
 
-void cInventory::Update(int nPlayerMoney)
+void cInventory::Update()
 {
     m_isClickInven = false;
 
@@ -49,6 +50,10 @@ void cInventory::Update(int nPlayerMoney)
     {
         return;
     }
+
+    // 기본 정보 로드
+    m_vecInvenItem = g_pGameManager->GetInvetoryInfo();
+    m_nPlayerMoney = g_pGameManager->GetCurrGold();
 
     // 상점 렉트 안에서 마우스가 있다면
     if (PtInRect(&m_rtInvenSize, g_ptMouse))
@@ -58,8 +63,6 @@ void cInventory::Update(int nPlayerMoney)
         g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
         m_isClickInven = true;
     }
-
-    m_nPlayerMoney = nPlayerMoney;
 
     // 플레이어 소지금 텍스쳐 변경
     cUIObject* pUIObject;
@@ -81,17 +84,26 @@ void cInventory::Update(int nPlayerMoney)
         string szClickBtnName = m_pInvenLayer->GetClickButtonName();
 
         // X버튼 클릭 시
-        if (!strcmp(szClickBtnName.c_str(), "Inven-x-btn"))
+        if (!strcmp(szClickBtnName.c_str(), "inven-x-btn"))
         {
             CloseInventory();
         }
         // 사용 버튼 클릭 시
         else if (!strcmp(szClickBtnName.c_str(), "Inven-use-btn"))
         {
+            // 현재 인벤토리 정보
+            vector<ST_ITEM> stInventory = g_pGameManager->GetInvetoryInfo();
+            
             // 아이템을 선택한 상태라면
-            if (m_nCurrSelectItem != -1 && m_nCurrSelectItem < m_vecItemInfo.size())
+            if (m_nCurrSelectItem != -1 && m_nCurrSelectItem < stInventory.size())
             {
-                m_vecItemInfo[m_nCurrSelectItem].nCount -= 1;
+                // 아이템사용하기!!!!!!!!!!!!!!!!!11 -> 효과 발동!!! 또는 장착!!!
+                g_pGameManager->PullItem(m_vecInvenItem[m_nCurrSelectItem].id);
+                // 아이템이 0개가 되는 상황이면
+                if (m_vecInvenItem[m_nCurrSelectItem].count == 1)
+                {
+                    m_nCurrSelectItem = -1;
+                }
             }
         }
         // 선택 버튼 클릭 시
@@ -104,7 +116,7 @@ void cInventory::Update(int nPlayerMoney)
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
                 if (m_nCurrSelectItem != i)
                 {
-                    if (i < m_vecItemInfo.size())
+                    if (i < m_vecInvenItem.size())
                     {
                         m_nCurrSelectItem = i;
 
@@ -146,18 +158,21 @@ void cInventory::Render()
 
 void cInventory::OpenInventory()
 {
+    m_isOpen = true;
     m_isClickInven = false;
     m_nCurrSelectItem = -1;
-    m_vecItemInfo.clear();
 
+    m_vecInvenItem = g_pGameManager->GetInvetoryInfo();
+    m_nPlayerMoney = g_pGameManager->GetCurrGold();
 
+    UpdateItemUI();
 }
 
 void cInventory::CloseInventory()
 {
+    m_isOpen = false;
     m_isClickInven = false;
     m_nCurrSelectItem = -1;
-    m_vecItemInfo.clear();
 }
 
 ULONG cInventory::Release(void)
@@ -321,10 +336,11 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         m_pInvenLayer->AddUIObject(pItemImage);
 
         // 해당 칸에 보여질 아이템이 있으면
-        if (i < m_vecItemInfo.size())
+        if (i < m_vecInvenItem.size())
         {
-            string szPath = m_vecItemInfo[i].szPath;
-            string szTexKey = m_vecItemInfo[i].szName;
+            ST_ITEM_INFO* stItemInfo = g_pGameManager->GetItemInfoById(m_vecInvenItem[i].id);
+            string szPath = stItemInfo->szPath;
+            string szTexKey = stItemInfo->szName;
             g_pTextureManager->AddTexture(szTexKey, szPath, true);
             IMAGE_INFO imageInfo;
             pItemImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szTexKey, &imageInfo));
@@ -343,7 +359,7 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         pSelectButton->SetSize(Vector2(stItemSize.w, stItemSize.h));
         pSelectButton->SetUIButton(m_pInvenLayer);
         // 해당 칸에 보여질 아이템이 없으면
-        if (i >= m_vecItemInfo.size())
+        if (i >= m_vecInvenItem.size())
         {
             pSelectButton->SetAxtive(false);
         }
@@ -375,9 +391,9 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         pCountText->SetDrawTextFormat(DT_RIGHT);
         pCountText->SetAxtive(false);
         // 해당 칸에 보여질 아이템이 있으면
-        if (i < m_vecItemInfo.size())
+        if (i < m_vecInvenItem.size())
         {
-            sprintf_s(Buf, sizeof(Buf), "%d", m_vecItemInfo[i].nCount);
+            sprintf_s(Buf, sizeof(Buf), "%d", m_vecInvenItem[i].count);
             pCountText->SetText(Buf);
             pCountText->SetAxtive(true);
         }
@@ -388,10 +404,10 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
     }
 }
 
-// 계속해서 아이템을 체크한다.
+// 계속해서 아이템과 소지금을 체크한다.
 void cInventory::UpdateItemUI()
 {
-    if (m_nCurrSelectItem >= m_vecItemInfo.size())
+    if (m_nCurrSelectItem >= m_vecInvenItem.size())
     {
         m_nCurrSelectItem = -1;
     }
@@ -417,11 +433,12 @@ void cInventory::UpdateItemUI()
         pCountObject = m_vecItemUI[i]->GetChildByName(Buf);
 
         // 아이템이 있으면
-        if (i < m_vecItemInfo.size())
+        if (i < m_vecInvenItem.size())
         {
             // 아이템 이미지
-            string szPath = m_vecItemInfo[i].szPath;
-            string szTexKey = m_vecItemInfo[i].szName;
+            ST_ITEM_INFO* stItemInfo = g_pGameManager->GetItemInfoById(m_vecInvenItem[i].id);
+            string szPath = stItemInfo->szPath;
+            string szTexKey = stItemInfo->szName;
             g_pTextureManager->AddTexture(szTexKey, szPath, true);
             IMAGE_INFO imageInfo;
             m_vecItemUI[i]->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szTexKey, &imageInfo));
@@ -450,7 +467,7 @@ void cInventory::UpdateItemUI()
             if (pCountObject)
             {
                 cUITextView* pText = (cUITextView*)pCountObject;
-                sprintf_s(Buf, sizeof(Buf), "%d", m_vecItemInfo[i].nCount);
+                sprintf_s(Buf, sizeof(Buf), "%d", m_vecInvenItem[i].count);
                 pText->SetText(Buf);
                 pText->SetAxtive(true);
             }

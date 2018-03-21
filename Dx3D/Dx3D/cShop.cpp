@@ -7,10 +7,11 @@
 
 cShop::cShop()
     : m_pShopLayer(NULL)
-    , m_eCurrSelectItem(E_ITEM_SWORD1)
-    , m_nPlayerMoney(0)
+    , m_nCurrSelectItem(0)
+    , m_nPlayerMoney(g_pGameManager->GetCurrGold())
     , m_isOpen(false)
     , m_isClickShop(false)
+    , m_isBuyItem(false)
 {
     m_rtShopSize.left = 50;
     m_rtShopSize.top = 150;
@@ -62,7 +63,7 @@ void cShop::Setup()
     }
 }
 
-void cShop::Update(int nPlayerMoney)
+void cShop::Update()
 {
     m_isClickShop = false;
 
@@ -70,6 +71,9 @@ void cShop::Update(int nPlayerMoney)
     {
         return;
     }
+
+    // 현재 소지금 셋팅
+    m_nPlayerMoney = g_pGameManager->GetCurrGold();
 
     // 상점 렉트 안에서 마우스가 있다면
     if (PtInRect(&m_rtShopSize, g_ptMouse))
@@ -79,8 +83,6 @@ void cShop::Update(int nPlayerMoney)
         g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
         m_isClickShop = true;
     }
-
-    m_nPlayerMoney = nPlayerMoney;
 
     // 플레이어 소지금 텍스쳐 변경
     cUIObject* pUIObject;
@@ -106,7 +108,14 @@ void cShop::Update(int nPlayerMoney)
         // 구입 버튼 클릭 시
         else if (!strcmp(szClickBtnName.c_str(), "shop-buy-btn"))
         {
-
+            // 플레이어에게 돈이 있으면 구입
+            if (m_vecItemInfo[m_nCurrSelectItem]->nPrice <= m_nPlayerMoney)
+            {
+                m_isBuyItem = true;
+                m_nPlayerMoney -= m_vecItemInfo[m_nCurrSelectItem]->nPrice;
+                g_pGameManager->Pay(-m_vecItemInfo[m_nCurrSelectItem]->nPrice);
+                g_pGameManager->PushItem(m_nCurrSelectItem);
+            }
         }
         // 선택 버튼 클릭 시
         for (int i = 0; i < m_vecItemInfo.size(); ++i)
@@ -114,9 +123,9 @@ void cShop::Update(int nPlayerMoney)
             if (!strcmp(szClickBtnName.c_str(), m_vecItemInfo[i]->szName.c_str()))
             {
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
-                if (m_eCurrSelectItem != (E_ITEM_TYPE)i)
+                if (m_nCurrSelectItem != i)
                 {
-                    m_eCurrSelectItem = (E_ITEM_TYPE)i;
+                    m_nCurrSelectItem = i;
 
                     for (int j = 0; j < m_vecItemInfo.size(); ++j)
                     {
@@ -158,6 +167,7 @@ void cShop::OpenShop()
     g_pSndManager->Play(m_vecSzHumanSound[rand() % 6]);
     m_isOpen = true;
     m_isClickShop = false;
+    m_nPlayerMoney = g_pGameManager->GetCurrGold();
 }
 
 void cShop::CloseShop()
@@ -166,7 +176,7 @@ void cShop::CloseShop()
 
     m_isClickShop = false;
     m_isOpen = false;
-    m_eCurrSelectItem = E_ITEM_SWORD1;
+    m_nCurrSelectItem = 0;
 
     // 첫번째 이미지 선택 활성화, 다른 이미지 비활성화
     cUIObject* pUIObject;
@@ -175,7 +185,7 @@ void cShop::CloseShop()
         m_pShopLayer->FindUIObject(&pUIObject, m_vecItemInfo[i]->szName + "select-img");
         if (pUIObject)
         {
-            if (i == m_eCurrSelectItem)
+            if (i == m_nCurrSelectItem)
             {
                 pUIObject->SetAxtive(true);
             }
@@ -364,7 +374,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pItemSelectImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
         pItemSelectImage->SetScale(stItemSize.w + 6, stItemSize.h + 6);
         pItemSelectImage->SetAxtive(false);
-        if (i == m_eCurrSelectItem)
+        if (i == m_nCurrSelectItem)
         {
             pItemSelectImage->SetAxtive(true);
         }
