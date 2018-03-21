@@ -680,6 +680,7 @@ void cPlayScene::UpdateUI()
     {
         cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
         pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
+        pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
     }
     // MP
     m_pPlayerStatUILayer->FindUIObject(&pObject, "player-mp");
@@ -687,6 +688,7 @@ void cPlayScene::UpdateUI()
     {
         cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
         pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
+        pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
     }
 }
 

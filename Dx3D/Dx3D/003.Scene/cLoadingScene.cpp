@@ -43,7 +43,7 @@ HRESULT cLoadingScene::Start()
     IMAGE_INFO imageInfo;
     pUIBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("loadscreen", &imageInfo));
     pUIBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pUIBG->SetScale(W_WIDTH, W_HEIGHT);
+    pUIBG->SetScale(W_WIDTH / (float)imageInfo.Width, W_HEIGHT / (float)imageInfo.Height);
     m_pBGLayer->AddUIObject(pUIBG);
 
     m_pBGLayer->SetActive(true);
@@ -63,7 +63,7 @@ HRESULT cLoadingScene::Start()
     pUIProgressBG->SetLocalPos(vPos);
     pUIProgressBG->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("loading-background", &imageInfo));
     pUIProgressBG->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
-    pUIProgressBG->SetScale(stSize.w, stSize.h);
+    pUIProgressBG->SetScale(stSize.w / (float)imageInfo.Width, stSize.h / (float)imageInfo.Height);
     m_pBGLayer->AddUIObject(pUIProgressBG);
 
     // 프로그래스바
