@@ -53,7 +53,8 @@ public:
 
     float GetLookatOffset() { return m_fLookatOffset; }
     void SetLookatOffset(float val) { m_fLookatOffset = val; }
-    void SetFovy(float fov);
+    void SetFov(float fov);
+    float GetFov() { return m_fFov; }
 
     void SetDist(float val) { m_fDistance = val; }
     void SetMinDist(float val) { m_fMinDist = val; }

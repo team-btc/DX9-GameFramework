@@ -18,6 +18,9 @@ private:
     char        m_szBuffer[256] = { 0 };
     bool        m_isCollidable;
 
+    cRay        m_rays[4];
+    float       m_fDists[4];
+
 public:
     // iSingletonManager을(를) 통해 상속됨
     virtual HRESULT Setup() override;

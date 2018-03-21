@@ -90,7 +90,7 @@ HRESULT cCamera::Update()
     return S_OK;
 }
 
-void cCamera::SetFovy(float fov)
+void cCamera::SetFov(float fov)
 {
     m_fFov = fov;
     Setup();
