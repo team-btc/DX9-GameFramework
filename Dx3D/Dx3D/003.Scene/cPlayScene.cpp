@@ -172,7 +172,7 @@ HRESULT cPlayScene::Start()
         m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->ColliderDisable();
+        g_pCameraManager->DisableCollider();
     }
     m_pCamera->Setup();
     g_pCameraManager->SetCurrCamera("play");
@@ -605,10 +605,7 @@ void cPlayScene::UpdateUI()
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
+ 
 }
 
 void cPlayScene::ParseEvent(string szCommand)

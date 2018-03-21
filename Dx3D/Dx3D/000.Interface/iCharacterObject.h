@@ -145,4 +145,5 @@ public:
 
     //  Ω∫≈» ∞ªΩ≈
     virtual void UpdateStatus() PURE;
+
 };

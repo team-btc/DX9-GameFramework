@@ -242,6 +242,14 @@ float cCharacterObject::Distance(Vector3 Pos)
     return fDistance;
 }
 
+void cCharacterObject::SumExp(int exp)
+{
+}
+
+void cCharacterObject::UpdateStatus()
+{
+}
+
 //void cCharacterObject::SumExp(int exp)
 //{
 //}
