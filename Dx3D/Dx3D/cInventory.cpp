@@ -370,7 +370,7 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
         g_pTextureManager->AddTexture("item-select", INTERFACE_PATH + (string)"item/item-select.png", true);
         sprintf_s(Buf, sizeof(Buf), "item-select-%d", i);
         pItemSelectImage->SetName(Buf);
-        pItemSelectImage->SetLocalPos(Vector3(0, 0, 0));
+        pItemSelectImage->SetLocalPos(Vector3(-2, -2, 0));
         pItemSelectImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("item-select", &imageInfo));
         pItemSelectImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
         pItemSelectImage->SetScale((stItemSize.w + 4) / (float)imageInfo.Width, (stItemSize.h + 4) / (float)imageInfo.Height);
