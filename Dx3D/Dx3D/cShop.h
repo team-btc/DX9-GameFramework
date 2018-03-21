@@ -18,7 +18,7 @@ enum E_ITEM_TYPE
 class cShop : public cObject
 {
 private:
-    vector<ST_ITEM_INFO>        m_vecItemInfo;
+    vector<ST_ITEM_INFO*>       m_vecItemInfo;
 
     cUILayer*                   m_pShopLayer;
 

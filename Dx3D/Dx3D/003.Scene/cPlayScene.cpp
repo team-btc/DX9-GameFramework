@@ -3,6 +3,7 @@
 #include "005.UI//cUILayer.h"
 #include "005.UI//cUIProgressBar.h"
 #include "cShop.h"
+#include "cInventory.h"
 
 cPlayScene::cPlayScene()
     : m_pPlayerStatUILayer(NULL)
@@ -15,6 +16,7 @@ cPlayScene::cPlayScene()
     , m_pWaveShader(NULL)
     , m_szMapKey("start")
     , m_pShop(NULL)
+    , m_pInventory(NULL)
     , m_pParticleFrost(NULL)
 {
 }
@@ -88,9 +90,14 @@ HRESULT cPlayScene::Start()
     {
         // 상점 셋팅
         m_pShop = new cShop;
-        m_pShop->Setup();
+        //m_pShop->Setup();
     }
 
+    if (!m_pInventory)
+    {
+        m_pInventory = new cInventory;
+        m_pInventory->Setup();
+    }
 
     if (!m_pFrustum)
     {
@@ -351,6 +358,11 @@ HRESULT cPlayScene::Update()
         m_pPlayerStatUILayer->Update();
     }
 
+    if (m_pInventory)
+    {
+        m_pInventory->Update(123456789);
+    }
+
     // 이벤트 체크
     string szEventName = "";
     if (m_pGameMap->CheckEvent(szEventName, m_pPlayer->GetPosition()))
@@ -490,6 +502,11 @@ HRESULT cPlayScene::Render()
         m_pParticleFrost->Render();
     }
 
+    if (m_pInventory)
+    {
+        m_pInventory->Render();
+    }
+
 #ifdef _DEBUG
 
     // 장애물, 이벤트 트랩 출력
@@ -513,6 +530,7 @@ ULONG cPlayScene::Release()
     SAFE_DELETE(m_pHPUILayer);
     SAFE_DELETE(m_pParticleFrost);
     SAFE_RELEASE(m_pShop);
+    SAFE_RELEASE(m_pInventory);
 
     return cObject::Release();
 }

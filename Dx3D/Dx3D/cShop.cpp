@@ -46,32 +46,8 @@ void cShop::Setup()
         return;
     }
 
-    // 정보 로드하기
-    json jLoad;
-    ifstream iFile;
-    iFile.open(SHOP_PATH + (string)"shop.json");
-    iFile >> jLoad;
-    iFile.close();
-
-    json jItem = jLoad["item"];
-    for (int i = 0; i < jItem.size(); ++i)
-    {
-        ST_ITEM_INFO stItem;
-        string szName = jItem[i]["item-name"];
-        stItem.szName = szName;
-        string szPath = jItem[i]["item-path"];
-        stItem.szPath = szPath;
-        stItem.nCount = jItem[i]["item-count"];
-        stItem.nPrice = jItem[i]["item-price"];
-        int nStatNum = jItem[i]["item-plus-stat"];
-        char szBuf[10];
-        sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
-        stItem.stStat.szName = szBuf;
-        ZeroMemory(&stItem.stStat, sizeof(ST_STATUS));
-        stItem.fPlusValue = jItem[i]["item-plus-value"];
-
-        m_vecItemInfo.push_back(stItem);
-    }
+    // 정보 가져오기
+    m_vecItemInfo = g_pGameManager->GetItemInfo();
 
     // 레이어 셋팅
     m_pShopLayer = new cUILayer;
@@ -135,7 +111,7 @@ void cShop::Update(int nPlayerMoney)
         // 선택 버튼 클릭 시
         for (int i = 0; i < m_vecItemInfo.size(); ++i)
         {
-            if (!strcmp(szClickBtnName.c_str(), m_vecItemInfo[i].szName.c_str()))
+            if (!strcmp(szClickBtnName.c_str(), m_vecItemInfo[i]->szName.c_str()))
             {
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
                 if (m_eCurrSelectItem != (E_ITEM_TYPE)i)
@@ -146,7 +122,7 @@ void cShop::Update(int nPlayerMoney)
                     {
                         // 선택 이미지 활성화, 다른 이미지 비활성화
                         cUIObject* pUIObject;
-                        m_pShopLayer->FindUIObject(&pUIObject, m_vecItemInfo[j].szName + "select-img");
+                        m_pShopLayer->FindUIObject(&pUIObject, m_vecItemInfo[j]->szName + "select-img");
                         if (pUIObject)
                         {
                             if (i == j)
@@ -196,7 +172,7 @@ void cShop::CloseShop()
     cUIObject* pUIObject;
     for (int i = 0; i < m_vecItemInfo.size(); ++i)
     {
-        m_pShopLayer->FindUIObject(&pUIObject, m_vecItemInfo[i].szName + "select-img");
+        m_pShopLayer->FindUIObject(&pUIObject, m_vecItemInfo[i]->szName + "select-img");
         if (pUIObject)
         {
             if (i == m_eCurrSelectItem)
@@ -342,8 +318,8 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
 
     for (int i = 0; i < m_vecItemInfo.size(); ++i)
     {
-        string szPath = m_vecItemInfo[i].szPath;
-        string szTexKey = m_vecItemInfo[i].szName;
+        string szPath = m_vecItemInfo[i]->szPath;
+        string szTexKey = m_vecItemInfo[i]->szName;
 
         if (i != 0)
         {
@@ -371,7 +347,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
 
         // 선택 버튼
         cUIButton* pSelectButton = new cUIButton;
-        pSelectButton->SetName(m_vecItemInfo[i].szName);
+        pSelectButton->SetName(m_vecItemInfo[i]->szName);
         pSelectButton->SetLocalPos(Vector3(0, 0, 0));
         pSelectButton->SetButtonState();
         pSelectButton->SetTexture("", "", "");
@@ -382,8 +358,8 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         // 선택 이미지
         cUIImageView* pItemSelectImage = new cUIImageView;
         g_pTextureManager->AddTexture("item-select", INTERFACE_PATH + (string)"item/item-select.png", true);
-        pItemSelectImage->SetName(m_vecItemInfo[i].szName + "select-img");
-        pItemSelectImage->SetLocalPos(Vector3(vItemPos.x - 3, vItemPos.y - 3, 0));
+        pItemSelectImage->SetName(m_vecItemInfo[i]->szName + "select-img");
+        pItemSelectImage->SetLocalPos(Vector3(-3, -3, 0));
         pItemSelectImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("item-select", &imageInfo));
         pItemSelectImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
         pItemSelectImage->SetScale(stItemSize.w + 6, stItemSize.h + 6);
@@ -392,7 +368,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         {
             pItemSelectImage->SetAxtive(true);
         }
-        m_pShopLayer->AddUIObject(pItemSelectImage);
+        pItemImage->AddChild(pItemSelectImage);
 
         // 아이템 내용 이미지
         cUIImageView* pItemContentsImage = new cUIImageView;
@@ -405,11 +381,11 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
 
         // 아이템명 텍스트
         cUITextView* pNameText = new cUITextView;
-        pNameText->SetName(m_vecItemInfo[i].szName);
+        pNameText->SetName(m_vecItemInfo[i]->szName);
         pNameText->SetLocalPos(Vector3(95, 10, 0));
         pNameText->SetSize(Vector2(150, 15));
         pNameText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
-        pNameText->SetText(m_vecItemInfo[i].szName);
+        pNameText->SetText(m_vecItemInfo[i]->szName);
         pNameText->SetColor(D3DCOLOR_XRGB(255, 255, 0));
         pNameText->SetDrawTextFormat(DT_LEFT);
         pItemImage->AddChild(pNameText);
@@ -421,7 +397,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pPlusValueText->SetSize(Vector2(150, 15));
         pPlusValueText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
         char buf[20];
-        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i].stStat.szName.c_str(), (int)m_vecItemInfo[i].fPlusValue);
+        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i]->stStat.szName.c_str(), (int)m_vecItemInfo[i]->fPlusValue);
         pPlusValueText->SetText(buf);
         pPlusValueText->SetColor(D3DCOLOR_XRGB(0, 255, 0));
         pPlusValueText->SetDrawTextFormat(DT_LEFT);
@@ -444,7 +420,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pPriceText->SetLocalPos(Vector3(115, 50, 0));
         pPriceText->SetSize(Vector2(100, 15));
         pPriceText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
-        sprintf_s(buf, sizeof(buf), "%d", m_vecItemInfo[i].nPrice);
+        sprintf_s(buf, sizeof(buf), "%d", m_vecItemInfo[i]->nPrice);
         pPriceText->SetText(buf);
         pPriceText->SetDrawTextFormat(DT_LEFT);
         pItemImage->AddChild(pPriceText);

@@ -6,8 +6,9 @@
 class cGameManager : public iSingletonManager
 {
 private:
-    json        m_jPlayerInfo;
-    bool        m_isLoadData;
+    json                        m_jPlayerInfo;
+    bool                        m_isLoadData;
+    vector<ST_ITEM_INFO*>       m_vecItemInfo;
 
 private:
     SINGLETON(cGameManager);
@@ -26,5 +27,9 @@ public:
     bool IsLoadData() { return m_isLoadData; }
     void DisableLoadFlag() { m_isLoadData = false; }
     void EnableLoadFlag() { m_isLoadData = true; }
+
+    void LoadItemInfo();
+    ST_ITEM_INFO* GetItemInfoById(int nId);
+    vector<ST_ITEM_INFO*> GetItemInfo() { return m_vecItemInfo; }
 };
 

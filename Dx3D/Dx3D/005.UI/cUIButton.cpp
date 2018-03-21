@@ -46,57 +46,61 @@ void cUIButton::SetSize(Vector2 size)
 void cUIButton::Update()
 {
     cUIObject::UpdateWorldTM();
-    RECT rc;	// 버튼 영역 렉트
-    SetRect(&rc,
-        (int)m_matWorld._41,
-        (int)m_matWorld._42,
-        (int)(m_matWorld._41 + (m_stSize.x * m_matWorld._11)),
-        (int)(m_matWorld._42 + m_stSize.y * m_matWorld._22));
 
-    if (PtInRect(&rc, g_ptMouse))   // 버튼 위에 커서가 있는 경우
+    if (m_isAxtive)
     {
-        if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
+        RECT rc;	// 버튼 영역 렉트
+        SetRect(&rc,
+            (int)m_matWorld._41,
+            (int)m_matWorld._42,
+            (int)(m_matWorld._41 + (m_stSize.x * m_matWorld._11)),
+            (int)(m_matWorld._42 + m_stSize.y * m_matWorld._22));
+
+        if (PtInRect(&rc, g_ptMouse))   // 버튼 위에 커서가 있는 경우
         {
-            if (m_eButtonState == E_MOUSEOVER)
+            if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
             {
-                m_ptClickPos = g_ptMouse;
-                m_eButtonState = E_SELECT;
-            }
-        }
-        else // 클릭을 안하고 있을 때
-        {
-            if (m_eButtonState == E_SELECT) // 이전에 클릭을 했던 상태라면
-            {
-                // 눌렀다 땜
-                if (m_pButton)
+                if (m_eButtonState == E_MOUSEOVER)
                 {
-                    m_pButton->OnClick(this);
-                    //m_pButton->OnRelease(this);
+                    m_ptClickPos = g_ptMouse;
+                    m_eButtonState = E_SELECT;
                 }
             }
-            m_eButtonState = E_MOUSEOVER;   // 현재 상태는 마우스 오버 상태
+            else // 클릭을 안하고 있을 때
+            {
+                if (m_eButtonState == E_SELECT) // 이전에 클릭을 했던 상태라면
+                {
+                    // 눌렀다 땜
+                    if (m_pButton)
+                    {
+                        m_pButton->OnClick(this);
+                        //m_pButton->OnRelease(this);
+                    }
+                }
+                m_eButtonState = E_MOUSEOVER;   // 현재 상태는 마우스 오버 상태
+            }
         }
-    }
-    else // 버튼 밖에 커서가 있는 경우
-    {
-        if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
+        else // 버튼 밖에 커서가 있는 경우
         {
+            if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
+            {
+            }
+            else
+            {
+                if (m_pButton && m_eButtonState == E_SELECT)
+                {
+                    m_pButton->OnRelease(this);
+                }
+                m_eButtonState = E_NORMAL;
+            }
         }
-        else
+
+        if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
         {
             if (m_pButton && m_eButtonState == E_SELECT)
             {
-                m_pButton->OnRelease(this);
+                m_pButton->OnDrag(this);
             }
-            m_eButtonState = E_NORMAL;
-        }
-    }
-
-    if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
-    {
-        if (m_pButton && m_eButtonState == E_SELECT)
-        {
-            m_pButton->OnDrag(this);
         }
     }
 
@@ -110,7 +114,7 @@ void cUIButton::Render(LPSPRITE pSprite)
     pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
     pSprite->SetTransform(&m_matWorld);
-    if (m_aTexture[m_eButtonState])
+    if (m_aTexture[m_eButtonState] && m_isAxtive)
     {
         pSprite->Draw(m_aTexture[m_eButtonState], &rc, &Vector3(0, 0, 0),
             &Vector3(0, 0, 0), D3DCOLOR_XRGB(255, 255, 255));

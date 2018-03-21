@@ -246,6 +246,9 @@
     <ClInclude Include="001.Manager\000.System\cGameManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="cInventory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx3D.cpp">
@@ -426,6 +429,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="000.Interface\iCharacterObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cInventory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

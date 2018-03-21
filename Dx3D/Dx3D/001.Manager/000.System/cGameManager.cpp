@@ -15,6 +15,7 @@ cGameManager::~cGameManager()
 HRESULT cGameManager::Setup()
 {
     LoadPlayerInfo();
+    LoadItemInfo();
 
     return S_OK;
 }
@@ -32,6 +33,12 @@ HRESULT cGameManager::Render()
 HRESULT cGameManager::Destroy()
 {
     SavePlayerInfo();
+
+    for (auto iter = m_vecItemInfo.begin(); iter != m_vecItemInfo.end();)
+    {
+        SAFE_DELETE(*iter);
+        iter = m_vecItemInfo.erase(iter);
+    }
 
     return S_OK;
 }
@@ -69,4 +76,43 @@ void cGameManager::MakeSaveData()
 
     m_jPlayerInfo["player"] = playerData;
     m_jPlayerInfo["map"] = mapData;
+}
+
+void cGameManager::LoadItemInfo()
+{
+    json jLoad;
+    ifstream iFile;
+    iFile.open(SHOP_PATH + (string)"shop.json");
+    iFile >> jLoad;
+    iFile.close();
+
+    json jItem = jLoad["item"];
+    for (int i = 0; i < jItem.size(); ++i)
+    {
+        ST_ITEM_INFO* stItem = new ST_ITEM_INFO;
+        string szName = jItem[i]["item-name"];
+        stItem->szName = szName;
+        string szPath = jItem[i]["item-path"];
+        stItem->szPath = szPath;
+        stItem->nPrice = jItem[i]["item-price"];
+        int nStatNum = jItem[i]["item-plus-stat"];
+        char szBuf[10];
+        sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
+        stItem->stStat.szName = szBuf;
+        stItem->fPlusValue = jItem[i]["item-plus-value"];
+
+        m_vecItemInfo.push_back(stItem);
+    }
+}
+
+ST_ITEM_INFO* cGameManager::GetItemInfoById(int nId)
+{
+    ST_ITEM_INFO* stItemInfo = NULL;
+
+    if (nId < m_vecItemInfo.size())
+    {
+        stItemInfo = m_vecItemInfo[nId];
+    }
+
+    return stItemInfo;
 }

@@ -14,6 +14,7 @@
 
 class cUILayer;
 class cShop;
+class cInventory;
 
 class cPlayScene : public iSceneObject
 {
@@ -36,6 +37,7 @@ private:
     cWaveShader*                    m_pWaveShader;
     
     cShop*                          m_pShop;
+    cInventory*                     m_pInventory;
 
     cParticle*                      m_pParticleFrost;
 
