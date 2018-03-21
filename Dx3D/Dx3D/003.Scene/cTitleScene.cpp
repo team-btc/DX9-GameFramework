@@ -2,13 +2,10 @@
 #include "cTitleScene.h"
 
 cTitleScene::cTitleScene()
-    : m_stMapInfo(NULL)
-    , m_pCamera(NULL)
-    , m_pGameMap(NULL)
+    : m_pCamera(NULL)
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("icecrown")
     , m_vSindraPos(229, 199, 242)
     , m_vArtuhsPos(Vector3(261, 88, 482))
     , m_vCameraPos(259.47f, 171.95f, 279.68f)
@@ -41,20 +38,10 @@ cTitleScene::~cTitleScene()
     SAFE_DELETE(m_pTextureShader);
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
-    SAFE_DELETE(m_pGameMap);
-    SAFE_DELETE(m_pBGLayer);
 }
 
 HRESULT cTitleScene::Start()
 {
-    if (!m_pFrustum)
-    {
-        m_pFrustum = new cFrustum;
-        g_pAutoReleasePool->AddObject(m_pFrustum);
-    }
-
-    m_pFrustum->Setup();
-
     m_pArthus = new cSkinnedMesh("arthaslichking");
     m_pArthus->SetPosition(m_vArtuhsPos);
     m_pArthus->SetScale(8.0f);
@@ -73,7 +60,6 @@ HRESULT cTitleScene::Start()
         m_pCamera->SetMaxDist(400.0f);
         m_pCamera->SetMinDist(5.0f);
         g_pCameraManager->AddCamera("title", m_pCamera);
-        g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
         g_pCameraManager->DisableCollider();
         
     }
@@ -105,14 +91,11 @@ HRESULT cTitleScene::Start()
 
 HRESULT cTitleScene::Update()
 {
-    //  FRUSTUM CULL UPDATE
-    m_pFrustum->Update();
-
     //  PLAYER UPDATE
     m_pArthus->SetPosition(m_vArtuhsPos);
     // 신드라고사 업데이트
-    m_pSindragosa->Update();
     m_pSindragosa->SetPosition(m_vSindraPos);
+
     // 위치 체크
 
     //신드라곳아 움직임 셋팅
@@ -140,7 +123,7 @@ HRESULT cTitleScene::Update()
         m_isRoar = false;
         m_isReady = false;
         m_vSindraPos = Vector3(229, 199, 242);
-        m_pSindragosa->IdleAnim();
+        //m_pSindragosa->IdleAnim();
         m_nCurrIndex = 0;
         m_pArthus->SetAnimationIndex(1);
         m_vArtuhsPos = Vector3(261, 88, 482);
@@ -164,12 +147,6 @@ HRESULT cTitleScene::Update()
 
 HRESULT cTitleScene::Render()
 {
-    if (m_stMapInfo == NULL ||
-        m_stMapInfo->pTerrainMesh == NULL)
-    {
-        return E_FAIL;
-    }
-
     Matrix4 matW, matV, matP;
     D3DXMatrixIdentity(&matW);
 
@@ -197,7 +174,11 @@ HRESULT cTitleScene::Render()
     {
         m_pArthus->UpdateAndRender();
     }
-    m_pSindragosa->Render();
+
+    if (m_pSindragosa)
+    {
+        m_pSindragosa->UpdateAndRender();
+    }
   
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
@@ -212,17 +193,15 @@ HRESULT cTitleScene::Render()
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 
-    if (m_stMapInfo->isEnableWater && m_pWaveShader)
+    if (m_pWaveShader)
     {
         m_pWaveShader->Render(vP);
     }
 
-    m_pBGLayer->Render();
-
-
-#ifdef _DEBUG
-
-#endif // _DEBUG
+    if (m_pBGLayer)
+    {
+        m_pBGLayer->Render();
+    }
 
     return S_OK;
 }
@@ -287,19 +266,19 @@ void cTitleScene::MoveSindraAllRoute()
     }
     if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 0)
     {
-        m_pSindragosa->RoarAnim();
+        //m_pSindragosa->RoarAnim();
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
         m_nCurrIndex++;
     }
     if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 1)
     {
-        m_pSindragosa->FlySitUpAnim();
+        //m_pSindragosa->FlySitUpAnim();
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
         m_nCurrIndex++;
     }
     if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_nCurrIndex == 2)
     {
-        m_pSindragosa->FlyWalkAnim();
+        //m_pSindragosa->FlyWalkAnim();
         m_fWorldTime = g_pTimerManager->GetWorldTime() + ARTHUS;
         m_nCurrIndex++;
         m_pSindragosa->SetRotation(m_vFlyRotation);
@@ -326,14 +305,14 @@ void cTitleScene::SetSindragosa()
     Vector3 v = Vector3(0, -90, 0);
     Matrix4 matS;
     D3DXMatrixScaling(&matS, 0.5f, 0.5f, 0.5f);
-    m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
+    //m_pSindragosa = new cSindragosa("Frostwurmnorthlend");
     g_pAutoReleasePool->AddObject(m_pSindragosa);
     m_pSindragosa->SetPosition(m_vSindraPos);
     m_pSindragosa->SetRotation(v);
 
-    m_pSindragosa->SetScale(matS);
-    m_pSindragosa->SetActive(true);
-    m_pSindragosa->IdleAnim();
+    //m_pSindragosa->SetScale(matS);
+    //m_pSindragosa->SetActive(true);
+    //m_pSindragosa->IdleAnim();
     
 }
 /*

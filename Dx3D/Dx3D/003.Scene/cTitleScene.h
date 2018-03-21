@@ -20,23 +20,19 @@ class cTitleScene : public iSceneObject
 private:
     cCamera*            m_pCamera;
 
-    string              m_szMapKey;
-    ST_MAP_INFO*        m_stMapInfo;
-
-    cGameMap*           m_pGameMap;
-
-    cPlayer*            m_pPlayer;
-    cFrustum*           m_pFrustum;
-    cSindragosa*        m_pSindragosa;
-    cUILayer*           m_pBGLayer;
+    LPMESH              m_pTerrain;
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
+
+    cUILayer*           m_pBGLayer;
+    
     cSkinnedMesh*       m_pArthus;
-    //=================================== 바닥..
-    LPMESH              m_pBlackMesh;
+    cSkinnedMesh*       m_pSindragosa;
+
     vector<ST_PNT_VERTEX>       m_vecWPNTVertex;
     vector<int>                 m_vecWVertexIndex;
+    
     // 무비스타트, 게임 스타트
     bool                m_isMovieStart;
     bool                m_isStart;
