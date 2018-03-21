@@ -27,7 +27,8 @@ private:
     cWaveShader*        m_pWaveShader;
 
     cUILayer*           m_pBGLayer;
-    
+    cUILayer*           m_pSCLayer;
+
     cSkinnedMesh*       m_pArthas;
     cSkinnedMesh*       m_pSindragosa;
 
@@ -46,9 +47,11 @@ private:
 
     float               m_fWorldTime;
     float               m_fSpeed;
+    
+    bool                m_isPressSpace;
 
     bool                m_isPopup;
-
+    
 public:
     cTitleScene();
     ~cTitleScene();

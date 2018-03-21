@@ -34,6 +34,18 @@ private:
     bool                m_isSelect;                 // 선택
 
     vector<cUIButton*>  m_vecClickButton;           // 클릭한 버튼 담아놓기
+
+                                                    // added
+    bool                m_isTransparent;            // 시간에 따라 투명도 변화 
+    float               m_fDeltaInterval;           // 델타 타임 간격
+    int                 m_nAlphaInterval;           // 알파값 증가폭 
+    bool                m_isRenderGuided;
+    int                 m_nTwinkleCount;            // 반짝이는 횟수;
+    float               m_fTime;
+    int                 m_nAlpha;
+    bool                m_isMaxAlpha;
+
+
 private:
     // cUILayer private function
     HRESULT RenderGuideLine();
@@ -76,4 +88,21 @@ public:
 
     bool IsClickButton() { return !m_vecClickButton.empty(); }
     string GetClickButtonName();
+
+    void SetTransparent(bool trans);
+    void SetDeltaInterval(float fDeltaInter) { m_fDeltaInterval = fDeltaInter; }
+    void SetAlphaInterval(int nAlphaInter) { m_nAlphaInterval = nAlphaInter; }
+    void ChangeTransparent();
+    void SetRenderGuidedLine(bool guided) { m_isRenderGuided = guided; }
+    int  GetTwinkleCount() { return m_nTwinkleCount; }
+    int  GetAlpha() { return m_nAlpha; }
+    bool GetMaxAlpha()
+    {
+        if (m_isMaxAlpha)
+        {
+            m_isMaxAlpha = false;
+            return true;
+        }
+    }
+
 };

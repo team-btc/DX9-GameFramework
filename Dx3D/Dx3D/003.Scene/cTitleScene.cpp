@@ -14,6 +14,7 @@ cTitleScene::cTitleScene()
     , m_vArthasPos(243.59f, 97.0f, 450.0f)
     , m_vSindraPos(229.0f, 199.0f, 242.0f)
     , m_fWorldTime(-1.0f)
+    , m_isPressSpace(false)
     , m_isPopup(false)
 {
 }
@@ -21,6 +22,8 @@ cTitleScene::cTitleScene()
 
 cTitleScene::~cTitleScene()
 {
+    SAFE_DELETE(m_pSCLayer);
+    SAFE_DELETE(m_pBGLayer);
 }
 
 HRESULT cTitleScene::Start()
@@ -110,11 +113,22 @@ HRESULT cTitleScene::Start()
     m_pBGLayer->Setup();
     m_pBGLayer->Update();
 
+    sz = "Assets\\Texture\\blue.png";
+    g_pTextureManager->AddTexture("blue", sz, true);
+    m_pSCLayer = new cUILayer;
+    m_pSCLayer->SetLayer("press", Vector3(0.0f, 0.0f, 0.0f), ST_SIZE(W_WIDTH, W_HEIGHT), true, D3DCOLOR_RGBA(255,255,255,255), "blue");
+   m_pSCLayer->SetTransparent(true);
+   m_pSCLayer->SetAlphaInterval(2);
+   m_pSCLayer->SetDeltaInterval(0.01f);
+    m_pSCLayer->SetActive(true);
+
     return S_OK;
 }
 
 HRESULT cTitleScene::Update()
 {
+
+    //m_pSCLayer->Update();
     if (m_fWorldTime < 0.0f)
     {
         m_pSindragosa->SetAnimationByName("Stand");
@@ -169,7 +183,7 @@ HRESULT cTitleScene::Update()
         m_pSindragosa->SetPosition(pos);
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
-            m_nCurrIndex++;
+            m_nCurrIndex++;                                     // 4°¡ ´ï
         }
         if (g_pTimerManager->GetWorldTime() > 17.0f)
         {
@@ -178,20 +192,32 @@ HRESULT cTitleScene::Update()
     }
     else if (m_nCurrIndex == 4)
     {
-        //  WAIT
+                    
     }
     else if (m_nCurrIndex == 5)
     {
         Vector3 pos = m_pArthas->GetPosition();
         pos.x += 10.0f * g_pTimerManager->GetDeltaTime();
-        pos.z += 25.0f * g_pTimerManager->GetDeltaTime();
+        pos.z += 30.0f * g_pTimerManager->GetDeltaTime();
         pos.y += 2.0f * g_pTimerManager->GetDeltaTime();
         m_pArthas->SetPosition(pos);
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
             //  SET BLACK SCREEN
+            m_nCurrIndex = 6;
+        }
+    }
+    else if (m_nCurrIndex == 6)
+    {
+        m_pSCLayer->Update();
+        if (m_pSCLayer->GetTwinkleCount() == 1)
+        {
+            m_pSCLayer->SetTransparent(false);
+            m_pSCLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 255));
             m_nCurrIndex = 10;
         }
+
+
     }
     else if (m_nCurrIndex == 10)
     {
@@ -205,6 +231,7 @@ HRESULT cTitleScene::Update()
         m_pArthas->SetAnimationSpeed(1.0f);
         m_pArthas->SetRotation(Vector3(0.0f, -80.0f, 0.0f));
         m_nCurrIndex = 5;
+        m_isPressSpace = true;
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.7f;
     }
 
@@ -256,7 +283,7 @@ HRESULT cTitleScene::Render()
     {
         m_pBGLayer->Render();
     }
-
+    m_pSCLayer->Render();
     return S_OK;
 }
 

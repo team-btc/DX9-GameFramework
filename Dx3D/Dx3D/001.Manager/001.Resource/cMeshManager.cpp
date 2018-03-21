@@ -158,7 +158,7 @@ void cMeshManager::LoadJSON()
     m_mapJson.insert(make_pair("Boar", newJson));
     m_fileJson.close();
 
-    m_fileJson.open("CharacterStatus.json");
+    m_fileJson.open("Assets\\Data\\CharacterStatus.json");
     m_fileJson >> newJson;
     m_mapJson.insert(make_pair("Status", newJson));
 
