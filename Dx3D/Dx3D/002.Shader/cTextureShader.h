@@ -1,8 +1,8 @@
-
 #pragma once
+
 class cTextureShader
 {
-    LPMESH				    m_pMesh;
+    LPMESH                  m_pMesh;
     LPEFFECT                m_pTextureShader;
     Vector4                 m_vPickPos;
     float                   m_fBGDensity;
@@ -22,5 +22,7 @@ public:
     void SetMesh(LPMESH mesh) { m_pMesh = mesh; }
     void SetAlphaDraw(LPTEXTURE9 AlphaDraw) { m_pAlphaDraw = AlphaDraw; }
     void Render();
+    void SetPlayerPos(Vector3 pos);
+    void SetTargetPos(Vector3* pos);
 };
 

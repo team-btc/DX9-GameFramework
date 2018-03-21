@@ -1,8 +1,10 @@
 #pragma once
 #include "iUILayer.h"
+#include "cUIButton.h"
 
 class cUIObject;
-class cUILayer : public iUILayer // 선생님 UIDraw 같은 역활
+
+class cUILayer : public iUILayer, public iUIButton // 선생님 UIDraw 같은 역활
 {
 private:
     enum E_UI_BACKGROUND
@@ -16,7 +18,7 @@ private:
     string              m_strName;                  // UILayer Name (Identify UILayer other UILayers) 
     Vector3             m_vPosition;                // UILayer Position
     Matrix4             m_matWorld;                 // UILayer World Matrix
-    LPDIRECT3DTEXTURE9  m_textureBackground;        // UILayer Background Texture
+    LPTEXTURE9          m_textureBackground;        // UILayer Background Texture
     ST_SIZE             m_stBackgroundTextureSize;  // UILayer Layout Size (Widht, Height)
     Color               m_colorBackground;          // UILayer Backgorund Color
     float               m_fRatioX;
@@ -31,6 +33,7 @@ private:
     bool                m_isActive;                 // 활성(true) / 비활성(false)
     bool                m_isSelect;                 // 선택
 
+    vector<cUIButton*>  m_vecClickButton;           // 클릭한 버튼 담아놓기
 private:
     // cUILayer private function
     HRESULT RenderGuideLine();
@@ -53,7 +56,7 @@ public:
     HRESULT FindUILayerChild(OUT cUILayer** pChild, IN string strChildName);
     HRESULT AddUIObject(IN cUIObject* pObject);
     HRESULT FindUIObject(OUT cUIObject** pObject, IN string strObjectName);
-
+    
     // Derived iUILayer interface
     virtual HRESULT SetPosition(IN Vector3 vPosition) override;
     virtual HRESULT GetPosition(OUT Vector3& vPosition) override;
@@ -65,5 +68,12 @@ public:
     virtual HRESULT GetWorldMatrix(OUT Matrix4 matWorld) override;
     virtual HRESULT SetWorldMatrix(IN Matrix4 matWorld) override;
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
-        IN bool useBackground = false, IN Color colerBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*빈 스트링*/) override;
+        IN bool useBackground = false, IN Color colorBackGround = D3DCOLOR_ARGB(0, 0, 0, 0), IN string strTextureName = "" /*빈 스트링*/) override;
+
+    virtual void OnClick(cUIButton* pSender) override;
+    virtual void OnDrag(cUIButton* pSender) override;
+    virtual void OnRelease(cUIButton* pSender) override;
+
+    bool IsClickButton() { return !m_vecClickButton.empty(); }
+    string GetClickButtonName();
 };

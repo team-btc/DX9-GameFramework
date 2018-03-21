@@ -66,4 +66,6 @@ public:
     Vector3 GetRotation() { return m_vRotation; }
     void SetScale(float scale) { m_vScale = Vector3(scale, scale, scale); }
     Vector3 GetScale() { return m_vScale; }
+
+    void GetMatrixByName(OUT Matrix4& mat, IN string szBoneName);
 };

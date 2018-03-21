@@ -16,10 +16,8 @@ cUIImageView::~cUIImageView()
 
 void cUIImageView::Render(LPSPRITE pSprite)
 {
-    if (m_pTexture)
+    if (m_pTexture && m_isAxtive)
     {
-        RECT rc;
-        SetRect(&rc, 0, 0, (int)m_stSize.x, (int)m_stSize.y);
         pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
 
         pSprite->SetTransform(&m_matWorld);

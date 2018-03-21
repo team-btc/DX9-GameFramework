@@ -13,23 +13,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
     m_stStat.szName = "Monster1";
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
-    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
-
-    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
-    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fCurMP = 0.0f;
-    m_stStat.fMaxMP = 0.0f;
-    m_stStat.fSpeed = 1.0f;
-    m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = 3.0f;
-    m_stStat.fMPGen = 3.0f;
-    m_stStat.nCoolTime = 0;
-    m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    UpdateStatus();
 
     IdleAnim();
 
@@ -53,23 +37,7 @@ cMonster::cMonster(string szKey)
     m_stStat.szName = "Monster1";
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
-    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
-
-    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
-    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fCurMP = 0.0f;
-    m_stStat.fMaxMP = 0.0f;
-    m_stStat.fSpeed = 1.0f;
-    m_stStat.fCritical = 15.0f;
-    m_stStat.fHPGen = 3.0f;
-    m_stStat.fMPGen = 3.0f;
-    m_stStat.nCoolTime = 0;
-    m_stStat.nCurEXP = 0;
-    m_stStat.nMaxEXP = 100;
+    UpdateStatus();
 
     IdleAnim();
 
@@ -110,14 +78,7 @@ void cMonster::Setup()
 
     m_stStat.Level = 1;
 
-    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
-    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
-
-    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
-    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
-    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
-    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
+    UpdateStatus();
 
     IdleAnim();
 
@@ -276,4 +237,36 @@ void cMonster::Render()
 ULONG cMonster::Release()
 {
     return cObject::Release();
+}
+
+void cMonster::SumExp(int exp)
+{
+    //m_stStat.nCurEXP += exp;
+    //while (m_stStat.nMaxEXP <= m_stStat.nCurEXP)
+    //{
+    //    m_stStat.Level++;
+    //    m_stStat.nCurEXP -= m_stStat.nMaxEXP;
+    //}
+    UpdateStatus();
+}
+
+void cMonster::UpdateStatus()
+{
+    m_stStat.fSTR = 10.0f + m_stStat.Level * 3.0f;
+    m_stStat.fDEX = 5.0f + m_stStat.Level * 3.0f;
+    m_stStat.fINT = 5.0f + m_stStat.Level * 3.0f;
+
+    m_stStat.fATK = 30.0f + m_stStat.Level * 10.0f;
+    m_stStat.fDEF = 5.0f + m_stStat.Level * 3.0f;
+    m_stStat.fCurHP = 300.0f + m_stStat.Level * 30.0f;
+    m_stStat.fMaxHP = 300.0f + m_stStat.Level * 30.0f;
+    m_stStat.fCurMP = 0.0f;
+    m_stStat.fMaxMP = 0.0f;
+    m_stStat.fSpeed = 1.0f;
+    m_stStat.fCritical = 15.0f;
+    m_stStat.fHPGen = 3.0f;
+    m_stStat.fMPGen = 3.0f;
+    m_stStat.nCoolTime = 0;
+    m_stStat.nCurEXP = 0;
+    m_stStat.nMaxEXP = 100;
 }
