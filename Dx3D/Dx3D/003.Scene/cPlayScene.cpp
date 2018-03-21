@@ -173,13 +173,13 @@ HRESULT cPlayScene::Start()
     if (!m_pCamera)
     {
         m_pCamera = new cCamera;
-        m_pCamera->TrackingEnable();
+        m_pCamera->EnableFocus();
         m_pCamera->SetMaxDist(100.0f);
         m_pCamera->SetMinDist(5.0f);
         m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->ColliderDisable();
+        g_pCameraManager->EnableCollider();
     }
     m_pCamera->Setup();
     g_pCameraManager->SetCurrCamera("play");
@@ -473,10 +473,10 @@ HRESULT cPlayScene::Render()
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
     g_pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-    for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
-    {
-        m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
-    }
+   // for (int i = 0; i < m_stMapInfo->vecObjectInfo.size(); ++i)
+   // {
+   //     m_stMapInfo->vecObjectInfo[i].pMesh->UpdateAndRender();
+   // }
     g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
     g_pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
 
@@ -510,8 +510,8 @@ HRESULT cPlayScene::Render()
 #ifdef _DEBUG
 
     // 장애물, 이벤트 트랩 출력
-    m_pGameMap->RendObstacle();
-    m_pGameMap->RendEventTrap();
+    //m_pGameMap->RendObstacle();
+    //m_pGameMap->RendEventTrap();
 
 #endif // _DEBUG
 
@@ -623,10 +623,6 @@ void cPlayScene::UpdateUI()
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
 }
 
 void cPlayScene::ParseEvent(string szCommand)
@@ -642,7 +638,7 @@ void cPlayScene::ParseEvent(string szCommand)
 void cPlayScene::TransportMap(string szMap)
 {
     m_szMapKey = szMap;
-    m_stMapInfo = NULL;   
+    m_stMapInfo = NULL;
     Start();
     Update();
 }

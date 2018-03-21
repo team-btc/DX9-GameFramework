@@ -17,8 +17,6 @@ private:
     Matrix4         m_matProj;
 
     Vector3         m_vRotation;
-    float           m_fRotX;
-    float           m_fRotY;
     POINT           m_ptPrevMouse;
     bool            m_isRButtonDown;
     bool            m_isFocus;
@@ -45,20 +43,22 @@ public:
     void SetEye(Vector3 pos) { m_vEye = pos; }
     Vector3 GetLookat() { return m_vLookAt; }
 
-    void TrackingToggle() { m_isFocus = !m_isFocus; }
-    void TrackingEnable() { m_isFocus = true; }
-    void TrackingDisable() { m_isFocus = false; }
+    void EnableControl() { m_isControl = true; }
+    void DisableControl() { m_isControl = false; }
+    void ToggleControl() { m_isControl = !m_isControl; }
+
+    void ToggleFocus() { m_isFocus = !m_isFocus; }
+    void EnableFocus() { m_isFocus = true; }
+    void DisableFocus() { m_isFocus = false; }
 
     float GetLookatOffset() { return m_fLookatOffset; }
     void SetLookatOffset(float val) { m_fLookatOffset = val; }
-    void SetFovy(float fov) { m_fFov = fov; }
+    void SetFov(float fov);
+    float GetFov() { return m_fFov; }
 
     void SetDist(float val) { m_fDistance = val; }
     void SetMinDist(float val) { m_fMinDist = val; }
     void SetMaxDist(float val) { m_fMaxDist = val; }
 
     void SetControl(bool b) { m_isControl = b; }
-
-    void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
-

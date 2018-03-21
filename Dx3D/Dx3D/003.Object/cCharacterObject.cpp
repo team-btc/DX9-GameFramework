@@ -154,6 +154,31 @@ void cCharacterObject::DeadAnim()
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Death")->second.nStateNum);
 }
 
+void cCharacterObject::FlyWalkAnim()
+{
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("FlyWalk")->second.nStateNum);
+}
+
+void cCharacterObject::FlySitUpAnim()
+{
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("FlySitGroundUp")->second.nStateNum);
+}
+
+void cCharacterObject::FlySitAnim()
+{
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("FlySitGround")->second.nStateNum);
+}
+
+void cCharacterObject::FlySitDownAnim()
+{
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("FlySitGroundDown")->second.nStateNum);
+}
+
+void cCharacterObject::RoarAnim()
+{
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Roar")->second.nStateNum);
+}
+
 void cCharacterObject::FalseAnim()
 {
    isAttack = false;

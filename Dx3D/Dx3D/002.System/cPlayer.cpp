@@ -85,21 +85,23 @@ void cPlayer::Update()
             m_isPickMonster = false;
 
             //메쉬 공격
-            for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+            if (m_vecMonster != NULL)
             {
-                if (ray.IsPicked(&(*iter)->GetSphere()))
+                for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
                 {
-                    m_isPickMonster = true;
-                    m_isMoveToPoint = false;
-                    isMoveToTarget = true;
-                    RayCast(*iter);
-                    if (!isRun && Distance((*iter)->GetPosition()) >= m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
+                    if (ray.IsPicked(&(*iter)->GetSphere()))
                     {
-                        RunAnim();
+                        m_isPickMonster = true;
+                        m_isMoveToPoint = false;
+                        isMoveToTarget = true;
+                        RayCast(*iter);
+                        if (!isRun && Distance((*iter)->GetPosition()) >= m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
+                        {
+                            RunAnim();
+                        }
                     }
                 }
             }
-
             //맵이동 나중에 씬에 따라서 맵이름이 바뀌어야함
             if (!m_isPickMonster)
             {
@@ -320,7 +322,7 @@ void cPlayer::Render()
     matW = m_MatScale * matT;
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    m_pPikingMesh->DrawSubset(0);
+    //m_pPikingMesh->DrawSubset(0);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 #endif // _DEBUG
 }

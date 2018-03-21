@@ -213,7 +213,6 @@
     <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="001.Manager\000.System\cGameManager.h" />
     <ClInclude Include="cInventory.h" />
-    <ClInclude Include="cMapLoad.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
@@ -224,6 +223,7 @@
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
     <ClInclude Include="cShop.h" />
+    <ClInclude Include="002.System\cSindragosa.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -278,7 +278,6 @@
     <ClCompile Include="003.Scene\cLoadingScene.cpp" />
     <ClCompile Include="001.Manager\000.System\cGameManager.cpp" />
     <ClCompile Include="cInventory.cpp" />
-    <ClCompile Include="cMapLoad.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="003.Object\cCharacterObject.cpp" />
@@ -289,6 +288,7 @@
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
     <ClCompile Include="cShop.cpp" />
+    <ClCompile Include="002.System\cSindragosa.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
