@@ -37,8 +37,12 @@ sampler2D TexSampler1 = sampler_state
    Texture = (texture1);
    AddressU = Mirror;
    AddressV = Mirror;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ending
 };
+
 sampler2D TexSampler2 = sampler_state
 {
    Texture = (texture2);
@@ -57,6 +61,7 @@ sampler2D TexAlpha = sampler_state
    MINFILTER = LINEAR;
    MAGFILTER = LINEAR;
 };
+
 
 struct VS_INPUT
 {

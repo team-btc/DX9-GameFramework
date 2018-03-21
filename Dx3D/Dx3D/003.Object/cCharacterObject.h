@@ -108,11 +108,5 @@ public:
 
     virtual void NearestSearch(vector<iCharacterObject*> _vec) override;
     virtual float Distance(Vector3 Pos) override;
-
-    ////  레벨업
-    //virtual void SumExp(int exp) override;
-
-    ////  스탯 갱신
-    //virtual void UpdateStatus() override;
 };
 

@@ -21,6 +21,7 @@ private:
 
     LPMESH              m_pTerrain;
     LPMESH              m_pWater;
+
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
