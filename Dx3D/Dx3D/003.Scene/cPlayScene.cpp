@@ -166,13 +166,13 @@ HRESULT cPlayScene::Start()
     if (!m_pCamera)
     {
         m_pCamera = new cCamera;
-        m_pCamera->TrackingEnable();
+        m_pCamera->EnableFocus();
         m_pCamera->SetMaxDist(100.0f);
         m_pCamera->SetMinDist(5.0f);
         m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->ColliderDisable();
+        g_pCameraManager->EnableCollider();
     }
     m_pCamera->Setup();
     g_pCameraManager->SetCurrCamera("play");
@@ -605,10 +605,6 @@ void cPlayScene::UpdateUI()
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (m_pCamera)
-    {
-        m_pCamera->WndProc(hWnd, message, wParam, lParam);
-    }
 }
 
 void cPlayScene::ParseEvent(string szCommand)
@@ -624,7 +620,7 @@ void cPlayScene::ParseEvent(string szCommand)
 void cPlayScene::TransportMap(string szMap)
 {
     m_szMapKey = szMap;
-    m_stMapInfo = NULL;   
+    m_stMapInfo = NULL;
     Start();
     Update();
 }
