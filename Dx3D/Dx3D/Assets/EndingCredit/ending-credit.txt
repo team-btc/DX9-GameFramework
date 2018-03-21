@@ -1,0 +1,104 @@
+Game Design
+TEAM BTC
+
+Producer
+Eugene Kim
+
+Technology Lead
+Eugene Kim
+
+Programming
+Eugene Kim
+Dongchul Choi
+Chanhyeok Park
+Dongwon Lee
+Eunju Lee
+
+Extract Resources
+Eugene Kim
+
+Game Base Programming
+Eugene Kim
+
+Editor Base Programming
+Eugene Kim
+
+Map Editor Programming
+Eunju Lee
+Chanhyeok Park
+Dongchul Choi
+
+Map Editor Programming Assist
+Eugene Kim
+
+Character Viewer Programming
+Dongwon Lee
+
+Shader Programming
+Chanhyeok Park
+
+Shader Programming Assist
+Eugene Kim
+
+Character Programming
+Dongwon Lee
+
+Character Programming Assist
+Eugene Kim
+
+UI Programming
+Dongchul Choi
+
+Shop Programming
+Eunju Lee
+
+Particle Programming
+Eugene Kim
+
+Story Concept
+TEAM BTC
+
+UI Image
+Eugene Kim
+Eunju Lee
+
+Character Animation
+Eugene Kim
+
+Audio Director
+Eugene Kim
+
+Audio Researcher
+Eugene Kim
+Chanhyeok Park
+
+Sound Design
+Eugene Kim
+Chanhyeok Park
+
+CI Design and Artist
+Eugene Kim
+
+Recruiting
+Eugene Kim
+
+Thanks to
+Dohyun Kim
+Marlamin (WOW OBJ EXPORTER)
+Jeromnimo (WOW MODEL VIEWER)
+
+Spechial Thanks
+Minwoo Ha
+SGA
+CKL
+
+2018 TEAM BANGTAN CODING DAN no rights reserved
+
+Visual Studio Community
+3DS MAX 
+Adobe Photoshop
+Sublime Text
+
+Direct X 9.0c
+MFC
+JSON for Modern C++

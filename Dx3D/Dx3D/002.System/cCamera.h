@@ -51,7 +51,7 @@ public:
     void ToggleControl() { m_isControl = !m_isControl; }
     void ToggleFocus() { m_isFocus = !m_isFocus; }
     void EnableFocus() { m_isFocus = true; }
-    void DisableFocus() { m_isFocus = false; }er
+    void DisableFocus() { m_isFocus = false; }
 
     float GetLookatOffset() { return m_fLookatOffset; }
     void SetLookatOffset(float val) { m_fLookatOffset = val; }

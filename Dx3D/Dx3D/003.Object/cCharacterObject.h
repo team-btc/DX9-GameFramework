@@ -104,7 +104,8 @@ public:
 
     virtual void NearestSearch(vector<cMonster*> _vec) override;
     virtual float Distance(Vector3 Pos) override;
-
+    virtual void SumExp(int exp) override;
+    virtual void UpdateStatus() override;
     ////  ·¹º§¾÷
     //virtual void SumExp(int exp) override;
 

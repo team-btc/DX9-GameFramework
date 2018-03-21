@@ -24,6 +24,7 @@ private:
     ST_MAP_INFO*        m_stMapInfo;
 
     cGameMap*           m_pGameMap;
+    LPMESH              m_pMesh;
 
     cPlayer*            m_pPlayer;
     cFrustum*           m_pFrustum;
