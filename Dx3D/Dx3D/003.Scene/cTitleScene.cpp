@@ -18,6 +18,10 @@ cTitleScene::cTitleScene()
     , m_isArthusMove(false)
     , m_isArthusRender(false)
     , m_isReady(false)
+    , m_isChangeScene(false)
+    , m_isTemp(false)
+    , m_isFadeOut(false)
+    , m_fFadeTime(FLT_MAX)
     , m_ft(0)
     , m_vStartPos(0,0,0)
     , m_fWorldTime(0)
@@ -43,6 +47,7 @@ cTitleScene::~cTitleScene()
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pBGLayer);
+    SAFE_DELETE(m_pSGLayer);
 }
 
 HRESULT cTitleScene::Start()
@@ -130,8 +135,8 @@ HRESULT cTitleScene::Start()
         
     }
     m_pCamera->Setup();
-    m_pCamera->SetPosition(m_vSindraPos);
-    m_pCamera->SetTargetPos(m_vCameraPos);
+    m_pCamera->SetEye(Vector3(262.53f, 88.71f, 498.78f));
+    m_pCamera->SetTargetPos(Vector3(259.47f, 172.95f, 279.68f));
     g_pCameraManager->SetCurrCamera("title");
 
 
@@ -139,8 +144,8 @@ HRESULT cTitleScene::Start()
     m_pBGLayer = new cUILayer;
     m_pBGLayer->SetLayer("press", Vector3(150, 650, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "Black");
     m_pBGLayer->SetTransparent(true);
-    m_pBGLayer->SetDeltaInterval(1);
-    m_pBGLayer->SetAlphaInterval(15);
+    m_pBGLayer->SetDeltaInterval(0.01f);
+    m_pBGLayer->SetAlphaInterval(2.5f);
     m_pBGLayer->SetActive(true);
 
     g_pTextureManager->AddTexture("press-tex", "Assets/Splash/press-space-to-start.png", true);    
@@ -148,9 +153,17 @@ HRESULT cTitleScene::Start()
     m_pBGLayer2->SetLayer("press_text", Vector3(0, 0, 0), ST_SIZE(1300, 150), true, D3DCOLOR_RGBA(0, 0, 0, 0), "press-tex");
     m_pBGLayer->AddUILayerChild(m_pBGLayer2);
     m_pBGLayer2->SetTransparent(true);
-    m_pBGLayer2->SetDeltaInterval(1);
-    m_pBGLayer2->SetAlphaInterval(15);
+    m_pBGLayer2->SetDeltaInterval(0.01f);
+    m_pBGLayer2->SetAlphaInterval(2.5f);
 
+    g_pTextureManager->AddTexture("blue", "./Assets/UI/blue.png", true);
+    m_pSGLayer = new cUILayer;
+    m_pSGLayer->SetLayer("press", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT), true, D3DCOLOR_RGBA(0, 0, 0, 0), "blue");
+    m_pSGLayer->SetTransparent(true);
+    m_pSGLayer->SetDeltaInterval(0.01f);
+    m_pSGLayer->SetAlphaInterval(1.0f);
+    m_pSGLayer->SetBackGroundColor(D3DCOLOR_RGBA(0, 0, 0, 0));
+    m_pSGLayer->SetActive(true);
     return S_OK;
 }
 
@@ -185,11 +198,13 @@ HRESULT cTitleScene::Update()
     }
     else  if (g_pKeyManager->isOnceKeyDown('9'))
     {
+        m_isChangeScene = false;
         m_isMovieStart = false;
         m_isStart = false;
         m_isArthusMove = false;
         m_isRoar = false;
         m_isReady = false;
+        m_isTemp = false;
         m_vSindraPos = Vector3(229, 199, 242);
         m_pSindragosa->IdleAnim();
         m_nCurrIndex = 0;
@@ -210,12 +225,15 @@ HRESULT cTitleScene::Update()
     {
         MoveArthus();
     }
-
-    if (m_pBGLayer)
+    if (m_pBGLayer && m_isReady)
     {
         m_pBGLayer->Update();
     }
 
+    if (m_isFadeOut)
+    {
+        g_pScnManager->ChangeScene("play");
+    }
     return S_OK;
 }
 
@@ -274,9 +292,14 @@ HRESULT cTitleScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    m_pBGLayer->Render();
-
-
+    if (m_isReady)
+    {
+        m_pBGLayer->Render();
+    }
+    if (!m_isFadeOut)
+    {
+        m_pSGLayer->Render();
+    }
 #ifdef _DEBUG
 
 #endif // _DEBUG
@@ -321,11 +344,12 @@ void cTitleScene::MoveArthus()
 {
     if (!m_isArthusMove)
     {
-        m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.0f;
+        m_fArthusTime = g_pTimerManager->GetWorldTime() + 1.0f;
         m_isArthusMove = true;
     }
-    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusMove)
+    if (m_fArthusTime <= g_pTimerManager->GetWorldTime() && m_isArthusMove)
     {
+        m_isReady = false;
         if (m_ft == 0)
         {
             m_pArthus->SetAnimationIndex(11);
@@ -371,9 +395,28 @@ void cTitleScene::MoveSindraAllRoute()
         m_isArthusRender = true;
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.0f;
     }
-    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusRender)
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isArthusRender && !m_isReady && !m_isTemp)
     {
         m_isReady = true;
+        m_isTemp = true;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && !m_isChangeScene)
+    {
+        m_isChangeScene = true;
+        m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+    }
+    if (m_isChangeScene)
+    {
+        m_pSGLayer->Update();
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime() && m_isChangeScene)
+    {
+        m_fFadeTime = g_pTimerManager->GetWorldTime() + 3.6f;
+    }
+    if (m_fWorldTime <= g_pTimerManager->GetWorldTime())
+    {
+        m_isFadeOut = true;
     }
     MoveSindra(m_vecSindraJumpTarget[0], 0);
     MoveSindra(m_vecSindraJumpTarget[1], 1);

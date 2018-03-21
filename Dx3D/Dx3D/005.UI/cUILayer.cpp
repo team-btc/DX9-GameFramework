@@ -20,8 +20,9 @@ cUILayer::cUILayer()
     , m_isActive(false)
     , m_isTransparent(false)
     , m_fDeltaInterval(DELTA_INTERVAL)
-    , m_nAlphaInterval(ALPHA_INTERVAL)
+    , m_fAlphaInterval(ALPHA_INTERVAL)
     , m_isRenderGuided(false)
+    , m_nTwinkleCount(0)
 {
     D3DXMatrixIdentity(&m_matWorld);			// 메트릭스 초기화 
     SetRect(&m_rtLayer, 0, 0, 0, 0);			// 렉트 초기화 
@@ -362,10 +363,11 @@ void cUILayer::ChangeTransparent()
     if (time >= m_fDeltaInterval)
     {
         time = 0;
-        alpha += m_nAlphaInterval;
+        alpha += m_fAlphaInterval;
         
-        if (alpha > 255)
+        if (255 - alpha <= D3DX_16F_EPSILON)
         {
+            m_nTwinkleCount += 1;
             alpha = 0;
         }
     }

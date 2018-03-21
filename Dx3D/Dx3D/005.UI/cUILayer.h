@@ -38,8 +38,9 @@ private:
     // added
     bool                m_isTransparent;            // 시간에 따라 투명도 변화 
     float               m_fDeltaInterval;           // 델타 타임 간격
-    int                 m_nAlphaInterval;           // 알파값 증가폭 
+    float               m_fAlphaInterval;           // 알파값 증가폭 
     bool                m_isRenderGuided;
+    int                 m_nTwinkleCount;
 private:
     // cUILayer private function
     HRESULT RenderGuideLine();
@@ -78,7 +79,8 @@ public:
 
     void SetTransparent(bool trans) { m_isTransparent = trans; }
     void SetDeltaInterval(float fDeltaInter) {m_fDeltaInterval = fDeltaInter;}
-    void SetAlphaInterval(int nAlphaInter) { m_nAlphaInterval = nAlphaInter; }
+    void SetAlphaInterval(float fAlphaInter) { m_fAlphaInterval = fAlphaInter; }
     void ChangeTransparent();
     void SetRenderGuidedLine(bool guided) { m_isRenderGuided = guided; }
+    int  GetTwinkleCount() { return m_nTwinkleCount; }
 };

@@ -29,6 +29,12 @@ private:
     cFrustum*           m_pFrustum;
     cSindragosa*        m_pSindragosa;
     cUILayer*           m_pBGLayer;
+    // 신드지나감
+    cUILayer*           m_pSGLayer;
+    // 장면 전환
+    cUILayer*           m_pCSLayer;
+
+
     cTextureShader*     m_pTextureShader;
     cSkyBoxShader*      m_pSkyBoxShader;
     cWaveShader*        m_pWaveShader;
@@ -43,6 +49,10 @@ private:
     bool                m_isArthusMove;
     bool                m_isArthusRender;
     bool                m_isReady;
+    bool                m_isChangeScene;
+    bool                m_isFadeOut;
+    bool                m_isTemp;
+    
     //갱신되는 포지션
     Vector3             m_vSindraPos;
     Vector3             m_vArtuhsPos;
@@ -63,6 +73,8 @@ private:
     // 베지어곡선용
     float               m_ft;
     float               m_fWorldTime;
+    float               m_fArthusTime;
+    float               m_fFadeTime;
 public:
     cTitleScene();
     ~cTitleScene();
