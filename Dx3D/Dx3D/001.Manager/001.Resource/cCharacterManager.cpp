@@ -47,3 +47,37 @@ cMonster* cCharacterManager::GetMonster()
     return returnMonster;
 }
 
+json cCharacterManager::GetPlayerData()
+{
+    json jPlayerData;
+    ST_STATUS stStatus = m_pPlayer->GetStatus();
+    jPlayerData["name"] = stStatus.szName;
+    jPlayerData["level"] = stStatus.Level;
+    jPlayerData["exp"] = stStatus.nCurEXP;
+    jPlayerData["hp"] = stStatus.fCurHP;
+    jPlayerData["mp"] = stStatus.fCurMP;
+    Vector3 pos = m_pPlayer->GetPosition();
+    jPlayerData["pos"]["x"] = pos.x;
+    jPlayerData["pos"]["y"] = pos.y;
+    jPlayerData["pos"]["z"] = pos.z;
+
+    return jPlayerData;
+}
+
+void cCharacterManager::SetPlayerData(json playerData)
+{
+    ST_STATUS stStatus;
+    string szTemp = playerData["name"];
+    stStatus.szName = szTemp;
+    stStatus.Level = playerData["level"];
+    stStatus.nCurEXP = playerData["exp"];
+    stStatus.fCurHP = playerData["hp"];
+    stStatus.fCurMP = playerData["mp"];
+    m_pPlayer->SetStatus(stStatus);
+
+    Vector3 pos;
+    pos.x = playerData["pos"]["x"];
+    pos.y = playerData["pos"]["y"];
+    pos.z = playerData["pos"]["z"];
+    m_pPlayer->SetPosition(pos);
+}

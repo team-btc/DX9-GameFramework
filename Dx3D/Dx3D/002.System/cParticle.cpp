@@ -117,6 +117,7 @@ void cParticle::AddParticle()
 void cParticle::PreRender()
 {
     g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
+    g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true);
     g_pDevice->SetRenderState(D3DRS_POINTSIZE, FloatToDword(m_fSize));
@@ -144,7 +145,7 @@ void cParticle::PostRender()
     g_pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-    g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
+    g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
 }
 
 // 렌더링 메서드

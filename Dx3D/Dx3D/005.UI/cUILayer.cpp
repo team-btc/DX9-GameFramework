@@ -39,6 +39,14 @@ cUILayer::~cUILayer()
         }
         m_vecUILayerChilds.clear();
     }
+    if (!m_vecUIObjects.empty())
+    {
+        for (int i = 0; i< m_vecUIObjects.size(); i++)
+        {
+            SAFE_RELEASE(m_vecUIObjects[i]);
+        }
+        m_vecUIObjects.clear();
+    }
 
     SAFE_RELEASE(m_pUIobjectRoot);
     SAFE_RELEASE(m_pSprite);
@@ -46,8 +54,6 @@ cUILayer::~cUILayer()
 
 HRESULT cUILayer::Setup()
 {
-    //test
-    g_pTextureManager->AddTexture("Arrow", "Assets\\UI\\Target_Arrow_UI.png", true);
     return E_NOTIMPL;
 }
 
@@ -86,11 +92,16 @@ HRESULT cUILayer::Render()
                 hr = RenderTextureBackground();
             }
         }
+#ifdef _DEBUG
+
         // 가이드라인 그리기
         if (m_isRenderGuided)
         {
-            hr = RenderGuideLine();
+            //hr = RenderGuideLine();
         }
+
+
+#endif // _DEBUG
 
         if (m_pUIobjectRoot)
         {
@@ -198,7 +209,7 @@ HRESULT cUILayer::FindUILayerChild(OUT cUILayer** pChild, IN string strChildName
     pChild = NULL;
     return S_OK;
 }
-HRESULT cUILayer::AddUIObject(IN cUIObject * pObject)
+HRESULT cUILayer::AddUIObject(IN cUIObject* pObject)
 {
     pObject->SetParent(m_pUIobjectRoot);
     m_pUIobjectRoot->AddChild(pObject);
@@ -273,7 +284,7 @@ HRESULT cUILayer::SetWorldMatrix(IN Matrix4 matWorld)
 
 //1)이름, 2)위치, 3)사이즈, 4)백그라운드 표시 = false, 5)백그라운드 컬러 = 0, 6)백그라운드 텍스쳐 ="")) 
 //입력된 값을 통해 레이어를 설정한다.	
-HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN Color colerBackGround, IN string strTextureName)
+HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize, IN bool useBackground, IN Color colorBackGround, IN string strTextureName)
 {
     HRESULT hr;
 
@@ -341,7 +352,7 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
             m_isVertexBackground = false;
         }
         // 백그라운드 컬러를 설정 
-        hr = SetBackGroundColor(colerBackGround);
+        hr = SetBackGroundColor(colorBackGround);
     }
 
     m_pUIobjectRoot = new cUIObject;
@@ -353,6 +364,7 @@ HRESULT cUILayer::SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_S
     return S_OK;
 }
 
+<<<<<<< HEAD
 void cUILayer::ChangeTransparent()
 {
     static float time = 0;
@@ -373,6 +385,35 @@ void cUILayer::ChangeTransparent()
     }
 
     SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, alpha));
+=======
+void cUILayer::OnClick(cUIButton* pSender)
+{
+    m_vecClickButton.push_back(pSender);
+}
+
+void cUILayer::OnDrag(cUIButton* pSender)
+{
+
+}
+
+void cUILayer::OnRelease(cUIButton* pSender)
+{
+
+}
+
+// 클릭한 버튼 이름 겟터
+string cUILayer::GetClickButtonName()
+{
+    string szName = "";
+
+    if (!m_vecClickButton.empty())
+    {
+        szName = (*m_vecClickButton.begin())->GetName();
+        m_vecClickButton.erase(m_vecClickButton.begin());
+    }
+
+    return szName;
+>>>>>>> intro
 }
 
 // 입력받은 너비와 높이로 레이어의 크기를 설정한다.

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "cTextureShader.h"
 
-
 cTextureShader::cTextureShader()
 {
     g_pShaderManager->AddEffect("rendtex", SHADER_PATH + (string)"FX/Ingame_TextureShader.fx");
@@ -81,4 +80,27 @@ void cTextureShader::Render()
        }
    }
    m_pTextureShader->End();
+}
+
+void cTextureShader::SetPlayerPos(Vector3 pos)
+{
+    Vector4 playerPos(pos.x, pos.y, pos.z, 1.0f);
+    m_pTextureShader->SetVector("PlayerPos", &playerPos);
+    m_pTextureShader->SetVector("PlayerColor", &Vector4(10, 255, 10, 255));
+    m_pTextureShader->SetFloat("PlayerScale", 0.015f);
+}
+
+void cTextureShader::SetTargetPos(Vector3* target)
+{
+    if (target)
+    {
+        Vector4 targetPos(target->x, target->y, target->z, 1.0f);
+        m_pTextureShader->SetVector("TargetPos", &targetPos);
+        m_pTextureShader->SetVector("TargetColor", &Vector4(255, 10, 10, 255));
+        m_pTextureShader->SetFloat("TargetScale", 0.02f);
+    }
+    else
+    {
+        m_pTextureShader->SetVector("TargetColor", &Vector4(0, 0, 0, 0));
+    }
 }

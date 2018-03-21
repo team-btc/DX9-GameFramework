@@ -34,5 +34,10 @@ public:
 
     bool GetMove() { return m_isMove; }
 
+    //  레벨업
+    virtual void SumExp(int exp) override;
+
+    //  스탯 갱신
+    virtual void UpdateStatus() override;
 };
 

@@ -467,7 +467,7 @@ float cSkinnedMesh::GetCurPos()
         D3DXTRACK_DESC desc;
         m_pAnimController->GetTrackDesc(0, &desc);
 
-        float CurPos = desc.Position / pAnimSet->GetPeriod();
+        float CurPos = (float)(desc.Position / pAnimSet->GetPeriod());
 
         nResult =  CurPos;
     }
@@ -480,6 +480,19 @@ string cSkinnedMesh::GetAnimName()
     m_pAnimController->GetTrackAnimationSet(0, &pAnimSet);
 
     return (string)pAnimSet->GetName();
+}
+
+void cSkinnedMesh::GetMatrixByName(OUT Matrix4& mat, IN string szBoneName)
+{
+    ST_BONE* pBone = (ST_BONE*)D3DXFrameFind(m_pRootFrame, szBoneName.c_str());
+    if (pBone)
+    {
+        mat = pBone->CombinedTransformationMatrix;
+    }
+    else
+    {
+        D3DXMatrixIdentity(&mat);
+    }
 }
 
 HRESULT cSkinnedMesh::Destroy()

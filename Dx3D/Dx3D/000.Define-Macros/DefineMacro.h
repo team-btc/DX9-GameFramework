@@ -126,4 +126,7 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define SKY_PATH "Assets\\Texture\\Skybox\\"
 #define SHADER_PATH "Assets\\Shader\\"
 #define OBJECT_PATH "Assets\\Object\\"
+#define INTERFACE_PATH "Assets\\Interface\\"
+#define SHOP_PATH "Assets\\Shop\\"
+#define STORE_SOUND_PATH "Assets\\Sound\\Effect\\Interface\\Store\\"
 #pragma endregion

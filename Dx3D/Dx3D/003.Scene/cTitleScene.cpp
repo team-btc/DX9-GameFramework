@@ -164,6 +164,7 @@ HRESULT cTitleScene::Start()
     m_pSGLayer->SetAlphaInterval(1.0f);
     m_pSGLayer->SetBackGroundColor(D3DCOLOR_RGBA(0, 0, 0, 0));
     m_pSGLayer->SetActive(true);
+
     return S_OK;
 }
 

@@ -9,19 +9,21 @@ cUIButton::cUIButton()
 cUIButton::~cUIButton()
 {}
 
-void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelected)
+void cUIButton::SetTexture(string sNormal, string sMouseOver, string sSelect)
 {
     // 텍스쳐를 매니져에 추가 하고 텍스쳐 배열에 셋팅
     IMAGE_INFO stImageInfo;
+    stImageInfo.Width = 1;
+    stImageInfo.Height = 1;
 
-    g_pTextureManager->AddTexture(sNormal, sNormal, true);
+    //g_pTextureManager->AddTexture(sNormal, sNormal, true);
     m_aTexture[E_NORMAL] = (LPTEXTURE9)g_pTextureManager->GetTexture(sNormal);
 
-    g_pTextureManager->AddTexture(sMouseOver, sMouseOver, true);
+    //g_pTextureManager->AddTexture(sMouseOver, sMouseOver, true);
     m_aTexture[E_MOUSEOVER] = (LPTEXTURE9)g_pTextureManager->GetTexture(sMouseOver);
 
-    g_pTextureManager->AddTexture(sSelected, sSelected, true);
-    m_aTexture[E_SELECTED] = (LPTEXTURE9)g_pTextureManager->GetTexture(sSelected, &stImageInfo);
+    //g_pTextureManager->AddTexture(sSelect, sSelect, true);
+    m_aTexture[E_SELECT] = (LPTEXTURE9)g_pTextureManager->GetTexture(sSelect, &stImageInfo);
 
     // 이미지 사이즈 셋팅
     m_stSize.x = (float)stImageInfo.Width;
@@ -58,19 +60,18 @@ void cUIButton::Update()
             if (m_eButtonState == E_MOUSEOVER)
             {
                 m_ptClickPos = g_ptMouse;
-                m_eButtonState = E_SELECTED;
+                m_eButtonState = E_SELECT;
             }
         }
         else // 클릭을 안하고 있을 때
         {
-            if (m_eButtonState == E_SELECTED) // 이전에 클릭을 했던 상태라면
+            if (m_eButtonState == E_SELECT) // 이전에 클릭을 했던 상태라면
             {
                 // 눌렀다 땜
                 if (m_pButton)
                 {
-                    int num = 0;
                     m_pButton->OnClick(this);
-                    m_pButton->OnRelease(this);
+                    //m_pButton->OnRelease(this);
                 }
             }
             m_eButtonState = E_MOUSEOVER;   // 현재 상태는 마우스 오버 상태
@@ -83,7 +84,7 @@ void cUIButton::Update()
         }
         else
         {
-            if (m_pButton && m_eButtonState == E_SELECTED)
+            if (m_pButton && m_eButtonState == E_SELECT)
             {
                 m_pButton->OnRelease(this);
             }
@@ -93,7 +94,7 @@ void cUIButton::Update()
 
     if (g_pKeyManager->isStayKeyDown(VK_LBUTTON))   // 클릭중
     {
-        if (m_pButton && m_eButtonState == E_SELECTED)
+        if (m_pButton && m_eButtonState == E_SELECT)
         {
             m_pButton->OnDrag(this);
         }

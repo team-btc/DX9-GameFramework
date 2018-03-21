@@ -9,23 +9,39 @@
 #include "cWaveShader.h"
 #include "cTextureShader.h"
 #include "cSkyBoxShader.h"
+#include "cParticle.h"
+#include "cUILayer.h"
+
+class cUILayer;
+class cShop;
 
 class cPlayScene : public iSceneObject
 {
 private:
-    cCamera*            m_pCamera;
-    string              m_szMapKey;
-    ST_MAP_INFO*        m_stMapInfo;
+    cUILayer*                       m_pPlayerStatUILayer;
+    cUILayer*                       m_pHPUILayer;
 
-    cGameMap*           m_pGameMap;
+    cCamera*                        m_pCamera;
+    string                          m_szMapKey;
+    ST_MAP_INFO*                    m_stMapInfo;
 
-    cPlayer*                m_pPlayer;
-    cFrustum*               m_pFrustum;
-    vector<cMonster*>*      m_vecMonster;
+    cGameMap*                       m_pGameMap;
 
-    cTextureShader*     m_pTextureShader;
-    cSkyBoxShader*      m_pSkyBoxShader;
-    cWaveShader*        m_pWaveShader;
+    cPlayer*                        m_pPlayer;
+    cFrustum*                       m_pFrustum;
+    vector<cMonster*>*              m_vecMonster;
+
+    cTextureShader*    	            m_pTextureShader;
+    cSkyBoxShader*                  m_pSkyBoxShader;
+    cWaveShader*                    m_pWaveShader;
+    
+    cShop*                          m_pShop;
+
+    cParticle*                      m_pParticleFrost;
+
+private:
+    void SetUI();
+    void UpdateUI();
 
 public:
     cPlayScene();
