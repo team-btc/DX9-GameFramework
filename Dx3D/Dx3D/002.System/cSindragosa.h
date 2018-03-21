@@ -35,6 +35,6 @@ public:
     void SetAggroTime(float Aggro) { m_fAggroTime = Aggro; }
 
     bool GetMove() { return m_isMove; }
-    
+
 };
 

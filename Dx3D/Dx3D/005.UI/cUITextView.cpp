@@ -24,30 +24,6 @@ void cUITextView::Render(LPSPRITE pSprite)
         (int)(m_matWorld._41 + m_stSize.x),
         (int)(m_matWorld._42 + m_stSize.y));
 
-#ifdef _DEBUG
-    // 수정하기
-    Color color = D3DCOLOR_XRGB(255, 255, 255);
-
-    vector<VertexRHWC> vecVertex;
-    vecVertex.reserve(8);
-
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.top, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.top, 0, 1), color));
-
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.top, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.bottom, 0, 1), color));
-
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.right, (float)rc.bottom, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.bottom, 0, 1), color));
-
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.bottom, 0, 1), color));
-    vecVertex.push_back(VertexRHWC(Vector4((float)rc.left, (float)rc.top, 0, 1), color));
-
-    g_pDevice->SetFVF(VertexRHWC::FVF);
-    g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &vecVertex[0], sizeof(VertexRHWC));
-#endif // _DEBUG
-
-
     m_pFont->DrawTextA(NULL, m_sText.c_str(), (INT)m_sText.length(), &rc,
         m_dwDrawTextFormat, m_dwColor);
 

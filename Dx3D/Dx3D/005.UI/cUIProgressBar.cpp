@@ -7,14 +7,10 @@
 cUIProgressBar::cUIProgressBar()
     : m_fMaxGuage(0.0f)
     , m_fCurGuage(0.0f)
-{
-
-}
+{}
 
 cUIProgressBar::~cUIProgressBar()
-{
-
-}
+{}
 
 // Max 게이지 설정 
 // 1) 맥스 게이지(0보다 큰 수를 입력해야함)
@@ -58,7 +54,7 @@ HRESULT cUIProgressBar::AddText(IN LPFONTDX pFont, IN DWORD TextFormat, IN D3DCO
 
 // 프로그레스바 게이지 텍스쳐 설정
 // 1)텍스쳐 경로(" ", "" 시 에러메시지 반환), 2)게이지 앞 뒤 선택(Default(FRONT) : 0, BACK : 1), 3)컬러(Default D3DCOLOR_ARGB(255,255,255,255))
-HRESULT cUIProgressBar::AddGuageTexture(IN string GuageImgPath, IN int imgType, IN ST_SIZE stSize, IN D3DCOLOR color)
+HRESULT cUIProgressBar::AddGuageTexture(IN string GuageImgPath, IN int imgType, IN D3DCOLOR color)
 {
     if (imgType < 0 || imgType > 1)
     {
@@ -78,18 +74,17 @@ HRESULT cUIProgressBar::AddGuageTexture(IN string GuageImgPath, IN int imgType, 
 
     pImgView->SetParent(this);
     pImgView->SetDebugRender(DEBUG_RENDER);
-    pImgView->SetLocalPos(Vector3((m_stSize.x * 0.5f) - (stSize.w * 0.5f), (m_stSize.y * 0.5f) - (stSize.h * 0.5f), 0));
+    pImgView->SetLocalPos(Vector3(0, 0, 0));
     pImgView->SetSize(Vector2((float)imgInfo.Width, (float)imgInfo.Height));
     pImgView->SetTexture(pTexture);
     pImgView->SetColor(color);
-    pImgView->SetScale(stSize.w, stSize.h);
+    pImgView->SetScale(m_stSize.x, m_stSize.y);
 
     // 종류별 타입  
     if (imgType == 0)
     {
         pImgView->SetName("UI_PROGRESS_FRONT");
         pImgView->SetTag((int)E_PROGRESSBAR_TEXTURE_FRONT);
-        m_stFrontSize = stSize;
         AddChild(pImgView);
     }
     else if (imgType == 1)
@@ -159,6 +154,17 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
         obj->SetText(text);
     }
 
+    // 넓이 계산 및 설정
+    float width = fCurrentGuage / m_fMaxGuage * m_stSize.x;
+
+    if (width <= 0.0f)
+    {
+        width = 0.0f;
+    }
+    else if (width >= m_stSize.x)
+    {
+        width = m_stSize.x;
+    }
 
     // 넓이 세팅
     if (!m_vecChild.empty())
@@ -168,30 +174,13 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
             switch ((E_PROGRESSBAR_INNER_TYPE)vPos->GetTag())
             {
             case E_PROGRESSBAR_TEXTURE_FRONT:
-            {
-                // 넓이 계산 및 설정
-                float width = fCurrentGuage / m_fMaxGuage * m_stFrontSize.w;
-
-                if (width <= 0.0f)
-                {
-                    width = 0.0f;
-                }
-                else if (width >= m_stFrontSize.w)
-                {
-                    width = m_stFrontSize.w;
-                }
                 ((cUIImageView*)vPos)->SetScale(width, m_stSize.y);
-            }
                 break;
             case E_PROGRESSBAR_TEXTURE_BACK:
-            {
                 ((cUIImageView*)vPos)->SetScale(m_stSize.x, m_stSize.y);
-            }
                 break;
             case E_PROGRESSBAR_TEXT:
-            {
                 ((cUITextView*)vPos)->SetSize(m_stSize);
-            }
                 break;
             }
         }
@@ -224,11 +213,4 @@ void cUIProgressBar::Render(LPSPRITE pSprite)
     {
         obj->Render(pSprite);
     }
-}
-
-ULONG cUIProgressBar::Release(void)
-{
-    cObject::Release();
-
-    return 0;
 }

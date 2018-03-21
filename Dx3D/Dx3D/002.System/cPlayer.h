@@ -1,10 +1,12 @@
 #pragma once
-#include "cCharacterObject.h"
+#include "003.Object\cCharacterObject.h"
+
 #define AggroTime 10.0f
 
 class cPlayer : public cCharacterObject
 {
 private:
+
     vector<cMonster*>* m_vecMonster;
 
     LPMESH m_pTerrain;
@@ -25,7 +27,7 @@ public:
     void Setup();
     void Update();
     void Render();
-    ULONG Release() override;
+    //void Destroy();
 
     void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
@@ -35,13 +37,5 @@ public:
 
     bool GetMoveToPoint() { return m_isMoveToPoint; }
     bool GetMove() { return m_isMove; }
-
-    void GetSwordMatrix(Matrix4& mat);
-
-    //  레벨업
-    virtual void SumExp(int exp) override;
-
-    //  스탯 갱신
-    virtual void UpdateStatus() override;
 };
 

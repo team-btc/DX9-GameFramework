@@ -62,17 +62,3 @@ void cMapManager::Destroy()
         iter = m_mapMapInfo.erase(iter);
     }
 }
-
-json cMapManager::GetMapData()
-{
-    json jMapData;
-    jMapData["key"] = m_szCurrMapKey;
-
-    return jMapData;
-}
-
-void cMapManager::SetMapData(json mapData)
-{
-    string szTemp = mapData["key"];
-    m_szCurrMapKey = szTemp;
-}

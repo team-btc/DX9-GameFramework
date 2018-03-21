@@ -33,8 +33,8 @@ public:
     Vector3 GetCameraPos() { return m_pCurrCamera->GetPosition(); }
 
     void SetCollisionMesh(LPMESH pMesh) { m_pCollisionMesh = pMesh; }
-    void EnableCollider() { m_isCollidable = true; }
-    void DisableCollider() { m_isCollidable = false; }
-    void ToggleCollider() { m_isCollidable = !m_isCollidable; }
+    void ColliderEnable() { m_isCollidable = true; }
+    void ColliderDisable() { m_isCollidable = false; }
+    void ColliderToggle() { m_isCollidable = !m_isCollidable; }
 };
 

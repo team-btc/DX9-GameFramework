@@ -4,7 +4,6 @@
 
 cUIObject::cUIObject()
     : m_vLocalPos(0, 0, 0)
-    , m_isAxtive(true)
     , m_pParent(NULL)
     , m_stSize(0, 0)
     , m_isDebugRender(false)
@@ -15,6 +14,9 @@ cUIObject::cUIObject()
 
 cUIObject::~cUIObject()
 {
+    cout << m_szName << endl;
+    cout << this << endl;
+
     if (!m_vecChild.empty())
     {
         for (int i = 0; i < m_vecChild.size(); i++)
@@ -171,9 +173,4 @@ cUIObject* cUIObject::IsClicked(POINT point, bool isTransform)
     }
 
     return NULL;
-}
-
-ULONG cUIObject::Release(void)
-{
-    return cObject::Release();
 }

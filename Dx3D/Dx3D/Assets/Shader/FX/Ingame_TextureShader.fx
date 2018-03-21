@@ -37,8 +37,8 @@ sampler2D TexSampler1 = sampler_state
    Texture = (texture1);
    AddressU = Mirror;
    AddressV = Mirror;
-};
 
+};
 sampler2D TexSampler2 = sampler_state
 {
    Texture = (texture2);
@@ -58,7 +58,6 @@ sampler2D TexAlpha = sampler_state
    MAGFILTER = LINEAR;
 };
 
-
 struct VS_INPUT
 {
     float4 mPosition : POSITION;
@@ -70,8 +69,8 @@ struct VS_OUTPUT
 };
 
 struct PS_INPUT
-{
-    float2 uv : TEXCOORD;
+{	
+	float2 uv : TEXCOORD;
 };
 
 VS_OUTPUT ColorShader_Pass_0_Vertex_Shader_vs_main(VS_INPUT Input)
@@ -87,31 +86,31 @@ VS_OUTPUT ColorShader_Pass_0_Vertex_Shader_vs_main(VS_INPUT Input)
 
 float4 main_0(PS_INPUT Input) : COLOR
 {
-    float BACK_DEN = BackGroundDensity;
+	float BACK_DEN = BackGroundDensity;
     float TEX1_DEN = Tex1Density;
     float TEX2_DEN = Tex2Density;
     float TEX3_DEN = Tex3Density;
 
     float2 UV = Input.uv;
-    UV.x *= BACK_DEN;
-    UV.y *= BACK_DEN;
-    float4 Tex0 = tex2D(BackGroundTex, UV);
+	UV.x *= BACK_DEN;
+	UV.y *= BACK_DEN;
+	float4 Tex0 = tex2D(BackGroundTex, UV);
 
     UV = Input.uv;
     UV.x *= TEX1_DEN;
     UV.y *= TEX1_DEN;
-    float4 Tex1 = tex2D(TexSampler1, UV);
+	float4 Tex1 = tex2D(TexSampler1, UV);
 
     UV = Input.uv;
     UV.x *= TEX2_DEN;
     UV.y *= TEX2_DEN;
-    float4 Tex2 = tex2D(TexSampler2, UV);
+	float4 Tex2 = tex2D(TexSampler2, UV);
     UV = Input.uv;
     UV.x *= TEX3_DEN;
     UV.y *= TEX3_DEN;
-    float4 Tex3 = tex2D(TexSampler3, UV);
-    float4 Alpha = tex2D(TexAlpha, Input.uv);
-
+	float4 Tex3 = tex2D(TexSampler3, UV);
+	float4 Alpha = tex2D(TexAlpha, Input.uv);
+    
     float d = Alpha.r + Alpha.g + Alpha.b;
     float Rd = Alpha.r / d;
     float Gd = Alpha.g / d;
@@ -119,14 +118,13 @@ float4 main_0(PS_INPUT Input) : COLOR
     float Backd = 1 - Alpha.r - Alpha.g - Alpha.b;
     if (Backd <= 0)
     {
-        Backd = 0.0f;
+       Backd = 0.0f;
     }
     // Player Bottom Circle Render
     float4 Pbrush = float4(0, 0, 0, 1);
     float Pr = PlayerScale;
     float Pl;
     float3 vPlayerPick = (float3)PlayerPos;
-    vPlayerPick.y = 0;
     float3 vPlayerPixel = float3(Input.uv.x, 0, Input.uv.y);
     float3 vPLen = vPlayerPick - vPlayerPixel;
     Pl = length(vPLen);
@@ -134,13 +132,13 @@ float4 main_0(PS_INPUT Input) : COLOR
     {
         Pbrush = PlayerColor;
     }
+  
 
     // Enemy Bottom Circle Render
     float4 Tbrush = float4(0, 0, 0, 1);
     float Tr = TargetScale;
     float Tl;
     float3 vTargetPick = (float3)TargetPos;
-    vTargetPick.y = 0;
     float3 vTargetPixel = float3(Input.uv.x, 0, Input.uv.y);
     float3 vTLen = vTargetPick - vTargetPixel;
     Tl = length(vTLen);
@@ -149,13 +147,20 @@ float4 main_0(PS_INPUT Input) : COLOR
         Tbrush = TargetColor;
     }
 
-    return (Tex0 * Backd + Tex1 * Alpha.r * Rd + Tex2 * Alpha.g * Gd + Tex3 * Alpha.b * Bd + Pbrush * 0.0025f + Tbrush * 0.0025f);
+    return (Tex0 * Backd + Tex1 * Alpha.r * Rd + Tex2 * Alpha.g * Gd + Tex3 * Alpha.b * Bd+ Pbrush * 0.001f + Tbrush * 0.001f);
 };
 
 technique Shader
 {
-    pass Pass_0
-    {
-        PixelShader = compile ps_2_0 main_0();
-    }
+	pass Pass_0
+	{
+       // CULLMODE = CW;
+       //ZWRITEENABLE = FALSE;
+       // ALPHABLENDENABLE = FALSE;
+       // BLENDOP = ADD;
+       // DESTBLEND = INVSRCALPHA;
+       // SRCBLEND = BOTHINVSRCALPHA;
+      
+		PixelShader = compile ps_2_0 main_0();
+	}
 };

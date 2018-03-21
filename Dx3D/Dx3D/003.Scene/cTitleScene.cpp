@@ -27,7 +27,6 @@ cTitleScene::cTitleScene()
     , m_fWorldTime(0)
     , m_isMovieStart(false)
     , m_vFlyRotation(0, -90, -75)
-    , m_pMesh(NULL)
 {
     m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
     m_vecSindraJumpTarget.push_back(Vector3(230.0f, 199.0f, 242.0f));
@@ -58,7 +57,7 @@ HRESULT cTitleScene::Start()
     if (m_stMapInfo == NULL)
     {
         cMapLoader mapLoader;
-        mapLoader.LoadMap();
+        mapLoader.LoadMap(m_szMapKey);
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
 
@@ -132,7 +131,7 @@ HRESULT cTitleScene::Start()
         m_pCamera->SetMinDist(5.0f);
         g_pCameraManager->AddCamera("title", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->DisableCollider();
+        g_pCameraManager->ColliderDisable();
         
     }
     m_pCamera->Setup();
@@ -165,7 +164,6 @@ HRESULT cTitleScene::Start()
     m_pSGLayer->SetAlphaInterval(1.0f);
     m_pSGLayer->SetBackGroundColor(D3DCOLOR_RGBA(0, 0, 0, 0));
     m_pSGLayer->SetActive(true);
-
     return S_OK;
 }
 
@@ -317,7 +315,10 @@ ULONG cTitleScene::Release()
 
 void cTitleScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  
+    if (m_pCamera)
+    {
+        m_pCamera->WndProc(hWnd, message, wParam, lParam);
+    }
 }
 
 void cTitleScene::MoveSindra(Vector3 vSpot, int n)

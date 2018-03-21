@@ -104,12 +104,5 @@ public:
 
     virtual void NearestSearch(vector<cMonster*> _vec) override;
     virtual float Distance(Vector3 Pos) override;
-    virtual void SumExp(int exp) override;
-    virtual void UpdateStatus() override;
-    ////  레벨업
-    //virtual void SumExp(int exp) override;
-
-    ////  스탯 갱신
-    //virtual void UpdateStatus() override;
 };
 

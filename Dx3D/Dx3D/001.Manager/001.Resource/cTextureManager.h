@@ -11,7 +11,6 @@ private:
     map<string, IMAGE_INFO>     m_mapImageInfo;
 
 public:
-    void LoadParticleTexture();
     void Destroy();
 
     void AddTexture(string szKey, string szFilepath, bool saveImageInfo = false);

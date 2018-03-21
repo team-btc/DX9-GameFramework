@@ -1,27 +1,24 @@
 #include "stdafx.h"
 #include "cPlayScene.h"
-#include "005.UI//cUILayer.h"
-#include "005.UI//cUIProgressBar.h"
-#include "cShop.h"
 
 cPlayScene::cPlayScene()
-    : m_pPlayerStatUILayer(NULL)
-    , m_pHPUILayer(NULL)
-	, m_stMapInfo(NULL)
+    : m_stMapInfo(NULL)
     , m_pCamera(NULL)
     , m_pGameMap(NULL)
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("start")
-    , m_pShop(NULL)
-    , m_pParticleFrost(NULL)
+    , m_szMapKey("icecrown")
 {
 }
 
 
 cPlayScene::~cPlayScene()
 {
+    SAFE_DELETE(m_pTextureShader);
+    SAFE_DELETE(m_pSkyBoxShader);
+    SAFE_DELETE(m_pWaveShader);
+    SAFE_DELETE(m_pGameMap);
 }
 
 HRESULT cPlayScene::Start()
@@ -30,12 +27,7 @@ HRESULT cPlayScene::Start()
     if (m_stMapInfo == NULL)
     {
         cMapLoader mapLoader;
-        mapLoader.SetKey(m_szMapKey);
-        mapLoader.LoadMap();
-        for (int i = 0; i < mapLoader.GetObjectMaxCnt(); ++i)
-        {
-            mapLoader.LoadObject(i);
-        }
+        mapLoader.LoadMap(m_szMapKey);
 
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
 
@@ -83,15 +75,6 @@ HRESULT cPlayScene::Start()
         }
     }
 
-    //  LOAD SHOP
-    if (!m_pShop)
-    {
-        // 상점 셋팅
-        m_pShop = new cShop;
-        m_pShop->Setup();
-    }
-
-
     if (!m_pFrustum)
     {
         m_pFrustum = new cFrustum;
@@ -137,7 +120,6 @@ HRESULT cPlayScene::Start()
         if (m_stMapInfo->vecEventInfo[i].szName == "monster")
         {
             cMonster* m_pEnermy = g_pCharacterManager->GetMonster();
-            m_pEnermy->Setup();
             m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
             m_pEnermy->SetActive(true);
             (*m_vecMonster).push_back(m_pEnermy);
@@ -147,20 +129,16 @@ HRESULT cPlayScene::Start()
     if (!m_pPlayer)
     {
         m_pPlayer = g_pCharacterManager->GetPlayer();
-    }
-
-    if (!g_pGameManager->IsLoadData())
-    {
         m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
     }
     else
     {
-        g_pGameManager->DisableLoadFlag();
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        m_pPlayer->SetVecMonster(m_vecMonster);
+        m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
     }
-
-    m_pPlayer->SetVecMonster(m_vecMonster);
-    m_pPlayer->SetTerrain(m_stMapInfo->pTerrainMesh);
-    m_pPlayer->Setup();
 
     //  CAMERA SETUP
     if (!m_pCamera)
@@ -169,75 +147,32 @@ HRESULT cPlayScene::Start()
         m_pCamera->TrackingEnable();
         m_pCamera->SetMaxDist(100.0f);
         m_pCamera->SetMinDist(5.0f);
-        m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->DisableCollider();
+        g_pCameraManager->ColliderEnable();
     }
     m_pCamera->Setup();
     g_pCameraManager->SetCurrCamera("play");
-
-    // UI 셋팅
-    SetUI();
-
-    if (m_pPlayerStatUILayer)
-    {
-        m_pPlayerStatUILayer->Setup();
-    }
-
-    //  파티클 세팅
-    if (!m_pParticleFrost)
-    {
-        float power = 1.0f;
-        Matrix4 mat;
-        m_pPlayer->GetSwordMatrix(mat);
-        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
-
-        m_pParticleFrost = new cParticle(&pos, 1, 100);
-        m_pParticleFrost->Init("snow");
-        ST_PARTICLE_ATTR attr;
-        attr.fGravity = 0.01f;
-        attr.isLoop = true;
-        attr.deltaAccelMin = Vector3(-power * 0.1f, -power * 0.5f, -power * 0.1f);
-        attr.deltaAccelMax = Vector3(power * 0.1f, -power * 1.5f, power * 0.1f);
-        attr.life = 3.0f;
-        attr.fSpeed = 1.0f;
-        attr.fMinLife = 5.0f;
-        attr.fMaxLife = 10.0f;
-        attr.color = XColor(1.0f, 1.0f, 1.0f, 1.0f);
-        attr.isFade = false;
-        m_pParticleFrost->SetSize(0.5f);
-        m_pParticleFrost->SetGenTerm(1.0f);
-        m_pParticleFrost->Reset(attr);
-    }
 
     return S_OK;
 }
 
 HRESULT cPlayScene::Update()
 {
-    // == 수정 해야 하는 부분!!! 상점 활성화!!
-    if (g_pKeyManager->isOnceKeyDown('O'))
-    {
-        m_pShop->SetIsOpen(true);
-        m_pShop->OpenShop();
-    }
-
-    // SHOP UPDATE -> 상점 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
-    if (m_pShop && m_pShop->GetIsOpen())
-    {
-        m_pShop->Update(123456789);//== 수정해야 하는 부분!! 플레이어 소지금으로 변경하기!!
-    }
-
     //  UPDATE CAMERA
+    //if (m_pCamera)
+    //{
+    //    if (m_pPlayer)
+    //    {
+    //        m_pCamera->Update(&m_pPlayer->GetPosition());
+    //    }
+    //    else
+    //    {
+    //        m_pCamera->Update();
+    //    }
+    //}
     if (m_pCamera)
     {
-        if (m_pShop)
-        {
-            // 마우스 컨트롤 가능 여부 셋팅
-            m_pCamera->SetControl(!m_pShop->GetClickShop());
-        }
-
         if (m_pPlayer)
         {
             m_pCamera->SetTargetPos(m_pPlayer->GetPosition());
@@ -250,16 +185,6 @@ HRESULT cPlayScene::Update()
     //  PLAYER UPDATE
     m_pPlayer->Update();
 
-    if (m_pParticleFrost)
-    {
-        Matrix4 mat;
-        m_pPlayer->GetSwordMatrix(mat);
-        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
-
-        m_pParticleFrost->SetPosition(pos);
-        m_pParticleFrost->Update();
-    }
-    
     // 위치 체크
     Vector3 Pos = m_pPlayer->GetPosition();
     m_pGameMap->GetHeight(Pos);
@@ -333,23 +258,17 @@ HRESULT cPlayScene::Update()
         {
             // 문제가 있다.
             m_pPlayer->SetMoveSpeed(0.0f);
-            //m_pPlayer->SetMove(false);
-            //m_pPlayer->SetMoveToPoint(false);
-            //m_pPlayer->SetMoveToTarget(false);
-            //m_pPlayer->IdleAnim();
+            m_pPlayer->SetMove(false);
+            m_pPlayer->SetMoveToPoint(false);
+            m_pPlayer->SetMoveToTarget(false);
+            m_pPlayer->IdleAnim();
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(0.1f);
+            m_pPlayer->SetMoveSpeed(0.5f);
         }
     }
 
-    // UI 업데이트 (플레이어 스탯)
-    if (m_pPlayerStatUILayer)
-    {
-        UpdateUI();
-        m_pPlayerStatUILayer->Update();
-    }
 
     // 이벤트 체크
     string szEventName = "";
@@ -370,10 +289,21 @@ HRESULT cPlayScene::Render()
         return E_FAIL;
     }
 
-    Matrix4 matW;
+    Matrix4 matW, matV, matP;
     D3DXMatrixIdentity(&matW);
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
+    MATERIAL9 mtrl;
+    mtrl.Ambient = WHITE;
+    mtrl.Diffuse = WHITE;
+    mtrl.Specular = WHITE;
+    mtrl.Emissive = BLACK;
+    mtrl.Power = 8.0f;
+    g_pDevice->SetMaterial(&mtrl);
+    g_pDevice->SetRenderState(D3DRS_NORMALIZENORMALS, true);
+    g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
+    g_pDevice->LightEnable(0, true);
+
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
     Vector4 vP(g_vCameraPos, 1.0f);
@@ -393,68 +323,12 @@ HRESULT cPlayScene::Render()
         {
             (*iter)->Render();
         }
-
-        // 몬스터를 따라다니는 UI!!
-        cUIProgressBar* pProgress = NULL;
-        if (m_pHPUILayer)
-        {
-            // HP
-            cUIObject* pObject;
-            m_pHPUILayer->FindUIObject(&pObject, "default-hp");
-            if (pObject)
-            {
-                pProgress = (cUIProgressBar*)pObject;
-            }
-        }
-
-        Matrix4 matView, matProj, matVP;
-        g_pDevice->GetTransform(D3DTS_VIEW, &matView);
-        g_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-
-        D3DVIEWPORT9 vp;
-        g_pDevice->GetViewport(&vp);
-        D3DXMatrixIdentity(&matVP);
-        matVP._11 = vp.Width / 2.0f;
-        matVP._22 = -(vp.Height / 2.0f);
-        matVP._33 = vp.MaxZ - vp.MinZ;
-        matVP._41 = vp.X + vp.Width / 2.0f;
-        matVP._42 = vp.Y + vp.Height / 2.0f;
-        matVP._43 = vp.MinZ;
-        if (pProgress)
-        {
-            Vector3 vMonsterPos = (*iter)->GetPosition();
-            vMonsterPos.y += 10.0f;
-
-            Vector3 vScreenPos;
-            D3DXVec3TransformCoord(&vScreenPos, &vMonsterPos, &(matView * matProj * matVP));
-
-            pProgress->SetMaxGuage((*iter)->GetStatus().fMaxHP);
-            pProgress->SetCurrentGuage((*iter)->GetStatus().fCurHP);
-            vScreenPos.x -= pProgress->GetSize().x * 0.5f;
-            m_pHPUILayer->SetPosition(vScreenPos);
-            pProgress->SetLocalPos(vScreenPos);
-            m_pHPUILayer->Update();
-            m_pHPUILayer->Render();
-        }
     }
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
     if (m_pTextureShader)
     {
-        Vector3 pos = m_pPlayer->GetPosition();
-        pos = pos / m_stMapInfo->fMapSize;
-        m_pTextureShader->SetPlayerPos(pos);
-        if (m_pPlayer->GetTarget())
-        {
-            pos = m_pPlayer->GetTarget()->GetPosition();
-            pos = pos / m_stMapInfo->fMapSize;
-            m_pTextureShader->SetTargetPos(&pos);
-        }
-        else
-        {
-            m_pTextureShader->SetTargetPos(NULL);
-        }
         m_pTextureShader->Render();
     }
 
@@ -473,22 +347,8 @@ HRESULT cPlayScene::Render()
         m_pWaveShader->Render(vP);
     }
 
-    // UI 렌더
-    if (m_pPlayerStatUILayer)
-    {
-        m_pPlayerStatUILayer->Render();
-    }
-
-    // SHOP RENDER
-    if (m_pShop && m_pShop->GetIsOpen())
-    {
-        m_pShop->Render();
-    }
-
-    if (m_pParticleFrost)
-    {
-        m_pParticleFrost->Render();
-    }
+    //g_pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, false);
+    //g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
 
 #ifdef _DEBUG
 
@@ -503,109 +363,16 @@ HRESULT cPlayScene::Render()
 
 ULONG cPlayScene::Release()
 {
-    SAFE_DELETE(m_pPlayerStatUILayer);
-    SAFE_DELETE(m_pHPUILayer);
-    SAFE_DELETE(m_pTextureShader);
-    SAFE_DELETE(m_pSkyBoxShader);
-    SAFE_DELETE(m_pWaveShader);
-    SAFE_DELETE(m_pGameMap);
-    SAFE_DELETE(m_pPlayerStatUILayer);
-    SAFE_DELETE(m_pHPUILayer);
-    SAFE_DELETE(m_pParticleFrost);
-    SAFE_RELEASE(m_pShop);
-
-    return cObject::Release();
-}
-
-void cPlayScene::SetUI()
-{
-    ST_SIZE stLayerSize = ST_SIZE(W_WIDTH / 4.0f, W_HEIGHT / 10.0f);
-    Vector2 vHP_MPSize = Vector2(stLayerSize.w * 0.8f, stLayerSize.h * 0.3f);
-
-    ST_SIZE stMonLayerSize = ST_SIZE(80, 15);
-    Vector2 vMonHPSize = Vector2(stMonLayerSize.w, stMonLayerSize.h);
-
-    string szRedPath = INTERFACE_PATH + (string)"progressBar/redgrad64.png";
-    string szGreenPath = INTERFACE_PATH + (string)"progressBar/greengrad64.png";
-    string szBluePath = INTERFACE_PATH + (string)"progressBar/bluegrad64.png";
-    string szGreyPath = INTERFACE_PATH + (string)"progressBar/greyscaleramp64.png";
-
-    LPFONTDX pFont = g_pFontManager->GetFont(g_pFontManager->E_QUEST);
-
-    // 캐릭터 스탯 레이어 초기화
-    if (!m_pPlayerStatUILayer)
-    {
-        m_pPlayerStatUILayer = new cUILayer;
-        m_pPlayerStatUILayer->SetLayer("player-stat", Vector3(0, 0, 0), stLayerSize);
-        m_pPlayerStatUILayer->SetActive(true);
-
-        // HP바
-        cUIProgressBar* pUIProgressHP = new cUIProgressBar;
-        pUIProgressHP->SetSize(vHP_MPSize);
-        pUIProgressHP->AddGuageTexture(szGreenPath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressHP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressHP->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
-        pUIProgressHP->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
-        pUIProgressHP->SetLocalPos(Vector3(80, 15, 0));
-        pUIProgressHP->SetName("player-hp");
-        pUIProgressHP->AddText(pFont, 0);
-        m_pPlayerStatUILayer->AddUIObject(pUIProgressHP);
-
-        // MP바
-        cUIProgressBar* pUIProgressMP = new cUIProgressBar;
-        pUIProgressMP->SetSize(vHP_MPSize);
-        pUIProgressMP->AddGuageTexture(szBluePath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressMP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressMP->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
-        pUIProgressMP->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
-        pUIProgressMP->SetLocalPos(Vector3(80, 50, 0));
-        pUIProgressMP->SetName("player-mp");
-        pUIProgressMP->AddText(pFont, 0);
-        m_pPlayerStatUILayer->AddUIObject(pUIProgressMP);
-    }
-
-    if (!m_pHPUILayer)
-    {
-        // 기본 HP 레이어 셋팅 (몬스터용)
-        m_pHPUILayer = new cUILayer;
-        m_pHPUILayer->SetLayer("default-hp", Vector3(0, 0, 0), stMonLayerSize);
-        m_pHPUILayer->SetActive(true);
-
-        // HP바
-        cUIProgressBar* pUIProgressHP = new cUIProgressBar;
-        pUIProgressHP->SetSize(vMonHPSize);
-        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
-        pUIProgressHP->AddGuageTexture(szGreyPath, 1, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
-        pUIProgressHP->SetMaxGuage(100);
-        pUIProgressHP->SetCurrentGuage(30);
-        pUIProgressHP->SetName("default-hp");
-        m_pHPUILayer->AddUIObject(pUIProgressHP);
-    }
-}
-
-void cPlayScene::UpdateUI()
-{
-    cUIObject* pObject;
-
-    // HP
-    m_pPlayerStatUILayer->FindUIObject(&pObject, "player-hp");
-    if (pObject)
-    {
-        cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-        pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
-    }
-    // MP
-    m_pPlayerStatUILayer->FindUIObject(&pObject, "player-mp");
-    if (pObject)
-    {
-        cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-        pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
-    }
+    cObject::Release();
+    return 0;
 }
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
- 
+    if (m_pCamera)
+    {
+        m_pCamera->WndProc(hWnd, message, wParam, lParam);
+    }
 }
 
 void cPlayScene::ParseEvent(string szCommand)

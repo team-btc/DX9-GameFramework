@@ -140,9 +140,6 @@ struct ST_MAP_INFO
     // 플레이어 시작 위치
     Vector3                 vStartPos;
 
-    //  맵 사이즈
-    float                   fMapSize;
-
     // 지형 매쉬
     LPMESH                  pTerrainMesh;
 
@@ -254,14 +251,4 @@ public:
     float           fMPGen;
     float           fCritical;
     int             nCoolTime;
-};
-
-struct ST_ITEM_INFO
-{
-    string          szName;
-    string          szPath;
-    int             nCount;
-    int             nPrice;
-    ST_STATUS       stStat;
-    float           fPlusValue;
 };

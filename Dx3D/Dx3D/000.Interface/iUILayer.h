@@ -17,6 +17,6 @@ interface iUILayer
     virtual HRESULT SetWorldMatrix(IN Matrix4 matWorld) PURE;
 
     virtual HRESULT SetLayer(IN string strLayerName, IN Vector3 vPosition, IN ST_SIZE stLayerSize,
-        IN bool useBackground, IN Color colorBackGround, IN string strTextureName) PURE;
+        IN bool useBackground, IN Color colerBackGround, IN string strTextureName) PURE;
 
 };

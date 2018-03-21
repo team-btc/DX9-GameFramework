@@ -13,7 +13,7 @@ class cCharacterManager
 
 private:
 
-    cPlayer*            m_pPlayer;
+    cPlayer * m_pPlayer;
     list<cMonster*>     m_listMonster;
     cSindragosa * m_pSindragosa;
 
@@ -27,8 +27,5 @@ public:
     cPlayer* GetPlayer() { return m_pPlayer; }
     cMonster* GetMonster();
     cSindragosa* GetSindragosa() { return m_pSindragosa; };
-
-    json GetPlayerData();
-    void SetPlayerData(json playerData);
 };
 

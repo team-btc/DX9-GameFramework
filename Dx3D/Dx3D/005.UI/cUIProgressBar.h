@@ -12,7 +12,6 @@ private:
 private:
     float	m_fMaxGuage;
     float	m_fCurGuage;        // 포인터로 할까 어떻게 할까 흠...
-    ST_SIZE m_stFrontSize;
 
 public:
     cUIProgressBar();
@@ -24,7 +23,7 @@ public:
     HRESULT AddText(IN LPFONTDX pFont, IN DWORD TextFormat,
         IN D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));
     HRESULT AddGuageTexture(IN string GuageImgPath,
-        IN int nImgType, IN ST_SIZE stSize, IN D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));
+        IN int nImgType = 0, IN D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));
     HRESULT Setup(IN string strProgressBarName, IN Vector3 vPosition, IN Vector2 vSize,
         IN float fGuageMax);
 
@@ -32,5 +31,4 @@ public:
         IN Vector3* vFollowPosition = NULL);    // 오버라이드로 했어야 오브젝트에 막들어가는데..
     virtual void Update() override;
     virtual void Render(LPSPRITE pSprite) override;
-    virtual ULONG Release(void);
 };
