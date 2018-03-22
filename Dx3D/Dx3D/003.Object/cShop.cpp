@@ -17,6 +17,8 @@ cShop::cShop()
     m_rtShopSize.right = m_rtShopSize.left + (LONG)(W_WIDTH * 0.4f);
     m_rtShopSize.bottom = m_rtShopSize.top + (LONG)(W_HEIGHT * 0.6f);
 
+    g_pSndManager->AddSound("store-buy", "store", "Assets\\Sound\\Effect\\Common\\uilootpickupitem.ogg");
+    g_pSndManager->AddSound("store-click", "store", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\click.ogg");
     g_pSndManager->AddSound("store-open", "store", STORE_SOUND_PATH + (string)"auctionwindowopen.ogg");
     g_pSndManager->AddSound("store-close", "store", STORE_SOUND_PATH + (string)"auctionwindowclose.ogg");
     g_pSndManager->AddSound("store-human0", "store", STORE_SOUND_PATH + (string)"humanmalemerchantcstartshopping01.ogg");
@@ -110,6 +112,7 @@ void cShop::Update()
             // 플레이어에게 돈이 있으면 구입
             if (m_vecItemInfo[m_nCurrSelectItem]->nPrice <= m_nPlayerMoney)
             {
+                g_pSndManager->Play("store-buy");
                 m_nPlayerMoney -= m_vecItemInfo[m_nCurrSelectItem]->nPrice;
                 g_pGameManager->Pay(-m_vecItemInfo[m_nCurrSelectItem]->nPrice);
                 g_pGameManager->PushItem(m_nCurrSelectItem);
@@ -123,6 +126,8 @@ void cShop::Update()
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
                 if (m_nCurrSelectItem != i)
                 {
+                    g_pSndManager->Play("store-click");
+
                     m_nCurrSelectItem = i;
 
                     for (int j = 0; j < m_vecItemInfo.size(); ++j)

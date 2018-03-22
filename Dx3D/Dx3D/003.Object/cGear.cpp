@@ -17,6 +17,11 @@ cGear::cGear()
     m_rtGearSize.bottom = m_rtGearSize.top + (LONG)(W_HEIGHT * 0.35f);
 
     m_stGearSlotSize = ST_SIZE(60, 60);
+
+    g_pSndManager->AddSound("gear-open", "gear", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\open.ogg");
+    g_pSndManager->AddSound("gear-close", "gear", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\close.ogg");
+    g_pSndManager->AddSound("gear-click", "gear", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\click.ogg");
+    g_pSndManager->AddSound("gear-pull", "gear", "Assets\\Sound\\Effect\\Common\\pickuplargechain.ogg");
 }
 
 cGear::~cGear()
@@ -78,6 +83,7 @@ void cGear::Update()
             // 아이템을 선택한 상태라면
             if (m_nCurrSelectGear != -1)
             {
+                g_pSndManager->Play("gear-pull");
                 // 아이템 해지 하기!!!!!!!!!!!!!!!!!11 -> 효과 해지!!!
                 if (m_nCurrSelectGear == ST_ITEM_INFO::E_HELM && m_stCurrGear.helmId != -1)
                 {
@@ -113,6 +119,8 @@ void cGear::Update()
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
                 if (m_nCurrSelectGear != i)
                 {
+                    g_pSndManager->Play("gear-click");
+
                     m_nCurrSelectGear = i;
 
                     for (int j = 0; j < m_vecGearUI.size(); ++j)
@@ -152,6 +160,8 @@ void cGear::Render()
 
 void cGear::OpenGear()
 {
+    g_pSndManager->Play("gear-open");
+
     m_isClickGear = false;
     m_isOpen = true;
     m_stCurrGear = g_pGameManager->GetGearInfo();
@@ -160,6 +170,8 @@ void cGear::OpenGear()
 
 void cGear::CloseGear()
 {
+    g_pSndManager->Play("gear-close");
+
     m_isClickGear = false;
     m_isOpen = false;
 }

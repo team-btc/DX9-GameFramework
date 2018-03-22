@@ -13,6 +13,7 @@ cFontManager::~cFontManager()
 HRESULT cFontManager::Setup()
 {
     AddFontResource(_TEXT("UI/umberto.ttf"));
+    AddFontResource(_TEXT("Assets\\Font\\Warcraft.ttf"));
 
     return S_OK;
 }
@@ -30,6 +31,7 @@ HRESULT cFontManager::Render()
 HRESULT cFontManager::Destroy()
 {
     RemoveFontResource(_TEXT("umberto"));
+    RemoveFontResource(_TEXT("Assets\\Font\\Warcraft.ttf"));
 
     for each (auto p in m_mapFont)
         SAFE_RELEASE(p.second);
@@ -127,6 +129,22 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     DEFAULT_QUALITY,
                     false,
                     _TEXT("Calibri"),
+                    &m_mapFont[e]);
+                break;
+            }
+            case cFontManager::E_DAMAGE:
+            {
+                D3DXCreateFont(g_pDevice,
+                    30,
+                    0,
+                    FW_DONTCARE,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("Rimbo"),
                     &m_mapFont[e]);
                 break;
             }

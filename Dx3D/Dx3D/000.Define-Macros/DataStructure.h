@@ -274,4 +274,28 @@ struct ST_ITEM_INFO
     float           fPlusValue;
     bool            isWear;
     E_ITEM_TYPE     eItemType;
+}; 
+
+class cUILayer;
+class cUITextView;
+struct ST_DAMAGE_TEXT
+{
+    cUILayer*       pUILayer;
+    cUITextView*    pTextUI;
+    string          szDamage;
+    Vector3         vCurrPos;
+    float           fMaxY;
+    float           fPlusY;
+    bool            isAxtive;
+
+    ST_DAMAGE_TEXT()
+    {
+        pUILayer = NULL;
+        pTextUI = NULL;
+        szDamage = "";
+        vCurrPos = Vector3(0, 0, 0);
+        fMaxY = 0;
+        fPlusY = 0;
+        isAxtive = false;
+    }
 };

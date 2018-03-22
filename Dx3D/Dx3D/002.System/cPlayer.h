@@ -1,23 +1,27 @@
 #pragma once
 #include "cCharacterObject.h"
+#include "cUILayer.h"
+#include "cUITextView.h"
 #define AggroTime 10.0f
 
 class cPlayer : public cCharacterObject
 {
 private:
-    vector<iCharacterObject*>* m_vecMonster;
+    vector<iCharacterObject*>*      m_vecMonster;
 
-    LPMESH m_pTerrain;
+    vector<ST_DAMAGE_TEXT>          m_vecDamageText;
 
-    Vector3 DestPoint;
+    LPMESH                          m_pTerrain;
 
-    float m_fScale;
-    float m_fCenter;
+    Vector3                         DestPoint;
 
-    bool m_isMoveToPoint;
-    bool m_isPoint;
-    bool m_isPickMonster;
-    bool m_isMouse;
+    float                           m_fScale;
+    float                           m_fCenter;
+
+    bool                            m_isMoveToPoint;
+    bool                            m_isPoint;
+    bool                            m_isPickMonster;
+    bool                            m_isMouse;
 
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
@@ -45,5 +49,11 @@ public:
     bool GetMoveToPoint() { return m_isMoveToPoint; }
 
     void GetSwordMatrix(Matrix4& mat);
+
+    void UISetup();
+    void UIUpdate();
+    void UIRender();
+    ST_DAMAGE_TEXT MakeDamageText();
+    void AddAttUI(int nAttValue);
 };
 

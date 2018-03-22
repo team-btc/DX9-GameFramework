@@ -71,6 +71,7 @@ cPlayer::~cPlayer()
 
 void cPlayer::Setup()
 {
+    UISetup();
 }
 
 void cPlayer::Update()
@@ -178,7 +179,12 @@ void cPlayer::Update()
                 if (m_pTarget)
                 {
                     //데미지 계산식을 넣어야함
-                    Action("Attack", m_stStat.fATK + (m_stStat.fSTR * 2)-m_pTarget->GetStatus().fDEF);
+                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+
+                    Action("Attack", ATK);
+
+                    // UI 셋팅
+                    AddAttUI((int)ATK);
 
                     m_pTarget->RayCast(this); // 어그로 주고
                     if (m_pTarget->GetTag() == MONSTER)
@@ -203,6 +209,9 @@ void cPlayer::Update()
                     //데미지 계산식을 넣어야함
                     float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
                     Action("Attack", ATK);
+
+                    // UI 셋팅
+                    AddAttUI((int)ATK);
 
                     m_pTarget->RayCast(this); // 어그로 주고
                     if (m_pTarget->GetTag() == MONSTER)
@@ -238,6 +247,8 @@ void cPlayer::Update()
         Attack();
     }
 
+    UIUpdate();
+
     m_pMesh->SetScale(m_fScale);
     m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
     m_pMesh->SetPosition(m_vPosition);
@@ -246,6 +257,8 @@ void cPlayer::Update()
 void cPlayer::Render()
 {
     m_pMesh->UpdateAndRender();
+
+    UIRender();
 
 #ifdef _DEBUG
     Matrix4 matT, matW;
@@ -261,6 +274,12 @@ void cPlayer::Render()
 
 ULONG cPlayer::Release()
 {
+    for (auto iter = m_vecDamageText.begin(); iter != m_vecDamageText.end();)
+    {
+        SAFE_DELETE(iter->pUILayer);
+        iter = m_vecDamageText.erase(iter);
+    }
+
     return cObject::Release();
 }
 
@@ -406,4 +425,154 @@ void cPlayer::SetLevelToStatus(string szKey, int Level)
     m_fScale = (float)status[szKey]["SIZE"];
     m_stSphere.fRadius = (float)status[szKey]["PICKINGRADIUS"];
     m_fCenter = (float)status[szKey]["CENTERPOS"];
+}
+
+void cPlayer::UISetup()
+{
+    // 공격 값 UI
+    if (m_vecDamageText.empty())
+    {
+        m_vecDamageText.resize(5);
+        for (int i = 0; i < m_vecDamageText.size(); ++i)
+        {
+            m_vecDamageText[i] = MakeDamageText();
+        }
+    }
+
+    if (!m_vecDamageText.empty())
+    {
+        for (int i = 0; i < m_vecDamageText.size(); ++i)
+        {
+            if (m_vecDamageText[i].pUILayer)
+            {
+                m_vecDamageText[i].pUILayer->Setup();
+            }
+        }
+    }
+}
+
+void cPlayer::UIUpdate()
+{
+    if (!m_vecDamageText.empty())
+    {
+        // 텍스트 위치 관리
+        for (int i = 0; i < m_vecDamageText.size(); ++i)
+        {
+            if (m_vecDamageText[i].isAxtive && m_vecDamageText[i].pTextUI)
+            {
+                m_vecDamageText[i].vCurrPos.y += m_vecDamageText[i].fPlusY;
+
+                Matrix4 matView, matProj, matVP;
+                g_pDevice->GetTransform(D3DTS_VIEW, &matView);
+                g_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
+
+                D3DVIEWPORT9 vp;
+                g_pDevice->GetViewport(&vp);
+                D3DXMatrixIdentity(&matVP);
+                matVP._11 = vp.Width / 2.0f;
+                matVP._22 = -(vp.Height / 2.0f);
+                matVP._33 = vp.MaxZ - vp.MinZ;
+                matVP._41 = vp.X + vp.Width / 2.0f;
+                matVP._42 = vp.Y + vp.Height / 2.0f;
+                matVP._43 = vp.MinZ;
+
+                Vector3 vScreenPos;
+                D3DXVec3TransformCoord(&vScreenPos, &m_vecDamageText[i].vCurrPos, &(matView * matProj * matVP));
+
+                vScreenPos.x -= m_vecDamageText[i].pTextUI->GetSize().x * 0.5f;
+                vScreenPos.y -= m_vecDamageText[i].pTextUI->GetSize().y * 0.5f;
+
+                m_vecDamageText[i].pTextUI->SetLocalPos(vScreenPos);
+
+                if (m_vecDamageText[i].vCurrPos.y >= m_vecDamageText[i].fMaxY)
+                {
+                    m_vecDamageText[i].isAxtive = false;
+                }
+            }
+        }
+    }
+
+    if (!m_vecDamageText.empty())
+    {
+        for (int i = 0; i < m_vecDamageText.size(); ++i)
+        {
+            if (m_vecDamageText[i].pUILayer && m_vecDamageText[i].isAxtive)
+            {
+                m_vecDamageText[i].pUILayer->Update();
+            }
+        }
+    }
+}
+
+void cPlayer::UIRender()
+{
+    if (!m_vecDamageText.empty())
+    {
+        g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
+        g_pDevice->SetRenderState(D3DRS_ZENABLE, false);
+        for (int i = 0; i < m_vecDamageText.size(); ++i)
+        {
+            if (m_vecDamageText[i].pUILayer && m_vecDamageText[i].isAxtive)
+            {
+                m_vecDamageText[i].pUILayer->Render();
+            }
+        }
+        g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
+        g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
+    }
+}
+
+ST_DAMAGE_TEXT cPlayer::MakeDamageText()
+{
+    ST_DAMAGE_TEXT stDamage;
+    stDamage.pUILayer = new cUILayer;
+    stDamage.pUILayer->SetLayer("att-num-layer", Vector3(0, 0, 0), ST_SIZE(50, 50));
+    stDamage.pUILayer->SetActive(true);
+
+    stDamage.pTextUI = new cUITextView;
+    char Buf[20];
+    sprintf_s(Buf, sizeof(Buf), "att-num-%zd", m_vecDamageText.size());
+    stDamage.pTextUI->SetName(Buf);
+    stDamage.pTextUI->SetLocalPos(stDamage.vCurrPos);
+    stDamage.pTextUI->SetSize(Vector2(100, 50));
+    stDamage.pTextUI->SetFont(g_pFontManager->GetFont(g_pFontManager->E_DAMAGE));
+    stDamage.pTextUI->SetText(stDamage.szDamage);
+    stDamage.pTextUI->SetColor(D3DCOLOR_XRGB(255, 255, 0));
+
+    stDamage.fPlusY = 0.05f;
+
+    stDamage.pUILayer->AddUIObject(stDamage.pTextUI);
+
+    return stDamage;
+}
+
+void cPlayer::AddAttUI(int nAttValue)
+{
+    bool isSet = false;
+
+    for (int i = 0; i < m_vecDamageText.size(); ++i)
+    {
+        // 텍스트 UI레이어가 비어 있으면
+        if (!m_vecDamageText[i].isAxtive)
+        {
+            m_vecDamageText[i].isAxtive = true;
+            m_vecDamageText[i].vCurrPos = GetTarget()->GetPosition();
+            m_vecDamageText[i].vCurrPos.y += 10;
+            m_vecDamageText[i].fMaxY = m_vecDamageText[i].vCurrPos.y + 2;
+            char Buf[10];
+            sprintf_s(Buf, sizeof(Buf), "%d", nAttValue);
+            m_vecDamageText[i].szDamage = Buf;
+            m_vecDamageText[i].pTextUI->SetText(m_vecDamageText[i].szDamage);
+
+            isSet = true;
+
+            break;
+        }
+    }
+
+    // 빈 UI레이어가 없으면
+    if (!isSet)
+    {
+        m_vecDamageText.push_back(MakeDamageText());
+    }
 }

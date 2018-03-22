@@ -20,6 +20,7 @@ cMainGame::cMainGame()
     g_pScnManager->Setup();
     g_pCharacterManager->Setup();
     g_pGameManager->Setup();
+    g_pFontManager->Setup();
 }
 
 

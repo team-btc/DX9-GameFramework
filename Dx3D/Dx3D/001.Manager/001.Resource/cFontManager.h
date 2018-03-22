@@ -16,7 +16,8 @@ public:
         E_ALERT,
         E_DEBUG,
         E_SHOP_TITLE,
-        E_SHOP_DEFAULT
+        E_SHOP_DEFAULT,
+        E_DAMAGE
     };
 
 private:
