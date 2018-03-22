@@ -741,7 +741,7 @@ void cPlayScene::SetUI()
         // MP¹Ù
         cUIProgressBar* pUIProgressMP = new cUIProgressBar;
         pUIProgressMP->SetSize(vTargetHPSize);
-        pUIProgressMP->AddGuageTexture(szRedPath, 0, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
+        pUIProgressMP->AddGuageTexture(szBluePath, 0, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
         pUIProgressMP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
         pUIProgressMP->SetLocalPos(Vector3(vTargetStatPos.x + 78, vTargetStatPos.y + 50, 0));
         pUIProgressMP->SetName("target-mp");
