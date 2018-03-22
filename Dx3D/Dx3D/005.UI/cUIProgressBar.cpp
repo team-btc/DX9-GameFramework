@@ -159,7 +159,6 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
         obj->SetText(text);
     }
 
-
     // ≥–¿Ã ºº∆√
     if (!m_vecChild.empty())
     {
