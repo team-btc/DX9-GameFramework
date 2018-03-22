@@ -127,7 +127,6 @@ string cSoundManager::StopBgm()
         {
             result = iter->first;
             Stop(result);
-            break;
         }
     }
     return result;

@@ -406,32 +406,6 @@ HRESULT cPlayScene::Update()
                 (*iter)->SetMoveSpeed(0.08f);
             }
         }
-        // ========================= 사운드 추가 
-        if ((*iter)->GetName() == "Boar" )
-        {
-            if ((*iter)->GetAttak())
-            {
-                m_fBoarAtkTime += g_pTimerManager->GetDeltaTime();
-                if (m_fBoarAtkTime >= 1.0f)
-                {
-                    g_pSndManager->Play("boar-attack");
-                    m_fBoarAtkTime = 0.0f;
-                }
-            }
-        }
-        else if ((*iter)->GetName() == "Bear")
-        {
-            if ((*iter)->GetAttak())
-            {
-                m_fBearAtkTime += g_pTimerManager->GetDeltaTime();
-                if (m_fBearAtkTime >= 1.4f)
-                {
-                    g_pSndManager->Play("bear-attack");
-                    m_fBearAtkTime = 0.0f;
-                }
-            }
-        }
-        // ===================================
         if ((*iter)->GetRoar())
         {
             m_isRoar = true;
@@ -446,14 +420,6 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            if ((*iter)->GetName() == "Boar")
-            {
-                g_pSndManager->Play("boar-death");
-            }
-            else if ((*iter)->GetName() == "Bear")
-            {
-                g_pSndManager->Play("bear-death");
-            }
             iter = (*m_vecMonster).erase(iter);
         }
     }

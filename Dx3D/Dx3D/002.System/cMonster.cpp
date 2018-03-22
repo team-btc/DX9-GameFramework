@@ -110,6 +110,8 @@ void cMonster::Update()
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;
         DeadAnim();
+
+        g_pSndManager->Play(m_szName + "-death");
     }
 
 
