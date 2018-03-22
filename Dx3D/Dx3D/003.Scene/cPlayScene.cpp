@@ -43,7 +43,7 @@ HRESULT cPlayScene::Start()
         {
             mapLoader.LoadObject(i);
         }
-        m_szMapKey = g_pMapManager->GetCurrKey();
+
         m_stMapInfo = g_pMapManager->GetCurrMapInfo();
 
         // 현재 맵 셋팅
@@ -152,7 +152,22 @@ HRESULT cPlayScene::Start()
     m_vecMonster->clear();
 
    //몬스터 생성
-    CreateMonster();
+    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+    {
+        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+        {
+            cMonster* Enermy = g_pCharacterManager->GetMonster(m_szMapKey);
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            Enermy->SetActive(true);
+            (*m_vecMonster).push_back(Enermy);
+        }
+        else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
+        {
+            cBoss* Enermy = g_pCharacterManager->GetBoss();
+            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+            (*m_vecMonster).push_back(Enermy);
+        }
+    }
 
     if (!m_pPlayer)
     {
@@ -204,7 +219,7 @@ HRESULT cPlayScene::Start()
         Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
 
         m_pParticleFrost = new cParticle(&pos, 20, 200, true, Vector3(-1.0f, 0, -0.5f), Vector3(0.5f, 1, 0.5f));
-        m_pParticleFrost->Init("smog03");
+        m_pParticleFrost->Init("smog01");
         ST_PARTICLE_ATTR attr;
         attr.fGravity = -0.03f;
         attr.isLoop = true;
@@ -215,9 +230,9 @@ HRESULT cPlayScene::Start()
         attr.vAccel = Vector3(0.2f, 0.1f, 0.4f);
         attr.fMinLife = 0.1f;
         attr.fMaxLife = 0.9f;
-        attr.color = D3DCOLOR_RGBA(0, 220, 25, 255);
+        attr.color = D3DCOLOR_RGBA(0, 20, 250, 255);
         attr.isFade = true;
-        attr.fadeColor = D3DCOLOR_RGBA(0, 190, 25, 180);
+        attr.fadeColor = D3DCOLOR_RGBA(0, 25, 250, 180);
         m_pParticleFrost->SetSize(3.5f);
         m_pParticleFrost->SetGenTerm(0.4f);
         m_pParticleFrost->Reset(attr);
@@ -237,7 +252,7 @@ HRESULT cPlayScene::Start()
         attr.deltaAccelMin = Vector3(power * 0.5f, -power * 0.5f, power * 0.5f); 
         attr.deltaAccelMax = Vector3(-power * 0.5f, -power * 0.5f, -power * 0.5f);
         attr.life = 2.3f;
-        attr.fSpeed = 0.05f;
+        attr.fSpeed = 0.1f;
         attr.fMinLife = 2.3f;
         attr.fMaxLife = 3.7f;
         attr.isVariableSpeed = true;
@@ -331,18 +346,18 @@ HRESULT cPlayScene::Update()
     //  UPDATE CAMERA
     if (m_pCamera)
     {
-        //if (m_pShop)
-        //{
-        //    // 마우스 컨트롤 가능 여부 셋팅
-        //    if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
-        //    {
-        //        m_pCamera->SetControl(false);
-        //    }
-        //    else
-        //    {
-        //        m_pCamera->SetControl(true);
-        //    }
-        //}
+        if (m_pShop)
+        {
+            // 마우스 컨트롤 가능 여부 셋팅
+            if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
+            {
+                m_pCamera->SetControl(false);
+            }
+            else
+            {
+                m_pCamera->SetControl(true);
+            }
+        }
 
         if (m_pPlayer)
         {
@@ -408,7 +423,16 @@ HRESULT cPlayScene::Update()
     //REGEN
     if (m_vecMonster->size() == 0)
     {
-        CreateMonster();
+        for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+        {
+            if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+            {
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
+                m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+                m_pEnermy->SetActive(true);
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+        }
     }
 
     //MONSTER SUMMON
@@ -467,7 +491,7 @@ HRESULT cPlayScene::Update()
             }
             else
             {
-                (*iter)->SetMoveSpeed(12.0f); // 몬스터 스피드
+                (*iter)->SetMoveSpeed(14.0f);
             }
         }
 
@@ -504,7 +528,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(20.0f); // 플레이어 스피드
+            m_pPlayer->SetMoveSpeed(20.0f);
         }
     }
 
@@ -604,7 +628,7 @@ HRESULT cPlayScene::Render()
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
-   /* if (m_pTextureShader)
+    if (m_pTextureShader)
     {
         Vector3 pos = m_pPlayer->GetPosition();
         pos = pos / m_stMapInfo->fMapSize;
@@ -635,7 +659,7 @@ HRESULT cPlayScene::Render()
     if (m_stMapInfo->isEnableWater && m_pWaveShader)
     {
         m_pWaveShader->Render(vP);
-    }*/
+    }
 
     // UI 렌더
     if (m_pPlayerStatUILayer)
@@ -814,25 +838,4 @@ void cPlayScene::TransportMap(string szMap)
     m_stMapInfo = NULL;
     Start();
     Update();
-}
-
-void cPlayScene::CreateMonster()
-{
-    for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
-    {
-        if (m_stMapInfo->vecEventInfo[i].szName == "monster")
-        {
-            cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
-            m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            m_pEnermy->SetActive(true);
-            (*m_vecMonster).push_back(m_pEnermy);
-        }
-        else if (m_stMapInfo->vecEventInfo[i].szName == "boss")
-        {
-            cBoss* Enermy = g_pCharacterManager->GetBoss();
-            Enermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
-            Enermy->SetActive(true);
-            (*m_vecMonster).push_back(Enermy);
-        }
-    }
 }
