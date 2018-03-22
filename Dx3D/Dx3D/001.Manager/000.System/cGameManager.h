@@ -22,7 +22,7 @@ struct ST_INVENTORY
 
     ST_INVENTORY()
     {
-        gold = 123456;
+        gold = 0;
     }
 };
 
@@ -93,6 +93,10 @@ public:
     void PullGear(int id);
 
     void Pay(int gold);
+
+    void PlusStat(int id);
+    void MinusStat(int id);
+    void EditStat(ST_STATUS* stStat, E_PLAYER_STAT eStat, float fValue);
     
     void LoadItemInfo();
     void LoadItemPlusStat(vector<ST_PLUS_STAT_INFO>* vecPlusStat, E_PLAYER_STAT eStat, float fValue);
