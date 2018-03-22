@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "cPlayScene.h"
 #include "005.UI//cUILayer.h"
+#include "005.UI//cUIImageView.h"
 #include "005.UI//cUIProgressBar.h"
 #include "cShop.h"
 #include "cInventory.h"
+#include "cGear.h"
 
 cPlayScene::cPlayScene()
     : m_pPlayerStatUILayer(NULL)
-    , m_pHPUILayer(NULL)
+    , m_pTargetStatUILayer(NULL)
+    , m_pMonsterHPUILayer(NULL)
 	, m_stMapInfo(NULL)
     , m_pCamera(NULL)
     , m_pGameMap(NULL)
@@ -17,6 +20,7 @@ cPlayScene::cPlayScene()
     , m_szMapKey("start")
     , m_pShop(NULL)
     , m_pInventory(NULL)
+    , m_pGear(NULL)
     , m_pParticleFrost(NULL)
     , m_pPlayer(NULL)
     , m_isRoar(false)
@@ -99,6 +103,12 @@ HRESULT cPlayScene::Start()
     {
         m_pInventory = new cInventory;
         m_pInventory->Setup();
+    }
+    //  LOAD GEAR
+    if (!m_pGear)
+    {
+        m_pGear = new cGear;
+        m_pGear->Setup();
     }
 
     if (!m_pFrustum)
@@ -191,6 +201,14 @@ HRESULT cPlayScene::Start()
     {
         m_pPlayerStatUILayer->Setup();
     }
+    if (m_pTargetStatUILayer)
+    {
+        m_pTargetStatUILayer->Setup();
+    }
+    if (m_pMonsterHPUILayer)
+    {
+        m_pMonsterHPUILayer->Setup();
+    }
 
     //  파티클 세팅
     if (!m_pParticleFrost)
@@ -227,29 +245,38 @@ HRESULT cPlayScene::Update()
     if (g_pKeyManager->isOnceKeyDown('O'))
     {
         m_pShop->OpenShop();
+
+        // 인벤도 오픈
+        if (m_pInventory && !m_pInventory->GetIsOpen())
+        {
+            m_pInventory->OpenInventory();
+        }
     }
     // == 수정 해야 하는 부분!!! 인벤 활성화!!
     if (g_pKeyManager->isOnceKeyDown('I'))
     {
         m_pInventory->OpenInventory();
     }
+    // == 수정 해야 하는 부분!!! 인벤 활성화!!
+    if (g_pKeyManager->isOnceKeyDown('P'))
+    {
+        m_pGear->OpenGear();
+    }
 
     // SHOP UPDATE -> 상점 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
     if (m_pShop && m_pShop->GetIsOpen())
     {
         m_pShop->Update();
-
-        // 아이템 구입을 했다면 인벤 오픈
-        if (m_pShop->GetIsBuyItem() && m_pInventory)
-        {
-            m_pShop->SetIsBuyItem(false);
-            m_pInventory->OpenInventory();
-        }
     }
     // INVENTORY UPDATE -> 인벤 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
     if (m_pInventory && m_pInventory->GetIsOpen())
     {
         m_pInventory->Update();
+    }
+    // GEAR UPDATE -> 장비창 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
+    if (m_pGear && m_pGear->GetIsOpen())
+    {
+        m_pGear->Update();
     }
 
     //  UPDATE CAMERA
@@ -258,7 +285,7 @@ HRESULT cPlayScene::Update()
         if (m_pShop)
         {
             // 마우스 컨트롤 가능 여부 셋팅
-            if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
+            if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven() || m_pGear->GetIsClickGear())
             {
                 m_pCamera->SetControl(false);
             }
@@ -402,10 +429,15 @@ HRESULT cPlayScene::Update()
     }
 
     // UI 업데이트 (플레이어 스탯)
+    UpdateUI();
+
     if (m_pPlayerStatUILayer)
     {
-        UpdateUI();
         m_pPlayerStatUILayer->Update();
+    }
+    if (m_pTargetStatUILayer)
+    {
+        m_pTargetStatUILayer->Update();
     }
 
     // 이벤트 체크
@@ -442,59 +474,6 @@ HRESULT cPlayScene::Render()
 
     m_pPlayer->Render();
 
-    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
-    {
-        bool result = false;
-        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
-        if (result)
-        {
-            (*iter)->Render();
-        }
-
-        // 몬스터를 따라다니는 UI!!
-        cUIProgressBar* pProgress = NULL;
-        if (m_pHPUILayer)
-        {
-            // HP
-            cUIObject* pObject;
-            m_pHPUILayer->FindUIObject(&pObject, "default-hp");
-            if (pObject)
-            {
-                pProgress = (cUIProgressBar*)pObject;
-            }
-        }
-
-        Matrix4 matView, matProj, matVP;
-        g_pDevice->GetTransform(D3DTS_VIEW, &matView);
-        g_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-
-        D3DVIEWPORT9 vp;
-        g_pDevice->GetViewport(&vp);
-        D3DXMatrixIdentity(&matVP);
-        matVP._11 = vp.Width / 2.0f;
-        matVP._22 = -(vp.Height / 2.0f);
-        matVP._33 = vp.MaxZ - vp.MinZ;
-        matVP._41 = vp.X + vp.Width / 2.0f;
-        matVP._42 = vp.Y + vp.Height / 2.0f;
-        matVP._43 = vp.MinZ;
-        if (pProgress)
-        {
-            Vector3 vMonsterPos = (*iter)->GetPosition();
-            vMonsterPos.y += 10.0f;
-
-            Vector3 vScreenPos;
-            D3DXVec3TransformCoord(&vScreenPos, &vMonsterPos, &(matView * matProj * matVP));
-
-            pProgress->SetMaxGuage((*iter)->GetStatus().fMaxHP);
-            pProgress->SetCurrentGuage((*iter)->GetStatus().fCurHP);
-            vScreenPos.x -= pProgress->GetSize().x * 0.5f;
-            m_pHPUILayer->SetPosition(vScreenPos);
-            pProgress->SetLocalPos(vScreenPos);
-            m_pHPUILayer->Update();
-            m_pHPUILayer->Render();
-        }
-    }
-
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
     if (m_pTextureShader)
@@ -530,10 +509,70 @@ HRESULT cPlayScene::Render()
         m_pWaveShader->Render(vP);
     }
 
+    for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
+    {
+        bool result = false;
+        m_pFrustum->IsInFrustum(result, &(*iter)->GetSphere());
+        if (result)
+        {
+            (*iter)->Render();
+        }
+
+        // 몬스터를 따라다니는 UI!!
+        cUIProgressBar* pProgress = NULL;
+        if (m_pMonsterHPUILayer)
+        {
+            cUIObject* pObject;
+            m_pMonsterHPUILayer->FindUIObject(&pObject, "default-hp");
+            if (pObject)
+            {
+                pProgress = (cUIProgressBar*)pObject;
+            }
+        }
+
+        Matrix4 matView, matProj, matVP;
+        g_pDevice->GetTransform(D3DTS_VIEW, &matView);
+        g_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
+
+        D3DVIEWPORT9 vp;
+        g_pDevice->GetViewport(&vp);
+        D3DXMatrixIdentity(&matVP);
+        matVP._11 = vp.Width / 2.0f;
+        matVP._22 = -(vp.Height / 2.0f);
+        matVP._33 = vp.MaxZ - vp.MinZ;
+        matVP._41 = vp.X + vp.Width / 2.0f;
+        matVP._42 = vp.Y + vp.Height / 2.0f;
+        matVP._43 = vp.MinZ;
+        if (pProgress)
+        {
+            Vector3 vMonsterPos = (*iter)->GetPosition();
+            vMonsterPos.y += 10.0f;
+
+            Vector3 vScreenPos;
+            D3DXVec3TransformCoord(&vScreenPos, &vMonsterPos, &(matView * matProj * matVP));
+
+            pProgress->SetMaxGuage((*iter)->GetStatus().fMaxHP);
+            pProgress->SetCurrentGuage((*iter)->GetStatus().fCurHP);
+            vScreenPos.x -= pProgress->GetSize().x * 0.5f;
+            m_pMonsterHPUILayer->SetPosition(vScreenPos);
+            pProgress->SetLocalPos(vScreenPos);
+            m_pMonsterHPUILayer->Update();
+            g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
+            g_pDevice->SetRenderState(D3DRS_ZENABLE, false);
+            m_pMonsterHPUILayer->Render();
+            g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
+            g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
+        }
+    }
+
     // UI 렌더
     if (m_pPlayerStatUILayer)
     {
         m_pPlayerStatUILayer->Render();
+    }
+    if (m_pTargetStatUILayer)
+    {
+        m_pTargetStatUILayer->Render();
     }
 
     // SHOP RENDER
@@ -546,6 +585,11 @@ HRESULT cPlayScene::Render()
     {
         m_pInventory->Render();
     }
+    // GEAR RENDER
+    if (m_pGear && m_pGear->GetIsOpen())
+    {
+        m_pGear->Render();
+    }
 
     if (m_pParticleFrost)
     {
@@ -555,8 +599,8 @@ HRESULT cPlayScene::Render()
 #ifdef _DEBUG
 
     // 장애물, 이벤트 트랩 출력
-    //m_pGameMap->RendObstacle();
-    //m_pGameMap->RendEventTrap();
+    m_pGameMap->RendObstacle();
+    m_pGameMap->RendEventTrap();
 
 #endif // _DEBUG
 
@@ -566,24 +610,30 @@ HRESULT cPlayScene::Render()
 ULONG cPlayScene::Release()
 {
     SAFE_DELETE(m_pPlayerStatUILayer);
-    SAFE_DELETE(m_pHPUILayer);
+    SAFE_DELETE(m_pTargetStatUILayer);
+    SAFE_DELETE(m_pMonsterHPUILayer);
     SAFE_DELETE(m_pTextureShader);
     SAFE_DELETE(m_pSkyBoxShader);
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
-    SAFE_DELETE(m_pPlayerStatUILayer);
-    SAFE_DELETE(m_pHPUILayer);
     SAFE_DELETE(m_pParticleFrost);
     SAFE_RELEASE(m_pShop);
     SAFE_RELEASE(m_pInventory);
+    SAFE_RELEASE(m_pGear);
 
     return cObject::Release();
 }
 
 void cPlayScene::SetUI()
 {
-    ST_SIZE stLayerSize = ST_SIZE(W_WIDTH / 4.0f, W_HEIGHT / 10.0f);
-    Vector2 vHP_MPSize = Vector2(stLayerSize.w * 0.8f, stLayerSize.h * 0.3f);
+    ST_SIZE stPlayerStatSize = ST_SIZE(300, 120);
+    Vector2 vPlayerHPSize = Vector2(stPlayerStatSize.w * 0.61f, stPlayerStatSize.h * 0.22f);
+    Vector2 vPlayerMPSize = Vector2(stPlayerStatSize.w * 0.61f, stPlayerStatSize.h * 0.12f);
+    Vector3 vPlayerStatPos = Vector3(15, 15, 0);
+
+    ST_SIZE stTargetStatSize = ST_SIZE(200, 80);
+    Vector2 vTargetHPSize = Vector2(stTargetStatSize.w * 0.58f, stTargetStatSize.h * 0.13f);
+    Vector3 vTargetStatPos = Vector3(340, 30, 0);
 
     ST_SIZE stMonLayerSize = ST_SIZE(80, 15);
     Vector2 vMonHPSize = Vector2(stMonLayerSize.w, stMonLayerSize.h);
@@ -591,58 +641,139 @@ void cPlayScene::SetUI()
     string szRedPath = INTERFACE_PATH + (string)"progressBar/redgrad64.png";
     string szGreenPath = INTERFACE_PATH + (string)"progressBar/greengrad64.png";
     string szBluePath = INTERFACE_PATH + (string)"progressBar/bluegrad64.png";
-    string szGreyPath = INTERFACE_PATH + (string)"progressBar/greyscaleramp64.png";
+    string szProgressBackPath = INTERFACE_PATH + (string)"progressBar/progress-back.png";
 
-    LPFONTDX pFont = g_pFontManager->GetFont(g_pFontManager->E_QUEST);
+    LPFONTDX pFont = g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT);
 
     // 캐릭터 스탯 레이어 초기화
     if (!m_pPlayerStatUILayer)
     {
         m_pPlayerStatUILayer = new cUILayer;
-        m_pPlayerStatUILayer->SetLayer("player-stat", Vector3(0, 0, 0), stLayerSize);
+        m_pPlayerStatUILayer->SetLayer("player-stat", Vector3(0, 0, 0), stPlayerStatSize);
         m_pPlayerStatUILayer->SetActive(true);
+
+        // 캐릭터 초상화
+        cUIImageView* pCharacterImage = new cUIImageView;
+        string szPath = INTERFACE_PATH + (string)"gear-character.png";
+        g_pTextureManager->AddTexture("gear-character-img", szPath, true);
+        pCharacterImage->SetName("gear-character-img");
+        pCharacterImage->SetLocalPos(Vector3(vPlayerStatPos.x + 10, vPlayerStatPos.y + 5, 0));
+        IMAGE_INFO imageInfo;
+        pCharacterImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("gear-character-img", &imageInfo));
+        pCharacterImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+        pCharacterImage->SetScale(100 / (float)imageInfo.Width, 100 / (float)imageInfo.Height);
+        m_pPlayerStatUILayer->AddUIObject(pCharacterImage);
 
         // HP바
         cUIProgressBar* pUIProgressHP = new cUIProgressBar;
-        pUIProgressHP->SetSize(vHP_MPSize);
-        pUIProgressHP->AddGuageTexture(szGreenPath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressHP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
+        pUIProgressHP->SetSize(vPlayerHPSize);
+        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vPlayerHPSize.x, vPlayerHPSize.y));
+        pUIProgressHP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vPlayerHPSize.x, vPlayerHPSize.y));
         pUIProgressHP->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
         pUIProgressHP->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
-        pUIProgressHP->SetLocalPos(Vector3(80, 15, 0));
+        pUIProgressHP->SetLocalPos(Vector3(vPlayerStatPos.x + 111, vPlayerStatPos.y + 26, 0));
         pUIProgressHP->SetName("player-hp");
         pUIProgressHP->AddText(pFont, 0);
         m_pPlayerStatUILayer->AddUIObject(pUIProgressHP);
 
         // MP바
         cUIProgressBar* pUIProgressMP = new cUIProgressBar;
-        pUIProgressMP->SetSize(vHP_MPSize);
-        pUIProgressMP->AddGuageTexture(szBluePath, 0, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
-        pUIProgressMP->AddGuageTexture(szRedPath, 1, ST_SIZE(vHP_MPSize.x, vHP_MPSize.y));
+        pUIProgressMP->SetSize(vPlayerMPSize);
+        pUIProgressMP->AddGuageTexture(szBluePath, 0, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
+        pUIProgressMP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
         pUIProgressMP->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
         pUIProgressMP->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
-        pUIProgressMP->SetLocalPos(Vector3(80, 50, 0));
+        pUIProgressMP->SetLocalPos(Vector3(vPlayerStatPos.x + 111, vPlayerStatPos.y + 26 + 30, 0));
         pUIProgressMP->SetName("player-mp");
         pUIProgressMP->AddText(pFont, 0);
         m_pPlayerStatUILayer->AddUIObject(pUIProgressMP);
+
+        // EXP바
+        cUIProgressBar* pUIProgressEXP = new cUIProgressBar;
+        pUIProgressEXP->SetSize(vPlayerMPSize);
+        pUIProgressEXP->AddGuageTexture(szGreenPath, 0, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
+        pUIProgressEXP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
+        pUIProgressEXP->SetMaxGuage(m_pPlayer->GetStatus().nMaxEXP);
+        pUIProgressEXP->SetCurrentGuage(m_pPlayer->GetStatus().nCurEXP);
+        pUIProgressEXP->SetLocalPos(Vector3(vPlayerStatPos.x + 111, vPlayerStatPos.y + 26 + 47, 0));
+        pUIProgressEXP->SetName("player-exp");
+        pUIProgressEXP->AddText(pFont, 0);
+        m_pPlayerStatUILayer->AddUIObject(pUIProgressEXP);
+
+        // 플레이어 스탯 배경
+        cUIImageView* pStatBGImage = new cUIImageView; 
+        szPath = INTERFACE_PATH + (string)"progressBar/player-frame.png";
+        g_pTextureManager->AddTexture("player-frame-img", szPath, true);
+        pStatBGImage->SetName("player-frame-img");
+        pStatBGImage->SetLocalPos(vPlayerStatPos);
+        pStatBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("player-frame-img", &imageInfo));
+        pStatBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+        pStatBGImage->SetScale(stPlayerStatSize.w / (float)imageInfo.Width, stPlayerStatSize.h / (float)imageInfo.Height);
+        m_pPlayerStatUILayer->AddUIObject(pStatBGImage);
     }
 
-    if (!m_pHPUILayer)
+    if (!m_pTargetStatUILayer)
     {
-        // 기본 HP 레이어 셋팅 (몬스터용)
-        m_pHPUILayer = new cUILayer;
-        m_pHPUILayer->SetLayer("default-hp", Vector3(0, 0, 0), stMonLayerSize);
-        m_pHPUILayer->SetActive(true);
+        m_pTargetStatUILayer = new cUILayer;
+        m_pTargetStatUILayer->SetLayer("Target-stat", Vector3(0, 0, 0), stTargetStatSize);
+        m_pTargetStatUILayer->SetActive(false);
+        string szPath;
+        IMAGE_INFO imageInfo;
+
+        // 캐릭터 초상화
+        cUIImageView* pCharacterImage = new cUIImageView;
+        pCharacterImage->SetName("target-face-img");
+        pCharacterImage->SetLocalPos(Vector3(vTargetStatPos.x + 10, vTargetStatPos.y + 5, 0));
+        m_pTargetStatUILayer->AddUIObject(pCharacterImage);
+
+        // HP바
+        cUIProgressBar* pUIProgressHP = new cUIProgressBar;
+        pUIProgressHP->SetSize(vTargetHPSize);
+        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
+        pUIProgressHP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
+        pUIProgressHP->SetLocalPos(Vector3(vTargetStatPos.x + 78, vTargetStatPos.y + 35, 0));
+        pUIProgressHP->SetName("target-hp");
+        pUIProgressHP->AddText(pFont, 0);
+        m_pTargetStatUILayer->AddUIObject(pUIProgressHP);
+
+        // MP바
+        cUIProgressBar* pUIProgressMP = new cUIProgressBar;
+        pUIProgressMP->SetSize(vTargetHPSize);
+        pUIProgressMP->AddGuageTexture(szRedPath, 0, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
+        pUIProgressMP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
+        pUIProgressMP->SetLocalPos(Vector3(vTargetStatPos.x + 78, vTargetStatPos.y + 50, 0));
+        pUIProgressMP->SetName("target-mp");
+        pUIProgressMP->AddText(pFont, 0);
+        m_pTargetStatUILayer->AddUIObject(pUIProgressMP);
+
+        // 타겟 스탯 배경
+        cUIImageView* pStatBGImage = new cUIImageView;
+        szPath = INTERFACE_PATH + (string)"progressBar/target-frame.png";
+        g_pTextureManager->AddTexture("target-frame-img", szPath, true);
+        pStatBGImage->SetName("target-frame-img");
+        pStatBGImage->SetLocalPos(vTargetStatPos);
+        pStatBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("target-frame-img", &imageInfo));
+        pStatBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+        pStatBGImage->SetScale(stTargetStatSize.w / (float)imageInfo.Width, stTargetStatSize.h / (float)imageInfo.Height);
+        m_pTargetStatUILayer->AddUIObject(pStatBGImage);
+    }
+
+    if (!m_pMonsterHPUILayer)
+    {
+        // 기본 HP 레이어 셋팅 (몬스터 따라다니는 용)
+        m_pMonsterHPUILayer = new cUILayer;
+        m_pMonsterHPUILayer->SetLayer("default-hp", Vector3(0, 0, 0), stMonLayerSize);
+        m_pMonsterHPUILayer->SetActive(true);
 
         // HP바
         cUIProgressBar* pUIProgressHP = new cUIProgressBar;
         pUIProgressHP->SetSize(vMonHPSize);
-        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
-        pUIProgressHP->AddGuageTexture(szGreyPath, 1, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
+        pUIProgressHP->AddGuageTexture(szBluePath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
+        pUIProgressHP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
         pUIProgressHP->SetMaxGuage(100);
         pUIProgressHP->SetCurrentGuage(30);
         pUIProgressHP->SetName("default-hp");
-        m_pHPUILayer->AddUIObject(pUIProgressHP);
+        m_pMonsterHPUILayer->AddUIObject(pUIProgressHP);
     }
 }
 
@@ -650,21 +781,77 @@ void cPlayScene::UpdateUI()
 {
     cUIObject* pObject;
 
-    // HP
-    m_pPlayerStatUILayer->FindUIObject(&pObject, "player-hp");
-    if (pObject)
+    if (m_pPlayerStatUILayer)
     {
-        cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-        pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
-        pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
+        // HP
+        m_pPlayerStatUILayer->FindUIObject(&pObject, "player-hp");
+        if (pObject)
+        {
+            cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
+            pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurHP);
+            pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxHP);
+        }
+        // MP
+        m_pPlayerStatUILayer->FindUIObject(&pObject, "player-mp");
+        if (pObject)
+        {
+            cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
+            pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
+            pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
+        }
+        // EXP
+        m_pPlayerStatUILayer->FindUIObject(&pObject, "player-exp");
+        if (pObject)
+        {
+            cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
+            pProgress->SetCurrentGuage(m_pPlayer->GetStatus().nCurEXP);
+            pProgress->SetMaxGuage(m_pPlayer->GetStatus().nMaxEXP);
+        }
     }
-    // MP
-    m_pPlayerStatUILayer->FindUIObject(&pObject, "player-mp");
-    if (pObject)
+
+    if (m_pTargetStatUILayer)
     {
-        cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-        pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
-        pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
+        iCharacterObject* pTarget = m_pPlayer->GetTarget();
+
+        if (pTarget)
+        {
+            m_pTargetStatUILayer->SetActive(true);
+
+            // 캐릭터 초상화
+            m_pTargetStatUILayer->FindUIObject(&pObject, "target-face-img");
+            if (pObject)
+            {
+                string szName = pTarget->GetName() + "-face.png";
+                string szPath = INTERFACE_PATH + szName;
+                g_pTextureManager->AddTexture(szName, szPath, true);
+
+                cUIImageView* pCharacterImage = (cUIImageView*)pObject;
+                IMAGE_INFO imageInfo;
+                pCharacterImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture(szName, &imageInfo));
+                pCharacterImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+                pCharacterImage->SetScale(70 / (float)imageInfo.Width, 70 / (float)imageInfo.Height);
+            }
+            // HP
+            m_pTargetStatUILayer->FindUIObject(&pObject, "target-hp");
+            if (pObject)
+            {
+                cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
+                pProgress->SetCurrentGuage(pTarget->GetStatus().fCurHP);
+                pProgress->SetMaxGuage(pTarget->GetStatus().fMaxHP);
+            }
+            // MP
+            m_pTargetStatUILayer->FindUIObject(&pObject, "target-mp");
+            if (pObject)
+            {
+                cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
+                pProgress->SetCurrentGuage(pTarget->GetStatus().fCurMP);
+                pProgress->SetMaxGuage(pTarget->GetStatus().fMaxMP);
+            }
+        }
+        else
+        {
+            m_pTargetStatUILayer->SetActive(false);
+        }
     }
 }
 

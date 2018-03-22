@@ -28,15 +28,15 @@ struct ST_INVENTORY
 
 struct ST_GEAR
 {
-    int swordId;
     int helmId;
     int chestPlateId;
+    int swordId;
 
     ST_GEAR()
     {
-        swordId = -1;
-        helmId = -1;
-        chestPlateId = -1;
+        helmId = 0;
+        chestPlateId = 2;
+        swordId = 4;
     }
 };
 
@@ -53,6 +53,7 @@ private:
 private:
     SINGLETON(cGameManager);
 
+private:
     int FindItem(int id);
 
 public:
@@ -73,6 +74,9 @@ public:
     void PushItem(int id);
     void PullItem(int id);
 
+    void PushGear(int id);
+    void PullGear(int id);
+
     void Pay(int gold);
     
     void LoadItemInfo();
@@ -81,5 +85,6 @@ public:
     vector<ST_ITEM_INFO*> GetItemInfo() { return m_vecItemInfo; }
     int GetCurrGold() { return m_stInventory.gold; }
     vector<ST_ITEM> GetInvetoryInfo() { return m_stInventory.items; }
+    ST_GEAR GetGearInfo() { return m_stGear; }
 };
 

@@ -11,7 +11,6 @@ cShop::cShop()
     , m_nPlayerMoney(g_pGameManager->GetCurrGold())
     , m_isOpen(false)
     , m_isClickShop(false)
-    , m_isBuyItem(false)
 {
     m_rtShopSize.left = 50;
     m_rtShopSize.top = 150;
@@ -111,7 +110,6 @@ void cShop::Update()
             // 플레이어에게 돈이 있으면 구입
             if (m_vecItemInfo[m_nCurrSelectItem]->nPrice <= m_nPlayerMoney)
             {
-                m_isBuyItem = true;
                 m_nPlayerMoney -= m_vecItemInfo[m_nCurrSelectItem]->nPrice;
                 g_pGameManager->Pay(-m_vecItemInfo[m_nCurrSelectItem]->nPrice);
                 g_pGameManager->PushItem(m_nCurrSelectItem);
