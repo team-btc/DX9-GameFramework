@@ -215,8 +215,8 @@
     <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="001.Manager\000.System\cGameManager.h" />
     <ClInclude Include="002.System\cBoss.h" />
-    <ClInclude Include="cGear.h" />
-    <ClInclude Include="cInventory.h" />
+    <ClInclude Include="003.Object\cGear.h" />
+    <ClInclude Include="003.Object\cInventory.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
@@ -280,8 +280,8 @@
     <ClCompile Include="003.Scene\cLoadingScene.cpp" />
     <ClCompile Include="001.Manager\000.System\cGameManager.cpp" />
     <ClCompile Include="002.System\cBoss.cpp" />
-    <ClCompile Include="cGear.cpp" />
-    <ClCompile Include="cInventory.cpp" />
+    <ClCompile Include="003.Object\cGear.cpp" />
+    <ClCompile Include="003.Object\cInventory.cpp" />
     <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="003.Object\cCharacterObject.cpp" />

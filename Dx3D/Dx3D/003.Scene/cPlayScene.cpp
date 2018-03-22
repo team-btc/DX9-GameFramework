@@ -1,11 +1,8 @@
 #include "stdafx.h"
 #include "cPlayScene.h"
-#include "005.UI//cUILayer.h"
-#include "005.UI//cUIImageView.h"
-#include "005.UI//cUIProgressBar.h"
-#include "cShop.h"
-#include "cInventory.h"
-#include "cGear.h"
+#include "cUIImageView.h"
+#include "cUITextView.h"
+#include "cUIProgressBar.h"
 
 cPlayScene::cPlayScene()
     : m_pPlayerStatUILayer(NULL)
@@ -496,8 +493,6 @@ HRESULT cPlayScene::Render()
         m_pSkyBoxShader->Render(vP);
     }
 
-    m_pPlayer->Render();
-
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
 
     if (m_pTextureShader)
@@ -587,6 +582,12 @@ HRESULT cPlayScene::Render()
             g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
             g_pDevice->SetRenderState(D3DRS_ZENABLE, true);
         }
+    }
+
+    // UI가 렌더 되기 때문에 하단에서 렌더!!
+    if (m_pPlayer)
+    {
+        m_pPlayer->Render();
     }
 
     // UI 렌더
@@ -717,8 +718,8 @@ void cPlayScene::SetUI()
         pUIProgressEXP->SetSize(vPlayerMPSize);
         pUIProgressEXP->AddGuageTexture(szGreenPath, 0, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
         pUIProgressEXP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vPlayerMPSize.x, vPlayerMPSize.y));
-        pUIProgressEXP->SetMaxGuage(m_pPlayer->GetStatus().nMaxEXP);
-        pUIProgressEXP->SetCurrentGuage(m_pPlayer->GetStatus().nCurEXP);
+        pUIProgressEXP->SetMaxGuage((float)m_pPlayer->GetStatus().nMaxEXP);
+        pUIProgressEXP->SetCurrentGuage((float)m_pPlayer->GetStatus().nCurEXP);
         pUIProgressEXP->SetLocalPos(Vector3(vPlayerStatPos.x + 111, vPlayerStatPos.y + 26 + 47, 0));
         pUIProgressEXP->SetName("player-exp");
         pUIProgressEXP->AddText(pFont, 0);
@@ -736,6 +737,7 @@ void cPlayScene::SetUI()
         m_pPlayerStatUILayer->AddUIObject(pStatBGImage);
     }
 
+    // 타겟 스탯 레이어 초기화
     if (!m_pTargetStatUILayer)
     {
         m_pTargetStatUILayer = new cUILayer;
@@ -782,6 +784,7 @@ void cPlayScene::SetUI()
         m_pTargetStatUILayer->AddUIObject(pStatBGImage);
     }
 
+    // 몬스터 따라다니는 UI레이어 초기화
     if (!m_pMonsterHPUILayer)
     {
         // 기본 HP 레이어 셋팅 (몬스터 따라다니는 용)
@@ -792,7 +795,7 @@ void cPlayScene::SetUI()
         // HP바
         cUIProgressBar* pUIProgressHP = new cUIProgressBar;
         pUIProgressHP->SetSize(vMonHPSize);
-        pUIProgressHP->AddGuageTexture(szBluePath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
+        pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
         pUIProgressHP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vMonHPSize.x, vMonHPSize.y));
         pUIProgressHP->SetMaxGuage(100);
         pUIProgressHP->SetCurrentGuage(30);
@@ -828,8 +831,8 @@ void cPlayScene::UpdateUI()
         if (pObject)
         {
             cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-            pProgress->SetCurrentGuage(m_pPlayer->GetStatus().nCurEXP);
-            pProgress->SetMaxGuage(m_pPlayer->GetStatus().nMaxEXP);
+            pProgress->SetCurrentGuage((float)m_pPlayer->GetStatus().nCurEXP);
+            pProgress->SetMaxGuage((float)m_pPlayer->GetStatus().nMaxEXP);
         }
     }
 

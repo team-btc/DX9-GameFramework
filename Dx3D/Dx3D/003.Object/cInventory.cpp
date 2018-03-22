@@ -19,6 +19,11 @@ cInventory::cInventory()
     m_rtInvenSize.bottom = m_rtInvenSize.top + (LONG)(W_HEIGHT * 0.35f);
 
     m_stItemSize = ST_SIZE(60, 60);
+
+    g_pSndManager->AddSound("inven-open", "inven", "Assets\\Sound\\Effect\\Common\\pickupbag.ogg");
+    g_pSndManager->AddSound("inven-close", "inven", "Assets\\Sound\\Effect\\Common\\putdownbag.ogg");
+    g_pSndManager->AddSound("inven-use", "inven", "Assets\\Sound\\Effect\\Common\\pickupmetallarge.ogg");
+    g_pSndManager->AddSound("inven-click", "inven", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\click.ogg");
 }
 
 
@@ -97,6 +102,7 @@ void cInventory::Update()
             // 아이템을 선택한 상태라면
             if (m_nCurrSelectItem != -1 && m_nCurrSelectItem < stInventory.size())
             {
+                g_pSndManager->Play("inven-use");
                 // 아이템사용하기!!!!!!!!!!!!!!!!!11 -> 효과 발동!!! 또는 장착!!!
                 g_pGameManager->PullItem(m_vecInvenItem[m_nCurrSelectItem].id);
                 // 아이템이 0개가 되는 상황이면
@@ -116,6 +122,8 @@ void cInventory::Update()
                 // 현재 선택된 아이템이 아닌 다른 아이템을 클릭 했으면
                 if (m_nCurrSelectItem != i)
                 {
+                    g_pSndManager->Play("inven-click");
+
                     if (i < m_vecInvenItem.size())
                     {
                         m_nCurrSelectItem = i;
@@ -158,6 +166,8 @@ void cInventory::Render()
 
 void cInventory::OpenInventory()
 {
+    g_pSndManager->Play("inven-open");
+
     m_isOpen = true;
     m_isClickInven = false;
     m_nCurrSelectItem = -1;
@@ -170,6 +180,8 @@ void cInventory::OpenInventory()
 
 void cInventory::CloseInventory()
 {
+    g_pSndManager->Play("inven-close");
+
     m_isOpen = false;
     m_isClickInven = false;
     m_nCurrSelectItem = -1;

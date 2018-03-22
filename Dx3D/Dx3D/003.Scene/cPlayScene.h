@@ -12,11 +12,9 @@
 #include "cSkyBoxShader.h"
 #include "cParticle.h"
 #include "cUILayer.h"
-
-class cUILayer;
-class cShop;
-class cInventory;
-class cGear;
+#include "cShop.h"
+#include "cInventory.h"
+#include "cGear.h"
 
 class cPlayScene : public iSceneObject
 {

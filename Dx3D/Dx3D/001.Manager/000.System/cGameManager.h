@@ -34,9 +34,9 @@ struct ST_GEAR
 
     ST_GEAR()
     {
-        helmId = 0;
-        chestPlateId = 2;
-        swordId = 4;
+        helmId = -1;
+        chestPlateId = -1;
+        swordId = -1;
     }
 };
 

@@ -23,11 +23,6 @@
     <ClCompile Include="003.Object\cRay.cpp" />
     <ClCompile Include="003.Object\cSkinnedMesh.cpp" />
     <ClCompile Include="003.Object\cSoundObject.cpp" />
-    <ClCompile Include="002.System\cAdo.cpp" />
-    <ClCompile Include="002.System\cAllocateHierarchy.cpp" />
-    <ClCompile Include="002.System\cAutoReleasePool.cpp" />
-    <ClCompile Include="002.System\cCamera.cpp" />
-    <ClCompile Include="002.System\cMainGame.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cLightManager.cpp" />
     <ClCompile Include="001.Manager\000.System\cCameraManager.cpp" />
     <ClCompile Include="005.UI\cUIButton.cpp" />
@@ -41,27 +36,32 @@
     <ClCompile Include="003.Repository\000.Model\cCharacterModel.cpp" />
     <ClCompile Include="003.Repository\001.Repository\cCharacterRepository.cpp" />
     <ClCompile Include="001.Manager\000.System\cDbManager.cpp" />
-    <ClCompile Include="002.System\cMapLoader.cpp" />
     <ClCompile Include="001.Manager\000.System\cMapManager.cpp" />
     <ClCompile Include="003.Scene\cEndingScene.cpp" />
-    <ClCompile Include="002.System\cGameMap.cpp" />
     <ClCompile Include="003.Scene\cLoadingScene.cpp" />
     <ClCompile Include="001.Manager\000.System\cGameManager.cpp" />
-    <ClCompile Include="cInventory.cpp" />
-    <ClCompile Include="002.System\cParticle.cpp" />
     <ClCompile Include="003.Object\cBoundingBox.cpp" />
     <ClCompile Include="003.Object\cCharacterObject.cpp" />
     <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp" />
-    <ClCompile Include="002.System\cMonster.cpp" />
-    <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="cGear.cpp" />
-    <ClCompile Include="002.System\cBoss.cpp" />
     <ClCompile Include="003.Object\cNonPlayer.cpp" />
     <ClCompile Include="003.Object\cShop.cpp" />
+    <ClCompile Include="002.System\cAdo.cpp" />
+    <ClCompile Include="002.System\cAllocateHierarchy.cpp" />
+    <ClCompile Include="002.System\cAutoReleasePool.cpp" />
+    <ClCompile Include="002.System\cBoss.cpp" />
+    <ClCompile Include="002.System\cCamera.cpp" />
+    <ClCompile Include="002.System\cGameMap.cpp" />
+    <ClCompile Include="002.System\cMainGame.cpp" />
+    <ClCompile Include="002.System\cMapLoader.cpp" />
+    <ClCompile Include="002.System\cMonster.cpp" />
+    <ClCompile Include="002.System\cParticle.cpp" />
+    <ClCompile Include="002.System\cPlayer.cpp" />
+    <ClCompile Include="003.Object\cGear.cpp" />
+    <ClCompile Include="003.Object\cInventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
@@ -100,10 +100,6 @@
     <ClInclude Include="003.Object\cRay.h" />
     <ClInclude Include="003.Object\cSkinnedMesh.h" />
     <ClInclude Include="003.Object\cSoundObject.h" />
-    <ClInclude Include="002.System\cAdo.h" />
-    <ClInclude Include="002.System\cAllocateHierarchy.h" />
-    <ClInclude Include="002.System\cAutoReleasePool.h" />
-    <ClInclude Include="002.System\cCamera.h" />
     <ClInclude Include="004.ExtLib\json.hpp" />
     <ClInclude Include="005.UI\cUIButton.h" />
     <ClInclude Include="005.UI\cUIImageView.h" />
@@ -113,35 +109,25 @@
     <ClInclude Include="005.UI\cUIProgressBar.h" />
     <ClInclude Include="005.UI\cUITextView.h" />
     <ClInclude Include="Assets\MultiAnimation.hpp" />
-    <ClInclude Include="002.System\cMainGame.h" />
     <ClInclude Include="001.Manager\001.Resource\cLightManager.h" />
     <ClInclude Include="001.Manager\000.System\cCameraManager.h" />
     <ClInclude Include="001.Manager\001.Resource\cMaterialManager.h" />
     <ClInclude Include="003.Repository\000.Model\cCharacterModel.h" />
     <ClInclude Include="003.Repository\001.Repository\cCharacterRepository.h" />
     <ClInclude Include="001.Manager\000.System\cDbManager.h" />
-    <ClInclude Include="002.System\cMapLoader.h" />
     <ClInclude Include="001.Manager\000.System\cMapManager.h" />
     <ClInclude Include="003.Scene\cEndingScene.h" />
-    <ClInclude Include="002.System\cGameMap.h" />
     <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="001.Manager\000.System\cGameManager.h" />
-    <ClInclude Include="cInventory.h" />
-    <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
     <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h" />
-    <ClInclude Include="002.System\cMonster.h" />
-    <ClInclude Include="cNonPlayer.h" />
-    <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
-    <ClInclude Include="002.System\cSindragosa.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="cGear.h" />
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
     <ClInclude Include="000.Define-Macros\DefineMacro.h" />
     <ClInclude Include="000.Define-Macros\InlineMacro.h" />
@@ -204,7 +190,6 @@
     <ClInclude Include="002.System\cGameMap.h" />
     <ClInclude Include="003.Scene\cLoadingScene.h" />
     <ClInclude Include="001.Manager\000.System\cGameManager.h" />
-    <ClInclude Include="002.System\cBoss.h" />
     <ClInclude Include="002.System\cParticle.h" />
     <ClInclude Include="003.Object\cBoundingBox.h" />
     <ClInclude Include="003.Object\cCharacterObject.h" />
@@ -444,6 +429,19 @@
     <ClInclude Include="001.Manager\000.System\cGameManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="002.System\cAdo.h" />
+    <ClInclude Include="002.System\cAllocateHierarchy.h" />
+    <ClInclude Include="002.System\cAutoReleasePool.h" />
+    <ClInclude Include="002.System\cBoss.h" />
+    <ClInclude Include="002.System\cCamera.h" />
+    <ClInclude Include="002.System\cGameMap.h" />
+    <ClInclude Include="002.System\cMainGame.h" />
+    <ClInclude Include="002.System\cMapLoader.h" />
+    <ClInclude Include="002.System\cMonster.h" />
+    <ClInclude Include="002.System\cParticle.h" />
+    <ClInclude Include="002.System\cPlayer.h" />
+    <ClInclude Include="003.Object\cGear.h" />
+    <ClInclude Include="003.Object\cInventory.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />
@@ -595,9 +593,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cNonPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Scene\cTitleScene.cpp">
