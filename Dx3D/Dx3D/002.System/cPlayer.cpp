@@ -95,8 +95,7 @@ void cPlayer::Update()
 
     if (g_pKeyManager->isOnceKeyDown('C'))
     {
-        cout << "공격력:" << m_stStat.fATK << endl;
-        cout << "현재경험치:" << m_stStat.nCurEXP << endl;
+        m_stStat.Level++;
     }
 
     // 쉬프트 누를시
@@ -531,7 +530,6 @@ void cPlayer::Attack()
     {
         m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
         PlayWalkSound();
-        m_vPosition += m_vDir * m_fMoveSpeed;
         m_stSphere.vCenter = m_vPosition;
     }
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
