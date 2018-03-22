@@ -83,6 +83,7 @@ void cPlayer::Update()
     if (g_pKeyManager->isOnceKeyDown('C'))
     {
         cout << "공격력:" << m_stStat.fATK << endl;
+        cout << "현재경험치:" << m_stStat.nCurEXP << endl;
     }
 
     //레벨업
@@ -328,7 +329,7 @@ void cPlayer::Attack()
     }
     else
     {
-        m_vPosition += m_vDir * m_fMoveSpeed;
+        m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
         m_stSphere.vCenter = m_vPosition;
     }
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
@@ -349,7 +350,7 @@ void cPlayer::Move()
     m_vDir = DestPoint - m_vPosition;
     D3DXVec3Normalize(&m_vDir, &m_vDir);
    
-    m_vPosition += m_vDir * m_fMoveSpeed;
+    m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
     m_stSphere.vCenter = m_vPosition;
 
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
@@ -367,7 +368,7 @@ void cPlayer::Move()
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
     //도착
-    if (Distance(DestPoint) < m_fMoveSpeed)
+    if (Distance(DestPoint) < m_fMoveSpeed * g_pTimerManager->GetDeltaTime())
     {
         m_vPosition = DestPoint;
         IdleAnim();
@@ -380,16 +381,18 @@ void cPlayer::SetLevelToStatus(string szKey, int Level)
 {
     json status = g_pMeshManager->GetJson("Status");
 
-    m_stStat.fSTR = (float)status[szKey]["STR"] + m_stStat.Level * (float)status[szKey]["UPSTR"];
-    m_stStat.fDEX = (float)status[szKey]["DEX"] + m_stStat.Level * (float)status[szKey]["UPDEX"];
-    m_stStat.fINT = (float)status[szKey]["INT"] + m_stStat.Level * (float)status[szKey]["UPINT"];
-
-    m_stStat.fATK = (float)status[szKey]["ATK"] + m_stStat.Level * (float)status[szKey]["UPATK"];
-    m_stStat.fDEF = (float)status[szKey]["DEF"] + m_stStat.Level * (float)status[szKey]["UPDEF"];
-    m_stStat.fCurHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fMaxHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fCurMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
-    m_stStat.fMaxMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
+    m_stStat.szName = szKey;
+    m_stStat.Level = Level;
+    m_stStat.fSTR = (float)status[szKey]["STR"] + Level * (float)status[szKey]["UPSTR"];
+    m_stStat.fDEX = (float)status[szKey]["DEX"] + Level * (float)status[szKey]["UPDEX"];
+    m_stStat.fINT = (float)status[szKey]["INT"] + Level * (float)status[szKey]["UPINT"];
+                                                  
+    m_stStat.fATK = (float)status[szKey]["ATK"] + Level * (float)status[szKey]["UPATK"];
+    m_stStat.fDEF = (float)status[szKey]["DEF"] + Level * (float)status[szKey]["UPDEF"];
+    m_stStat.fCurHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fMaxHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fCurMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
+    m_stStat.fMaxMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
 
     m_stStat.fHPGen = (float)status[szKey]["HPGEN"];
     m_stStat.fMPGen = (float)status[szKey]["MPGEN"];

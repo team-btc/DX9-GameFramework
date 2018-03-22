@@ -106,6 +106,8 @@ void cMonster::Update()
         ST_STATUS TargetStatus = m_pTarget->GetStatus();
         TargetStatus.nCurEXP += m_stStat.nMaxEXP;
         m_pTarget->SetStatus(TargetStatus);
+        cout << "얻은경험치:" << m_stStat.nMaxEXP << endl;
+        cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
 
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;
@@ -158,7 +160,7 @@ void cMonster::Update()
                     isAttack = false;
                 }
 
-                m_vPosition += m_vDir * m_fMoveSpeed;
+                m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
                 m_stSphere.vCenter = m_vPosition;
 
                 D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
@@ -183,10 +185,10 @@ void cMonster::Update()
                 m_vDir = m_vDest - m_vPosition;
                 D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-                m_vPosition += m_vDir * m_fMoveSpeed;
+                m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
                 m_stSphere.vCenter = m_vPosition;
 
-                if (Distance(m_vDest) < m_fMoveSpeed)
+                if (Distance(m_vDest) < m_fMoveSpeed * g_pTimerManager->GetDeltaTime())
                 {
                     m_vPosition = m_vDest;
                     isMove = false;
@@ -250,16 +252,18 @@ void cMonster::SetLevelToStatus(string szKey, int Level)
 {
     json status = g_pMeshManager->GetJson("Status");
 
-    m_stStat.fSTR = (float)status[szKey]["STR"] + m_stStat.Level * (float)status[szKey]["UPSTR"];
-    m_stStat.fDEX = (float)status[szKey]["DEX"] + m_stStat.Level * (float)status[szKey]["UPDEX"];
-    m_stStat.fINT = (float)status[szKey]["INT"] + m_stStat.Level * (float)status[szKey]["UPINT"];
+    m_stStat.szName = szKey;
+    m_stStat.Level = Level;
+    m_stStat.fSTR = (float)status[szKey]["STR"] + Level * (float)status[szKey]["UPSTR"];
+    m_stStat.fDEX = (float)status[szKey]["DEX"] + Level * (float)status[szKey]["UPDEX"];
+    m_stStat.fINT = (float)status[szKey]["INT"] + Level * (float)status[szKey]["UPINT"];
 
-    m_stStat.fATK = (float)status[szKey]["ATK"] + m_stStat.Level * (float)status[szKey]["UPATK"];
-    m_stStat.fDEF = (float)status[szKey]["DEF"] + m_stStat.Level * (float)status[szKey]["UPDEF"];
-    m_stStat.fCurHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fMaxHP = (float)status[szKey]["HP"] + m_stStat.Level * (float)status[szKey]["UPHP"];
-    m_stStat.fCurMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
-    m_stStat.fMaxMP = (float)status[szKey]["MP"] + m_stStat.Level * (float)status[szKey]["UPMP"];
+    m_stStat.fATK = (float)status[szKey]["ATK"] + Level * (float)status[szKey]["UPATK"];
+    m_stStat.fDEF = (float)status[szKey]["DEF"] + Level * (float)status[szKey]["UPDEF"];
+    m_stStat.fCurHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fMaxHP = (float)status[szKey]["HP"] + Level * (float)status[szKey]["UPHP"];
+    m_stStat.fCurMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
+    m_stStat.fMaxMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
 
     m_stStat.fHPGen = (float)status[szKey]["HPGEN"];
     m_stStat.fMPGen = (float)status[szKey]["MPGEN"];

@@ -100,6 +100,11 @@ void cCharacterManager::SetPlayerData(json playerData)
     string szTemp = playerData["name"];
     stStatus.szName = szTemp;
     stStatus.Level = playerData["level"];
+    if (m_pPlayer)
+    {
+        m_pPlayer->SetLevelToStatus(stStatus.szName, stStatus.Level);
+        stStatus = m_pPlayer->GetStatus();
+    }
     stStatus.nCurEXP = playerData["exp"];
     stStatus.fCurHP = playerData["hp"];
     stStatus.fCurMP = playerData["mp"];
@@ -114,5 +119,6 @@ void cCharacterManager::SetPlayerData(json playerData)
 
 cBoss* cCharacterManager::GetBoss()
 {
+    m_pBoss->Setup();
     return m_pBoss;
 }
