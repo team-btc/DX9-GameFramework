@@ -156,6 +156,8 @@ void cPlayer::Update()
         {
             isRecovery = false;
             m_fRecoveryCount = 0.0f;
+            m_isPoint = true;
+            AttackAnim();
         }
 
         //위협
@@ -189,6 +191,7 @@ void cPlayer::Update()
             // 바로 액션이 아니라 모션이 다지나야지 액션이가능함
             if (m_stStat.fCurMP >= 50.0f && m_stStat.fCurHP < m_stStat.fMaxHP)
             {
+                g_pSndManager->Play("heal");
                 Action("Heal", 50.0f + m_stStat.fINT * 4);
                 m_stStat.fCurMP -= 50.0f;
             }
@@ -267,19 +270,23 @@ void cPlayer::Update()
                 m_isPoint = false;
                 if (m_pTarget)
                 {
-                    //데미지 계산식을 넣어야함
-                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
-
-                    Action("Attack", ATK);
-
-                    // UI 셋팅
-                    AddAttUI((int)ATK);
-
-                    m_pTarget->RayCast(this); // 어그로 주고
-                    if (m_pTarget->GetTag() == MONSTER)
+                    if (Distance(m_pTarget->GetPosition()) < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
                     {
-                        cMonster* Target = (cMonster*)m_pTarget;
-                        Target->SetAggroTime(AggroTime);
+                        //데미지 계산식을 넣어야함
+                        float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+
+                        Action("Attack", ATK);
+
+                        // UI 셋팅
+                        AddAttUI((int)ATK);
+
+                        m_pTarget->RayCast(this); // 어그로 주고
+
+                        if (m_pTarget->GetTag() == MONSTER)
+                        {
+                            cMonster* Target = (cMonster*)m_pTarget;
+                            Target->SetAggroTime(AggroTime);
+                        }
                     }
                 }
             }
@@ -295,14 +302,20 @@ void cPlayer::Update()
                 m_isPoint = false;
                 if (m_pTarget)
                 {
-                    //데미지 계산식을 넣어야함
-                    Action("Attack", m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF);
-
-                    m_pTarget->RayCast(this); // 어그로 주고
-                    if (m_pTarget->GetTag() == MONSTER)
+                    if (Distance(m_pTarget->GetPosition()) < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
                     {
-                        cMonster* Target = (cMonster*)m_pTarget;
-                        Target->SetAggroTime(AggroTime);
+                        float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+                        //데미지 계산식을 넣어야함
+                        Action("Attack", ATK);
+
+                        AddAttUI((int)ATK);
+
+                        m_pTarget->RayCast(this); // 어그로 주고
+                        if (m_pTarget->GetTag() == MONSTER)
+                        {
+                            cMonster* Target = (cMonster*)m_pTarget;
+                            Target->SetAggroTime(AggroTime);
+                        }
                     }
                 }
             }
@@ -327,18 +340,21 @@ void cPlayer::Update()
             {
                 if (m_pTarget)
                 {
-                    //데미지 계산식을 넣어야함
-                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
-                    Action("Attack", ATK);
-
-                    // UI 셋팅
-                    AddAttUI((int)ATK);
-
-                    m_pTarget->RayCast(this); // 어그로 주고
-                    if (m_pTarget->GetTag() == MONSTER)
+                    if (Distance(m_pTarget->GetPosition()) < m_stSphere.fRadius + m_pTarget->GetSphere().fRadius)
                     {
-                        cMonster* Target = (cMonster*)m_pTarget;
-                        Target->SetAggroTime(AggroTime);
+                        //데미지 계산식을 넣어야함
+                        float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
+                        Action("Attack", ATK);
+
+                        // UI 셋팅
+                        AddAttUI((int)ATK);
+
+                        m_pTarget->RayCast(this); // 어그로 주고
+                        if (m_pTarget->GetTag() == MONSTER)
+                        {
+                            cMonster* Target = (cMonster*)m_pTarget;
+                            Target->SetAggroTime(AggroTime);
+                        }
                     }
                 }
                 IdleAnim();

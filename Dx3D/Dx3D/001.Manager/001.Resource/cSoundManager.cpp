@@ -22,6 +22,9 @@ cSoundManager::~cSoundManager()
 
 void cSoundManager::Setup()
 {
+    g_pSndManager->AddSound("heal", "play", "Assets\\Sound\\Effect\Arthaslichking\\hr_lich king_slay02.ogg");
+    g_pSndManager->AddSound("skill", "play", "Assets\\Sound\\Effect\Arthaslichking\\ic_lich king_frostmourne_is_hunger.ogg");
+    g_pSndManager->AddSound("roar", "play", "Assets\\Sound\\Effect\Arthaslichking\\ic_lich king_special01.ogg");
 }
 
 void cSoundManager::Update()
