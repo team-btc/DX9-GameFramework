@@ -9,12 +9,16 @@ private:
     vector<ST_ITEM_INFO*>       m_vecItemInfo;
 
     cUILayer*                   m_pShopLayer;
+    cUILayer*                   m_pPlusStatLayer;
 
     vector<string>              m_vecSzHumanSound;
 
     int                         m_nCurrSelectItem;
 
     RECT                        m_rtShopSize;
+
+    vector<RECT>                m_vecItemRect;
+    ST_SIZE                     m_stPlusStatDefSize;
 
     int                         m_nPlayerMoney;
 
@@ -24,6 +28,9 @@ private:
 private:
     void SetShopUI();
     void SetShopItemUI(Vector3 vShopPos);
+    void SetPlusStatUI();
+    void UpdatePlusStatUI(int id, Vector3 vPos);
+    bool CheckPtInItem();
 
 public:
     cShop();

@@ -8,9 +8,13 @@ class cInventory : public cObject
 {
     cUILayer*                   m_pInvenLayer;
     vector<cUIImageView*>       m_vecItemUI;
+    cUILayer*                   m_pPlusStatLayer;
 
     RECT                        m_rtInvenSize;
     ST_SIZE                     m_stItemSize;
+
+    vector<RECT>                m_vecItemRect;
+    ST_SIZE                     m_stPlusStatDefSize;
 
     vector<ST_ITEM>             m_vecInvenItem;
 
@@ -26,6 +30,9 @@ private:
     void SetInvenUI();
     void SetItemUI(Vector3 vInvenPos);
     void UpdateItemUI();
+    void SetPlusStatUI();
+    void UpdatePlusStatUI(int id, Vector3 vPos);
+    bool CheckPtInItem();
 
 public:
     cInventory();

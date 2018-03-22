@@ -238,9 +238,9 @@ public:
     string          szName;
     float           fATK;
     float           fDEF;
-    float           fSTR;
-    float           fDEX;
-    float           fINT;
+    float           fSTR;//Èû
+    float           fDEX;//¹Î
+    float           fINT;//Áö
     float           fMaxHP;
     float           fMaxMP;
     float           fSpeed;
@@ -254,6 +254,12 @@ public:
     float           fMPGen;
     float           fCritical;
     int             nCoolTime;
+};
+
+struct ST_PLUS_STAT_INFO
+{
+    int     nType;
+    float   fPlusValue;
 };
 
 struct ST_ITEM_INFO
@@ -270,10 +276,11 @@ struct ST_ITEM_INFO
     string          szName;
     string          szPath;
     int             nPrice;
-    ST_STATUS       stStat;
     float           fPlusValue;
     bool            isWear;
     E_ITEM_TYPE     eItemType;
+
+    vector<ST_PLUS_STAT_INFO> vecPlusStat;
 }; 
 
 class cUILayer;

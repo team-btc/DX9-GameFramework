@@ -154,7 +154,7 @@ void cUIProgressBar::Update(IN float fCurrentGuage, IN Vector3* vFollowPosition 
     {
         string text;
         char buffer[128];
-        sprintf_s(buffer, "%.1f / %.1f", fCurrentGuage, m_fMaxGuage);
+        sprintf_s(buffer, "%d / %d", (int)fCurrentGuage, (int)m_fMaxGuage);
         text = buffer;
         obj->SetText(text);
     }

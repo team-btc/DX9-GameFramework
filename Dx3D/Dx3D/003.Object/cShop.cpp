@@ -7,6 +7,7 @@
 
 cShop::cShop()
     : m_pShopLayer(NULL)
+    , m_pPlusStatLayer(NULL)
     , m_nCurrSelectItem(0)
     , m_nPlayerMoney(g_pGameManager->GetCurrGold())
     , m_isOpen(false)
@@ -16,6 +17,8 @@ cShop::cShop()
     m_rtShopSize.top = 150;
     m_rtShopSize.right = m_rtShopSize.left + (LONG)(W_WIDTH * 0.4f);
     m_rtShopSize.bottom = m_rtShopSize.top + (LONG)(W_HEIGHT * 0.6f);
+
+    m_stPlusStatDefSize = ST_SIZE(100, 20);
 
     g_pSndManager->AddSound("store-buy", "store", "Assets\\Sound\\Effect\\Common\\uilootpickupitem.ogg");
     g_pSndManager->AddSound("store-click", "store", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\click.ogg");
@@ -56,11 +59,20 @@ void cShop::Setup()
     m_pShopLayer->SetLayer("shop", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
     m_pShopLayer->SetActive(true);
 
+    m_pPlusStatLayer = new cUILayer;
+    m_pPlusStatLayer->SetLayer("plus-stat", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
+    m_pPlusStatLayer->SetActive(false);
+
     SetShopUI();
+    SetPlusStatUI();
 
     if (m_pShopLayer)
     {
         m_pShopLayer->Setup();
+    }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Setup();
     }
 }
 
@@ -83,6 +95,16 @@ void cShop::Update()
         g_pKeyManager->isOnceKeyDown(VK_LBUTTON);
         g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
         m_isClickShop = true;
+
+        // 아이템에 마우스가 올려져있는지 체크하고 레이어 셋팅
+        if (!CheckPtInItem())
+        {
+            m_pPlusStatLayer->SetActive(false);
+        }
+    }
+    else
+    {
+        m_pPlusStatLayer->SetActive(false);
     }
 
     // 플레이어 소지금 텍스쳐 변경
@@ -154,6 +176,11 @@ void cShop::Update()
     }
 
     m_pShopLayer->Update();
+
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Update();
+    }
 }
 
 void cShop::Render()
@@ -161,6 +188,10 @@ void cShop::Render()
     if (m_pShopLayer)
     {
         m_pShopLayer->Render();
+    }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Render();
     }
 }
 
@@ -203,6 +234,7 @@ void cShop::CloseShop()
 ULONG cShop::Release(void)
 {
     SAFE_DELETE(m_pShopLayer);
+    SAFE_DELETE(m_pPlusStatLayer);
 
     cObject::Release();
 
@@ -347,6 +379,14 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
             }
         }
 
+        // 렉트 만들기
+        RECT rtItem;
+        rtItem.left = (LONG)vItemPos.x;
+        rtItem.top = (LONG)vItemPos.y;
+        rtItem.right = rtItem.left + (LONG)stItemSize.w + (LONG)stItemContentsSize.w;
+        rtItem.bottom = rtItem.top + (LONG)stItemSize.h;
+        m_vecItemRect.push_back(rtItem);
+
         // 이미지
         cUIImageView* pItemImage = new cUIImageView;
         g_pTextureManager->AddTexture(szTexKey, szPath, true);
@@ -402,20 +442,7 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pNameText->SetColor(D3DCOLOR_XRGB(255, 255, 0));
         pNameText->SetDrawTextFormat(DT_LEFT);
         pItemImage->AddChild(pNameText);
-
-        // 증가치 텍스트
-        cUITextView* pPlusValueText = new cUITextView;
-        pPlusValueText->SetName("plus-value");
-        pPlusValueText->SetLocalPos(Vector3(95, 30, 0));
-        pPlusValueText->SetSize(Vector2(150, 15));
-        pPlusValueText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
-        char buf[20];
-        sprintf_s(buf, sizeof(buf), "%s +%d", m_vecItemInfo[i]->stStat.szName.c_str(), (int)m_vecItemInfo[i]->fPlusValue);
-        pPlusValueText->SetText(buf);
-        pPlusValueText->SetColor(D3DCOLOR_XRGB(0, 255, 0));
-        pPlusValueText->SetDrawTextFormat(DT_LEFT);
-        pItemImage->AddChild(pPlusValueText);
-
+        
         // 코인 이미지
         cUIImageView* pCoinImage = new cUIImageView;
         szPath = INTERFACE_PATH + (string)"coin.png";
@@ -433,9 +460,112 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         pPriceText->SetLocalPos(Vector3(115, 50, 0));
         pPriceText->SetSize(Vector2(100, 15));
         pPriceText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        char buf[20];
         sprintf_s(buf, sizeof(buf), "%d", m_vecItemInfo[i]->nPrice);
         pPriceText->SetText(buf);
         pPriceText->SetDrawTextFormat(DT_LEFT);
         pItemImage->AddChild(pPriceText);
     }
+}
+
+void cShop::SetPlusStatUI()
+{
+    // 배경
+    cUIImageView* pBGImage = new cUIImageView;
+    string szPath = INTERFACE_PATH + (string)"stat-bg.png";
+    g_pTextureManager->AddTexture("stat-bg-img", szPath, true);
+    pBGImage->SetName("stat-bg-img");
+    pBGImage->SetLocalPos(Vector3(0, 0, 0));
+    IMAGE_INFO imageInfo;
+    pBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("stat-bg-img", &imageInfo));
+    pBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pBGImage->SetScale(m_stPlusStatDefSize.w / (float)imageInfo.Width, m_stPlusStatDefSize.h / (float)imageInfo.Height);
+    m_pPlusStatLayer->AddUIObject(pBGImage);
+
+    Vector3 vPos(5, 5, 0);
+    float fPlusY = 17;
+
+    // 증가 스탯 텍스트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUITextView* pText = new cUITextView;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        pText->SetName(buf);
+        pText->SetLocalPos(vPos);
+        pText->SetSize(Vector2(100, 15));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetDrawTextFormat(DT_LEFT);
+        pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
+        pText->SetAxtive(false);
+        pBGImage->AddChild(pText);
+
+        vPos.y += fPlusY;
+    }
+}
+
+void cShop::UpdatePlusStatUI(int id, Vector3 vPos)  // 렉트 안에 마우스가 있을 때만 발동
+{
+    ST_ITEM_INFO stItem =  *g_pGameManager->GetItemInfoById(id);
+
+    // 증가 스탯 업데이트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUIObject* pObject;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        m_pPlusStatLayer->FindUIObject(&pObject, buf);
+        
+        if (pObject)
+        {
+            cUITextView* pText = (cUITextView*)pObject;
+
+            // 셋팅해야 하는 플러스 스탯이 있으면
+            if (i < stItem.vecPlusStat.size())
+            {
+                string szPlusName = g_pGameManager->GetStatName((E_PLAYER_STAT)stItem.vecPlusStat[i].nType);
+                sprintf_s(buf, sizeof(buf), " +%d", (int)stItem.vecPlusStat[i].fPlusValue);
+                string sztotal = szPlusName + buf;
+                pText->SetText(sztotal);
+                pText->SetAxtive(true);
+            }
+            else
+            {
+                pText->SetAxtive(false);
+            }
+        }
+    }
+    // 배경 사이즈 바꾸기
+    cUIObject* pObject;
+    m_pPlusStatLayer->FindUIObject(&pObject, "stat-bg-img");
+
+    if (pObject)
+    {
+        pObject->SetLocalPos(vPos);
+        cUIImageView* pImage = (cUIImageView*)pObject;
+        ST_SIZE stSize;
+        stSize.h = m_stPlusStatDefSize.h * stItem.vecPlusStat.size();
+        stSize.w = m_stPlusStatDefSize.w;
+        pImage->SetScale((float)stSize.w / pImage->GetSize().x, (float)stSize.h / pImage->GetSize().y);
+    }
+
+    m_pPlusStatLayer->SetActive(true);
+}
+
+// 아이템 렉트 안에 마우스가 있다면
+bool cShop::CheckPtInItem()
+{
+    bool isIn = false;
+
+    for (int i = 0; i < m_vecItemRect.size(); ++i)
+    {
+        if (PtInRect(&m_vecItemRect[i], g_ptMouse))
+        {
+            UpdatePlusStatUI(i, Vector3((float)g_ptMouse.x + 10, (float)g_ptMouse.y, 0));
+            isIn = true;
+            break;
+        }
+    }
+
+    return isIn;
 }
