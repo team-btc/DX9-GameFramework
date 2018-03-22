@@ -1,0 +1,78 @@
+{
+    "map":[
+        {
+            "name": "start"
+        },
+        {
+            "name": "badland"
+        },
+        {
+            "name": "tempdun"
+        }
+    ],
+    "texture":[
+        { "key" : "smog01",         "path" : "Assets\\Texture\\Particle\\smog_01.png"},
+        { "key" : "smog02",         "path" : "Assets\\Texture\\Particle\\smog_02.png"},
+        { "key" : "smog03",         "path" : "Assets\\Texture\\Particle\\smog_03.png"},
+        { "key" : "smog04",         "path" : "Assets\\Texture\\Particle\\smog_04.png"},
+        { "key" : "snow01",         "path" : "Assets\\Texture\\Particle\\snow_01.png"},
+        { "key" : "snow02",         "path" : "Assets\\Texture\\Particle\\snow_02.png"},
+        { "key" : "snow03",         "path" : "Assets\\Texture\\Particle\\snow_03.png"},
+        { "key" : "leaf01",         "path" : "Assets\\Texture\\Particle\\leaf_01.png"},
+        { "key" : "leaf02",         "path" : "Assets\\Texture\\Particle\\leaf_02.png"},
+        { "key" : "leaf03",         "path" : "Assets\\Texture\\Particle\\leaf_03.png"},
+        { "key" : "leaf04",         "path" : "Assets\\Texture\\Particle\\leaf_04.png"},
+        { "key" : "effect01",       "path" : "Assets\\Texture\\Particle\\effect_01.jpg"},
+        { "key" : "effect02",       "path" : "Assets\\Texture\\Particle\\effect_02.png"},
+        { "key" : "effect03",       "path" : "Assets\\Texture\\Particle\\effect_03.png"},
+        { "key" : "star01",         "path" : "Assets\\Texture\\Particle\\star_01.png"},
+        { "key" : "star02",         "path" : "Assets\\Texture\\Particle\\star_02.png"},
+        { "key" : "circle01",       "path" : "Assets\\Texture\\Particle\\circle_01.png"},
+        { "key" : "electronic01",   "path" : "Assets\\Texture\\Particle\\electronic_01.png"}
+    ],
+    "json":[
+        { "key": "arthaslichking", "path": "Assets\\Player\\ArthasLichking\\arthaslichking.json"},
+        { "key": "deathwing", "path": "Assets\\Enemy\\deathwing.json"},
+        { "key": "bear", "path": "Assets\\Enemy\\bear.json"},
+        { "key": "boar", "path": "Assets\\Enemy\\boar.json"},
+        { "key": "status", "path": "Assets\\Data\\CharacterStatus.json"}
+    ],
+    "mesh":[
+        { "key": "arthaslichking", "path": "Assets\\Player\\ArthasLichking", "filename": "arthaslichking.x"},
+        { "key": "deathwing", "path": "Assets\\Enemy", "filename": "deathwing.x"},
+        { "key": "sindragosa", "path": "Assets\\Enemy", "filename": "Frostwurmnorthlend.x"},
+        { "key": "bear", "path": "Assets\\Enemy", "filename": "bear.x"},
+        { "key": "boar", "path": "Assets\\Enemy", "filename": "boar.x"},
+        { "key": "quest-indicator", "path": "Assets\\Interface\\Quest", "filename": "talktome.x"}
+    ],
+    "sound":[
+        { "key":"start-bgm",                "path":   "Assets\\Sound\\BGM\\start\\na_generalwalknight03.mp3", "bgm" : true, "loop": true},
+        { "key":"badland-bgm",              "path":   "Assets\\Sound\\BGM\\badland\\daybarrendry01.mp3", "bgm": true, "loop": true},
+        { "key":"tempdun-bgm",              "path":   "Assets\\Sound\\BGM\\magam\\mus_43_deathwingsfall_hero_uu01.mp3", "bgm": true, "loop": true},
+        { "key":"Bear-attack",              "path":   "Assets\\Sound\\Effect\\bear\\mbearattacka.ogg"},
+        { "key":"Bear-death",               "path":   "Assets\\Sound\\Effect\\bear\\mbeardeatha.ogg"},
+        { "key":"Boar-attack",              "path":   "Assets\\Sound\\Effect\\boar\\mwildboarattack1.ogg"},
+        { "key":"Boar-death",               "path":   "Assets\\Sound\\Effect\\boar\\mwildboardeath1.ogg"},
+        { "key":"start-walk",               "path":   "Assets\\Sound\\Effect\\Footstep\\grass\\mon_footstep_bipedal_foot_medium_grass_01.ogg"},
+        { "key":"badland-walk",                 "path":   "Assets\\Sound\\Effect\\Footstep\\dirt\\mon_footstep_bipedal_foot_medium_dirt_01.ogg"},
+        { "key":"tempdun-walk",                 "path":   "Assets\\Sound\\Effect\\Footstep\\stone\\mon_footstep_bipedal_foot_medium_stone_02.ogg"},
+        { "key":"Deathwing-attack1",                "path":   "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_01.ogg"},
+        { "key":"Deathwing-attack2",                "path":   "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_02.ogg"},
+        { "key":"Deathwing-attack3",                "path":   "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_03.ogg"},
+        { "key":"Deathwing-death",              "path":   "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_death_04.ogg"},
+        { "key":"attack1",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack01.ogg"},
+        { "key":"attack2",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack02.ogg"},
+        { "key":"attack3",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack03.ogg"},
+        { "key":"attack4",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack04.ogg"},
+        { "key":"attack5",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack05.ogg"},
+        { "key":"attack6",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack06.ogg"},
+        { "key":"attack7",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack07.ogg"},
+        { "key":"attack8",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack08.ogg"},
+        { "key":"attack9",              "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack09.ogg"},
+        { "key":"attack10",                 "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack10.ogg"},
+        { "key":"death",                "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_death01.ogg"},
+        { "key":"heal",                 "path":  "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_slay02.ogg"},
+        { "key":"skill",                "path":  "Assets\\Sound\\Effect\\Arthaslichking\\ic_lich king_frostmourne_is_hunger.ogg"},
+        { "key":"roar",                 "path":  "Assets\\Sound\\Effect\\Arthaslichking\\ic_lich king_special01.ogg"}
+    ]   
+}

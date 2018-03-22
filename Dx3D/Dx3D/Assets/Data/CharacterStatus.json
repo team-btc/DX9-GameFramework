@@ -33,7 +33,7 @@
         "PICKINGRADIUS":4.0,
         "CENTERPOS":4.0
     },
-    "Bear":
+    "bear":
     {
         "STR":30.0,
         "DEX":20.0,
@@ -67,7 +67,7 @@
         "PICKINGRADIUS":6.0,
         "CENTERPOS":4.0
     },
-    "Boar":
+    "boar":
     {
         "STR":10.0,
         "DEX":5.0,
@@ -101,7 +101,7 @@
         "PICKINGRADIUS":8.0,
         "CENTERPOS":4.0
     },
-    "Deathwing":
+    "deathwing":
     {
         "STR":50.0,
         "DEX":30.0,

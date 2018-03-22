@@ -14,6 +14,9 @@ cLoadingScene::cLoadingScene()
     , m_nObjectCurrCnt(0)
     , m_fMaxCount(1.0f)
     , m_fCurrCount(0.0f)
+    , m_nCount(0)
+    , m_nHeadIndex(0)
+    , m_szHeadKey("map")
 {
 }
 
@@ -26,11 +29,21 @@ cLoadingScene::~cLoadingScene()
 HRESULT cLoadingScene::Start()
 {
     //  MAKE RESOURCE LIST
-    
+    ifstream i;
+    i.open("Assets\\Data\\ResourceList.json", ios_base::in);
+    i >> m_jResourceList;
+    i.close();
+
+    m_fMaxCount += (float)m_jResourceList["map"].size();
+    m_fMaxCount += (float)m_jResourceList["texture"].size();
+    m_fMaxCount += (float)m_jResourceList["json"].size();
+    m_fMaxCount += (float)m_jResourceList["mesh"].size();
+    m_fMaxCount += (float)m_jResourceList["sound"].size();
+
     // 맵 로더
     m_pMapLoader = new cMapLoader;
-    string szKey = "badland";
-    m_pMapLoader->SetKey(szKey);
+    //string szKey = "badland";
+    //m_pMapLoader->SetKey(szKey);
 
     // 배경
     m_pBGLayer = new cUILayer;
@@ -73,8 +86,8 @@ HRESULT cLoadingScene::Start()
     pUIProgress->SetSize(Vector2(stSize.w, stSize.h));
     pUIProgress->AddGuageTexture(szFrontPath, 0, ST_SIZE(stSize.w - 80, stSize.h));
     pUIProgress->AddGuageTexture(szBackPath, 1, stSize);
-    pUIProgress->SetMaxGuage(m_fMaxCount * 100.0f);
-    pUIProgress->SetCurrentGuage(m_fCurrCount * 100.0f);
+    pUIProgress->SetMaxGuage(m_fMaxCount);
+    pUIProgress->SetCurrentGuage(m_fCurrCount);
     pUIProgress->SetLocalPos(vPos);
     pUIProgress->SetName("progressbar");
     LPFONTDX pFont = g_pFontManager->GetFont(g_pFontManager->E_QUEST);
@@ -98,24 +111,89 @@ HRESULT cLoadingScene::Start()
 
 HRESULT cLoadingScene::Update()
 {
+    m_fCurrCount = (float)m_nCount;
     //  LOAD RESOURCES
-
-    if (m_pMapLoader && m_isMapDefLoad == false)
+    //  map load
+    if (m_szHeadKey == "map")
     {
+        string key = m_jResourceList[m_szHeadKey][m_nHeadIndex]["name"];
+        m_pMapLoader->SetKey(key);
         m_pMapLoader->LoadMap();
-        m_nObjectMaxCnt = m_pMapLoader->GetObjectMaxCnt();
-        m_fCurrCount = 1.0f / ((float)m_nObjectMaxCnt + 1.0f);
-        m_isMapDefLoad = true;
+        m_nHeadIndex++;
+        m_nCount++;
+        if (m_nHeadIndex >= (int)m_jResourceList[m_szHeadKey].size())
+        {
+            m_nHeadIndex = 0;
+            m_szHeadKey = "texture";
+        }
     }
-    else if (m_pMapLoader && m_nObjectCurrCnt < m_nObjectMaxCnt)
+    else if (m_szHeadKey == "texture")
     {
-        m_pMapLoader->LoadObject(m_nObjectCurrCnt);
-        ++m_nObjectCurrCnt;
-        m_fCurrCount = (1.0f + (float)m_nObjectCurrCnt) / ((float)m_nObjectMaxCnt + 1.0f);
+        string key = m_jResourceList[m_szHeadKey][m_nHeadIndex]["key"];
+        string path = m_jResourceList[m_szHeadKey][m_nHeadIndex]["path"];
+        g_pTextureManager->AddTexture(key, path);
+
+        m_nHeadIndex++;
+        m_nCount++;
+        if (m_nHeadIndex >= (int)m_jResourceList[m_szHeadKey].size())
+        {
+            m_szHeadKey = "json";
+            m_nHeadIndex = 0;
+        }
+    }
+    else if (m_szHeadKey == "json")
+    {
+        string key = m_jResourceList[m_szHeadKey][m_nHeadIndex]["key"];
+        string path = m_jResourceList[m_szHeadKey][m_nHeadIndex]["path"];
+        g_pMeshManager->LoadJSON(key, path);
+
+        m_nHeadIndex++;
+        m_nCount++;
+        if (m_nHeadIndex >= (int)m_jResourceList[m_szHeadKey].size())
+        {
+            m_szHeadKey = "mesh";
+            m_nHeadIndex = 0;
+        }
+    }
+    else if (m_szHeadKey == "mesh")
+    {
+        string key = m_jResourceList[m_szHeadKey][m_nHeadIndex]["key"];
+        string path = m_jResourceList[m_szHeadKey][m_nHeadIndex]["path"];
+        string filename = m_jResourceList[m_szHeadKey][m_nHeadIndex]["filename"];
+        g_pMeshManager->LoadSkinnedMesh(key, path, filename);
+
+        m_nHeadIndex++;
+        m_nCount++;
+        if (m_nHeadIndex >= (int)m_jResourceList[m_szHeadKey].size())
+        {
+            m_nHeadIndex = 0;
+            m_szHeadKey = "sound";
+        }
+    }
+    else if (m_szHeadKey == "sound")
+    {
+        string key = m_jResourceList[m_szHeadKey][m_nHeadIndex]["key"];
+        string path = m_jResourceList[m_szHeadKey][m_nHeadIndex]["path"];
+        bool isBgm = m_jResourceList[m_szHeadKey][m_nHeadIndex]["bgm"].is_null() ? false : m_jResourceList[m_szHeadKey][m_nHeadIndex]["bgm"];
+        bool isLoop = m_jResourceList[m_szHeadKey][m_nHeadIndex]["loop"].is_null() ? false : m_jResourceList[m_szHeadKey][m_nHeadIndex]["loop"];
+        
+        g_pSndManager->AddSound(key, "", path, isBgm, isLoop);
+
+        m_nHeadIndex++;
+        m_nCount++;
+        if (m_nHeadIndex >= (int)m_jResourceList[m_szHeadKey].size())
+        {
+            m_nHeadIndex = 0;
+            m_szHeadKey = "end";
+        }
     }
     else
     {
-        // 로딩이 끝났으면!
+        g_pCharacterManager->Setup();
+        g_pGameManager->Setup();
+        g_pFontManager->Setup();
+        g_pMapManager->SetPrevMap("");
+        g_pScnManager->ChangeScene("title");
     }
 
     if (m_pBGLayer)
@@ -130,7 +208,7 @@ HRESULT cLoadingScene::Update()
         if (pObject)
         {
             cUIProgressBar* pProgress = (cUIProgressBar*)pObject;
-            pProgress->SetCurrentGuage(m_fCurrCount * 100.0f);
+            pProgress->SetCurrentGuage(m_fCurrCount);
         }
         m_pProgressBarLayer->Update();
     }
@@ -140,9 +218,6 @@ HRESULT cLoadingScene::Update()
 
 HRESULT cLoadingScene::Render()
 {
-    //  BACKGROUND IMAGE
-    //  PROGRESS BAR
-
     if (m_pBGLayer)
     {
         m_pBGLayer->Render();

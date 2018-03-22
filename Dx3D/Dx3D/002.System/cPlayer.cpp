@@ -83,8 +83,8 @@ void cPlayer::Update()
 {
     if (m_stStat.fCurHP < 0.0f)
     {
-        m_stStat.fCurHP = 1.0f;
-        //PostQuitMessage(1);
+        m_stStat.fCurHP = 0.0f;
+        isAlive = false;
     }
 
     m_nRandIndex = rand() % 10;
@@ -581,7 +581,7 @@ void cPlayer::Move()
 
 void cPlayer::SetLevelToStatus(string szKey, int Level)
 {
-    json status = g_pMeshManager->GetJson("Status");
+    json status = g_pMeshManager->GetJson("status");
 
     m_stStat.szName = szKey;
     m_stStat.Level = Level;

@@ -387,3 +387,10 @@ void cGameManager::SetGearData(json data)
     m_stGear.helmId = data[JSON_GEAR_CHEST].is_null() ? -1 : data[JSON_GEAR_CHEST];
     m_stGear.helmId = data[JSON_GEAR_WEAPON].is_null() ? -1 : data[JSON_GEAR_WEAPON];
 }
+
+string cGameManager::GetMapKey()
+{
+    string key = m_jPlayerInfo["map"]["key"];
+
+    return key;
+}

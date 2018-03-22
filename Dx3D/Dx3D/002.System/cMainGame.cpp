@@ -12,15 +12,9 @@ cMainGame::cMainGame()
     hr = g_pCameraManager->Setup();
     hr = g_pMaterialManager->Setup();
     g_pSndManager->Setup();
-    g_pTextureManager->LoadParticleTexture();
-    g_pMeshManager->LoadJSON();
-    g_pMeshManager->LoadBasicMesh();
-    g_pMeshManager->LoadSkinnedMesh();
 
     g_pScnManager->Setup();
-    g_pCharacterManager->Setup();
-    g_pGameManager->Setup();
-    g_pFontManager->Setup();
+    g_pMeshManager->LoadBasicMesh();
 }
 
 
@@ -56,12 +50,12 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
-    hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);
+    hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
-    hr = g_pScnManager->ChangeScene("play");
+    hr = g_pScnManager->ChangeScene("loading");
 }
 
 void cMainGame::Update()

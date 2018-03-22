@@ -55,6 +55,9 @@ private:
 
     vector<string>                  m_VecSzDeathwingAttack;
     vector<string>                  m_VecSzPlayerAttack;
+
+    bool                            m_isOver;
+    float                           m_fOverTime;
     
 private:
     void SetUI();

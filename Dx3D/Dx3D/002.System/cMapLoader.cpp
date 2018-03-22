@@ -14,16 +14,7 @@ cMapLoader::~cMapLoader()
 
 void cMapLoader::LoadMap()
 {
-    // 만약에 로드 했던 맵이라면 로드하지 않고 현재 맵으로 셋팅
-    if (g_pGameManager->IsLoadData())
-    {
-        m_szKey = g_pMapManager->GetCurrKey();
-    }
-    else
-    {
-        g_pMapManager->SetCurrMap(m_szKey);
-    }
-
+    g_pMapManager->SetCurrMap(m_szKey);
     if (g_pMapManager->IsLoadMapInfo(m_szKey))
     {
         return;

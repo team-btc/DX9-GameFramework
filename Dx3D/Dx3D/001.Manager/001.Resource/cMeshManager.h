@@ -27,11 +27,11 @@ public:
     void LoadStaticMesh(string szKey, string szPath);
     LPMESH GetStaticMesh(string szKey);
 
-    void LoadSkinnedMesh();
+    void LoadSkinnedMesh(string key, string path, string filename);
     cSkinnedMesh* GetSkinnedMesh(string szKey);
     cSkinnedMesh* GetSkinnedMesh(string szKey, string szDirectory, string szFilepath);
 
-    void LoadJSON();
+    void LoadJSON(string key, string path);
     json          GetJson(string szKey);
     json          GetJson(string szKey, string szDirectory, string szFilepath);
 

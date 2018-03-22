@@ -95,78 +95,78 @@ LPMESH cMeshManager::GetBasicMesh(string szKey)
     return mesh;
 }
 
-void cMeshManager::LoadSkinnedMesh()
+void cMeshManager::LoadSkinnedMesh(string key, string path, string filename)
 {
     cSkinnedMesh* pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Player\\ArthasLichking", "arthaslichking.X");
-    if (GetJson("arthaslichking") != NULL)
+    pNewMesh->Load(path, filename);
+    if (GetJson(key) != NULL)
     {
-        pNewMesh->LoadJSON("arthaslichking");
+        pNewMesh->LoadJSON(key);
     }
-    m_mapSkinnedMesh.insert(make_pair("arthaslichking", pNewMesh));
+    m_mapSkinnedMesh.insert(make_pair(key, pNewMesh));
 
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy", "Deathwing.X");
-    if (GetJson("Deathwing") != NULL)
-    {
-        pNewMesh->LoadJSON("Deathwing");
-    }
-    m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
-
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
-    m_mapSkinnedMesh.insert(make_pair("sindragosa", pNewMesh));
-
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy", "Bear.X");
-    if (GetJson("Bear") != NULL)
-    {
-        pNewMesh->LoadJSON("Bear");
-    }
-    m_mapSkinnedMesh.insert(make_pair("Bear", pNewMesh));
-
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Enemy", "Boar.X");
-    if (GetJson("Boar") != NULL)
-    {
-        pNewMesh->LoadJSON("Boar");
-    }
-    m_mapSkinnedMesh.insert(make_pair("Boar", pNewMesh));
-
-    pNewMesh = new cSkinnedMesh;
-    pNewMesh->Load("Assets\\Interface\\Quest", "talktome.x");
-    m_mapSkinnedMesh.insert(make_pair("quest-indicator", pNewMesh));
+    //pNewMesh = new cSkinnedMesh;
+    //pNewMesh->Load("Assets\\Enemy", "Deathwing.X");
+    //if (GetJson("Deathwing") != NULL)
+    //{
+    //    pNewMesh->LoadJSON("Deathwing");
+    //}
+    //m_mapSkinnedMesh.insert(make_pair("Deathwing", pNewMesh));
+    //
+    //pNewMesh = new cSkinnedMesh;
+    //pNewMesh->Load("Assets\\Enemy", "Frostwurmnorthlend.X");
+    //m_mapSkinnedMesh.insert(make_pair("sindragosa", pNewMesh));
+    //
+    //pNewMesh = new cSkinnedMesh;
+    //pNewMesh->Load("Assets\\Enemy", "Bear.X");
+    //if (GetJson("Bear") != NULL)
+    //{
+    //    pNewMesh->LoadJSON("Bear");
+    //}
+    //m_mapSkinnedMesh.insert(make_pair("Bear", pNewMesh));
+    //
+    //pNewMesh = new cSkinnedMesh;
+    //pNewMesh->Load("Assets\\Enemy", "Boar.X");
+    //if (GetJson("Boar") != NULL)
+    //{
+    //    pNewMesh->LoadJSON("Boar");
+    //}
+    //m_mapSkinnedMesh.insert(make_pair("Boar", pNewMesh));
+    //
+    //pNewMesh = new cSkinnedMesh;
+    //pNewMesh->Load("Assets\\Interface\\Quest", "talktome.x");
+    //m_mapSkinnedMesh.insert(make_pair("quest-indicator", pNewMesh));
 }
 
-void cMeshManager::LoadJSON()
+void cMeshManager::LoadJSON(string key, string path)
 {
     json newJson;
     ifstream m_fileJson;
-    m_fileJson.open("Assets\\Player\\ArthasLichking\\ArthasLichking.json");
+    m_fileJson.open(path);
     m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("arthaslichking", newJson));
+    m_mapJson.insert(make_pair(key, newJson));
     m_fileJson.close();
-
-    m_fileJson.open("Assets\\Enemy\\Deathwing.json");
-    m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Deathwing", newJson));
-    m_fileJson.close();
-
-    m_fileJson.open("Assets\\Enemy\\Bear.json");
-    m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Bear", newJson));
-    m_fileJson.close();
-
-    m_fileJson.open("Assets\\Enemy\\Boar.json");
-    m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Boar", newJson));
-    m_fileJson.close();
-
-    m_fileJson.open("Assets\\Data\\CharacterStatus.json");
-    m_fileJson >> newJson;
-    m_mapJson.insert(make_pair("Status", newJson));
-
-    m_fileJson.close();
+    //
+    //m_fileJson.open("Assets\\Enemy\\Deathwing.json");
+    //m_fileJson >> newJson;
+    //m_mapJson.insert(make_pair("Deathwing", newJson));
+    //m_fileJson.close();
+    //
+    //m_fileJson.open("Assets\\Enemy\\Bear.json");
+    //m_fileJson >> newJson;
+    //m_mapJson.insert(make_pair("Bear", newJson));
+    //m_fileJson.close();
+    //
+    //m_fileJson.open("Assets\\Enemy\\Boar.json");
+    //m_fileJson >> newJson;
+    //m_mapJson.insert(make_pair("Boar", newJson));
+    //m_fileJson.close();
+    //
+    //m_fileJson.open("Assets\\Data\\CharacterStatus.json");
+    //m_fileJson >> newJson;
+    //m_mapJson.insert(make_pair("Status", newJson));
+    //
+    //m_fileJson.close();
 }
 
 cSkinnedMesh* cMeshManager::GetSkinnedMesh(string szKey)

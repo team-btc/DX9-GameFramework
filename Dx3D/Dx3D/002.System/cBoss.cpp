@@ -219,7 +219,7 @@ void cBoss::MoveToTarget()
 
 void cBoss::SetLevelToStatus(string szKey, int Level)
 {
-    json status = g_pMeshManager->GetJson("Status");
+    json status = g_pMeshManager->GetJson("status");
 
     m_stStat.szName = szKey;
     m_stStat.Level = Level;
