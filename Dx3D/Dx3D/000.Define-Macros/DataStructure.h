@@ -283,7 +283,6 @@ struct ST_ITEM_INFO
     string          szName;
     string          szPath;
     int             nPrice;
-    float           fPlusValue;
     bool            isWear;
     E_ITEM_TYPE     eItemType;
 

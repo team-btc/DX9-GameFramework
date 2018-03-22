@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "cGameManager.h"
-
+#include "cPlayer.h"
 
 cGameManager::cGameManager()
     : m_isLoadData(false)
@@ -138,6 +138,8 @@ void cGameManager::PullItem(int id)
         {
             PushGear(id);
         }
+
+        PlusStat(id);
     }
     // 새로운 아이템이면
     else
@@ -205,11 +207,89 @@ void cGameManager::PullGear(int id)
     }
     break;
     }
+
+    MinusStat(id);
 }
 
 void cGameManager::Pay(int gold)
 {
     m_stInventory.gold += gold;
+}
+
+void cGameManager::PlusStat(int id)
+{
+    cPlayer* pPlayer = g_pCharacterManager->GetPlayer();
+    ST_STATUS stStat = pPlayer->GetStatus();
+
+    for (int i = 0; i < m_vecItemInfo[id]->vecPlusStat.size(); ++i)
+    {
+        EditStat(&stStat, (E_PLAYER_STAT)m_vecItemInfo[id]->vecPlusStat[i].nType, m_vecItemInfo[id]->vecPlusStat[i].fPlusValue);
+    }
+    pPlayer->SetStatus(stStat);
+}
+
+void cGameManager::MinusStat(int id)
+{
+    cPlayer* pPlayer = g_pCharacterManager->GetPlayer();
+    ST_STATUS stStat = pPlayer->GetStatus();
+
+    for (int i = 0; i < m_vecItemInfo[id]->vecPlusStat.size(); ++i)
+    {
+        EditStat(&stStat, (E_PLAYER_STAT)m_vecItemInfo[id]->vecPlusStat[i].nType, -(m_vecItemInfo[id]->vecPlusStat[i].fPlusValue));
+    }
+    pPlayer->SetStatus(stStat);
+}
+
+void cGameManager::EditStat(ST_STATUS* stStat, E_PLAYER_STAT eStat, float fValue)
+{
+    switch (eStat)
+    {
+    case E_PLAYER_HP_CUR:
+    {
+        stStat->fCurHP += fValue;
+    }
+    break;
+    case E_PLAYER_HP_MAX:
+    {
+        stStat->fMaxHP += fValue;
+    }
+    break;
+    case E_PLAYER_MP_CUR:
+    {
+        stStat->fCurHP += fValue;
+    }
+    break;
+    case E_PLAYER_MP_MAX:
+    {
+        stStat->fMaxMP += fValue;
+    }
+    break;
+    case E_PLAYER_ATT:
+    {
+        stStat->fATK += fValue;
+    }
+    break;
+    case E_PLAYER_DEF:
+    {
+        stStat->fDEF += fValue;
+    }
+    break;
+    case E_PLAYER_STR:
+    {
+        stStat->fSTR += fValue;
+    }
+    break;
+    case E_PLAYER_DEX:
+    {
+        stStat->fDEX += fValue;
+    }
+    break;
+    case E_PLAYER_INT:
+    {
+        stStat->fINT += fValue;
+    }
+    break;
+    }
 }
 
 void cGameManager::LoadItemInfo()
@@ -229,7 +309,6 @@ void cGameManager::LoadItemInfo()
         string szPath = jItem[i]["item-path"];
         stItem->szPath = szPath;
         stItem->nPrice = jItem[i]["item-price"];
-        stItem->fPlusValue = jItem[i]["item-plus-value"];
         stItem->isWear = jItem[i]["item-wear"];
         stItem->eItemType = jItem[i]["item-type"];
 

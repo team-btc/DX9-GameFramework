@@ -3,6 +3,42 @@
 
 #define g_pGameManager cGameManager::GetInstance()
 
+struct ST_ITEM
+{
+    int id;
+    int count;
+
+    ST_ITEM()
+    {
+        id = -1;
+        count = -1;
+    }
+};
+
+struct ST_INVENTORY
+{
+    int     gold;
+    vector<ST_ITEM> items;
+
+    ST_INVENTORY()
+    {
+        gold = 0;
+    }
+};
+
+struct ST_GEAR
+{
+    int helmId;
+    int chestPlateId;
+    int swordId;
+
+    ST_GEAR()
+    {
+        helmId = -1;
+        chestPlateId = -1;
+        swordId = -1;
+    }
+};
 
 enum E_PLAYER_STAT
 {
@@ -60,6 +96,10 @@ public:
     void PullGear(int id);
 
     void Pay(int gold);
+
+    void PlusStat(int id);
+    void MinusStat(int id);
+    void EditStat(ST_STATUS* stStat, E_PLAYER_STAT eStat, float fValue);
     
     void LoadItemInfo();
     void LoadItemPlusStat(vector<ST_PLUS_STAT_INFO>* vecPlusStat, E_PLAYER_STAT eStat, float fValue);
