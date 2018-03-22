@@ -3,43 +3,6 @@
 
 #define g_pGameManager cGameManager::GetInstance()
 
-struct ST_ITEM
-{
-    int id;
-    int count;
-
-    ST_ITEM()
-    {
-        id = -1;
-        count = -1;
-    }
-};
-
-struct ST_INVENTORY
-{
-    int     gold;
-    vector<ST_ITEM> items;
-
-    ST_INVENTORY()
-    {
-        gold = 0;
-    }
-};
-
-struct ST_GEAR
-{
-    int helmId;
-    int chestPlateId;
-    int swordId;
-
-    ST_GEAR()
-    {
-        helmId = -1;
-        chestPlateId = -1;
-        swordId = -1;
-    }
-};
-
 enum E_PLAYER_STAT
 {
     E_PLAYER_LEVEL,

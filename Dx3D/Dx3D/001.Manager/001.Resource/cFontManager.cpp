@@ -111,7 +111,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    "WarCraftFont",
+                    "WarCraft Font",
                     &m_mapFont[e]);
                 break;
             }
@@ -174,8 +174,8 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     DEFAULT_CHARSET,
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
-                    false,7
-                    _TEXT("Calibri"),7
+                    false,
+                    _TEXT("Calibri"),
                     &m_mapFont[e]);
                 break;
             }

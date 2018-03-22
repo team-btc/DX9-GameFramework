@@ -11,10 +11,10 @@
         "key": "tempdun"
     },
     "player": {
-        "exp": 0,
-        "hp": 0.0,
+        "exp": 80,
+        "hp": 4030.0,
         "level": 51,
-        "mp": 2850.0,
+        "mp": 2600.0,
         "name": "arthaslichking",
         "pos": {
             "x": 374.580688476563,
