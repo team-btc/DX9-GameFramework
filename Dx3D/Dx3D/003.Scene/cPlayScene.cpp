@@ -360,7 +360,7 @@ HRESULT cPlayScene::Update()
             }
             else
             {
-                (*iter)->SetMoveSpeed(12.0f);
+                (*iter)->SetMoveSpeed(12.0f); // 몬스터 스피드
             }
         }
 
@@ -397,7 +397,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(20.0f);
+            m_pPlayer->SetMoveSpeed(20.0f); // 플레이어 스피드
         }
     }
 
