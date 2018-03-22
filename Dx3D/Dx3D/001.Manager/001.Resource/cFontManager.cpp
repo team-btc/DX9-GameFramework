@@ -5,10 +5,10 @@
 cFontManager::cFontManager()
 {
     string fontpath = FONT_PATH;
-    m_listFont.push_back(fontpath + "Abaddon.ttf");
-    m_listFont.push_back(fontpath + "Folkard.ttf");
-    m_listFont.push_back(fontpath + "FrizQt.ttf");
-    m_listFont.push_back(fontpath + "Warcraft.ttf");
+    m_listFont.push_back("Assets\\Font\\Abaddon.ttf");
+    m_listFont.push_back("Assets\\Font\\Folkard.ttf");
+    m_listFont.push_back("Assets\\Font\\FrizQt.ttf");
+    m_listFont.push_back("Assets\\Font\\Warcraft.ttf");
 }
 
 cFontManager::~cFontManager()
@@ -19,7 +19,7 @@ HRESULT cFontManager::Setup()
 {
     for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
     {
-        AddFontResourceA(iter->c_str());
+        int i = AddFontResourceA(iter->c_str());
     }
 
     return S_OK;
@@ -39,7 +39,10 @@ HRESULT cFontManager::Destroy()
 {
     for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
     {
-        RemoveFontResourceA(iter->c_str());
+        if (RemoveFontResourceA(iter->c_str()))
+        {
+            cout << "remove font" << endl;
+        }
     }
 
     for each (auto p in m_mapFont)
@@ -71,7 +74,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("FrizQt"),
+                    _TEXT("Abaddon¢â"),
                     &m_mapFont[e]);
                 break;
             }
@@ -101,8 +104,8 @@ LPFONTDX cFontManager::GetFont(eFontType e)
             }
             case cFontManager::E_QUEST:
             {
-                D3DXCreateFont(g_pDevice,
-                    45,
+                HRESULT hr = D3DXCreateFontA(g_pDevice,
+                    40,
                     0,
                     FW_DONTCARE,
                     1,
@@ -111,7 +114,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("Warcraft"),
+                    "WarCraftFont",
                     &m_mapFont[e]);
                 break;
             }

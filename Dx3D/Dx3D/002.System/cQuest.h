@@ -41,6 +41,9 @@ private:
 
     string      m_szTitle;
     string      m_szList;
+    string      m_szCount;
+
+    float       m_fTimer;
 
 public:
     cQuest();
@@ -54,6 +57,8 @@ public:
     void SetNextQuest();
 
     void EmitMessage(string event);
+
+    void MakeCountMessage();
 
 private:
     E_QUEST_TYPE StringToType(string type);

@@ -93,8 +93,8 @@ void cPlayer::Update()
         m_stStat.nCurEXP -= m_stStat.nMaxEXP;
         m_stStat.Level++;
         SetLevelToStatus(m_stStat.szName,m_stStat.Level);
-        cout << "레벨업 " << endl;
-        cout << "현재 레벨:" << m_stStat.Level << endl;
+        //cout << "레벨업 " << endl;
+        //cout << "현재 레벨:" << m_stStat.Level << endl;
     }
 
     if (!isAttack)

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "cQuest.h"
-
+#include "cPlayer.h"
 
 cQuestIndicator::cQuestIndicator()
     : m_pMesh(NULL)
@@ -16,6 +16,7 @@ cQuestIndicator::~cQuestIndicator()
 void cQuestIndicator::Setup()
 {
     m_pMesh = m_pMesh == NULL ? g_pMeshManager->GetSkinnedMesh("quest-indicator") : m_pMesh;
+    m_pMesh->SetScale(50.0f);
 }
 
 void cQuestIndicator::Update()
@@ -65,6 +66,8 @@ cQuest::cQuest()
     , m_pListFont(NULL)
     , m_szTitle("")
     , m_szList("")
+    , m_szCount("")
+    , m_fTimer(0.0f)
 {
 }
 
@@ -81,20 +84,21 @@ void cQuest::Setup(string map)
     int centerx = W_WIDTH / 2;
     int centery = W_HEIGHT / 2;
     m_rtQuestTitle = { centerx - 400, 200, centerx + 400, 300 };
-    m_rtQuestList = { W_WIDTH - 450, 300, W_WIDTH - 50, 700 };
+    m_rtQuestList = { W_WIDTH - 650, 300, W_WIDTH - 50, 700 };
 
     m_rtQuestTitle2 = m_rtQuestTitle;
     m_rtQuestList2 = m_rtQuestList;
 
-    m_rtQuestTitle2.left += 10;
-    m_rtQuestTitle2.top += 10;
-    m_rtQuestTitle2.right += 10;
-    m_rtQuestTitle2.bottom += 10;
+    int offset = 3;
+    m_rtQuestTitle2.left += offset;
+    m_rtQuestTitle2.top += offset;
+    m_rtQuestTitle2.right += offset;
+    m_rtQuestTitle2.bottom += offset;
 
-    m_rtQuestList2.left += 10;
-    m_rtQuestList2.top += 10;
-    m_rtQuestList2.right += 10;
-    m_rtQuestList2.bottom += 10;
+    m_rtQuestList2.left += offset;
+    m_rtQuestList2.top += offset;
+    m_rtQuestList2.right += offset;
+    m_rtQuestList2.bottom += offset;
 
     m_pTitleFont = g_pFontManager->GetFont(cFontManager::E_ALERT);
     m_pListFont = g_pFontManager->GetFont(cFontManager::E_QUEST);
@@ -115,6 +119,7 @@ void cQuest::Setup(string map)
         string desc = q[i]["desc"].is_null() ? "" : q[i]["desc"];
         int count = q[i]["count"].is_null() ? 0 : q[i]["count"];
         int goal = q[i]["goal"].is_null() ? 1 : q[i]["goal"];
+        int exp = q[i]["exp"].is_null() ? 0 : q[i]["exp"];
 
         ST_QUEST_INFO elem;
         elem.name = name;
@@ -124,6 +129,7 @@ void cQuest::Setup(string map)
         elem.count = count;
         elem.goal = goal;
         elem.desc = desc;
+        elem.exp = exp;
 
         m_vecQuestInfo.push_back(elem);
     }
@@ -137,28 +143,28 @@ void cQuest::Update()
     {
         m_pIndicator->Update();
     }
+
+    if (m_fTimer < g_pTimerManager->GetWorldTime())
+    {
+        m_szTitle = "";
+    }
+
+    MakeCountMessage();
 }
 
 void cQuest::Render()
 {
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-    g_pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
     if (m_pIndicator)
     {
         m_pIndicator->Render();
     }
 
-    //m_pSprite->Begin(D3DXSPRITE_BILLBOARD | D3DXSPRITE_ALPHABLEND | D3DXSPRITE_SORT_TEXTURE);
     DWORD option = DT_CENTER | DT_NOCLIP;
-    m_pTitleFont->DrawTextA(NULL, m_szTitle.c_str(), -1, &m_rtQuestTitle2, option, D3DCOLOR_XRGB(255, 255, 255));
-    m_pTitleFont->DrawTextA(NULL, m_szTitle.c_str(), -1, &m_rtQuestTitle, option, D3DCOLOR_XRGB(0, 0, 0));
-    option = DT_LEFT | DT_NOCLIP;
-    m_pListFont->DrawTextA(NULL, m_szList.c_str(), -1, &m_rtQuestList2, option, D3DCOLOR_XRGB(255, 255, 255));
-    m_pListFont->DrawTextA(NULL, m_szList.c_str(), -1, &m_rtQuestList, option, D3DCOLOR_XRGB(0, 0, 0));
-    //m_pSprite->End();
-
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-    g_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+    m_pTitleFont->DrawTextA(NULL, m_szTitle.c_str(), -1, &m_rtQuestTitle2, option, D3DCOLOR_XRGB(0, 0, 0));
+    m_pTitleFont->DrawTextA(NULL, m_szTitle.c_str(), -1, &m_rtQuestTitle, option, D3DCOLOR_XRGB(255, 255, 255));
+    option = DT_RIGHT | DT_NOCLIP;
+    m_pListFont->DrawTextA(NULL, (m_szList + m_szCount).c_str(), -1, &m_rtQuestList2, option, D3DCOLOR_XRGB(0, 0, 0));
+    m_pListFont->DrawTextA(NULL, (m_szList + m_szCount).c_str(), -1, &m_rtQuestList, option, D3DCOLOR_XRGB(255, 255, 255));
 }
 
 void cQuest::Release()
@@ -172,9 +178,6 @@ void cQuest::SetNextQuest()
     auto iter = m_vecQuestInfo.begin();
     if (iter != m_vecQuestInfo.end())
     {
-        m_szTitle = m_stProgress.name;
-        m_szList = m_stProgress.desc;
-
         switch (iter->type)
         {
         case Q_MOVE:
@@ -182,7 +185,6 @@ void cQuest::SetNextQuest()
             m_pIndicator->SetVisible(true);
             ST_EVENT_INFO eventInfo = g_pMapManager->GetEventByName(iter->event);
             m_pIndicator->SetPosition(eventInfo.vPos);
-            m_pIndicator->SetScale(10.0f);
             break;
         }
         case Q_HUNT:
@@ -206,19 +208,58 @@ void cQuest::SetNextQuest()
         m_stProgress = ST_QUEST_INFO();
         m_pIndicator->SetVisible(false);
     }
+
+    m_fTimer = g_pTimerManager->GetWorldTime() + 5.0f;
+    m_szTitle = m_stProgress.name;
+    m_szList = m_stProgress.desc;
 }
 
 void cQuest::EmitMessage(string event)
 {
-    if (m_stProgress.event.compare(event) == 0)
+    transform(event.begin(), event.end(), event.begin(), tolower);
+
+    switch (m_stProgress.type)
     {
-        m_stProgress.count++;
-        m_szTitle = "MOVED !!!";
+    case Q_MOVE:
+    {
+        if (m_stProgress.event.compare(event) == 0)
+        {
+            m_stProgress.count++;
+        }
+        break;
+    }
+    case Q_HUNT:
+    {
+        if (m_stProgress.target.compare(event) == 0)
+        {
+            m_stProgress.count++;
+        }
+        else
+        {
+            m_szCount = "";
+        }
+        break;
+    }
     }
 
     if (m_stProgress.goal <= m_stProgress.count)
     {
+        cPlayer* p = g_pCharacterManager->GetPlayer();
+        ST_STATUS& status = p->GetStatus();
+        status.nCurEXP += m_stProgress.exp;
         SetNextQuest();
+    }
+}
+
+void cQuest::MakeCountMessage()
+{
+    if (m_stProgress.type != Q_END)
+    {
+        m_szCount = "\n" + to_string(m_stProgress.count) + " / " + to_string(m_stProgress.goal);
+    }
+    else
+    {
+        m_szCount = "";
     }
 }
 

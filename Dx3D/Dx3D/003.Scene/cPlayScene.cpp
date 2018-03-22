@@ -383,6 +383,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
+            m_pQuest->EmitMessage((*iter)->GetName());
             iter = (*m_vecMonster).erase(iter);
         }
     }
@@ -568,11 +569,9 @@ HRESULT cPlayScene::Render()
     }
 
 #ifdef _DEBUG
-
     // 장애물, 이벤트 트랩 출력
     //m_pGameMap->RendObstacle();
     //m_pGameMap->RendEventTrap();
-
 #endif // _DEBUG
 
     return S_OK;

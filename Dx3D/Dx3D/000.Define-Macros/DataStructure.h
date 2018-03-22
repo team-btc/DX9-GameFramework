@@ -289,6 +289,7 @@ struct ST_QUEST_INFO
     string              desc;
     int                 count;
     int                 goal;
+    int                 exp;
 
     ST_QUEST_INFO()
     {
@@ -300,6 +301,7 @@ struct ST_QUEST_INFO
         desc = "";
         count = 0;
         goal = 1;
+        exp = 0;
     }
 };
 #pragma endregion
