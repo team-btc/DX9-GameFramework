@@ -412,7 +412,17 @@ void cPlayer::Attack()
         isMoveToTarget = false;
         m_isPoint = true;
         AttackAnim();
-        g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+        if (g_pSndManager->IsPlay(m_vecPlayerAtkSound[m_nPrevIndex]))
+        {
+            g_pSndManager->Stop(m_vecPlayerAtkSound[m_nPrevIndex]);
+            g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+            m_nPrevIndex = m_nRandIndex;
+        }
+        else
+        {
+            g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+            m_nPrevIndex = m_nRandIndex;
+        }
     }
     else
     {
