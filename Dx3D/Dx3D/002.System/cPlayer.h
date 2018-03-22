@@ -19,6 +19,10 @@ private:
     float m_fScale;
     float m_fCenter;
     float m_fRoartime;
+    float m_fWalkTime;
+    vector<string> m_vecPlayerAtkSound;
+    int   m_nRandIndex;
+    int   m_nPrevIndex;
 
     bool m_isUsingRoar;
     bool m_isMoveToPoint;
@@ -42,7 +46,7 @@ public:
     void PickGround(cRay ray);
     void Attack();
     void Move();
-
+    
     void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
     void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
@@ -59,5 +63,7 @@ public:
     void UIRender();
     ST_DAMAGE_TEXT MakeDamageText();
     void AddAttUI(int nAttValue);
-};
 
+    void PlayWalkSound();
+    void SetPlayerAtkSound();
+};

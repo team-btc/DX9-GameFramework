@@ -14,6 +14,7 @@
 #include "cUIImageView.h"
 
 #define ARTHUS  1.27f
+
 class cTitleScene : public iSceneObject
 {
 private:
@@ -42,10 +43,13 @@ private:
     Vector3             m_vCameraPos;
     Vector3             m_vArthusStartPos;
     Vector3             m_vArthusLastPos;
-
+    
     int                 m_nCurrIndex;
+    int                 m_nSoundIndex;
 
     float               m_fWorldTime;
+    float               m_fWalkTime;
+    float               m_fRoarTime;
     float               m_fSpeed;
     
     bool                m_isPressSpace;

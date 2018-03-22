@@ -11,6 +11,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     , m_isMouse(false)
     , m_fScale(0.0f)
     , m_fCenter(0.0f)
+    , m_fWalkTime(0.36f)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -41,6 +42,7 @@ cPlayer::cPlayer(string szKey)
     , m_fScale(0.0f)
     , m_fCenter(0.0f)
     , m_fRecoveryCount(0.0f)
+    , m_nPrevIndex(0)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -74,6 +76,7 @@ void cPlayer::Setup()
 {
     UISetup();
     m_fMoveSpeed = 0.0f;
+    SetPlayerAtkSound();
 }
 
 void cPlayer::Update()
@@ -81,9 +84,10 @@ void cPlayer::Update()
     if (m_stStat.fCurHP < 0.0f)
     {
         m_stStat.fCurHP = 1.0f;
-        PostQuitMessage(1);
+        //PostQuitMessage(1);
     }
 
+    m_nRandIndex = rand() % 10;
     if (g_pKeyManager->isOnceKeyDown(VK_ESCAPE))
     {
         m_pTarget = NULL;
@@ -149,6 +153,8 @@ void cPlayer::Update()
             m_fRecoveryCount = 0.0f;
             m_isPoint = true;
             AttackAnim();
+            g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+            m_nPrevIndex = m_nRandIndex;
         }
 
         //원거리 스킬
@@ -399,6 +405,51 @@ void cPlayer::GetSwordMatrix(Matrix4 & mat)
     m_pMesh->GetMatrixByName(mat, "creature_arthaslichking_arthaslichking_bone_43");
 }
 
+void cPlayer::PlayWalkSound()
+{
+    if (g_pMapManager->GetCurrKey() == "start")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            g_pSndManager->Play("start-walk");
+            m_fWalkTime = 0.0f;
+        }
+    }
+    else if (g_pMapManager->GetCurrKey() == "badland")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            g_pSndManager->Play("badland-walk");
+            m_fWalkTime = 0.0f;
+        }
+    }
+    else if (g_pMapManager->GetCurrKey() == "tempdun")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            g_pSndManager->Play("tempdun-walk");
+            m_fWalkTime = 0.0f;
+        }
+    }
+}
+
+void cPlayer::SetPlayerAtkSound()
+{
+    m_vecPlayerAtkSound.push_back("attack1");
+    m_vecPlayerAtkSound.push_back("attack2");
+    m_vecPlayerAtkSound.push_back("attack3");
+    m_vecPlayerAtkSound.push_back("attack4");
+    m_vecPlayerAtkSound.push_back("attack5");
+    m_vecPlayerAtkSound.push_back("attack6");
+    m_vecPlayerAtkSound.push_back("attack7");
+    m_vecPlayerAtkSound.push_back("attack8");
+    m_vecPlayerAtkSound.push_back("attack9");
+    m_vecPlayerAtkSound.push_back("attack10");
+}
+
 void cPlayer::PickMonster(cRay ray)
 {
     isMove = true;
@@ -457,10 +508,14 @@ void cPlayer::Attack()
         isMoveToTarget = false;
         m_isPoint = true;
         AttackAnim();
+        g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+        m_nPrevIndex = m_nRandIndex;
     }
     else
     {
         m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
+        PlayWalkSound();
+        m_vPosition += m_vDir * m_fMoveSpeed;
         m_stSphere.vCenter = m_vPosition;
     }
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));
@@ -497,7 +552,7 @@ void cPlayer::Move()
     }
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-
+    PlayWalkSound();
     //도착
     if (Distance(DestPoint) < m_fMoveSpeed * g_pTimerManager->GetDeltaTime())
     {
@@ -505,6 +560,7 @@ void cPlayer::Move()
         IdleAnim();
         m_isMoveToPoint = false;
         DestPoint = Vector3(0, 0, 0);
+        m_fWalkTime = 0.36f;
     }
 }
 

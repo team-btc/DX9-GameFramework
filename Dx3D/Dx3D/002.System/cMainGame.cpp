@@ -68,6 +68,7 @@ void cMainGame::Update()
 {
     g_ptDeltaMouse.x = g_ptMouse.x - g_ptDeltaMouse.x;
     g_ptDeltaMouse.y = g_ptMouse.y - g_ptDeltaMouse.y;
+    g_pSndManager->Update();
     g_pCameraManager->Update();
     g_pScnManager->Update();
     g_ptDeltaMouse = g_ptMouse;

@@ -5,8 +5,8 @@ using namespace FMOD;
 
 #include "cSoundObject.h"
 
-#define SOUND_BUFFER 20
-#define EXTRA_CHANNEL_BUFFER 5
+#define SOUND_BUFFER 64
+#define EXTRA_CHANNEL_BUFFER 64
 #define TOTAL_SOUND_BUFFER (SOUND_BUFFER + EXTRA_CHANNEL_BUFFER)
 
 #define g_pSndManager  cSoundManager::GetInstance()
@@ -22,6 +22,8 @@ private:
     SoundIter   m_iterSounds;
 
     System*     m_pSystem;
+    Channel*    m_pChannel;
+    Channel*    m_pChannel2;
 
 public:
     void Setup();

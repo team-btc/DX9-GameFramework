@@ -41,12 +41,21 @@ HRESULT cEndingScene::Start()
     m_pBGLayer->SetActive(true);
 
     m_pBGLayer->Setup();
-    
+    m_isStart = true;
+
+    g_pSndManager->AddSound("ending-bgm", "ending", ENDING_SOUND_PATH + (string)"ending.mp3", true);
+    m_fWorldTime = -2.0f;
     return S_OK;
 }
 
 HRESULT cEndingScene::Update()
 {
+    if (m_fWorldTime <= -1.0f)
+    {
+        g_pSndManager->Play("ending-bgm", 1.0f);
+        m_fWorldTime = 0.0f;
+    }
+
     if (g_pKeyManager->isOnceKeyDown(VK_RETURN))
     {
         m_isStart = true;
@@ -66,17 +75,26 @@ HRESULT cEndingScene::Update()
     //  SCROLL IMAGE
     if (m_isStart)
     {
-        m_fTexPos -= SCROLL_SPD;
-        if (m_fTexPos <= -11600.0f)
+        m_fWorldTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWorldTime <= 141.0f)
         {
-            m_fTexPos = -11600.0f;
+            m_fTexPos -= SCROLL_SPD;
+        }
+        else if (m_fWorldTime >= 150.0f)
+        {
+            m_isStart = false;
         }
         if (m_fTexPos <= -7300 && m_fTexPos > -11500.0f)
         {
             m_fTexPos2 -= SCROLL_SPD;
         }
-    }
 
+        
+    }
+    if (!m_isStart)
+    {
+        PostQuitMessage(0);
+    }
     m_pUIBG2->SetLocalPos(Vector3(0, m_fTexPos2, 0));
     m_pUIBG->SetLocalPos(Vector3(0, m_fTexPos, 0));
 

@@ -53,11 +53,18 @@ private:
 
     cQuest*                         m_pQuest;
 
+    vector<string>                  m_VecSzDeathwingAttack;
+    vector<string>                  m_VecSzPlayerAttack;
+    
 private:
     void SetUI();
     void UpdateUI();
+    void SetupSound();
+    bool                            m_isRoar;
 
-    bool                m_isRoar;
+    // 사운드 관련 변수
+    bool                            m_isWalk;
+    float                           m_fWalkTime;
 public:
     cPlayScene();
     ~cPlayScene();

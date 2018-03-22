@@ -93,6 +93,13 @@ void cMonster::Setup()
 
 void cMonster::Update()
 {
+    if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
+    {
+        isAlive = false;
+        g_pSndManager->Stop(m_szName + "-death");
+        g_pCharacterManager->PushMonster(this);
+    }
+
     if (m_stStat.fCurHP <= 0 && isActive)
     {
         isActive = false;
@@ -107,6 +114,7 @@ void cMonster::Update()
         cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;
+        g_pSndManager->Play(m_szName + "-death");
         DeadAnim();
     }
 
@@ -138,12 +146,14 @@ void cMonster::Update()
                 if (!isAttack)
                 {
                     AttackAnim();
+                    g_pSndManager->Play(m_szName + "-attack");
                     isAttack = true;
                 }
 
                 if (m_pMesh->GetCurPos() >= 1.0f)
                 {
                     AttackAnim();
+                    g_pSndManager->Play(m_szName + "-attack");
                     m_pMesh->SetDescZeroPos();
                     float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
                     Action("Attack", ATK);

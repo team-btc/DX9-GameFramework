@@ -25,7 +25,10 @@ cPlayScene::cPlayScene()
     , m_pParticleIce(NULL)
     , m_pParticleCherry(NULL)
     , m_pParticleEffect(NULL)
+    , m_isWalk(false)
+    , m_fWalkTime(0.0f)
 {
+    SetupSound();
 }
 
 
@@ -310,6 +313,19 @@ HRESULT cPlayScene::Start()
     m_pQuest = m_pQuest == NULL ? new cQuest : m_pQuest;
     m_pQuest->Setup(m_szMapKey);
 
+    if (m_szMapKey == "start")
+    {
+        g_pSndManager->Play("start-bgm", 0.6f);
+    }
+    else if (m_szMapKey == "badland")
+    {
+        g_pSndManager->Play("badland-bgm", 0.6f);
+    }
+    else if (m_szMapKey == "tempdun")
+    {
+        g_pSndManager->Play("tempdun-bgm", 0.6f);
+    }
+
     return S_OK;
 }
 
@@ -508,7 +524,6 @@ HRESULT cPlayScene::Update()
                 (*iter)->SetMoveSpeed(14.0f);
             }
         }
-
         if ((*iter)->GetRoar())
         {
             m_isRoar = true;
@@ -546,7 +561,6 @@ HRESULT cPlayScene::Update()
             m_pPlayer->SetMoveSpeed(20.0f);
         }
     }
-
     // UI 업데이트 (플레이어 스탯)
     UpdateUI();
 
@@ -1005,6 +1019,24 @@ void cPlayScene::UpdateUI()
             m_pTargetStatUILayer->SetActive(false);
         }
     }
+}
+
+void cPlayScene::SetupSound()
+{
+    m_VecSzDeathwingAttack.push_back("deathwing-attack1");
+    m_VecSzDeathwingAttack.push_back("deathwing-attack2");
+    m_VecSzDeathwingAttack.push_back("deathwing-attack3");
+
+    m_VecSzPlayerAttack.push_back("attack1");
+    m_VecSzPlayerAttack.push_back("attack2");
+    m_VecSzPlayerAttack.push_back("attack3");
+    m_VecSzPlayerAttack.push_back("attack4");
+    m_VecSzPlayerAttack.push_back("attack5");
+    m_VecSzPlayerAttack.push_back("attack6");
+    m_VecSzPlayerAttack.push_back("attack7");
+    m_VecSzPlayerAttack.push_back("attack8");
+    m_VecSzPlayerAttack.push_back("attack9");
+    m_VecSzPlayerAttack.push_back("attack10");
 }
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
