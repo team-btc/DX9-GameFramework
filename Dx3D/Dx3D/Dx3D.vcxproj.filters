@@ -49,7 +49,6 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="003.Object\cNonPlayer.cpp" />
     <ClCompile Include="003.Object\cShop.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="002.System\cAdo.cpp" />
     <ClCompile Include="002.System\cAllocateHierarchy.cpp" />
     <ClCompile Include="002.System\cAutoReleasePool.cpp" />
@@ -63,9 +62,7 @@
     <ClCompile Include="002.System\cPlayer.cpp" />
     <ClCompile Include="003.Object\cGear.cpp" />
     <ClCompile Include="003.Object\cInventory.cpp" />
-=======
     <ClCompile Include="002.System\cQuest.cpp" />
->>>>>>> quest-system
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
@@ -432,7 +429,6 @@
     <ClInclude Include="001.Manager\000.System\cGameManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="002.System\cAdo.h" />
     <ClInclude Include="002.System\cAllocateHierarchy.h" />
     <ClInclude Include="002.System\cAutoReleasePool.h" />
@@ -446,9 +442,7 @@
     <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Object\cGear.h" />
     <ClInclude Include="003.Object\cInventory.h" />
-=======
     <ClInclude Include="002.System\cQuest.h" />
->>>>>>> quest-system
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />
