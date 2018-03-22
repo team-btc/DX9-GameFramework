@@ -127,6 +127,22 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define SHADER_PATH "Assets\\Shader\\"
 #define OBJECT_PATH "Assets\\Object\\"
 #define INTERFACE_PATH "Assets\\Interface\\"
-#define SHOP_PATH "Assets\\Shop\\"
+#define SHOP_PATH "Assets\\Shop\\shop.json"
 #define STORE_SOUND_PATH "Assets\\Sound\\Effect\\Interface\\Store\\"
+#define QUEST_LIST_PATH "Assets\\Data\\QuestList.json"
+#define PLAYER_SAVE_PATH "Save\\Player.json"
+#pragma endregion
+
+#pragma region SAVEFILE_KEY
+#define JSON_PLAYER_KEY "player"
+#define JSON_INVENTORY_KEY "inventory"
+#define JSON_GEAR_KEY "gear"
+#define JSON_MAP_KEY "map"
+#define JSON_GOLD "gold"
+#define JSON_ITEMS "items"
+#define JSON_ITEM_ID "id"
+#define JSON_ITEM_COUNT "count"
+#define JSON_GEAR_HELM "helm"
+#define JSON_GEAR_CHEST "chest"
+#define JSON_GEAR_WEAPON "weapon"
 #pragma endregion

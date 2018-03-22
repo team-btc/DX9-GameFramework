@@ -70,7 +70,12 @@ public:
     vector<ST_ITEM> GetInvetoryInfo() { return m_stInventory.items; }
     ST_GEAR GetGearInfo() { return m_stGear; }
     string GetStatName(E_PLAYER_STAT eStat);
-    
+
+    json GetInvenData();
+    json GetGearData();
+    void SetInvenData(json data);
+    void SetGearData(json data);
+
 #pragma region QUEST
     void LoadQuestInfo();
     json GetQuest(string map);

@@ -49,7 +49,7 @@ void cGameManager::SavePlayerInfo()
     MakeSaveData();
 
     ofstream savefileStream;
-    savefileStream.open("Save\\Player.json", ios_base::out);
+    savefileStream.open(PLAYER_SAVE_PATH, ios_base::out);
     savefileStream << m_jPlayerInfo.dump(4);
     savefileStream.close();
 }
@@ -57,14 +57,16 @@ void cGameManager::SavePlayerInfo()
 void cGameManager::LoadPlayerInfo()
 {
     ifstream loadfileStream;
-    loadfileStream.open("Save\\Player.json", ios_base::in);
+    loadfileStream.open(PLAYER_SAVE_PATH, ios_base::in);
     if (loadfileStream.is_open())
     {
         loadfileStream >> m_jPlayerInfo;
         loadfileStream.close();
 
-        g_pCharacterManager->SetPlayerData(m_jPlayerInfo["player"]);
-        g_pMapManager->SetMapData(m_jPlayerInfo["map"]);
+        g_pCharacterManager->SetPlayerData(m_jPlayerInfo[JSON_PLAYER_KEY]);
+        g_pMapManager->SetMapData(m_jPlayerInfo[JSON_MAP_KEY]);
+        SetGearData(m_jPlayerInfo[JSON_GEAR_KEY]);
+        SetInvenData(m_jPlayerInfo[JSON_INVENTORY_KEY]);
 
         m_isLoadData = true;
     }
@@ -74,9 +76,13 @@ void cGameManager::MakeSaveData()
 {
     json playerData = g_pCharacterManager->GetPlayerData();
     json mapData = g_pMapManager->GetMapData();
+    json invenData = GetInvenData();
+    json gearData = GetGearData();
 
-    m_jPlayerInfo["player"] = playerData;
-    m_jPlayerInfo["map"] = mapData;
+    m_jPlayerInfo[JSON_PLAYER_KEY] = playerData;
+    m_jPlayerInfo[JSON_MAP_KEY] = mapData;
+    m_jPlayerInfo[JSON_INVENTORY_KEY] = invenData;
+    m_jPlayerInfo[JSON_GEAR_KEY] = gearData;
 }
 
 int cGameManager::FindItem(int id)
@@ -210,7 +216,7 @@ void cGameManager::LoadItemInfo()
 {
     json jLoad;
     ifstream iFile;
-    iFile.open(SHOP_PATH + (string)"shop.json");
+    iFile.open(SHOP_PATH);
     iFile >> jLoad;
     iFile.close();
 
@@ -267,7 +273,7 @@ ST_ITEM_INFO* cGameManager::GetItemInfoById(int id)
 void cGameManager::LoadQuestInfo()
 {
     ifstream i;
-    i.open("Assets\\Data\\QuestList.json", ios_base::in);
+    i.open(QUEST_LIST_PATH, ios_base::in);
     i >> m_jQuestInfo;
     i.close();
 }
@@ -331,4 +337,53 @@ string cGameManager::GetStatName(E_PLAYER_STAT eStat)
     }
 
     return szName;
+}
+
+json cGameManager::GetInvenData()
+{
+    json jInven;
+    jInven[JSON_GOLD] = m_stInventory.gold;
+    for (int i = 0; i < (int)m_stInventory.items.size(); i++)
+    {
+        jInven[JSON_ITEMS][i][JSON_ITEM_ID] = m_stInventory.items[i].id;
+        jInven[JSON_ITEMS][i][JSON_ITEM_COUNT] = m_stInventory.items[i].count;
+    }
+
+    return jInven;
+}
+
+json cGameManager::GetGearData()
+{
+    json jGear;
+    jGear[JSON_GEAR_HELM] = m_stGear.helmId;
+    jGear[JSON_GEAR_CHEST] = m_stGear.chestPlateId;
+    jGear[JSON_GEAR_WEAPON] = m_stGear.swordId;
+
+    return jGear;
+}
+
+void cGameManager::SetInvenData(json data)
+{
+    m_stInventory.gold = data[JSON_GOLD].is_null() ? 0 : data[JSON_GOLD];
+    if (!data[JSON_ITEMS].is_null())
+    {
+        for (int i = 0; i < (int)data[JSON_ITEMS].size(); i++)
+        {
+            ST_ITEM item;
+            item.id = data[JSON_ITEMS][i][JSON_ITEM_ID].is_null() ? -1 : data[JSON_ITEMS][i][JSON_ITEM_ID];
+            item.count = data[JSON_ITEMS][i][JSON_ITEM_COUNT].is_null() ? -1 : data[JSON_ITEMS][i][JSON_ITEM_COUNT];
+            if (item.id == -1)
+            {
+                continue;
+            }
+            m_stInventory.items.push_back(item);
+        }
+    }
+}
+
+void cGameManager::SetGearData(json data)
+{
+    m_stGear.helmId = data[JSON_GEAR_HELM].is_null() ? -1 : data[JSON_GEAR_HELM];
+    m_stGear.helmId = data[JSON_GEAR_CHEST].is_null() ? -1 : data[JSON_GEAR_CHEST];
+    m_stGear.helmId = data[JSON_GEAR_WEAPON].is_null() ? -1 : data[JSON_GEAR_WEAPON];
 }
