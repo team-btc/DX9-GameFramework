@@ -531,7 +531,6 @@ void cPlayer::Attack()
     {
         m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
         PlayWalkSound();
-        m_vPosition += m_vDir * m_fMoveSpeed;
         m_stSphere.vCenter = m_vPosition;
     }
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));

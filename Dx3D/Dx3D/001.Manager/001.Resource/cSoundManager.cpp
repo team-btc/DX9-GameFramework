@@ -22,7 +22,6 @@ cSoundManager::~cSoundManager()
 
 void cSoundManager::Setup()
 {
-<<<<<<< HEAD
     g_pSndManager->AddSound("start-bgm", "play", "Assets\\Sound\\BGM\\start\\na_generalwalknight03.mp3", true, true);
     g_pSndManager->AddSound("badland-bgm", "play", "Assets\\Sound\\BGM\\badland\\daybarrendry01.mp3", true, true);
     g_pSndManager->AddSound("tempdun-bgm", "play", "Assets\\Sound\\BGM\\magam\\mus_43_deathwingsfall_hero_uu01.mp3", true, true);
