@@ -10,8 +10,8 @@
         "MP":300.0,
         "SPEED":1.0,
         "CRITICAL":15.0,
-        "HPGEN":0.0,
-        "MPGEN":0.0,
+        "HPGEN":10.0,
+        "MPGEN":10.0,
         "COOLTIME":0.0,
         "EXP":100,
 

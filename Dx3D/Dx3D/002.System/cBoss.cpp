@@ -48,7 +48,7 @@ void cBoss::Setup()
     isRun = false;
     isIdle = false;
     isHeal = false;
-    isStatic = false;
+    isAction = false;
     isActive = true;
     isAlive = true;
     isMoveToTarget = false;
@@ -64,13 +64,6 @@ void cBoss::Setup()
 
 void cBoss::Update()
 {
-    //죽음정의
-    if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
-    {
-        isAlive = false;
-        g_pCharacterManager->PushBoss(this);
-    }
-
     if (m_stStat.fCurHP <= 0 && isActive)
     {
         isActive = false;
@@ -89,65 +82,82 @@ void cBoss::Update()
 
 
     //공격부터 스킬까지 정의
-    if (m_pTarget)
+    if (isActive)
     {
-        m_fRoarTime += g_pTimerManager->GetDeltaTime();
-        if (m_fRoarTime > 20.0f && g_pCharacterManager->GetVectorSize() > 0)
+        if (m_pTarget)
         {
             if (!isRoar)
             {
-                m_fRoarTime = 0.0f;
-                RoarAnim();
-                isAttack = false;
-                isMove = false;
-                m_fMoveSpeed = 0.0f;
-            }
-        }
+                m_vDir = m_pTarget->GetPosition() - m_vPosition;
+                float Distance = D3DXVec3Length(&m_vDir);
+                D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-        if (!isRoar)
-        {
-            m_vDir = m_pTarget->GetPosition() - m_vPosition;
-            float Distance = D3DXVec3Length(&m_vDir);
-            D3DXVec3Normalize(&m_vDir, &m_vDir);
-            if (Distance < m_pTarget->GetSphere().fRadius + m_stSphere.fRadius)
-            {
-                if (!isAttack)
+                if (Distance < m_pTarget->GetSphere().fRadius + m_stSphere.fRadius)
                 {
+                    if (!isAttack)
+                    {
+                        isMoveToTarget = false;
+                        isAttack = true;
+                        AttackAnim();
+                    }
+                }
+                else
+                {
+                    if (!isMoveToTarget)
+                    {
+                        isMove = true;
+                        isAttack = false;
+                        isMoveToTarget = true;
+                        RunAnim();
+                    }
+                }
+
+                m_fRoarTime += g_pTimerManager->GetDeltaTime(); // 수정 : 마나 소모하게 해야함
+                if (m_fRoarTime > 20.0f && g_pCharacterManager->GetVectorSize() > 0) // 로어 애니메이션 돌아가는곳
+                {
+                    m_fRoarTime = 0.0f;
+                    RoarAnim();
+                    isRecovery = true;
+                    isAttack = false;
+                    isMove = false;
                     isMoveToTarget = false;
-                    isAttack = true;
-                    AttackAnim();
+                    m_fMoveSpeed = 0.0f;
                 }
             }
             else
             {
-                if (!isMoveToTarget)
+                if (isRecovery) // 체젠 마젠
                 {
-                    isMove = true;
-                    isAttack = false;
-                    isMoveToTarget = true;
-                    RunAnim();
+                    m_stStat.fCurHP < m_stStat.fMaxHP ? m_stStat.fCurHP += m_stStat.fHPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurHP = m_stStat.fMaxHP;
+                    m_stStat.fCurMP < m_stStat.fMaxMP ? m_stStat.fCurMP += m_stStat.fMPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurMP = m_stStat.fMaxMP;
+                }
+
+                if (m_pMesh->GetCurPos() > 1.0f)
+                {
+                    m_isRoar = true;
+                    isRoar = false;
+                    isRecovery = false;
                 }
             }
         }
-    }
 
-    if (isAttack)
-    {
-        Attack();
-    }
-
-    if (isMoveToTarget && !isRoar)
-    {
-        MoveToTarget();
-    }
-
-    if (isRoar)
-    {
-        if (m_pMesh->GetCurPos() > 1.0f)
+        if (isAttack)
         {
-            m_isRoar = true;
-            isRoar = false;
-            isMoveToTarget = false;
+            Attack();
+        }
+
+        if (isMoveToTarget && !isRoar)
+        {
+            MoveToTarget();
+        }
+    }
+    else
+    {
+        //죽음정의
+        if (m_pMesh->GetCurPos() >= 1.0f)
+        {
+            isAlive = false;
+            g_pCharacterManager->PushBoss(this);
         }
     }
     D3DXMatrixLookAtLH(&m_MatRotate, &D3DXVECTOR3(0, 0, 0), &m_vDir, &D3DXVECTOR3(0, 1, 0));

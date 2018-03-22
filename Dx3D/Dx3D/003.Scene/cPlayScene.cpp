@@ -8,7 +8,7 @@ cPlayScene::cPlayScene()
     : m_pPlayerStatUILayer(NULL)
     , m_pTargetStatUILayer(NULL)
     , m_pMonsterHPUILayer(NULL)
-	, m_stMapInfo(NULL)
+    , m_stMapInfo(NULL)
     , m_pCamera(NULL)
     , m_pGameMap(NULL)
     , m_pTextureShader(NULL)
@@ -22,6 +22,9 @@ cPlayScene::cPlayScene()
     , m_pPlayer(NULL)
     , m_pQuest(NULL)
     , m_isRoar(false)
+    , m_pParticleIce(NULL)
+    , m_pParticleCherry(NULL)
+    , m_pParticleEffect(NULL)
 {
 }
 
@@ -187,7 +190,7 @@ HRESULT cPlayScene::Start()
         m_pCamera->SetLookatOffset(8.0f);
         g_pCameraManager->AddCamera("play", m_pCamera);
         g_pCameraManager->SetCollisionMesh(m_stMapInfo->pTerrainMesh);
-        g_pCameraManager->EnableCollider();
+        g_pCameraManager->DisableCollider();
     }
     m_pCamera->Setup();
     g_pCameraManager->SetCurrCamera("play");
@@ -208,30 +211,99 @@ HRESULT cPlayScene::Start()
         m_pMonsterHPUILayer->Setup();
     }
 
+
     //  파티클 세팅
     if (!m_pParticleFrost)
     {
-        float power = 1.0f;
+        float power = 2.0f;
         Matrix4 mat;
         m_pPlayer->GetSwordMatrix(mat);
         Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
 
-        m_pParticleFrost = new cParticle(&pos, 1, 100);
-        m_pParticleFrost->Init("snow");
+        m_pParticleFrost = new cParticle(&pos, 20, 200, true, Vector3(-1.0f, 0, -0.5f), Vector3(0.5f, 1, 0.5f));
+        m_pParticleFrost->Init("smog01");
         ST_PARTICLE_ATTR attr;
-        attr.fGravity = 0.01f;
+        attr.fGravity = -0.03f;
         attr.isLoop = true;
-        attr.deltaAccelMin = Vector3(-power * 0.1f, -power * 0.5f, -power * 0.1f);
-        attr.deltaAccelMax = Vector3(power * 0.1f, -power * 1.5f, power * 0.1f);
-        attr.life = 3.0f;
-        attr.fSpeed = 1.0f;
-        attr.fMinLife = 5.0f;
-        attr.fMaxLife = 10.0f;
-        attr.color = XColor(1.0f, 1.0f, 1.0f, 1.0f);
-        attr.isFade = false;
-        m_pParticleFrost->SetSize(0.5f);
-        m_pParticleFrost->SetGenTerm(1.0f);
+        attr.deltaAccelMin = Vector3(power * 0.5f, -power * 0.0f, power * 0.5f);
+        attr.deltaAccelMax = Vector3(-power * 0.5f, -power * 1.5f, -power * 0.5f);
+        attr.life = 0.5f;
+        attr.fSpeed = 0.04f;
+        attr.vAccel = Vector3(0.2f, 0.1f, 0.4f);
+        attr.fMinLife = 0.1f;
+        attr.fMaxLife = 0.9f;
+        attr.color = D3DCOLOR_RGBA(0, 20, 250, 255);
+        attr.isFade = true;
+        attr.fadeColor = D3DCOLOR_RGBA(0, 25, 250, 180);
+        m_pParticleFrost->SetSize(3.5f);
+        m_pParticleFrost->SetGenTerm(0.4f);
         m_pParticleFrost->Reset(attr);
+        m_pParticleFrost->RemoveBlack(true);
+    }
+
+    if (!m_pParticleIce)
+    {
+        float power = 1.0f;
+        Vector3 pos = m_pPlayer->GetPosition();
+
+        m_pParticleIce = new cParticle(&pos, 20, 100, true, Vector3(-3, 0, -3), Vector3(3, 0.5f, 3));
+        m_pParticleIce->Init("smog04");
+        ST_PARTICLE_ATTR attr;
+        attr.fGravity = -0.08f;
+        attr.isLoop = true;
+        attr.deltaAccelMin = Vector3(power * 0.5f, -power * 0.5f, power * 0.5f);
+        attr.deltaAccelMax = Vector3(-power * 0.5f, -power * 0.5f, -power * 0.5f);
+        attr.life = 2.3f;
+        attr.fSpeed = 0.1f;
+        attr.fMinLife = 2.3f;
+        attr.fMaxLife = 3.7f;
+        attr.isVariableSpeed = true;
+        attr.color = D3DCOLOR_RGBA(187, 39, 5, 15);
+        attr.isFade = false;
+        m_pParticleIce->SetSize(4.5f);
+        m_pParticleIce->SetGenTerm(0.5f);
+        m_pParticleIce->Reset(attr);
+        m_pParticleIce->RemoveBlack(true);
+    }
+
+    if (!m_pParticleCherry)
+    {
+        float power = 2.0f;
+        Matrix4 mat;
+        m_pPlayer->GetSwordMatrix(mat);
+        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41, mat._42, mat._43) : Vector3(0, 0, 0);
+
+        m_pParticleCherry = new cParticle(&pos, 40, 1000, true, Vector3(-60, 40, -60), Vector3(60, 120, 60));
+        m_pParticleCherry->Init("leaf01");
+        ST_PARTICLE_ATTR attr;
+        attr.fGravity = 0.05f;
+        attr.isLoop = true;
+        attr.deltaAccelMin = Vector3(power * 0.5f, -power * 0.0f, power * 0.5f);
+        attr.deltaAccelMax = Vector3(-power * 0.5f, -power * 1.5f, -power * 0.5f);
+        attr.life = 15;
+        attr.fSpeed = 0.2f;
+        attr.vAccel = Vector3(0.2f, 0.1f, 0.4f);
+        attr.fMinLife = 10.0f;
+        attr.fMaxLife = 15;
+        attr.color = D3DCOLOR_RGBA(245, 192, 247, 220);
+        attr.isFade = false;
+        m_pParticleCherry->SetSize(2);
+        m_pParticleCherry->SetGenTerm(0.1f);
+        m_pParticleCherry->Reset(attr);
+    }
+
+    // 이펙트 부분
+    if (!m_pParticleEffect)
+    {
+        Vector3 pos = m_pPlayer->GetPosition();
+        m_pParticleEffect = new cParticle(&pos, 30);
+        m_pParticleEffect->Init("effect03");
+
+        m_pParticleEffect->SetSize(5.0f);
+        m_pParticleEffect->SetGenTerm(1);
+
+        m_pParticleEffect->Reset();
+        m_pParticleEffect->RemoveBlack(true);
     }
 
     //  QUEST 세팅
@@ -243,6 +315,11 @@ HRESULT cPlayScene::Start()
 
 HRESULT cPlayScene::Update()
 {
+    if (g_pKeyManager->isOnceKeyDown('T'))
+    {
+        m_pParticleEffect->Reset();
+    }
+
     // == 수정 해야 하는 부분!!! 상점 활성화!!
     if (g_pKeyManager->isOnceKeyDown('O'))
     {
@@ -321,7 +398,37 @@ HRESULT cPlayScene::Update()
         m_pParticleFrost->SetPosition(pos);
         m_pParticleFrost->Update();
     }
-    
+
+    if (m_pParticleIce)
+    {
+        Vector3 pos = m_pPlayer->GetPosition();
+        //Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41 - 1, mat._42, mat._43) : Vector3(0, 0, 0);
+
+        m_pParticleIce->SetPosition(pos);
+        m_pParticleIce->Update();
+    }
+
+
+    if (m_pParticleCherry)
+    {
+        Matrix4 mat;
+        m_pPlayer->GetSwordMatrix(mat);
+        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41 - 1, mat._42, mat._43) : Vector3(0, 0, 0);
+
+        m_pParticleCherry->SetPosition(pos);
+        m_pParticleCherry->Update();
+    }
+
+    if (m_pParticleEffect)
+    {
+        Matrix4 mat;
+        m_pPlayer->GetSwordMatrix(mat);
+        Vector3 pos = m_pPlayer != NULL ? Vector3(mat._41 - 1, mat._42, mat._43) : Vector3(0, 0, 0);
+
+        m_pParticleEffect->SetPosition(pos);
+        m_pParticleEffect->UpdateCircle();
+    }
+
     // 위치 체크
     Vector3 Pos = m_pPlayer->GetPosition();
     m_pGameMap->GetHeight(Pos);
@@ -330,7 +437,16 @@ HRESULT cPlayScene::Update()
     //REGEN
     if (m_vecMonster->size() == 0)
     {
-        CreateMonster();
+        for (int i = 0; i < m_stMapInfo->vecEventInfo.size(); i++)
+        {
+            if (m_stMapInfo->vecEventInfo[i].szName == "monster")
+            {
+                cMonster* m_pEnermy = g_pCharacterManager->GetMonster(m_szMapKey);
+                m_pEnermy->SetStartPoint(m_stMapInfo->vecEventInfo[i].vPos);
+                m_pEnermy->SetActive(true);
+                (*m_vecMonster).push_back(m_pEnermy);
+            }
+        }
     }
 
     //MONSTER SUMMON
@@ -389,7 +505,7 @@ HRESULT cPlayScene::Update()
             }
             else
             {
-                (*iter)->SetMoveSpeed(12.0f);
+                (*iter)->SetMoveSpeed(14.0f);
             }
         }
 
@@ -608,6 +724,21 @@ HRESULT cPlayScene::Render()
         m_pParticleFrost->Render();
     }
 
+    if (m_pParticleCherry)
+    {
+        m_pParticleCherry->Render();
+    }
+
+    if (m_pParticleIce)
+    {
+        m_pParticleIce->Render();
+    }
+
+    if (m_pParticleEffect)
+    {
+        m_pParticleCherry->Render();
+    }
+
     if (m_pQuest)
     {
         m_pQuest->Render();
@@ -632,6 +763,9 @@ ULONG cPlayScene::Release()
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pParticleFrost);
+    SAFE_DELETE(m_pParticleIce);
+    SAFE_DELETE(m_pParticleCherry);
+    SAFE_DELETE(m_pParticleEffect);
     SAFE_RELEASE(m_pQuest);
     SAFE_RELEASE(m_pShop);
     SAFE_RELEASE(m_pInventory);

@@ -40,6 +40,7 @@ cPlayer::cPlayer(string szKey)
     , m_isMouse(false)
     , m_fScale(0.0f)
     , m_fCenter(0.0f)
+    , m_fRecoveryCount(0.0f)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -77,6 +78,12 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
+    if (m_stStat.fCurHP < 0.0f)
+    {
+        m_stStat.fCurHP = 1.0f;
+        PostQuitMessage(1);
+    }
+
     if (g_pKeyManager->isOnceKeyDown(VK_ESCAPE))
     {
         m_pTarget = NULL;
@@ -86,6 +93,16 @@ void cPlayer::Update()
     {
         cout << "공격력:" << m_stStat.fATK << endl;
         cout << "현재경험치:" << m_stStat.nCurEXP << endl;
+    }
+
+    // 쉬프트 누를시
+    // 타켓을 정해준다
+    if (g_pKeyManager->isOnceKeyDown(VK_TAB))
+    {
+        if ((*m_vecMonster).size() > 0)
+        {
+            NearestSearch((*m_vecMonster));
+        }
     }
 
     //레벨업
@@ -98,34 +115,90 @@ void cPlayer::Update()
         //cout << "현재 레벨:" << m_stStat.Level << endl;
     }
 
-    if (!isAttack)
+    if (m_isUsingRoar)
+    {
+        m_fRoartime -= g_pTimerManager->GetDeltaTime();
+        if (m_fRoartime <= 0.0f)
+        {
+            m_stStat.fMaxHP -= 500.0f;
+            m_stStat.fCurHP > m_stStat.fMaxHP ? m_stStat.fCurHP = m_stStat.fMaxHP : m_stStat.fCurHP;
+            m_stStat.fATK -= 100.0f;
+            m_stStat.fDEF -= 50.0f;
+            m_fScale = 8.0f;
+            m_isUsingRoar = false;
+        }
+    }
+    
+    if (!isAttack && !isAction)
     {
         //오른쪽 버튼 누를시
         if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
         {
+            isRecovery = false;
+            m_fRecoveryCount = 0.0f;
             m_isMouse = true;
             cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
             PickMonster(ray);
             PickGround(ray);
         }
-
+        
         //기본 공격
         if (g_pKeyManager->isOnceKeyDown('1'))
         {
+            isRecovery = false;
+            m_fRecoveryCount = 0.0f;
             m_isPoint = true;
             AttackAnim();
+        }
+
+        //원거리 스킬
+        if (g_pKeyManager->isOnceKeyDown('2'))
+        {
+            isRecovery = false;
+            m_fRecoveryCount = 0.0f;
+        }
+
+        //위협
+        if (g_pKeyManager->isOnceKeyDown('3')&& !isRoar)
+        {
+            if (m_stStat.fCurMP >= 50.0f)
+            {
+                isRecovery = false;
+                m_fRecoveryCount = 0.0f;
+                RoarAnim();
+                isAction = true;
+                m_isMoveToPoint = false;
+                m_fMoveSpeed = 0.0f;
+
+                if (!m_isUsingRoar)
+                {
+                    m_stStat.fCurHP += 500.0f;
+                    m_stStat.fMaxHP += 500.0f;
+                    m_stStat.fATK += 100.0f;
+                    m_stStat.fDEF += 50.0f;
+                    m_fScale = 12.0f;
+                    m_isUsingRoar = true;
+                }
+                m_fRoartime = 50.0f;
+            }
         }
 
         //공격중이아니라면 이동할수있고 회복스킬을 쓸수있다.
         if (g_pKeyManager->isOnceKeyDown('Q'))
         {
             // 바로 액션이 아니라 모션이 다지나야지 액션이가능함
-            Action("Heal", 50.0f);
+            if (m_stStat.fCurMP >= 50.0f && m_stStat.fCurHP < m_stStat.fMaxHP)
+            {
+                Action("Heal", 50.0f + m_stStat.fINT * 4);
+                m_stStat.fCurMP -= 50.0f;
+            }
         }
 
         
         if (g_pKeyManager->isOnceKeyDown('W'))
         {
+            isRecovery = false;
+            m_fRecoveryCount = 0.0f;
             m_isMoveToPoint = false;
             isMoveToTarget = false;
             m_isMouse = false;
@@ -166,6 +239,21 @@ void cPlayer::Update()
         {
             IdleAnim();
         }
+
+        //체젠마젠
+        if (isRecovery)
+        {
+            m_stStat.fCurHP < m_stStat.fMaxHP ? m_stStat.fCurHP += m_stStat.fHPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurHP = m_stStat.fMaxHP;
+            m_stStat.fCurMP < m_stStat.fMaxMP ? m_stStat.fCurMP += m_stStat.fMPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurMP = m_stStat.fMaxMP;
+        }
+        else
+        {
+            m_fRecoveryCount += g_pTimerManager->GetDeltaTime();
+            if (m_fRecoveryCount > 5.0f)
+            {
+                isRecovery = true;
+            }
+        }
         
     }
     else
@@ -174,7 +262,7 @@ void cPlayer::Update()
         //일정 타이밍에 데미지가 들어가게
         if (m_pMesh->GetAnimName() == "Attack0")
         {
-            if (m_isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack"].mapPosition["attack"])
+            if (m_isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack0"].mapPosition["attack"])
             {
                 m_isPoint = false;
                 if (m_pTarget)
@@ -200,7 +288,39 @@ void cPlayer::Update()
                 IdleAnim();
             }
         }
+        else if (m_pMesh->GetAnimName() == "Attack1")
+        {
+            if (m_isPoint && m_pMesh->GetdescPos() >= m_pMesh->GetStateInfo()["Attack1"].mapPosition["attack"])
+            {
+                m_isPoint = false;
+                if (m_pTarget)
+                {
+                    //데미지 계산식을 넣어야함
+                    Action("Attack", m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF);
+
+                    m_pTarget->RayCast(this); // 어그로 주고
+                    if (m_pTarget->GetTag() == MONSTER)
+                    {
+                        cMonster* Target = (cMonster*)m_pTarget;
+                        Target->SetAggroTime(AggroTime);
+                    }
+                }
+            }
+            if (m_pMesh->GetCurPos() >= 1.0f)
+            {
+                IdleAnim();
+            }
+        }
         //일정 타이밍이없다면 그냥 데미지가 들어가게
+        else if (isRoar)
+        {
+            if (m_pMesh->GetCurPos() >= 1.0f)
+            {
+                isAction = false;
+                isRoar = false;
+                IdleAnim();
+            }
+        }
         else
         {
             if (m_pMesh->GetCurPos() >= 1.0f)
@@ -223,16 +343,6 @@ void cPlayer::Update()
                 }
                 IdleAnim();
             }
-        }
-    }
-
-    // 쉬프트 누를시
-    // 타켓을 정해준다
-    if (g_pKeyManager->isOnceKeyDown(VK_TAB))
-    {
-        if ((*m_vecMonster).size() > 0)
-        {
-            NearestSearch((*m_vecMonster));
         }
     }
 
@@ -298,6 +408,7 @@ void cPlayer::PickMonster(cRay ray)
     {
         if (ray.IsPicked(&(*iter)->GetSphere()))
         {
+            isRecovery = false;
             m_isPickMonster = true;
             m_isMoveToPoint = false;
             isMoveToTarget = true;
@@ -414,8 +525,8 @@ void cPlayer::SetLevelToStatus(string szKey, int Level)
     m_stStat.fCurMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
     m_stStat.fMaxMP = (float)status[szKey]["MP"] + Level * (float)status[szKey]["UPMP"];
 
-    m_stStat.fHPGen = (float)status[szKey]["HPGEN"];
-    m_stStat.fMPGen = (float)status[szKey]["MPGEN"];
+    m_stStat.fHPGen = (float)status[szKey]["HPGEN"] + Level * (float)status[szKey]["UPHPGEN"];
+    m_stStat.fMPGen = (float)status[szKey]["MPGEN"] + Level * (float)status[szKey]["UPMPGEN"];
 
     m_stStat.fSpeed = (float)status[szKey]["SPEED"];
     m_stStat.fCritical = (float)status[szKey]["CRITICAL"];

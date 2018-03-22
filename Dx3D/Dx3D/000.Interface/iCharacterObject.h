@@ -41,8 +41,10 @@ protected:
     bool            isIdle;
     bool            isHeal;
     bool            isRoar;
-    bool            isStatic; //
-    bool            isActive; // 
+
+    bool            isRecovery;
+    bool            isAction; //
+    bool            isActive; // 움직일지 말지 체크
     bool            isAlive; // 살아있는 유무체크
     bool            isMoveToTarget; // 타겟으로 이동하는 불값
 
@@ -76,7 +78,9 @@ public:
     virtual void SetIdle(bool Idle) PURE;
     virtual void SetHeal(bool Heal) PURE;
     virtual void SetRoar(bool Roar) PURE;
-    virtual void SetStatic(bool Static) PURE;
+
+    virtual void SetRecovery(bool Recovery) PURE;
+    virtual void SetAction(bool Action) PURE;
     virtual void SetActive(bool Active) PURE;
     virtual void SetAlive(bool Alive) PURE;
     virtual void SetMoveToTarget(bool MoveToTarget) PURE;
@@ -107,7 +111,9 @@ public:
     virtual bool GetIdle() PURE;
     virtual bool GetHeal() PURE;
     virtual bool GetRoar() PURE;
-    virtual bool GetStatic() PURE;
+
+    virtual bool GetRecovery() PURE;
+    virtual bool GetAction() PURE;
     virtual bool GetActive() PURE;
     virtual bool GetAlive() PURE;
     virtual bool GetMoveToTarget() PURE;

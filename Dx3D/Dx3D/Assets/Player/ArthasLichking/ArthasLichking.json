@@ -23,6 +23,12 @@
         },
         {
             "Name": "Attack1",
+            "Position": [
+                {
+                    "Name": "attack",
+                    "Value": "0.826000"
+                }
+            ],
             "index": "5"
         },
         {

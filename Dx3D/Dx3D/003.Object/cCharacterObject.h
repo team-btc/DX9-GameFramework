@@ -44,7 +44,9 @@ public:
     virtual void SetIdle(bool Idle) override { isIdle = Idle; }
     virtual void SetHeal(bool Heal) override { isHeal = Heal; }
     virtual void SetRoar(bool Roar) override { isRoar = Roar; }
-    virtual void SetStatic(bool Static) override { isStatic = Static; }
+
+    virtual void SetRecovery(bool Recovery) override { isRecovery = Recovery; }
+    virtual void SetAction(bool Action) override { isAction = Action; }
     virtual void SetActive(bool Active) override { isActive = Active; }
     virtual void SetAlive(bool Alive) override { isAlive = Alive; }
     virtual void SetMoveToTarget(bool MoveToTarget) { isMoveToTarget = MoveToTarget; }
@@ -75,7 +77,9 @@ public:
     virtual bool GetIdle() override { return isIdle; }
     virtual bool GetHeal() override { return isHeal; }
     virtual bool GetRoar() override { return isRoar; }
-    virtual bool GetStatic() override { return isStatic; }
+
+    virtual bool GetRecovery() override { return isRecovery; }
+    virtual bool GetAction() override { return isAction; }
     virtual bool GetActive() override { return isActive; }
     virtual bool GetAlive() override { return isAlive; }
     virtual bool GetMoveToTarget() override { return isMoveToTarget; }

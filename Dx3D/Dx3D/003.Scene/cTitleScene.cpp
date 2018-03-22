@@ -237,6 +237,12 @@ HRESULT cTitleScene::Update()
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 1.7f;
     }
 
+    if (g_pKeyManager->isOnceKeyDown(VK_RETURN))
+    {
+        m_nCurrIndex = 10;
+    }
+
+
     return S_OK;
 }
 

@@ -46,7 +46,10 @@ private:
     cInventory*                     m_pInventory;
     cGear*                          m_pGear;
 
-    cParticle*                      m_pParticleFrost;
+    cParticle*                      m_pParticleFrost; 
+    cParticle*                      m_pParticleIce;
+    cParticle*                      m_pParticleCherry;  // ∫¢≤…
+    cParticle*                      m_pParticleEffect;  // ¿Ã∆Â∆Æ 
 
     cQuest*                         m_pQuest;
 
