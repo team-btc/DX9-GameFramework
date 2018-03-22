@@ -60,7 +60,7 @@ void cMainGame::Setup()
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
-    hr = g_pScnManager->ChangeScene("title");
+    hr = g_pScnManager->ChangeScene("play"); // 시작 변경점
 }
 
 void cMainGame::Update()

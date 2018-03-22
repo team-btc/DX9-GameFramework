@@ -58,6 +58,7 @@ public:
         return &m_stBoundingSphere;
     }
     float GetdescPos();
+    float GetAllPos();
     float GetCurPos();
     string GetAnimName();
     void SetAnimationByName(string szAnimName);

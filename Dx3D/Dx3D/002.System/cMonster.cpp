@@ -77,7 +77,7 @@ void cMonster::Setup()
     isRun = false;
     isIdle = false;
     isHeal = false;
-    isStatic = false;
+    isAction = false;
     isActive = false;
     isAlive = true;
     isMoveToTarget = false;
@@ -93,12 +93,6 @@ void cMonster::Setup()
 
 void cMonster::Update()
 {
-    if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
-    {
-        isAlive = false;
-        g_pCharacterManager->PushMonster(this);
-    }
-
     if (m_stStat.fCurHP <= 0 && isActive)
     {
         isActive = false;
@@ -106,6 +100,9 @@ void cMonster::Update()
         ST_STATUS TargetStatus = m_pTarget->GetStatus();
         TargetStatus.nCurEXP += m_stStat.nMaxEXP;
         m_pTarget->SetStatus(TargetStatus);
+        int Money = (int)GetRandomFloat(30.0f, 100.0f);
+        g_pGameManager->Pay(Money);
+        cout << "얻은 돈 :" << Money << endl;
         cout << "얻은경험치:" << m_stStat.nMaxEXP << endl;
         cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
 
@@ -121,6 +118,7 @@ void cMonster::Update()
         if (m_fAggroTime <= 0.0f)
         {
             m_pTarget = NULL;
+            m_fMoveCount = 0.0f;
             m_vDest = m_vStartPoint;
             //m_isMove = false;
             RunAnim();
@@ -129,6 +127,7 @@ void cMonster::Update()
 
         if (m_pTarget)
         {
+            isRecovery = false;
             isMove = true;
             m_vDir = m_pTarget->GetPosition() - m_vPosition;
             float Distance = D3DXVec3Length(&m_vDir);
@@ -211,15 +210,28 @@ void cMonster::Update()
             
             if (m_fMoveCount > 10.0f)
             {
+                if (!isRecovery)
+                    isRecovery = true;
                 isMove = true;
                 m_fMoveCount = 0.0f;
                 m_vDest = m_vStartPoint + GetRandomVector3(Vector3(-m_fMoveRadius, 0, -m_fMoveRadius), Vector3(m_fMoveRadius, 0, m_fMoveRadius));
-                //WalkAnim();
+                WalkAnim();
+            }
+
+            if (isRecovery)//체 마젠
+            {
+                m_stStat.fCurHP < m_stStat.fMaxHP ? m_stStat.fCurHP += m_stStat.fHPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurHP = m_stStat.fMaxHP;
+                m_stStat.fCurMP < m_stStat.fMaxMP ? m_stStat.fCurMP += m_stStat.fMPGen * g_pTimerManager->GetDeltaTime() : m_stStat.fCurMP = m_stStat.fMaxMP;
             }
         }
     }
     else
     {
+        if (m_pMesh->GetCurPos() >= 1.0f) // 실제로 데이터 리턴
+        {
+            isAlive = false;
+            g_pCharacterManager->PushMonster(this);
+        }
     }
 
     m_pMesh->SetScale(m_fScale);

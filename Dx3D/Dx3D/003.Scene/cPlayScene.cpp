@@ -255,18 +255,18 @@ HRESULT cPlayScene::Update()
     //  UPDATE CAMERA
     if (m_pCamera)
     {
-        if (m_pShop)
-        {
-            // 마우스 컨트롤 가능 여부 셋팅
-            if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
-            {
-                m_pCamera->SetControl(false);
-            }
-            else
-            {
-                m_pCamera->SetControl(true);
-            }
-        }
+        //if (m_pShop)
+        //{
+        //    // 마우스 컨트롤 가능 여부 셋팅
+        //    if (m_pShop->GetClickShop() || m_pInventory->GetIsClickInven())
+        //    {
+        //        m_pCamera->SetControl(false);
+        //    }
+        //    else
+        //    {
+        //        m_pCamera->SetControl(true);
+        //    }
+        //}
 
         if (m_pPlayer)
         {

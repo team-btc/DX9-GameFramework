@@ -2,6 +2,7 @@
 #include "cCharacterObject.h"
 #include "cSkinnedMesh.h"
 #include "cMonster.h"
+#include "cPlayer.h"
 
 
 cCharacterObject::cCharacterObject()
@@ -32,7 +33,9 @@ cCharacterObject::cCharacterObject()
    isWalk = false;
    isIdle = false;
    isHeal = false;
-   isStatic = false;
+   isRoar = false;
+   isRecovery = false;
+   isAction = false;
    isActive = false;
    isAlive = true;
    isMoveToTarget = false;
@@ -88,7 +91,11 @@ void cCharacterObject::Attack(float ATK)
     {
         //데미지 계산식을 넣어야함
         m_pTarget->GetStatus().fCurHP -= ATK;
-        //cout << m_pTarget->GetStatus().fCurHP << endl;
+        if (m_pTarget->GetTag() == PLAYER)
+        {
+            cPlayer* Player = (cPlayer*)m_pTarget;
+            Player->SetRecoveryCount(0.0f);
+        }
     }
 }
 
@@ -199,6 +206,7 @@ void cCharacterObject::FalseAnim()
    isIdle = false;
    isHeal = false;
    isRoar = false;
+   //isRecovery = false;
 }
 
 void cCharacterObject::MoveForword()
