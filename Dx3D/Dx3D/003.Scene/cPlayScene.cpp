@@ -336,26 +336,48 @@ HRESULT cPlayScene::Update()
         m_pParticleEffect->Reset();
     }
 
-    // == 수정 해야 하는 부분!!! 상점 활성화!!
-    if (g_pKeyManager->isOnceKeyDown('O'))
+    if (g_pKeyManager->isOnceKeyDown('V'))
     {
-        m_pShop->OpenShop();
-
-        // 인벤도 오픈
-        if (m_pInventory && !m_pInventory->GetIsOpen())
+        if (!m_pShop->GetIsOpen())
+        {
+            m_pShop->OpenShop();
+            // 인벤도 오픈
+            if (!m_pInventory->GetIsOpen())
+            {
+                m_pInventory->OpenInventory();
+            }
+        }
+        else
+        {
+            m_pShop->CloseShop();
+            // 인벤도 닫기
+            if (m_pInventory->GetIsOpen())
+            {
+                m_pInventory->CloseInventory();
+            }
+        }
+    }
+    if (g_pKeyManager->isOnceKeyDown('B'))
+    {
+        if (!m_pInventory->GetIsOpen())
         {
             m_pInventory->OpenInventory();
         }
+        else
+        {
+            m_pInventory->CloseInventory();
+        }
     }
-    // == 수정 해야 하는 부분!!! 인벤 활성화!!
-    if (g_pKeyManager->isOnceKeyDown('I'))
+    if (g_pKeyManager->isOnceKeyDown('C'))
     {
-        m_pInventory->OpenInventory();
-    }
-    // == 수정 해야 하는 부분!!! 인벤 활성화!!
-    if (g_pKeyManager->isOnceKeyDown('P'))
-    {
-        m_pGear->OpenGear();
+        if (!m_pGear->GetIsOpen())
+        {
+            m_pGear->OpenGear();
+        }
+        else
+        {
+            m_pGear->CloseGear();
+        }
     }
 
     // SHOP UPDATE -> 상점 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
@@ -879,6 +901,8 @@ void cPlayScene::SetUI()
     // 타겟 스탯 레이어 초기화
     if (!m_pTargetStatUILayer)
     {
+        pFont = g_pFontManager->GetFont(g_pFontManager->E_SHOP_SMALL);
+
         m_pTargetStatUILayer = new cUILayer;
         m_pTargetStatUILayer->SetLayer("Target-stat", Vector3(0, 0, 0), stTargetStatSize);
         m_pTargetStatUILayer->SetActive(false);
@@ -896,7 +920,7 @@ void cPlayScene::SetUI()
         pUIProgressHP->SetSize(vTargetHPSize);
         pUIProgressHP->AddGuageTexture(szRedPath, 0, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
         pUIProgressHP->AddGuageTexture(szProgressBackPath, 1, ST_SIZE(vTargetHPSize.x, vTargetHPSize.y));
-        pUIProgressHP->SetLocalPos(Vector3(vTargetStatPos.x + 78, vTargetStatPos.y + 35, 0));
+        pUIProgressHP->SetLocalPos(Vector3(vTargetStatPos.x + 78, vTargetStatPos.y + 36, 0));
         pUIProgressHP->SetName("target-hp");
         pUIProgressHP->AddText(pFont, 0);
         m_pTargetStatUILayer->AddUIObject(pUIProgressHP);

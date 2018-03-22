@@ -323,8 +323,8 @@ void cShop::SetShopUI()
     // 현재 소지금 텍스트
     cUITextView* pMoneyText = new cUITextView;
     pMoneyText->SetName("shop-player-money-tex");
-    pMoneyText->SetLocalPos(Vector3(vShopPos.x + 50, vShopPos.y + stShopSize.h - 27, 0));
-    pMoneyText->SetSize(Vector2(150, 15));
+    pMoneyText->SetLocalPos(Vector3(vShopPos.x + 50, vShopPos.y + stShopSize.h - 32, 0));
+    pMoneyText->SetSize(Vector2(150, 25));
     pMoneyText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
     char szMoney[20];
     sprintf_s(szMoney, sizeof(szMoney), "%d", m_nPlayerMoney);
@@ -435,8 +435,8 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         // 아이템명 텍스트
         cUITextView* pNameText = new cUITextView;
         pNameText->SetName(m_vecItemInfo[i]->szName);
-        pNameText->SetLocalPos(Vector3(95, 10, 0));
-        pNameText->SetSize(Vector2(150, 15));
+        pNameText->SetLocalPos(Vector3(95, 5, 0));
+        pNameText->SetSize(Vector2(150, 25));
         pNameText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
         pNameText->SetText(m_vecItemInfo[i]->szName);
         pNameText->SetColor(D3DCOLOR_XRGB(255, 255, 0));
@@ -457,8 +457,8 @@ void cShop::SetShopItemUI(Vector3 vShopPos)
         // 가격 텍스트
         cUITextView* pPriceText = new cUITextView;
         pPriceText->SetName("price");
-        pPriceText->SetLocalPos(Vector3(115, 50, 0));
-        pPriceText->SetSize(Vector2(100, 15));
+        pPriceText->SetLocalPos(Vector3(115, 45, 0));
+        pPriceText->SetSize(Vector2(100, 25));
         pPriceText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
         char buf[20];
         sprintf_s(buf, sizeof(buf), "%d", m_vecItemInfo[i]->nPrice);
@@ -494,7 +494,7 @@ void cShop::SetPlusStatUI()
         pText->SetName(buf);
         pText->SetLocalPos(vPos);
         pText->SetSize(Vector2(100, 15));
-        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_SMALL));
         pText->SetDrawTextFormat(DT_LEFT);
         pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
         pText->SetAxtive(false);

@@ -78,8 +78,11 @@ void cUIObject::Render(LPSPRITE pSprite)
 {
     if (m_isDebugRender && m_isAxtive)
     {
-        g_pDevice->SetFVF(VertexRHWC::FVF);
-        g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &m_vecVertex[0], sizeof(VertexRHWC));
+        if (m_matWorld._11 > 0.0f)
+        {
+            g_pDevice->SetFVF(VertexRHWC::FVF);
+            g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &m_vecVertex[0], sizeof(VertexRHWC));
+        }
     }
 
     for each (auto vPos in m_vecChild)

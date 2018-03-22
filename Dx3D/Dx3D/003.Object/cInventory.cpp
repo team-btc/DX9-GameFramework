@@ -308,8 +308,8 @@ void cInventory::SetInvenUI()
     // 현재 소지금 텍스트
     cUITextView* pMoneyText = new cUITextView;
     pMoneyText->SetName("Inven-player-money-tex");
-    pMoneyText->SetLocalPos(Vector3(vInvenPos.x + 40, vInvenPos.y + stInvenSize.h - 24, 0));
-    pMoneyText->SetSize(Vector2(100, 15));
+    pMoneyText->SetLocalPos(Vector3(vInvenPos.x + 40, vInvenPos.y + stInvenSize.h - 29, 0));
+    pMoneyText->SetSize(Vector2(100, 25));
     pMoneyText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
     char szMoney[20];
     sprintf_s(szMoney, sizeof(szMoney), "%d", m_nPlayerMoney);
@@ -574,7 +574,7 @@ void cInventory::SetPlusStatUI()
         pText->SetName(buf);
         pText->SetLocalPos(vPos);
         pText->SetSize(Vector2(100, 15));
-        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_SMALL));
         pText->SetDrawTextFormat(DT_LEFT);
         pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
         pText->SetAxtive(false);

@@ -118,7 +118,23 @@ LPFONTDX cFontManager::GetFont(eFontType e)
             case cFontManager::E_SHOP_TITLE:
             {
                 D3DXCreateFont(g_pDevice,
-                    20,
+                    22,
+                    0,
+                    FW_BOLD,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("Calibri"),
+                    &m_mapFont[e]);
+                break;
+            }
+            case cFontManager::E_SHOP_BIG:
+            {
+                D3DXCreateFont(g_pDevice,
+                    25,
                     0,
                     FW_BOLD,
                     1,
@@ -134,7 +150,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
             case cFontManager::E_SHOP_DEFAULT:
             {
                 D3DXCreateFont(g_pDevice,
-                    15,
+                    20,
                     0,
                     FW_BOLD,
                     1,
@@ -144,6 +160,22 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     DEFAULT_QUALITY,
                     false,
                     _TEXT("Calibri"),
+                    &m_mapFont[e]);
+                break;
+            }
+            case cFontManager::E_SHOP_SMALL:
+            {
+                D3DXCreateFont(g_pDevice,
+                    15,
+                    0,
+                    FW_BOLD,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,7
+                    _TEXT("Calibri"),7
                     &m_mapFont[e]);
                 break;
             }
@@ -159,23 +191,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("WarCraftFont"),
-                    &m_mapFont[e]);
-                break;
-            }
-            case cFontManager::E_STAT:
-            {
-                D3DXCreateFont(g_pDevice,
-                    20,
-                    0,
-                    FW_DONTCARE,
-                    1,
-                    false,
-                    DEFAULT_CHARSET,
-                    OUT_DEFAULT_PRECIS,
-                    DEFAULT_QUALITY,
-                    false,
-                    _TEXT("Calibri"),
+                    _TEXT("WarCraft Font"),
                     &m_mapFont[e]);
                 break;
             }

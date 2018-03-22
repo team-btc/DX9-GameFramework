@@ -278,7 +278,7 @@ void cGear::SetStatText(Vector3 vGearPos)
     float fPlusY = 25;
     Vector3 vTextPos(fBaseX, vGearPos.y + 90, 0);
     Vector2 vTitleSize(45, 20);
-    Vector2 vValueSize(100, 20);
+    Vector2 vValueSize(110, 20);
     DWORD dTitleFontColor = D3DCOLOR_XRGB(255, 255, 0);
     DWORD dValueFontColor = D3DCOLOR_XRGB(255, 255, 255);
 
@@ -350,7 +350,7 @@ cUITextView* cGear::MakeStatTextUI(string name, Vector3 pos, Vector2 size, DWORD
     pTextUI->SetName(name);
     pTextUI->SetLocalPos(pos);
     pTextUI->SetSize(size);
-    pTextUI->SetFont(g_pFontManager->GetFont(g_pFontManager->E_STAT));
+    pTextUI->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
     pTextUI->SetText(name);
     pTextUI->SetDrawTextFormat(DT_LEFT);
     pTextUI->SetColor(color);
@@ -653,7 +653,7 @@ void cGear::SetPlusStatUI()
         pText->SetName(buf);
         pText->SetLocalPos(vPos);
         pText->SetSize(Vector2(100, 15));
-        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_SMALL));
         pText->SetDrawTextFormat(DT_LEFT);
         pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
         pText->SetAxtive(false);
