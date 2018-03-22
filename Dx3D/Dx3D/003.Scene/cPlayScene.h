@@ -40,7 +40,10 @@ private:
     cShop*                          m_pShop;
     cInventory*                     m_pInventory;
 
-    cParticle*                      m_pParticleFrost;
+    cParticle*                      m_pParticleFrost; 
+    cParticle*                      m_pParticleIce;
+    cParticle*                      m_pParticleCherry;  // ∫¢≤…
+    cParticle*                      m_pParticleEffect;  // ¿Ã∆Â∆Æ 
 
 private:
     void SetUI();

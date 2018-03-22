@@ -1,6 +1,9 @@
 #pragma once
 #include "cBoundingBox.h"
 
+#define TEMP_AGE (0.5f)
+#define TEMP_MULTIPLE (10.0f)
+
 // 파티클 시스템의 요소들.
 // 파티클 시스템은 파티클들의 모임이며 파티클을 보여주고 관리하는 역할을 담당한다.
 // 파티클의 크기나 파티클 원천의 위치, 파티클에 적용할 텍스처 등 
@@ -38,9 +41,21 @@ protected:
     DWORD m_vbOffset;                           //  파티클 시스템의 렌더링에 이용.
     DWORD m_vbBatchSize;                        //  파티클 시스템의 렌더링에 이용.
 
+    bool        m_isRandomPos;
+    Vector3     m_vMinRange;
+    Vector3     m_vMaxRange;
+    bool        m_isBlack;
+private:
+    void UseRandomPosition(bool bUseRandom) { m_isRandomPos = bUseRandom; }
+    void SetRandomRange(Vector3 vMinRange, Vector3 vMaxRange) { m_vMinRange = vMinRange, m_vMaxRange = vMaxRange; }
+    void AddParticleCircle();
 public:
-    cParticle();                                //  생성자
+    //  생성자
+    cParticle();             
     cParticle(Vector3* vOriginPos, int nGenNum, int nMaxNum);
+    cParticle(Vector3* vOriginPos, int nGenNum, int nMaxNum, bool bRandomPos, Vector3 vMinRange, Vector3 vMaxRange);
+    cParticle(Vector3* vOriginPos, int nMaxNum);
+
     virtual ~cParticle();                       //  소멸자 (버텍스 버퍼, 텍스쳐를 해제) 
     virtual bool Init(string szKey);            //  init - 포인트 스프라이트를 저장하기 위한 버텍스 버퍼를 만들고 텍스쳐를 설정
     virtual void Reset();                       //  시스템 내의 모든 파티클 속성을 리셋
@@ -72,7 +87,12 @@ public:
 
     void SetGenTerm(float fTerm) { m_fGenTerm = fTerm; }
     void SetSize(float size) { m_fSize = size; }
+    
     void SetPosition(Vector3 vPos) { m_vOriginPos = vPos; }
+    void RemoveBlack(bool bRemove) { m_isBlack = bRemove; }
+
+    void SetOriginParticle(ST_PARTICLE_ATTR origin) { m_particleOrigin = origin; }
+    void UpdateCircle();
 
 protected:
     // 속성 리스트 _particle을 검색하여 죽은 파티클을 리스트에서 제거.

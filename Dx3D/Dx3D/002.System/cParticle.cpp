@@ -6,6 +6,10 @@ cParticle::cParticle()
 {
     m_vertexBuffer = 0; //버텍스 버퍼
     m_vTexture = NULL;  //텍스처
+    m_isRandomPos = false;
+    m_vMinRange = Vector3(0, 0, 0);
+    m_vMaxRange = Vector3(0, 0, 0);
+    m_isBlack = false;
 }
 
 cParticle::cParticle(Vector3* vOriginPos, int nGenNum, int nMaxNum)
@@ -21,6 +25,41 @@ cParticle::cParticle(Vector3* vOriginPos, int nGenNum, int nMaxNum)
     for (int i = 0; i < nGenNum; i++)
     {
         AddParticle();
+    }
+}
+
+cParticle::cParticle(Vector3 * vOriginPos, int nGenNum, int nMaxNum, bool bRandomPos, Vector3 vMinRange, Vector3 vMaxRange)
+{
+    m_vOriginPos = *vOriginPos;
+    m_fSize = 0.9f;
+    m_vbBufferSize = 2048;
+    m_vbOffset = 0;
+    m_vbBatchSize = 512;
+    m_fGenTerm = 0.0f;
+    m_nMaxParticle = nMaxNum;
+
+    UseRandomPosition(bRandomPos);
+    SetRandomRange(vMinRange, vMaxRange);
+
+    for (int i = 0; i < nGenNum; i++)
+    {
+        AddParticle();
+    }
+}
+
+cParticle::cParticle(Vector3 * vOriginPos, int nMaxNum)
+{
+    m_vOriginPos = *vOriginPos;
+    m_fSize = 0.9f;
+    m_vbBufferSize = 2048;
+    m_vbOffset = 0;
+    m_vbBatchSize = 512;
+    m_fGenTerm = 0.0f;
+    m_nMaxParticle = nMaxNum;
+
+    for (int i = 0; i < nMaxNum; i++)
+    {
+        AddParticleCircle();
     }
 }
 
@@ -108,7 +147,9 @@ void cParticle::AddParticle()
 {
     ST_PARTICLE_ATTR attribute;
     attribute = m_particleOrigin;
+
     attribute.vPos = m_vOriginPos;
+
     ResetParticle(&attribute, m_particleOrigin);
     m_particleList.push_back(attribute);
 }
@@ -135,6 +176,13 @@ void cParticle::PreRender()
     g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+
+    if (m_isBlack)
+    {
+        g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+        g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+    }
 }
 
 // 특정 파티클 시스템이 지정했을 수 있는 렌더 상태를 복구하는 데 이용.
@@ -283,30 +331,45 @@ void cParticle::ResetParticle(ST_PARTICLE_ATTR* attribute)
     D3DXVec3Normalize(
         &attribute->vSpeed,
         &attribute->vSpeed);
-    attribute->vSpeed *= 100.0f;
-    attribute->color = XColor(
-        GetRandomFloat(0.0f, 1.0f),
-        GetRandomFloat(0.0f, 1.0f),
-        GetRandomFloat(0.0f, 1.0f),
-        1.0f);
+
+    attribute->vSpeed *= TEMP_MULTIPLE;
+   
+    //attribute->color = XColor(
+    //    GetRandomFloat(0.0f, 1.0f),
+    //    GetRandomFloat(0.0f, 1.0f),
+    //    GetRandomFloat(0.0f, 1.0f),
+    //    1.0f);
+
+    attribute->color = XColor(1, 1, 1, 1);
+
+   
     attribute->age = 0.0f;
-    attribute->life = 2.0f;
-    // 2초 동안의 수명을 가진다. 
+    attribute->life = TEMP_AGE;
+    // 0.5초 동안의 수명을 가진다. 
 }
 
 void cParticle::ResetParticle(ST_PARTICLE_ATTR* attrDest, ST_PARTICLE_ATTR attrOrigin)
 {
     *attrDest = attrOrigin;
-    attrDest->vPos = m_vOriginPos;
+
+    if (m_isRandomPos)
+    {
+        attrDest->vPos = m_vOriginPos + GetRandomVector3(m_vMinRange, m_vMaxRange);
+    }
+    else
+    {
+        attrDest->vPos = m_vOriginPos;
+    }
+
     Vector3 min = attrOrigin.deltaAccelMin;
     Vector3 max = attrOrigin.deltaAccelMax;
 
     // 랜덤한 속도 생성
     attrDest->vSpeed = GetRandomVector3(min, max);
 
-    //D3DXVec3Normalize(
-    //    &attrDest->vSpeed,
-    //    &attrDest->vSpeed);
+  /*  D3DXVec3Normalize(
+        &attrDest->vSpeed,
+        &attrDest->vSpeed);*/
     attrDest->vSpeed *= attrDest->fSpeed;
 
     attrDest->life = GetRandomFloat(attrDest->fMinLife, attrDest->fMaxLife);
@@ -353,6 +416,37 @@ void cParticle::Update()
                 {
                     i->isAlive = false;
                 }
+            }
+        }
+    }
+}
+
+void cParticle::AddParticleCircle()
+{
+    ST_PARTICLE_ATTR attribute;
+    attribute.vPos = m_vOriginPos;
+
+    ResetParticle(&attribute);
+    m_particleList.push_back(attribute);
+
+}
+
+void cParticle::UpdateCircle()
+{
+    for (auto iter = m_particleList.begin(); iter != m_particleList.end(); ++iter)
+    {
+        // 살아있는 것만 업데이트
+        if (iter->isAlive)
+        {
+            float time = g_pTimerManager->GetDeltaTime();
+
+            iter->vPos += (iter->vSpeed * time);
+
+            iter->age += time;
+
+            if (iter->age > iter->life)	//수명이 끝났음
+            {
+                iter->isAlive = false;
             }
         }
     }
