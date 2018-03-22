@@ -7,6 +7,7 @@
 
 cInventory::cInventory()
     : m_pInvenLayer(NULL)
+    , m_pPlusStatLayer(NULL)
     , m_nPlayerMoney(g_pGameManager->GetCurrGold())
     , m_nCurrSelectItem(-1)
     , m_nSlotMaxNum(12)
@@ -19,6 +20,8 @@ cInventory::cInventory()
     m_rtInvenSize.bottom = m_rtInvenSize.top + (LONG)(W_HEIGHT * 0.35f);
 
     m_stItemSize = ST_SIZE(60, 60);
+
+    m_stPlusStatDefSize = ST_SIZE(100, 20);
 
     g_pSndManager->AddSound("inven-open", "inven", "Assets\\Sound\\Effect\\Common\\pickupbag.ogg");
     g_pSndManager->AddSound("inven-close", "inven", "Assets\\Sound\\Effect\\Common\\putdownbag.ogg");
@@ -37,13 +40,22 @@ void cInventory::Setup()
     m_pInvenLayer->SetLayer("Inven", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
     m_pInvenLayer->SetActive(true);
 
+    m_pPlusStatLayer = new cUILayer;
+    m_pPlusStatLayer->SetLayer("plus-stat", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
+    m_pPlusStatLayer->SetActive(false);
+
     m_vecInvenItem = g_pGameManager->GetInvetoryInfo();
 
     SetInvenUI();
+    SetPlusStatUI();
 
     if (m_pInvenLayer)
     {
         m_pInvenLayer->Setup();
+    }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Setup();
     }
 }
 
@@ -67,6 +79,16 @@ void cInventory::Update()
         g_pKeyManager->isOnceKeyDown(VK_LBUTTON);
         g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
         m_isClickInven = true;
+
+        // 아이템에 마우스가 올려져있는지 체크하고 레이어 셋팅
+        if (!CheckPtInItem())
+        {
+            m_pPlusStatLayer->SetActive(false);
+        }
+    }
+    else
+    {
+        m_pPlusStatLayer->SetActive(false);
     }
 
     // 플레이어 소지금 텍스쳐 변경
@@ -154,6 +176,11 @@ void cInventory::Update()
     }
 
     m_pInvenLayer->Update();
+
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Update();
+    }
 }
 
 void cInventory::Render()
@@ -161,6 +188,10 @@ void cInventory::Render()
     if (m_pInvenLayer)
     {
         m_pInvenLayer->Render();
+    }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Render();
     }
 }
 
@@ -190,6 +221,7 @@ void cInventory::CloseInventory()
 ULONG cInventory::Release(void)
 {
     SAFE_DELETE(m_pInvenLayer);
+    SAFE_DELETE(m_pPlusStatLayer);
 
     return cObject::Release();
 }
@@ -327,6 +359,14 @@ void cInventory::SetItemUI(Vector3 vInvenPos)
                 vItemPos.x += fPlusX;
             }
         }
+
+        // 렉트 만들기
+        RECT rtItem;
+        rtItem.left = (LONG)vItemPos.x;
+        rtItem.top = (LONG)vItemPos.y;
+        rtItem.right = rtItem.left + (LONG)stItemSize.w;
+        rtItem.bottom = rtItem.top + (LONG)stItemSize.h;
+        m_vecItemRect.push_back(rtItem);
 
         // 슬롯 이미지
         cUIImageView* pSlotImage = new cUIImageView;
@@ -506,4 +546,106 @@ void cInventory::UpdateItemUI()
             }
         }
     }
+}
+
+void cInventory::SetPlusStatUI()
+{
+    // 배경
+    cUIImageView* pBGImage = new cUIImageView;
+    string szPath = INTERFACE_PATH + (string)"stat-bg.png";
+    g_pTextureManager->AddTexture("stat-bg-img", szPath, true);
+    pBGImage->SetName("stat-bg-img");
+    pBGImage->SetLocalPos(Vector3(0, 0, 0));
+    IMAGE_INFO imageInfo;
+    pBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("stat-bg-img", &imageInfo));
+    pBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pBGImage->SetScale(m_stPlusStatDefSize.w / (float)imageInfo.Width, m_stPlusStatDefSize.h / (float)imageInfo.Height);
+    m_pPlusStatLayer->AddUIObject(pBGImage);
+
+    Vector3 vPos(5, 5, 0);
+    float fPlusY = 17;
+
+    // 증가 스탯 텍스트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUITextView* pText = new cUITextView;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        pText->SetName(buf);
+        pText->SetLocalPos(vPos);
+        pText->SetSize(Vector2(100, 15));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetDrawTextFormat(DT_LEFT);
+        pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
+        pText->SetAxtive(false);
+        pBGImage->AddChild(pText);
+
+        vPos.y += fPlusY;
+    }
+}
+
+void cInventory::UpdatePlusStatUI(int id, Vector3 vPos)  // 렉트 안에 마우스가 있을 때만 발동
+{
+    ST_ITEM_INFO stItem = *g_pGameManager->GetItemInfoById(id);
+
+    // 증가 스탯 업데이트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUIObject* pObject;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        m_pPlusStatLayer->FindUIObject(&pObject, buf);
+
+        if (pObject)
+        {
+            cUITextView* pText = (cUITextView*)pObject;
+
+            // 셋팅해야 하는 플러스 스탯이 있으면
+            if (i < stItem.vecPlusStat.size())
+            {
+                string szPlusName = g_pGameManager->GetStatName((E_PLAYER_STAT)stItem.vecPlusStat[i].nType);
+                sprintf_s(buf, sizeof(buf), " +%d", (int)stItem.vecPlusStat[i].fPlusValue);
+                string sztotal = szPlusName + buf;
+                pText->SetText(sztotal);
+                pText->SetAxtive(true);
+            }
+            else
+            {
+                pText->SetAxtive(false);
+            }
+        }
+    }
+    // 배경 사이즈 바꾸기
+    cUIObject* pObject;
+    m_pPlusStatLayer->FindUIObject(&pObject, "stat-bg-img");
+
+    if (pObject)
+    {
+        pObject->SetLocalPos(vPos);
+        cUIImageView* pImage = (cUIImageView*)pObject;
+        ST_SIZE stSize;
+        stSize.h = m_stPlusStatDefSize.h * stItem.vecPlusStat.size();
+        stSize.w = m_stPlusStatDefSize.w;
+        pImage->SetScale((float)stSize.w / pImage->GetSize().x, (float)stSize.h / pImage->GetSize().y);
+    }
+
+    m_pPlusStatLayer->SetActive(true);
+}
+
+// 아이템 렉트 안에 마우스가 있다면
+bool cInventory::CheckPtInItem()
+{
+    bool isIn = false;
+
+    for (int i = 0; i < m_vecInvenItem.size(); ++i)
+    {
+        if (PtInRect(&m_vecItemRect[i], g_ptMouse))
+        {
+            UpdatePlusStatUI(m_vecInvenItem[i].id, Vector3((float)g_ptMouse.x + 10, (float)g_ptMouse.y, 0));
+            isIn = true;
+            break;
+        }
+    }
+
+    return isIn;
 }

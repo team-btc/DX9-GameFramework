@@ -18,7 +18,8 @@ public:
         E_DEBUG,
         E_SHOP_TITLE,
         E_SHOP_DEFAULT,
-        E_DAMAGE
+        E_DAMAGE,
+        E_STAT
     };
 
 private:
