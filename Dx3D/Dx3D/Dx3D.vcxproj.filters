@@ -63,6 +63,7 @@
     <ClCompile Include="003.Object\cGear.cpp" />
     <ClCompile Include="003.Object\cInventory.cpp" />
     <ClCompile Include="002.System\cQuest.cpp" />
+    <ClCompile Include="cSplashScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
@@ -443,6 +444,7 @@
     <ClInclude Include="003.Object\cGear.h" />
     <ClInclude Include="003.Object\cInventory.h" />
     <ClInclude Include="002.System\cQuest.h" />
+    <ClInclude Include="cSplashScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />
