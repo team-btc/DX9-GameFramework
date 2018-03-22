@@ -13,33 +13,33 @@ cTextureManager::~cTextureManager()
 
 void cTextureManager::LoadParticleTexture()
 {
-    // ø¨±‚
-    AddTexture("smog01", "Assets\\Texture\\Particle\\smog_01.png");
-    AddTexture("smog02", "Assets\\Texture\\Particle\\smog_02.png");
-    AddTexture("smog03", "Assets\\Texture\\Particle\\smog_03.png");
-    AddTexture("smog04", "Assets\\Texture\\Particle\\smog_04.png");
+    //// ø¨±‚
+    //AddTexture("smog01", "Assets\\Texture\\Particle\\smog_01.png");
+    //AddTexture("smog02", "Assets\\Texture\\Particle\\smog_02.png");
+    //AddTexture("smog03", "Assets\\Texture\\Particle\\smog_03.png");
+    //AddTexture("smog04", "Assets\\Texture\\Particle\\smog_04.png");
 
-    // ¥´
-    AddTexture("snow01", "Assets\\Texture\\Particle\\snow_01.png");
-    AddTexture("snow02", "Assets\\Texture\\Particle\\snow_02.png");
-    AddTexture("snow03", "Assets\\Texture\\Particle\\snow_03.png");
+    //// ¥´
+    //AddTexture("snow01", "Assets\\Texture\\Particle\\snow_01.png");
+    //AddTexture("snow02", "Assets\\Texture\\Particle\\snow_02.png");
+    //AddTexture("snow03", "Assets\\Texture\\Particle\\snow_03.png");
 
-    // ¿Ÿ
-    AddTexture("leaf01", "Assets\\Texture\\Particle\\leaf_01.png");
-    AddTexture("leaf02", "Assets\\Texture\\Particle\\leaf_02.png");
-    AddTexture("leaf03", "Assets\\Texture\\Particle\\leaf_03.png");
-    AddTexture("leaf04", "Assets\\Texture\\Particle\\leaf_04.png");
+    //// ¿Ÿ
+    //AddTexture("leaf01", "Assets\\Texture\\Particle\\leaf_01.png");
+    //AddTexture("leaf02", "Assets\\Texture\\Particle\\leaf_02.png");
+    //AddTexture("leaf03", "Assets\\Texture\\Particle\\leaf_03.png");
+    //AddTexture("leaf04", "Assets\\Texture\\Particle\\leaf_04.png");
 
-    // ¿Ã∆Â∆Æ
-    AddTexture("effect01", "Assets\\Texture\\Particle\\effect_01.jpg");
-    AddTexture("effect02", "Assets\\Texture\\Particle\\effect_02.png");
-    AddTexture("effect03", "Assets\\Texture\\Particle\\effect_03.png");
+    //// ¿Ã∆Â∆Æ
+    //AddTexture("effect01", "Assets\\Texture\\Particle\\effect_01.jpg");
+    //AddTexture("effect02", "Assets\\Texture\\Particle\\effect_02.png");
+    //AddTexture("effect03", "Assets\\Texture\\Particle\\effect_03.png");
 
-    // ±‚≈∏
-    AddTexture("star01", "Assets\\Texture\\Particle\\star_01.png");
-    AddTexture("star02", "Assets\\Texture\\Particle\\star_02.png");
-    AddTexture("circle01", "Assets\\Texture\\Particle\\circle_01.png");
-    AddTexture("electronic01", "Assets\\Texture\\Particle\\electronic_01.png");
+    //// ±‚≈∏
+    //AddTexture("star01", "Assets\\Texture\\Particle\\star_01.png");
+    //AddTexture("star02", "Assets\\Texture\\Particle\\star_02.png");
+    //AddTexture("circle01", "Assets\\Texture\\Particle\\circle_01.png");
+    //AddTexture("electronic01", "Assets\\Texture\\Particle\\electronic_01.png");
     
 }
 

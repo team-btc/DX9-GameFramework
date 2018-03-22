@@ -18,16 +18,16 @@ void cCharacterManager::Setup()
     m_pPlayer = new cPlayer("arthaslichking");
     g_pAutoReleasePool->AddObject(m_pPlayer);
 
-    m_pBoss = new cBoss("Deathwing");
+    m_pBoss = new cBoss("deathwing");
     g_pAutoReleasePool->AddObject(m_pBoss);
 
     for (int i = 0; i < limitMonster; i++)
     {
-        cMonster* newMonster = new cMonster("Boar");
+        cMonster* newMonster = new cMonster("boar");
         g_pAutoReleasePool->AddObject(newMonster);
         m_vMonster.push_back(newMonster);
 
-        newMonster = new cMonster("Bear");
+        newMonster = new cMonster("bear");
         g_pAutoReleasePool->AddObject(newMonster);
         m_vMonster.push_back(newMonster);
     }
@@ -50,7 +50,7 @@ cMonster* cCharacterManager::GetMonster(string szMap)
     {
         for (auto iter = m_vMonster.begin(); iter != m_vMonster.end(); iter++)
         {
-            if ((*iter)->GetName() == "Boar")
+            if ((*iter)->GetName() == "boar")
             {
                 returnMonster = (cMonster*)(*iter);
                 returnMonster->Setup();

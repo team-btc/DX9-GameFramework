@@ -15,6 +15,7 @@ cCamera::cCamera()
     , m_fMinDist(2.0f)
     , m_vTargetPos(0.0f, 0.0f, 0.0f)
     , m_fLookatOffset(LOOKAT_POS)
+    , m_ptPrevMouse(POINT{ 0, 0 })
 {
 }
 

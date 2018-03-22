@@ -18,6 +18,11 @@ private:
     float                       m_fMaxCount;
     float                       m_fCurrCount;
 
+    json                        m_jResourceList;
+    int                         m_nCount;
+    int                         m_nHeadIndex;
+    string                      m_szHeadKey;
+
 public:
     cLoadingScene();
     ~cLoadingScene();

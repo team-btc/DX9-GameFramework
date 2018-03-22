@@ -26,7 +26,9 @@ cPlayScene::cPlayScene()
     , m_pParticleCherry(NULL)
     , m_pParticleEffect(NULL)
     , m_isWalk(false)
+    , m_isOver(false)
     , m_fWalkTime(0.0f)
+    , m_fOverTime(0.0f)
 {
     SetupSound();
 }
@@ -42,6 +44,10 @@ HRESULT cPlayScene::Start()
     if (m_stMapInfo == NULL)
     {
         cMapLoader mapLoader;
+        if (g_pGameManager->IsLoadData())
+        {
+            m_szMapKey = g_pGameManager->GetMapKey();
+        }
         mapLoader.SetKey(m_szMapKey);
         mapLoader.LoadMap();
         for (int i = 0; i < mapLoader.GetObjectMaxCnt(); ++i)
@@ -170,13 +176,13 @@ HRESULT cPlayScene::Start()
         m_pPlayer = g_pCharacterManager->GetPlayer();
     }
 
-    if (!g_pGameManager->IsLoadData())
+    if (g_pGameManager->IsLoadData())
     {
-        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
+        g_pGameManager->DisableLoadFlag();
     }
     else
     {
-        g_pGameManager->DisableLoadFlag();
+        m_pPlayer->SetPosition(m_stMapInfo->vStartPos);
     }
 
     m_pPlayer->SetVecMonster(m_vecMonster);
@@ -213,7 +219,6 @@ HRESULT cPlayScene::Start()
     {
         m_pMonsterHPUILayer->Setup();
     }
-
 
     //  파티클 세팅
     if (!m_pParticleFrost)
@@ -331,6 +336,29 @@ HRESULT cPlayScene::Start()
 
 HRESULT cPlayScene::Update()
 {
+    if (m_isOver)
+    {
+        if (m_pShop->GetIsOpen())
+        {
+            m_pShop->CloseShop();
+        }
+        if (m_pInventory->GetIsOpen())
+        {
+            m_pInventory->CloseInventory();
+        }
+        if (m_pGear->GetIsOpen())
+        {
+            m_pGear->CloseGear();
+        }
+
+        if (m_fOverTime < g_pTimerManager->GetWorldTime())
+        {
+            g_pScnManager->ChangeScene("ending");
+        }
+
+        return S_OK;
+    }
+
     if (g_pKeyManager->isOnceKeyDown('T'))
     {
         m_pParticleEffect->Reset();
@@ -425,6 +453,14 @@ HRESULT cPlayScene::Update()
     if (m_pPlayer)
     {
         m_pPlayer->Update();
+        if (!m_pPlayer->GetAlive())
+        {
+            m_isOver = true;
+            m_fOverTime = g_pTimerManager->GetWorldTime() + 6.0f;
+            m_pCamera->SetRotation(Vector3(-30.0f, 0.0f, 0.0f));
+            m_pPlayer->GetSkinnedMesh()->SetRotation(Vector3(0.0f, -90.0f, 0.0f));
+            m_pPlayer->Action("Death", 0.0f);
+        }
     }
 
     if (m_pParticleFrost)
@@ -493,11 +529,11 @@ HRESULT cPlayScene::Update()
         cBoss* Boss = NULL;
         for (auto iter = (*m_vecMonster).begin(); iter != (*m_vecMonster).end(); iter++)
         {
-            if ((*iter)->GetName() == "Deathwing")
+            if ((*iter)->GetName() == "deathwing")
                 Boss = (cBoss*)(*iter);
         }
 
-        if (Boss->GetIsRoar())
+        if (Boss != NULL && Boss->GetIsRoar())
         {
             for (int i = 0; i < 1; i++)
             {
@@ -560,6 +596,11 @@ HRESULT cPlayScene::Update()
         }
         else
         {
+            if ((*iter)->GetName() == "deathwing")
+            {
+                m_isOver = true;
+                m_fOverTime = g_pTimerManager->GetWorldTime() + 3.0f;
+            }
             m_pQuest->EmitMessage((*iter)->GetName());
             iter = (*m_vecMonster).erase(iter);
         }

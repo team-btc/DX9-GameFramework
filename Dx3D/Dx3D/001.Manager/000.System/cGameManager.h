@@ -116,6 +116,8 @@ public:
     void SetInvenData(json data);
     void SetGearData(json data);
 
+    string GetMapKey();
+
 #pragma region QUEST
     void LoadQuestInfo();
     json GetQuest(string map);

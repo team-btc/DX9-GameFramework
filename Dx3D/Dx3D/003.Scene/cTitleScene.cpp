@@ -208,10 +208,9 @@ HRESULT cTitleScene::Update()
         m_pSindragosa->SetPosition(pos);
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
-          
             m_nCurrIndex++;
         }
-        if (g_pTimerManager->GetWorldTime() > 17.0f)
+        if (g_pTimerManager->GetWorldTime() + 12.0f > m_fWorldTime)
         {
             m_isPopup = true;
         }

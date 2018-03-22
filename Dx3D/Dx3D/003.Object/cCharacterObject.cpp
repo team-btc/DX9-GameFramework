@@ -83,6 +83,10 @@ void cCharacterObject::Action(string Command, float value)
     {
 
     }
+    else if (Command == "Death")
+    {
+        m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Death")->second.nStateNum);
+    }
 }
 
 void cCharacterObject::Attack(float ATK)

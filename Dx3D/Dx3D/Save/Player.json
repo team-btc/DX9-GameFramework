@@ -1,0 +1,25 @@
+{
+    "gear": {
+        "chest": -1,
+        "helm": -1,
+        "weapon": -1
+    },
+    "inventory": {
+        "gold": 1101
+    },
+    "map": {
+        "key": "tempdun"
+    },
+    "player": {
+        "exp": 0,
+        "hp": 0.0,
+        "level": 51,
+        "mp": 2850.0,
+        "name": "arthaslichking",
+        "pos": {
+            "x": 374.580688476563,
+            "y": 94.0594940185547,
+            "z": 341.61474609375
+        }
+    }
+}

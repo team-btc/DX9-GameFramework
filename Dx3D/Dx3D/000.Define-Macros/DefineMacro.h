@@ -131,6 +131,7 @@ using LPSKININFO        = LPD3DXSKININFO;
 #define STORE_SOUND_PATH "Assets\\Sound\\Effect\\Interface\\Store\\"
 #define QUEST_LIST_PATH "Assets\\Data\\QuestList.json"
 #define PLAYER_SAVE_PATH "Save\\Player.json"
+#define RESOURCE_LIST_PATH "Assets\\Data\\ResourceList.json"
 #pragma endregion
 
 #pragma region SAVEFILE_KEY
