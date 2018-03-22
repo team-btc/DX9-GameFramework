@@ -223,15 +223,32 @@ void cGameManager::LoadItemInfo()
         string szPath = jItem[i]["item-path"];
         stItem->szPath = szPath;
         stItem->nPrice = jItem[i]["item-price"];
-        int nStatNum = jItem[i]["item-plus-stat"];
-        char szBuf[10];
-        sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
-        stItem->stStat.szName = szBuf;
         stItem->fPlusValue = jItem[i]["item-plus-value"];
         stItem->isWear = jItem[i]["item-wear"];
         stItem->eItemType = jItem[i]["item-type"];
 
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_HP_CUR, jItem[i]["hp-cur"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_HP_MAX, jItem[i]["hp-max"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_MP_CUR, jItem[i]["mp-cur"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_MP_MAX, jItem[i]["mp-max"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_ATT, jItem[i]["att"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_DEF, jItem[i]["def"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_STR, jItem[i]["str"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_DEX, jItem[i]["dex"]);
+        LoadItemPlusStat(&stItem->vecPlusStat, E_PLAYER_INT, jItem[i]["int"]);
+
         m_vecItemInfo.push_back(stItem);
+    }
+}
+
+void cGameManager::LoadItemPlusStat(vector<ST_PLUS_STAT_INFO>* vecPlusStat, E_PLAYER_STAT eStat, float fValue)
+{
+    if (fValue != 0)
+    {
+        ST_PLUS_STAT_INFO stStat;
+        stStat.nType = (int)eStat;
+        stStat.fPlusValue = fValue;
+        vecPlusStat->push_back(stStat);
     }
 }
 
@@ -258,4 +275,60 @@ void cGameManager::LoadQuestInfo()
 json cGameManager::GetQuest(string map)
 {
     return m_jQuestInfo[map];
+}
+
+string cGameManager::GetStatName(E_PLAYER_STAT eStat)
+{
+    string szName = "";
+
+    switch (eStat)
+    {
+    case E_PLAYER_HP_CUR:
+    {
+        szName = "HP";
+    }
+        break;
+    case E_PLAYER_HP_MAX:
+    {
+        szName = "Health";
+    }
+        break;
+    case E_PLAYER_MP_CUR:
+    {
+        szName = "MP";
+    }
+        break;
+    case E_PLAYER_MP_MAX:
+    {
+        szName = "MP";
+    }
+        break;
+    case E_PLAYER_ATT:
+    {
+        szName = "Att";
+    }
+        break;
+    case E_PLAYER_DEF:
+    {
+        szName = "Def";
+    }
+        break;
+    case E_PLAYER_STR:
+    {
+        szName = "Str";
+    }
+        break;
+    case E_PLAYER_DEX:
+    {
+        szName = "Dex";
+    }
+        break;
+    case E_PLAYER_INT:
+    {
+        szName = "Int";
+    }
+        break;
+    }
+
+    return szName;
 }

@@ -355,7 +355,7 @@ HRESULT cPlayScene::Update()
     // GEAR UPDATE -> 장비창 지점을 픽킹 면제 시키기 위해서 가장 상단에서 실행
     if (m_pGear && m_pGear->GetIsOpen())
     {
-        m_pGear->Update();
+        m_pGear->Update(m_pPlayer->GetStatus());
     }
 
     //  UPDATE CAMERA

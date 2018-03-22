@@ -163,6 +163,22 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     &m_mapFont[e]);
                 break;
             }
+            case cFontManager::E_STAT:
+            {
+                D3DXCreateFont(g_pDevice,
+                    20,
+                    0,
+                    FW_DONTCARE,
+                    1,
+                    false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    false,
+                    _TEXT("Calibri"),
+                    &m_mapFont[e]);
+                break;
+            }
         }
     }
 

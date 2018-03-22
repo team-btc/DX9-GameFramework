@@ -7,6 +7,7 @@
 
 cGear::cGear()
     : m_pGearLayer(NULL)
+    , m_pPlusStatLayer(NULL)
     , m_nCurrSelectGear(-1)
     , m_isClickGear(false)
     , m_isOpen(false)
@@ -17,6 +18,8 @@ cGear::cGear()
     m_rtGearSize.bottom = m_rtGearSize.top + (LONG)(W_HEIGHT * 0.35f);
 
     m_stGearSlotSize = ST_SIZE(60, 60);
+
+    m_stPlusStatDefSize = ST_SIZE(100, 20);
 
     g_pSndManager->AddSound("gear-open", "gear", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\open.ogg");
     g_pSndManager->AddSound("gear-close", "gear", "Assets\\Sound\\Effect\\Interface\\CharacterSheet\\close.ogg");
@@ -34,17 +37,26 @@ void cGear::Setup()
     m_pGearLayer->SetLayer("Inven", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
     m_pGearLayer->SetActive(true);
 
+    m_pPlusStatLayer = new cUILayer;
+    m_pPlusStatLayer->SetLayer("plus-stat", Vector3(0, 0, 0), ST_SIZE(W_WIDTH, W_HEIGHT));
+    m_pPlusStatLayer->SetActive(false);
+
     m_stCurrGear = g_pGameManager->GetGearInfo();
 
     SetGearUI();
+    SetPlusStatUI();
 
     if (m_pGearLayer)
     {
         m_pGearLayer->Setup();
     }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Setup();
+    }
 }
 
-void cGear::Update()
+void cGear::Update(ST_STATUS stPlayerStat)
 {
     m_isClickGear = false;
 
@@ -56,7 +68,7 @@ void cGear::Update()
     // 기본 정보 로드
     m_stCurrGear = g_pGameManager->GetGearInfo();
     // 계속해서 장비와 스탯 체크하고 업데이트
-    UpdateGearUI();
+    UpdateGearUI(stPlayerStat);
 
     // 장비창 렉트 안에 마우스가 있다면
     if (PtInRect(&m_rtGearSize, g_ptMouse))
@@ -65,6 +77,16 @@ void cGear::Update()
         g_pKeyManager->isOnceKeyDown(VK_LBUTTON);
         g_pKeyManager->isOnceKeyDown(VK_RBUTTON);
         m_isClickGear = true;
+
+        // 아이템에 마우스가 올려져있는지 체크하고 레이어 셋팅
+        if (!CheckPtInItem())
+        {
+            m_pPlusStatLayer->SetActive(false);
+        }
+    }
+    else
+    {
+        m_pPlusStatLayer->SetActive(false);
     }
 
     // 버튼 클릭을 했다면
@@ -148,6 +170,11 @@ void cGear::Update()
     }
 
     m_pGearLayer->Update();
+
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Update();
+    }
 }
 
 void cGear::Render()
@@ -155,6 +182,10 @@ void cGear::Render()
     if (m_pGearLayer)
     {
         m_pGearLayer->Render();
+    }
+    if (m_pPlusStatLayer)
+    {
+        m_pPlusStatLayer->Render();
     }
 }
 
@@ -165,7 +196,6 @@ void cGear::OpenGear()
     m_isClickGear = false;
     m_isOpen = true;
     m_stCurrGear = g_pGameManager->GetGearInfo();
-    UpdateGearUI();
 }
 
 void cGear::CloseGear()
@@ -179,6 +209,7 @@ void cGear::CloseGear()
 ULONG cGear::Release(void)
 {
     SAFE_DELETE(m_pGearLayer);
+    SAFE_DELETE(m_pPlusStatLayer);
 
     return cObject::Release();
 }
@@ -236,14 +267,102 @@ void cGear::SetGearUI()
     pXButton->SetUIButton(m_pGearLayer);
     m_pGearLayer->AddUIObject(pXButton);
 
+    SetStatText(vGearPos);
     SetStatUI(vGearPos);
+}
+
+void cGear::SetStatText(Vector3 vGearPos)
+{
+    float fBaseX = vGearPos.x + 40;
+    float fPlusX = 50;
+    float fPlusY = 25;
+    Vector3 vTextPos(fBaseX, vGearPos.y + 90, 0);
+    Vector2 vTitleSize(45, 20);
+    Vector2 vValueSize(100, 20);
+    DWORD dTitleFontColor = D3DCOLOR_XRGB(255, 255, 0);
+    DWORD dValueFontColor = D3DCOLOR_XRGB(255, 255, 255);
+
+    // 레벨 :
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Level", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    cUITextView* UIText = MakeStatTextUI(": 1", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_LEVEL, UIText));
+
+    // 이름 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Name", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": name", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_NAME, UIText));
+
+    // 공격력 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Att", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": 12", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_ATT, UIText));
+
+    // 방어력 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Def", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": 34", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_DEF, UIText));
+
+    // 힘 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Str", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": 56", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_STR, UIText));
+
+    // 민첩 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Dex", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": 78", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_DEX, UIText));
+
+    // 지능 :
+    vTextPos.x = fBaseX;
+    vTextPos.y += fPlusY;
+    m_pGearLayer->AddUIObject(MakeStatTextUI("Int", vTextPos, vTitleSize, dTitleFontColor));
+    vTextPos.x += fPlusX;
+    UIText = MakeStatTextUI(": 90", vTextPos, vValueSize, dValueFontColor);
+    m_pGearLayer->AddUIObject(UIText);
+    m_mapTextUI.insert(make_pair(E_PLAYER_INT, UIText));
+}
+
+cUITextView* cGear::MakeStatTextUI(string name, Vector3 pos, Vector2 size, DWORD color)
+{
+    cUITextView* pTextUI = new cUITextView;
+    pTextUI->SetName(name);
+    pTextUI->SetLocalPos(pos);
+    pTextUI->SetSize(size);
+    pTextUI->SetFont(g_pFontManager->GetFont(g_pFontManager->E_STAT));
+    pTextUI->SetText(name);
+    pTextUI->SetDrawTextFormat(DT_LEFT);
+    pTextUI->SetColor(color);
+
+    return pTextUI;
 }
 
 void cGear::SetStatUI(Vector3 vGearPos)
 {
     // 아이템 이미지
     ST_SIZE stSlotSize = m_stGearSlotSize;
-    Vector3 vItemPos(vGearPos.x + 190, vGearPos.y + 85, 0);
+    Vector3 vItemPos(vGearPos.x + 200, vGearPos.y + 85, 0);
     float fPlusY = stSlotSize.h + 5;
 
     for (int i = 0; i < 3; ++i)
@@ -252,6 +371,14 @@ void cGear::SetStatUI(Vector3 vGearPos)
         {
             vItemPos.y += fPlusY;
         }
+
+        // 렉트 만들기
+        RECT rtItem;
+        rtItem.left = (LONG)vItemPos.x;
+        rtItem.top = (LONG)vItemPos.y;
+        rtItem.right = rtItem.left + (LONG)stSlotSize.w;
+        rtItem.bottom = rtItem.top + (LONG)stSlotSize.h;
+        m_vecItemRect.push_back(rtItem);
 
         // 슬롯 이미지
         string szSlotPath;
@@ -388,8 +515,65 @@ void cGear::SetStatUI(Vector3 vGearPos)
     m_pGearLayer->AddUIObject(pPullText);
 }
 
-void cGear::UpdateGearUI()
+void cGear::UpdateGearUI(ST_STATUS stPlayerStat)
 {
+    // 스탯 셋팅
+    for (auto iter = m_mapTextUI.begin(); iter != m_mapTextUI.end(); ++iter)
+    {
+        switch (iter->first)
+        {
+        case E_PLAYER_LEVEL:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", stPlayerStat.Level);
+            iter->second->SetText(Buf);
+        }
+            break;
+        case E_PLAYER_NAME:
+        {
+            string szName = ": " + stPlayerStat.szName;
+            iter->second->SetText(szName);
+        }
+            break;
+        case E_PLAYER_ATT:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", (int)stPlayerStat.fATK);
+            iter->second->SetText(Buf);
+        }
+            break;
+        case E_PLAYER_DEF:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", (int)stPlayerStat.fDEF);
+            iter->second->SetText(Buf);
+        }
+            break;
+        case E_PLAYER_STR:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", (int)stPlayerStat.fSTR);
+            iter->second->SetText(Buf);
+        }
+            break;
+        case E_PLAYER_DEX:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", (int)stPlayerStat.fDEX);
+            iter->second->SetText(Buf);
+        }
+            break;
+        case E_PLAYER_INT:
+        {
+            char Buf[20];
+            sprintf_s(Buf, sizeof(Buf), ": %d", (int)stPlayerStat.fINT);
+            iter->second->SetText(Buf);
+        }
+            break;
+        }
+    }
+
+    // 아이템 체크
     for (int i = 0; i < m_vecGearUI.size(); ++i)
     {
         int nId;
@@ -441,4 +625,122 @@ void cGear::UpdateGearUI()
             }
         }
     }
+}
+
+void cGear::SetPlusStatUI()
+{
+    // 배경
+    cUIImageView* pBGImage = new cUIImageView;
+    string szPath = INTERFACE_PATH + (string)"stat-bg.png";
+    g_pTextureManager->AddTexture("stat-bg-img", szPath, true);
+    pBGImage->SetName("stat-bg-img");
+    pBGImage->SetLocalPos(Vector3(0, 0, 0));
+    IMAGE_INFO imageInfo;
+    pBGImage->SetTexture((LPTEXTURE9)g_pTextureManager->GetTexture("stat-bg-img", &imageInfo));
+    pBGImage->SetSize(Vector2((float)imageInfo.Width, (float)imageInfo.Height));
+    pBGImage->SetScale(m_stPlusStatDefSize.w / (float)imageInfo.Width, m_stPlusStatDefSize.h / (float)imageInfo.Height);
+    m_pPlusStatLayer->AddUIObject(pBGImage);
+
+    Vector3 vPos(5, 5, 0);
+    float fPlusY = 17;
+
+    // 증가 스탯 텍스트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUITextView* pText = new cUITextView;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        pText->SetName(buf);
+        pText->SetLocalPos(vPos);
+        pText->SetSize(Vector2(100, 15));
+        pText->SetFont(g_pFontManager->GetFont(g_pFontManager->E_SHOP_DEFAULT));
+        pText->SetDrawTextFormat(DT_LEFT);
+        pText->SetColor(D3DCOLOR_XRGB(0, 200, 0));
+        pText->SetAxtive(false);
+        pBGImage->AddChild(pText);
+
+        vPos.y += fPlusY;
+    }
+}
+
+void cGear::UpdatePlusStatUI(int id, Vector3 vPos)  // 렉트 안에 마우스가 있을 때만 발동
+{
+    ST_ITEM_INFO stItem = *g_pGameManager->GetItemInfoById(id);
+
+    // 증가 스탯 업데이트
+    for (int i = 0; i < 4; ++i)
+    {
+        cUIObject* pObject;
+        char buf[20];
+        sprintf_s(buf, sizeof(buf), "stat-%d", i);
+        m_pPlusStatLayer->FindUIObject(&pObject, buf);
+
+        if (pObject)
+        {
+            cUITextView* pText = (cUITextView*)pObject;
+
+            // 셋팅해야 하는 플러스 스탯이 있으면
+            if (i < stItem.vecPlusStat.size())
+            {
+                string szPlusName = g_pGameManager->GetStatName((E_PLAYER_STAT)stItem.vecPlusStat[i].nType);
+                sprintf_s(buf, sizeof(buf), " +%d", (int)stItem.vecPlusStat[i].fPlusValue);
+                string sztotal = szPlusName + buf;
+                pText->SetText(sztotal);
+                pText->SetAxtive(true);
+            }
+            else
+            {
+                pText->SetAxtive(false);
+            }
+        }
+    }
+    // 배경 사이즈 바꾸기
+    cUIObject* pObject;
+    m_pPlusStatLayer->FindUIObject(&pObject, "stat-bg-img");
+
+    if (pObject)
+    {
+        pObject->SetLocalPos(vPos);
+        cUIImageView* pImage = (cUIImageView*)pObject;
+        ST_SIZE stSize;
+        stSize.h = m_stPlusStatDefSize.h * stItem.vecPlusStat.size();
+        stSize.w = m_stPlusStatDefSize.w;
+        pImage->SetScale((float)stSize.w / pImage->GetSize().x, (float)stSize.h / pImage->GetSize().y);
+    }
+
+    m_pPlusStatLayer->SetActive(true);
+}
+
+// 아이템 렉트 안에 마우스가 있다면
+bool cGear::CheckPtInItem()
+{
+    bool isIn = false;
+
+    for (int i = 0; i < m_vecGearUI.size(); ++i)
+    {
+        if (PtInRect(&m_vecItemRect[i], g_ptMouse))
+        {
+            if (i == ST_ITEM_INFO::E_HELM && m_stCurrGear.helmId != -1)
+            {
+                UpdatePlusStatUI(m_stCurrGear.helmId, Vector3((float)g_ptMouse.x + 10, (float)g_ptMouse.y, 0));
+                isIn = true;
+            }
+            else if (i == ST_ITEM_INFO::E_CHEST_PLATE && m_stCurrGear.chestPlateId != -1)
+            {
+                UpdatePlusStatUI(m_stCurrGear.chestPlateId, Vector3((float)g_ptMouse.x + 10, (float)g_ptMouse.y, 0));
+                isIn = true;
+            }
+            else if (i == ST_ITEM_INFO::E_SWORD && m_stCurrGear.swordId != -1)
+            {
+                UpdatePlusStatUI(m_stCurrGear.swordId, Vector3((float)g_ptMouse.x + 10, (float)g_ptMouse.y, 0));
+                isIn = true;
+            }
+            if (isIn)
+            {
+                break;
+            }
+        }
+    }
+
+    return isIn;
 }
