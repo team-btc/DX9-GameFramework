@@ -52,7 +52,7 @@ cPlayer::cPlayer(string szKey)
     m_eTag = PLAYER;
 
     m_stStat.szName = szKey;
-    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
+    m_stStat.Level = g_pMeshManager->GetJson("status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 

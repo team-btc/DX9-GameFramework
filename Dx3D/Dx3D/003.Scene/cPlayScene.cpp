@@ -796,6 +796,9 @@ HRESULT cPlayScene::Render()
         m_pGear->Render();
     }
 
+    Matrix4 matI;
+    D3DXMatrixIdentity(&matI);
+    g_pDevice->SetTransform(D3DTS_WORLD, &matI);
     if (m_pParticleFrost)
     {
         m_pParticleFrost->Render();

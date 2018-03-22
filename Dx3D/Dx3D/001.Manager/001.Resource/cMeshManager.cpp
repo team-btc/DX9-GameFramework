@@ -164,7 +164,7 @@ void cMeshManager::LoadJSON(string key, string path)
     //
     //m_fileJson.open("Assets\\Data\\CharacterStatus.json");
     //m_fileJson >> newJson;
-    //m_mapJson.insert(make_pair("Status", newJson));
+    //m_mapJson.insert(make_pair("status", newJson));
     //
     //m_fileJson.close();
 }

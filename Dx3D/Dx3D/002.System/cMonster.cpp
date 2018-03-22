@@ -17,7 +17,7 @@ cMonster::cMonster(string szKey, string szFolder, string szFilename)
     m_eTag = MONSTER;
 
     m_stStat.szName = "Monster1";
-    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
+    m_stStat.Level = g_pMeshManager->GetJson("status")[m_stStat.szName]["LEVEL"];
 
     IdleAnim();
 
@@ -47,7 +47,7 @@ cMonster::cMonster(string szKey)
     m_szName = szKey;
 
     m_stStat.szName = szKey;
-    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
+    m_stStat.Level = g_pMeshManager->GetJson("status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
@@ -82,7 +82,7 @@ void cMonster::Setup()
     isAlive = true;
     isMoveToTarget = false;
 
-    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
+    m_stStat.Level = g_pMeshManager->GetJson("status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
