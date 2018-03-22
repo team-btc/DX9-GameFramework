@@ -360,7 +360,7 @@ HRESULT cPlayScene::Update()
             }
             else
             {
-                (*iter)->SetMoveSpeed(0.08f);
+                (*iter)->SetMoveSpeed(12.0f);
             }
         }
 
@@ -397,7 +397,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
-            m_pPlayer->SetMoveSpeed(15.0f);
+            m_pPlayer->SetMoveSpeed(20.0f);
         }
     }
 

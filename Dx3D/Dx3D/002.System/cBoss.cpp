@@ -203,7 +203,7 @@ void cBoss::MoveToTarget()
     m_vDir = m_pTarget->GetPosition() - m_vPosition;
     D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-    m_vPosition += m_vDir * m_fMoveSpeed;
+    m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
     m_stSphere.vCenter = m_vPosition;
 }
 

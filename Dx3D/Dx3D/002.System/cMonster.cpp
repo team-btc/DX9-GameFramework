@@ -160,7 +160,7 @@ void cMonster::Update()
                     isAttack = false;
                 }
 
-                m_vPosition += m_vDir * m_fMoveSpeed;
+                m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
                 m_stSphere.vCenter = m_vPosition;
 
                 D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
@@ -185,10 +185,10 @@ void cMonster::Update()
                 m_vDir = m_vDest - m_vPosition;
                 D3DXVec3Normalize(&m_vDir, &m_vDir);
 
-                m_vPosition += m_vDir * m_fMoveSpeed;
+                m_vPosition += m_vDir * m_fMoveSpeed * g_pTimerManager->GetDeltaTime();
                 m_stSphere.vCenter = m_vPosition;
 
-                if (Distance(m_vDest) < m_fMoveSpeed)
+                if (Distance(m_vDest) < m_fMoveSpeed * g_pTimerManager->GetDeltaTime())
                 {
                     m_vPosition = m_vDest;
                     isMove = false;
