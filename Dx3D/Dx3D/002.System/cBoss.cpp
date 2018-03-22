@@ -17,7 +17,7 @@ cBoss::cBoss(string szKey)
     m_szName = szKey;
 
     m_stStat.szName = szKey;
-    m_stStat.Level = 1;
+    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
@@ -53,7 +53,7 @@ void cBoss::Setup()
     isAlive = true;
     isMoveToTarget = false;
 
-    m_stStat.Level = 16;
+    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 

@@ -41,6 +41,8 @@ protected:
     bool            isIdle;
     bool            isHeal;
     bool            isRoar;
+    bool            isCasting;
+    bool            isFire;
 
     bool            isRecovery;
     bool            isAction; //
@@ -78,6 +80,8 @@ public:
     virtual void SetIdle(bool Idle) PURE;
     virtual void SetHeal(bool Heal) PURE;
     virtual void SetRoar(bool Roar) PURE;
+    virtual void SetCasting(bool Casting) PURE;
+    virtual void SetFire(bool Fire) PURE;
 
     virtual void SetRecovery(bool Recovery) PURE;
     virtual void SetAction(bool Action) PURE;
@@ -111,6 +115,8 @@ public:
     virtual bool GetIdle() PURE;
     virtual bool GetHeal() PURE;
     virtual bool GetRoar() PURE;
+    virtual bool GetCasting() PURE;
+    virtual bool GetFire() PURE;
 
     virtual bool GetRecovery() PURE;
     virtual bool GetAction() PURE;
@@ -132,7 +138,10 @@ public:
     virtual void RunAnim() PURE;
     virtual void WalkAnim() PURE;
     virtual void IdleAnim() PURE;
+    virtual void HealAnim() PURE;
     virtual void RoarAnim() PURE;
+    virtual void CastingAnim() PURE;
+    virtual void FireAnim() PURE;
     virtual void LeftAnim() PURE;
     virtual void RightAnim() PURE;
     virtual void DeadAnim() PURE;

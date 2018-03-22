@@ -34,6 +34,8 @@ cCharacterObject::cCharacterObject()
    isIdle = false;
    isHeal = false;
    isRoar = false;
+   isFire = false;
+
    isRecovery = false;
    isAction = false;
    isActive = false;
@@ -157,11 +159,32 @@ void cCharacterObject::IdleAnim()
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Stand")->second.nStateNum);
 }
 
+void cCharacterObject::HealAnim()
+{
+    FalseAnim();
+    isHeal = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("CastReady")->second.nStateNum);
+}
+
 void cCharacterObject::RoarAnim()
 {
     FalseAnim();
     isRoar = true;
     m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("Roar")->second.nStateNum);
+}
+
+void cCharacterObject::CastingAnim()
+{
+    FalseAnim();
+    isCasting = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("CastChanneling")->second.nStateNum);
+}
+
+void cCharacterObject::FireAnim()
+{
+    FalseAnim();
+    isFire = true;
+    m_pMesh->SetAnimationIndex(m_pMesh->GetStateInfo().find("CastSpell")->second.nStateNum);
 }
 
 void cCharacterObject::LeftAnim()
@@ -210,6 +233,8 @@ void cCharacterObject::FalseAnim()
    isIdle = false;
    isHeal = false;
    isRoar = false;
+   isFire = false;
+   isCasting = false;
    //isRecovery = false;
 }
 
