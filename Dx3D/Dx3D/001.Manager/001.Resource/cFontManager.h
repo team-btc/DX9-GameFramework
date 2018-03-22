@@ -2,6 +2,7 @@
 #include "iSingletonManager.h"
 
 #define g_pFontManager cFontManager::GetInstance()
+#define FONT_PATH "Assets\\Font\\"
 
 class cFontManager : public iSingletonManager
 {
@@ -21,6 +22,7 @@ public:
 
 private:
     map<eFontType, LPFONTDX>	m_mapFont;
+    list<string>                m_listFont;
 
 public:
     // iSingletonManager을(를) 통해 상속됨

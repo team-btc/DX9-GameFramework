@@ -29,5 +29,7 @@ public:
 
     json GetMapData();
     void SetMapData(json mapData);
+
+    ST_EVENT_INFO GetEventByName(string szEvent);
 };
 

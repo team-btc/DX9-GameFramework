@@ -76,3 +76,21 @@ void cMapManager::SetMapData(json mapData)
     string szTemp = mapData["key"];
     m_szCurrMapKey = szTemp;
 }
+
+ST_EVENT_INFO cMapManager::GetEventByName(string szEvent)
+{
+    ST_EVENT_INFO result;
+    result.szName = "";
+    auto eventlist = m_mapMapInfo[m_szCurrMapKey]->vecEventInfo;
+
+    for (auto iter = eventlist.begin(); iter < eventlist.end(); iter++)
+    {
+        if (szEvent == iter->szName)
+        {
+            result = *iter;
+            break;
+        }
+    }
+
+    return result;
+}

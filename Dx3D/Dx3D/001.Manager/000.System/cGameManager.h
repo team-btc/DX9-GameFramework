@@ -3,43 +3,6 @@
 
 #define g_pGameManager cGameManager::GetInstance()
 
-struct ST_ITEM
-{
-    int id;
-    int count;
-
-    ST_ITEM()
-    {
-        id = -1;
-        count = -1;
-    }
-};
-
-struct ST_INVENTORY
-{
-    int     gold;
-    vector<ST_ITEM> items;
-
-    ST_INVENTORY()
-    {
-        gold = 123456;
-    }
-};
-
-struct ST_GEAR
-{
-    int swordId;
-    int helmId;
-    int chestPlateId;
-
-    ST_GEAR()
-    {
-        swordId = -1;
-        helmId = -1;
-        chestPlateId = -1;
-    }
-};
-
 class cGameManager : public iSingletonManager
 {
 private:
@@ -49,6 +12,9 @@ private:
     vector<ST_ITEM_INFO*>       m_vecItemInfo;
     ST_INVENTORY                m_stInventory;
     ST_GEAR                     m_stGear;
+
+    //  QUEST
+    json                        m_jQuestInfo;
 
 private:
     SINGLETON(cGameManager);
@@ -81,5 +47,10 @@ public:
     vector<ST_ITEM_INFO*> GetItemInfo() { return m_vecItemInfo; }
     int GetCurrGold() { return m_stInventory.gold; }
     vector<ST_ITEM> GetInvetoryInfo() { return m_stInventory.items; }
-};
 
+#pragma region QUEST
+    void LoadQuestInfo();
+    json GetQuest(string map);
+#pragma endregion
+
+};

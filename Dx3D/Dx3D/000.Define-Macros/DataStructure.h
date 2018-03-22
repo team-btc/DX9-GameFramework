@@ -124,6 +124,13 @@ struct ST_EVENT_INFO
     string              szName;
     Vector3             vPos;
     float               fRadius;
+
+    ST_EVENT_INFO()
+    {
+        szName = "";
+        vPos = Vector3(0.0f, 0.0f, 0.0f);
+        fRadius = 0.0f;
+    }
 };
 
 class cSkinnedMesh;
@@ -263,4 +270,75 @@ struct ST_ITEM_INFO
     int             nPrice;
     ST_STATUS       stStat;
     float           fPlusValue;
+};
+
+#pragma region QUEST
+enum E_QUEST_TYPE
+{
+    Q_MOVE = 0, Q_HUNT, Q_END
+};
+
+struct ST_QUEST_INFO
+{
+    int                 id;
+    string              name;
+    string              map;
+    E_QUEST_TYPE        type;
+    string              event;
+    string              target;
+    string              desc;
+    int                 count;
+    int                 goal;
+
+    ST_QUEST_INFO()
+    {
+        id = -1;
+        type = Q_END;
+        name = "";
+        map = "";
+        target = "";
+        desc = "";
+        count = 0;
+        goal = 1;
+    }
+};
+#pragma endregion
+
+
+
+struct ST_ITEM
+{
+    int id;
+    int count;
+
+    ST_ITEM()
+    {
+        id = -1;
+        count = -1;
+    }
+};
+
+struct ST_INVENTORY
+{
+    int             gold;
+    vector<ST_ITEM> items;
+
+    ST_INVENTORY()
+    {
+        gold = 1000;
+    }
+};
+
+struct ST_GEAR
+{
+    int swordId;
+    int helmId;
+    int chestPlateId;
+
+    ST_GEAR()
+    {
+        swordId = -1;
+        helmId = -1;
+        chestPlateId = -1;
+    }
 };

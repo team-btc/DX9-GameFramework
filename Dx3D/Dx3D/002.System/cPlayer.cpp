@@ -71,6 +71,7 @@ cPlayer::~cPlayer()
 
 void cPlayer::Setup()
 {
+    m_fMoveSpeed = 0.0f;
 }
 
 void cPlayer::Update()

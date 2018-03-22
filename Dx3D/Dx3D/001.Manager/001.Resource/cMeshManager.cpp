@@ -132,6 +132,10 @@ void cMeshManager::LoadSkinnedMesh()
         pNewMesh->LoadJSON("Boar");
     }
     m_mapSkinnedMesh.insert(make_pair("Boar", pNewMesh));
+
+    pNewMesh = new cSkinnedMesh;
+    pNewMesh->Load("Assets\\Interface\\Quest", "talktome.x");
+    m_mapSkinnedMesh.insert(make_pair("quest-indicator", pNewMesh));
 }
 
 void cMeshManager::LoadJSON()

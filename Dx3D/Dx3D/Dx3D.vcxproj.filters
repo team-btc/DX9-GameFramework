@@ -62,6 +62,7 @@
     <ClCompile Include="002.System\cBoss.cpp" />
     <ClCompile Include="003.Object\cNonPlayer.cpp" />
     <ClCompile Include="003.Object\cShop.cpp" />
+    <ClCompile Include="002.System\cQuest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="000.Define-Macros\DataStructure.h" />
@@ -135,7 +136,6 @@
     <ClInclude Include="002.System\cPlayer.h" />
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
-    <ClInclude Include="002.System\cSindragosa.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -422,9 +422,6 @@
     <ClInclude Include="001.Manager\001.Resource\cCharacterManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="cNonPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="003.Scene\cTitleScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -443,6 +440,7 @@
     <ClInclude Include="001.Manager\000.System\cGameManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="002.System\cQuest.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Dx3D.rc" />
@@ -594,9 +592,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="001.Manager\001.Resource\cCharacterManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cNonPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="003.Scene\cTitleScene.cpp">

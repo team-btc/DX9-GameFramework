@@ -22,17 +22,6 @@ cSoundManager::~cSoundManager()
 
 void cSoundManager::Setup()
 {
-    AddSound("player-attack-01", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack01.ogg", false, false);
-    AddSound("player-attack-02", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack02.ogg", false, false);
-    AddSound("player-attack-03", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack03.ogg", false, false);
-    AddSound("store-open", "play", "Assets\\Sound\\Effect\\Store\\auctionwindowclose.ogg", false, false);
-    AddSound("store-close", "play", "Assets\\Sound\\Effect\\Store\\auctionwindowopen.ogg", false, false);
-    AddSound("shop-01", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping01.ogg", false, false);
-    AddSound("shop-02", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping04.ogg", false, false);
-    AddSound("shop-03", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping09.ogg", false, false);
-    AddSound("shop-04", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping13.ogg", false, false);
-    AddSound("shop-05", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping18.ogg", false, false);
-    AddSound("shop-06", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping19.ogg", false, false);
 }
 
 void cSoundManager::Update()

@@ -4,6 +4,11 @@
 
 cFontManager::cFontManager()
 {
+    string fontpath = FONT_PATH;
+    m_listFont.push_back(fontpath + "Abaddon.ttf");
+    m_listFont.push_back(fontpath + "Folkard.ttf");
+    m_listFont.push_back(fontpath + "FrizQt.ttf");
+    m_listFont.push_back(fontpath + "Warcraft.ttf");
 }
 
 cFontManager::~cFontManager()
@@ -12,7 +17,10 @@ cFontManager::~cFontManager()
 
 HRESULT cFontManager::Setup()
 {
-    AddFontResource(_TEXT("UI/umberto.ttf"));
+    for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
+    {
+        AddFontResourceA(iter->c_str());
+    }
 
     return S_OK;
 }
@@ -29,10 +37,15 @@ HRESULT cFontManager::Render()
 
 HRESULT cFontManager::Destroy()
 {
-    RemoveFontResource(_TEXT("umberto"));
+    for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
+    {
+        RemoveFontResourceA(iter->c_str());
+    }
 
     for each (auto p in m_mapFont)
+    {
         SAFE_RELEASE(p.second);
+    }
 
     m_mapFont.clear();
 
@@ -58,7 +71,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("umberto"),
+                    _TEXT("FrizQt"),
                     &m_mapFont[e]);
                 break;
             }
@@ -79,13 +92,17 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                 break;
             }
             case cFontManager::E_NORMAL:
+            {
                 break;
+            }
             case cFontManager::E_CHAT:
+            {
                 break;
+            }
             case cFontManager::E_QUEST:
             {
                 D3DXCreateFont(g_pDevice,
-                    25,
+                    45,
                     0,
                     FW_DONTCARE,
                     1,
@@ -94,7 +111,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("umberto"),
+                    _TEXT("Warcraft"),
                     &m_mapFont[e]);
                 break;
             }

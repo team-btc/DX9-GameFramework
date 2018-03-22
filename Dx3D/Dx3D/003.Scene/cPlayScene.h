@@ -12,6 +12,7 @@
 #include "cSkyBoxShader.h"
 #include "cParticle.h"
 #include "cUILayer.h"
+#include "cQuest.h"
 
 class cUILayer;
 class cShop;
@@ -41,6 +42,8 @@ private:
     cInventory*                     m_pInventory;
 
     cParticle*                      m_pParticleFrost;
+
+    cQuest*                         m_pQuest;
 
 private:
     void SetUI();
