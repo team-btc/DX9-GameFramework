@@ -53,9 +53,9 @@ void cSoundManager::Setup()
     g_pSndManager->AddSound("attack10", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack10.ogg");
     g_pSndManager->AddSound("death", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_death01.ogg");
 
-    g_pSndManager->AddSound("heal", "play", "Assets\\Sound\\Effect\Arthaslichking\\hr_lich king_slay02.ogg");
-    g_pSndManager->AddSound("skill", "play", "Assets\\Sound\\Effect\Arthaslichking\\ic_lich king_frostmourne_is_hunger.ogg");
-    g_pSndManager->AddSound("roar", "play", "Assets\\Sound\\Effect\Arthaslichking\\ic_lich king_special01.ogg");
+    g_pSndManager->AddSound("heal", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_slay02.ogg");
+    g_pSndManager->AddSound("skill", "play", "Assets\\Sound\\Effect\\Arthaslichking\\ic_lich king_frostmourne_is_hunger.ogg");
+    g_pSndManager->AddSound("roar", "play", "Assets\\Sound\\Effect\\Arthaslichking\\ic_lich king_special01.ogg");
 }
 
 void cSoundManager::Update()
