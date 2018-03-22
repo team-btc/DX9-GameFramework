@@ -96,6 +96,10 @@ void cMonster::Update()
     if (!isActive &&  m_pMesh->GetCurPos() >= 1.0f)
     {
         isAlive = false;
+        if (g_pSndManager->IsPlay(m_szName + "-death"))
+        {
+            g_pSndManager->Stop(m_szName + "-death");
+        }
         g_pCharacterManager->PushMonster(this);
     }
 
@@ -109,9 +113,8 @@ void cMonster::Update()
 
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;
-        DeadAnim();
-
         g_pSndManager->Play(m_szName + "-death");
+        DeadAnim();
     }
 
 
@@ -140,12 +143,22 @@ void cMonster::Update()
                 if (!isAttack)
                 {
                     AttackAnim();
+                    if (g_pSndManager->IsPlay(m_szName + "-attack"))
+                    {
+                        g_pSndManager->Stop(m_szName + "-attack");
+                    }
+                    g_pSndManager->Play(m_szName + "-attack");
                     isAttack = true;
                 }
 
                 if (m_pMesh->GetCurPos() >= 1.0f)
                 {
                     AttackAnim();
+                    if (g_pSndManager->IsPlay(m_szName + "-attack"))
+                    {
+                        g_pSndManager->Stop(m_szName + "-attack");
+                    }
+                    g_pSndManager->Play(m_szName + "-attack");
                     m_pMesh->SetDescZeroPos();
                     float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 2) - m_pTarget->GetStatus().fDEF;
                     Action("Attack", ATK);

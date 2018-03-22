@@ -22,9 +22,6 @@ cPlayScene::cPlayScene()
     , m_isRoar(false)
     , m_isWalk(false)
     , m_fWalkTime(0.0f)
-    , m_fBoarAtkTime(0.5f)
-    , m_fBearAtkTime(0.2f)
-    , m_fPlayerAtktime(0.7f)
 {
     SetupSound();
     srand(time(NULL));
@@ -240,18 +237,30 @@ HRESULT cPlayScene::Start()
         m_pParticleFrost->Reset(attr);
     }
 
-    if (m_szMapKey == "start")
-    {
-        g_pSndManager->Play("start-bgm", 0.8f);
-    }
-    else if (m_szMapKey == "badland")
-    {
-        g_pSndManager->Play("badland-bgm", 0.8f);
-    }
-    else if (m_szMapKey == "tempdun")
-    {
-        g_pSndManager->Play("tempdun-bgm", 0.6f);
-    }
+   if (m_szMapKey == "start")
+   {
+       if (g_pSndManager->IsPlay("start-bgm"))
+       {
+           g_pSndManager->Stop("start-bgm");
+       }
+       g_pSndManager->Play("start-bgm", 0.6f);
+   }
+   else if (m_szMapKey == "badland")
+   {
+       if (g_pSndManager->IsPlay("badland-bgm"))
+       {
+           g_pSndManager->Stop("badland-bgm");
+       }
+       g_pSndManager->Play("badland-bgm", 0.6f);
+   }
+   else if (m_szMapKey == "tempdun")
+   {
+       if (g_pSndManager->IsPlay("tempdun-bgm"))
+       {
+           g_pSndManager->Stop("tempdun-bgm");
+       }
+       g_pSndManager->Play("tempdun-bgm", 0.6f);
+   }
     return S_OK;
 }
 
@@ -441,43 +450,7 @@ HRESULT cPlayScene::Update()
         {
             m_pPlayer->SetMoveSpeed(0.3f);
         }
-        if (m_szMapKey == "start" && !m_isWalk)
-        {
-            m_fWalkTime += g_pTimerManager->GetDeltaTime();
-            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
-            {
-                g_pSndManager->Play("start-walk");
-                m_fWalkTime = 0.0f;
-            }
-        }
-        else if (m_szMapKey == "badland" && !m_isWalk)
-        {
-            m_fWalkTime += g_pTimerManager->GetDeltaTime();
-            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
-            {
-                g_pSndManager->Play("badland-walk");
-                m_fWalkTime = 0.0f;
-            }
-        }
-        else if (m_szMapKey == "tempdun")
-        {
-            m_fWalkTime += g_pTimerManager->GetDeltaTime();
-            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
-            {
-                g_pSndManager->Play("tempdun-walk");
-                m_fWalkTime = 0.0f;
-            }
-        }
-        if (m_pPlayer->GetAttak())
-        {
-            m_fPlayerAtktime += g_pTimerManager->GetDeltaTime();
-            if (m_fPlayerAtktime >= 1.8f)
-            {
-                g_pSndManager->Play(m_VecSzPlayerAttack.at(m_nRandPlayerAtkIndex), 0.5f);
-            }
-        }
     }
-    m_nRandPlayerAtkIndex =  rand() % 10;
     // UI 업데이트 (플레이어 스탯)
     if (m_pPlayerStatUILayer)
     {

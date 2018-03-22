@@ -13,12 +13,16 @@ private:
 
     float m_fScale;
     float m_fCenter;
+    float m_fWalkTime;
+    vector<string> m_vecPlayerAtkSound;
+    int   m_nRandIndex;
+    int   m_nPrevIndex;
+
 
     bool m_isMoveToPoint;
     bool m_isPoint;
     bool m_isPickMonster;
     bool m_isMouse;
-
 public:
     cPlayer(string szKey, string szFolder, string szFilename);
     cPlayer(string szKey);
@@ -35,7 +39,7 @@ public:
     void PickGround(cRay ray);
     void Attack();
     void Move();
-
+    
     void SetMoveToPoint(bool MoveToPoint) { m_isMoveToPoint = MoveToPoint; }
     void SetDestPoint(Vector3 Dest) { DestPoint = Dest; }
     void SetVecMonster(vector<iCharacterObject*>* monster) { m_vecMonster = monster; }
@@ -45,5 +49,8 @@ public:
     bool GetMoveToPoint() { return m_isMoveToPoint; }
 
     void GetSwordMatrix(Matrix4& mat);
+
+    void PlayWalkSound();
+    void SetPlayerAtkSound();
 };
 

@@ -54,10 +54,6 @@ private:
     // 사운드 관련 변수
     bool                            m_isWalk;
     float                           m_fWalkTime;
-    float                           m_fBoarAtkTime;
-    float                           m_fBearAtkTime;
-    float                           m_fPlayerAtktime;
-    int                             m_nRandPlayerAtkIndex;
 public:
     cPlayScene();
     ~cPlayScene();

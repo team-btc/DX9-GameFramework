@@ -26,20 +26,20 @@ void cSoundManager::Setup()
     g_pSndManager->AddSound("badland-bgm", "play", "Assets\\Sound\\BGM\\badland\\daybarrendry01.mp3", true, true);
     g_pSndManager->AddSound("tempdun-bgm", "play", "Assets\\Sound\\BGM\\magam\\mus_43_deathwingsfall_hero_uu01.mp3", true, true);
 
-    g_pSndManager->AddSound("bear-attack", "play", "Assets\\Sound\\Effect\\bear\\mbearattacka.ogg");
-    g_pSndManager->AddSound("bear-death", "play", "Assets\\Sound\\Effect\\bear\\mbeardeatha.ogg");
+    g_pSndManager->AddSound("Bear-attack", "play", "Assets\\Sound\\Effect\\bear\\mbearattacka.ogg");
+    g_pSndManager->AddSound("Bear-death", "play", "Assets\\Sound\\Effect\\bear\\mbeardeatha.ogg");
 
-    g_pSndManager->AddSound("boar-attack", "play", "Assets\\Sound\\Effect\\boar\\mwildboarattack1.ogg");
-    g_pSndManager->AddSound("boar-death", "play", "Assets\\Sound\\Effect\\boar\\mwildboardeath1.ogg");
+    g_pSndManager->AddSound("Boar-attack", "play", "Assets\\Sound\\Effect\\boar\\mwildboarattack1.ogg");
+    g_pSndManager->AddSound("Boar-death", "play", "Assets\\Sound\\Effect\\boar\\mwildboardeath1.ogg");
 
     g_pSndManager->AddSound("start-walk", "play", "Assets\\Sound\\Effect\\Footstep\\grass\\mon_footstep_bipedal_foot_medium_grass_01.ogg", false);
     g_pSndManager->AddSound("badland-walk", "play", "Assets\\Sound\\Effect\\Footstep\\dirt\\mon_footstep_bipedal_foot_medium_dirt_01.ogg", false);
     g_pSndManager->AddSound("tempdun-walk", "play", "Assets\\Sound\\Effect\\Footstep\\stone\\mon_footstep_bipedal_foot_medium_stone_02.ogg", false);
 
-    g_pSndManager->AddSound("deathwing-attack1", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_01.ogg");
-    g_pSndManager->AddSound("deathwing-attack2", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_02.ogg");
-    g_pSndManager->AddSound("deathwing-attack3", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_03.ogg");
-    g_pSndManager->AddSound("deathwing-death", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_death_04.ogg");
+    g_pSndManager->AddSound("Deathwing-attack1", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_01.ogg");
+    g_pSndManager->AddSound("Deathwing-attack2", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_02.ogg");
+    g_pSndManager->AddSound("Deathwing-attack3", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_03.ogg");
+    g_pSndManager->AddSound("Deathwing-death", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_death_04.ogg");
 
     g_pSndManager->AddSound("attack1", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack01.ogg");
     g_pSndManager->AddSound("attack2", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack02.ogg");

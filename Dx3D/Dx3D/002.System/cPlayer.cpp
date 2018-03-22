@@ -11,6 +11,7 @@ cPlayer::cPlayer(string szKey, string szFolder, string szFilename)
     , m_isMouse(false)
     , m_fScale(0.0f)
     , m_fCenter(0.0f)
+    , m_fWalkTime(0.36f)
 {
     m_pMesh = new cSkinnedMesh(szKey, szFolder, szFilename);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -40,6 +41,7 @@ cPlayer::cPlayer(string szKey)
     , m_isMouse(false)
     , m_fScale(0.0f)
     , m_fCenter(0.0f)
+    , m_nPrevIndex(0)
 {
     m_pMesh = new cSkinnedMesh(szKey);
     g_pAutoReleasePool->AddObject(m_pMesh);
@@ -71,10 +73,13 @@ cPlayer::~cPlayer()
 
 void cPlayer::Setup()
 {
+    SetPlayerAtkSound();
+    srand(time(NULL));
 }
 
 void cPlayer::Update()
 {
+    m_nRandIndex = rand() % 10;
     if (g_pKeyManager->isOnceKeyDown(VK_ESCAPE))
     {
         m_pTarget = NULL;
@@ -111,6 +116,17 @@ void cPlayer::Update()
         {
             m_isPoint = true;
             AttackAnim();
+            if (g_pSndManager->IsPlay(m_vecPlayerAtkSound[m_nPrevIndex]))
+            {
+                g_pSndManager->Stop(m_vecPlayerAtkSound[m_nPrevIndex]);
+                g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+                m_nPrevIndex = m_nRandIndex;
+            }
+            else
+            {
+                g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
+                m_nPrevIndex = m_nRandIndex;
+            }
         }
 
         //공격중이아니라면 이동할수있고 회복스킬을 쓸수있다.
@@ -237,6 +253,8 @@ void cPlayer::Update()
         Attack();
     }
 
+   
+
     m_pMesh->SetScale(m_fScale);
     m_pMesh->SetRotation(Vector3(0, D3DXToDegree(m_fRotY) - 90.0f, 0));
     m_pMesh->SetPosition(m_vPosition);
@@ -266,6 +284,75 @@ ULONG cPlayer::Release()
 void cPlayer::GetSwordMatrix(Matrix4 & mat)
 {
     m_pMesh->GetMatrixByName(mat, "creature_arthaslichking_arthaslichking_bone_43");
+}
+
+void cPlayer::PlayWalkSound()
+{
+    if (g_pMapManager->GetCurrKey() == "start")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            if (g_pSndManager->IsPlay("start-walk"))
+            {
+                g_pSndManager->Stop("start-walk");
+                g_pSndManager->Play("start-walk");
+            }
+            else
+            {
+                g_pSndManager->Play("start-walk");
+            }
+            m_fWalkTime = 0.0f;
+        }
+    }
+    else if (g_pMapManager->GetCurrKey() == "badland")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            if (g_pSndManager->IsPlay("badland-walk"))
+            {
+                g_pSndManager->Stop("badland-walk");
+                g_pSndManager->Play("badland-walk");
+            }
+            else
+            {
+                g_pSndManager->Play("badland-walk");
+            }
+            m_fWalkTime = 0.0f;
+        }
+    }
+    else if (g_pMapManager->GetCurrKey() == "tempdun")
+    {
+        m_fWalkTime += g_pTimerManager->GetDeltaTime();
+        if (m_fWalkTime >= 0.45f)
+        {
+            if (g_pSndManager->IsPlay("start-walk"))
+            {
+                g_pSndManager->Stop("tempdun-walk");
+                g_pSndManager->Play("tempdun-walk");
+            }
+            else
+            {
+                g_pSndManager->Play("tempdun-walk");
+            }
+            m_fWalkTime = 0.0f;
+        }
+    }
+}
+
+void cPlayer::SetPlayerAtkSound()
+{
+    m_vecPlayerAtkSound.push_back("attack1");
+    m_vecPlayerAtkSound.push_back("attack2");
+    m_vecPlayerAtkSound.push_back("attack3");
+    m_vecPlayerAtkSound.push_back("attack4");
+    m_vecPlayerAtkSound.push_back("attack5");
+    m_vecPlayerAtkSound.push_back("attack6");
+    m_vecPlayerAtkSound.push_back("attack7");
+    m_vecPlayerAtkSound.push_back("attack8");
+    m_vecPlayerAtkSound.push_back("attack9");
+    m_vecPlayerAtkSound.push_back("attack10");
 }
 
 void cPlayer::PickMonster(cRay ray)
@@ -325,9 +412,11 @@ void cPlayer::Attack()
         isMoveToTarget = false;
         m_isPoint = true;
         AttackAnim();
+        g_pSndManager->Play(m_vecPlayerAtkSound[m_nRandIndex], 0.7f);
     }
     else
     {
+        PlayWalkSound();
         m_vPosition += m_vDir * m_fMoveSpeed;
         m_stSphere.vCenter = m_vPosition;
     }
@@ -365,7 +454,7 @@ void cPlayer::Move()
     }
     D3DXMatrixRotationY(&m_MatRotate, m_fRotY);
     D3DXMatrixTranslation(&m_MatTrans, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-
+    PlayWalkSound();
     //도착
     if (Distance(DestPoint) < m_fMoveSpeed)
     {
@@ -373,6 +462,7 @@ void cPlayer::Move()
         IdleAnim();
         m_isMoveToPoint = false;
         DestPoint = Vector3(0, 0, 0);
+        m_fWalkTime = 0.36f;
     }
 }
 
