@@ -1,0 +1,46 @@
+{
+    "start": [
+        {
+            "name": "MOVE TO NEXT POSITION 1",
+            "type": "MOVE",
+            "target": "POSITION",
+            "count": 0,
+            "goal": 1,
+            "event": "q-1",
+            "desc": "Move to target position",
+            "exp": 100
+        },
+        {
+            "name": "MOVE TO NEXT POSITION 2",
+            "type": "MOVE",
+            "target": "POSITION",
+            "count": 0,
+            "goal": 1,
+            "event": "q-2",
+            "desc": "Move to target position",
+            "exp": 100
+        }
+    ],
+    "badland": [
+        {
+            "name": "HUNTING THE TARGET",
+            "type": "HUNT",
+            "target": "bear",
+            "count": 0,
+            "goal": 1,
+            "event": "bear",
+            "desc": "Kill the bear",
+            "exp": 1
+        },
+        {
+            "name": "HUNTING THE TARGET",
+            "type": "HUNT",
+            "target": "boar",
+            "count": 0,
+            "goal": 1,
+            "event": "boar",
+            "desc": "Kill the boar",
+            "exp": 2
+        }
+    ]
+}

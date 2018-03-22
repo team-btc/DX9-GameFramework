@@ -20,6 +20,7 @@ cPlayScene::cPlayScene()
     , m_pGear(NULL)
     , m_pParticleFrost(NULL)
     , m_pPlayer(NULL)
+    , m_pQuest(NULL)
     , m_isRoar(false)
 {
 }
@@ -233,6 +234,10 @@ HRESULT cPlayScene::Start()
         m_pParticleFrost->Reset(attr);
     }
 
+    //  QUEST 세팅
+    m_pQuest = m_pQuest == NULL ? new cQuest : m_pQuest;
+    m_pQuest->Setup(m_szMapKey);
+
     return S_OK;
 }
 
@@ -402,6 +407,7 @@ HRESULT cPlayScene::Update()
         }
         else
         {
+            m_pQuest->EmitMessage((*iter)->GetName());
             iter = (*m_vecMonster).erase(iter);
         }
     }
@@ -435,6 +441,11 @@ HRESULT cPlayScene::Update()
     if (m_pTargetStatUILayer)
     {
         m_pTargetStatUILayer->Update();
+    }
+
+    if (m_pQuest)
+    {
+        m_pQuest->Update();
     }
 
     // 이벤트 체크
@@ -597,12 +608,15 @@ HRESULT cPlayScene::Render()
         m_pParticleFrost->Render();
     }
 
-#ifdef _DEBUG
+    if (m_pQuest)
+    {
+        m_pQuest->Render();
+    }
 
+#ifdef _DEBUG
     // 장애물, 이벤트 트랩 출력
     m_pGameMap->RendObstacle();
     m_pGameMap->RendEventTrap();
-
 #endif // _DEBUG
 
     return S_OK;
@@ -618,6 +632,7 @@ ULONG cPlayScene::Release()
     SAFE_DELETE(m_pWaveShader);
     SAFE_DELETE(m_pGameMap);
     SAFE_DELETE(m_pParticleFrost);
+    SAFE_RELEASE(m_pQuest);
     SAFE_RELEASE(m_pShop);
     SAFE_RELEASE(m_pInventory);
     SAFE_RELEASE(m_pGear);
@@ -865,10 +880,14 @@ void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void cPlayScene::ParseEvent(string szCommand)
 {
     string szPrefix = szCommand.substr(0, szCommand.find('-'));
+    string szPostfix = szCommand.substr(szCommand.find('-') + 1);
     if (szPrefix == "to")
     {
-        string szPostfix = szCommand.substr(szCommand.find('-') + 1);
         TransportMap(szPostfix);
+    }
+    else if (szPrefix == "q")
+    {
+        m_pQuest->EmitMessage(szCommand);
     }
 }
 

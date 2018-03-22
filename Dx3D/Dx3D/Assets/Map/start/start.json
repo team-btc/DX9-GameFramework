@@ -215,6 +215,18 @@
             "event-position-z": 146.918716430664
         },
         {
+            "event-name": "q-1",
+            "event-position-x": 217.940551757813,
+            "event-position-y": 150.811309814453,
+            "event-position-z": 128.918716430664
+        },
+        {
+            "event-name": "q-2",
+            "event-position-x": 128.940551757813,
+            "event-position-y": 150.811309814453,
+            "event-position-z": 128.918716430664
+        },
+        {
             "event-name": "startpos",
             "event-position-x": 241.965667724609,
             "event-position-y": 127.999969482422,

@@ -15,6 +15,11 @@
 #include "cShop.h"
 #include "cInventory.h"
 #include "cGear.h"
+#include "cQuest.h"
+
+class cUILayer;
+class cShop;
+class cInventory;
 
 class cPlayScene : public iSceneObject
 {
@@ -42,6 +47,8 @@ private:
     cGear*                          m_pGear;
 
     cParticle*                      m_pParticleFrost;
+
+    cQuest*                         m_pQuest;
 
 private:
     void SetUI();

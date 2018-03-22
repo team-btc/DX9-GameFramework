@@ -72,6 +72,7 @@ cPlayer::~cPlayer()
 void cPlayer::Setup()
 {
     UISetup();
+    m_fMoveSpeed = 0.0f;
 }
 
 void cPlayer::Update()
@@ -93,8 +94,8 @@ void cPlayer::Update()
         m_stStat.nCurEXP -= m_stStat.nMaxEXP;
         m_stStat.Level++;
         SetLevelToStatus(m_stStat.szName,m_stStat.Level);
-        cout << "레벨업 " << endl;
-        cout << "현재 레벨:" << m_stStat.Level << endl;
+        //cout << "레벨업 " << endl;
+        //cout << "현재 레벨:" << m_stStat.Level << endl;
     }
 
     if (!isAttack)
@@ -102,7 +103,7 @@ void cPlayer::Update()
         //오른쪽 버튼 누를시
         if (g_pKeyManager->isOnceKeyDown(VK_RBUTTON))
         {
-            m_isMouse = true;;
+            m_isMouse = true;
             cRay ray = cRay::RayAtWorldSpace(g_ptMouse.x, g_ptMouse.y);
             PickMonster(ray);
             PickGround(ray);

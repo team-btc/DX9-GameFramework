@@ -106,8 +106,8 @@ void cMonster::Update()
         ST_STATUS TargetStatus = m_pTarget->GetStatus();
         TargetStatus.nCurEXP += m_stStat.nMaxEXP;
         m_pTarget->SetStatus(TargetStatus);
-        cout << "얻은경험치:" << m_stStat.nMaxEXP << endl;
-        cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
+        //cout << "얻은경험치:" << m_stStat.nMaxEXP << endl;
+        //cout << "현재경험치:" << TargetStatus.nCurEXP << endl;
 
         m_pTarget->SetTarget(NULL);
         m_stSphere.fRadius = 0;

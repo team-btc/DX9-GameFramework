@@ -73,19 +73,16 @@ void cGameMap::RendObstacle()
 
     g_pDevice->SetTransform(D3DTS_WORLD, &matW);
     g_pDevice->SetTexture(0, NULL);
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
     m_stCurrMapInfo->pObstacleMesh->DrawSubset(0);
 
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
 void cGameMap::RendEventTrap()
 {
     g_pDevice->SetTexture(0, NULL);
-    g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
     g_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
     for (int i = 0; i < m_stCurrMapInfo->vecEventInfo.size(); ++i)

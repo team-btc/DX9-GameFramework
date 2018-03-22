@@ -4,6 +4,11 @@
 
 cFontManager::cFontManager()
 {
+    string fontpath = FONT_PATH;
+    m_listFont.push_back("Assets\\Font\\Abaddon.ttf");
+    m_listFont.push_back("Assets\\Font\\Folkard.ttf");
+    m_listFont.push_back("Assets\\Font\\FrizQt.ttf");
+    m_listFont.push_back("Assets\\Font\\Warcraft.ttf");
 }
 
 cFontManager::~cFontManager()
@@ -12,8 +17,10 @@ cFontManager::~cFontManager()
 
 HRESULT cFontManager::Setup()
 {
-    AddFontResource(_TEXT("UI/umberto.ttf"));
-    AddFontResource(_TEXT("Assets\\Font\\Warcraft.ttf"));
+    for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
+    {
+        int i = AddFontResourceA(iter->c_str());
+    }
 
     return S_OK;
 }
@@ -30,11 +37,15 @@ HRESULT cFontManager::Render()
 
 HRESULT cFontManager::Destroy()
 {
-    RemoveFontResource(_TEXT("umberto"));
-    RemoveFontResource(_TEXT("Assets\\Font\\Warcraft.ttf"));
+    for (auto iter = m_listFont.begin(); iter != m_listFont.end(); iter++)
+    {
+        RemoveFontResourceA(iter->c_str());
+    }
 
     for each (auto p in m_mapFont)
+    {
         SAFE_RELEASE(p.second);
+    }
 
     m_mapFont.clear();
 
@@ -60,7 +71,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("umberto"),
+                    _TEXT("Abaddon¢â"),
                     &m_mapFont[e]);
                 break;
             }
@@ -81,13 +92,17 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                 break;
             }
             case cFontManager::E_NORMAL:
+            {
                 break;
+            }
             case cFontManager::E_CHAT:
+            {
                 break;
+            }
             case cFontManager::E_QUEST:
             {
-                D3DXCreateFont(g_pDevice,
-                    25,
+                HRESULT hr = D3DXCreateFontA(g_pDevice,
+                    40,
                     0,
                     FW_DONTCARE,
                     1,
@@ -96,7 +111,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("umberto"),
+                    "WarCraftFont",
                     &m_mapFont[e]);
                 break;
             }
@@ -144,7 +159,7 @@ LPFONTDX cFontManager::GetFont(eFontType e)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     false,
-                    _TEXT("Rimbo"),
+                    _TEXT("WarCraftFont"),
                     &m_mapFont[e]);
                 break;
             }

@@ -16,6 +16,7 @@ HRESULT cGameManager::Setup()
 {
     LoadPlayerInfo();
     LoadItemInfo();
+    LoadQuestInfo();
 
     return S_OK;
 }
@@ -244,4 +245,17 @@ ST_ITEM_INFO* cGameManager::GetItemInfoById(int id)
     }
 
     return stItemInfo;
+}
+
+void cGameManager::LoadQuestInfo()
+{
+    ifstream i;
+    i.open("Assets\\Data\\QuestList.json", ios_base::in);
+    i >> m_jQuestInfo;
+    i.close();
+}
+
+json cGameManager::GetQuest(string map)
+{
+    return m_jQuestInfo[map];
 }
