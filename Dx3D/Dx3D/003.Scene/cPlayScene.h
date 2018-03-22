@@ -42,11 +42,22 @@ private:
 
     cParticle*                      m_pParticleFrost;
 
+    vector<string>                  m_VecSzDeathwingAttack;
+    vector<string>                  m_VecSzPlayerAttack;
+    
 private:
     void SetUI();
     void UpdateUI();
+    void SetupSound();
+    bool                            m_isRoar;
 
-    bool                m_isRoar;
+    // 사운드 관련 변수
+    bool                            m_isWalk;
+    float                           m_fWalkTime;
+    float                           m_fBoarAtkTime;
+    float                           m_fBearAtkTime;
+    float                           m_fPlayerAtktime;
+    int                             m_nRandPlayerAtkIndex;
 public:
     cPlayScene();
     ~cPlayScene();

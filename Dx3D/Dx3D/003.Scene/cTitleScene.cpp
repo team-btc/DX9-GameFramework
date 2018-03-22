@@ -16,7 +16,15 @@ cTitleScene::cTitleScene()
     , m_fWorldTime(-1.0f)
     , m_isPressSpace(false)
     , m_isPopup(false)
+    , m_nSoundIndex(0)
 {
+    g_pSndManager->AddSound("title-bgm", "title", "Assets\\Sound\\BGM\\title\\ir_frozenthrone_06.mp3", true, true);
+    g_pSndManager->AddSound("title-start", "title", "Assets\\Sound\\Effect\\Arthaslichking\\ic_lich king_frostmourne_is_hunger.ogg");
+    g_pSndManager->AddSound("title-walk", "title", "Assets\\Sound\\Effect\\Footstep\\dirt\\mon_footstep_bipedal_foot_medium_dirt_011.ogg", false, false);
+    g_pSndManager->AddSound("title-fly", "title", "Assets\\Sound\\Effect\\Sindragosa\\hugewingflap3.ogg", false, true);
+    g_pSndManager->AddSound("title-roar", "title", "Assets\\Sound\\Effect\\Sindragosa\\spell_dk_artifact_sindragosasfury_dragonroar.ogg");
+    g_pSndManager->AddSound("title-breath", "title", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_death_02.ogg");
+
 }
 
 
@@ -123,7 +131,7 @@ HRESULT cTitleScene::Start()
     m_pSCLayer->SetAlphaInterval(2);
     m_pSCLayer->SetDeltaInterval(0.01f);
     m_pSCLayer->SetActive(true);
-
+    g_pSndManager->Play("title-bgm", 0.5f);
     return S_OK;
 }
 
@@ -135,16 +143,25 @@ HRESULT cTitleScene::Update()
     {
         m_pSindragosa->SetAnimationByName("Stand");
         m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.0f;
+        m_fRoarTime = g_pTimerManager->GetWorldTime() + 5.75f;
     }
-
+    if (m_nSoundIndex == 0)
+    {
+        if (m_fRoarTime < g_pTimerManager->GetWorldTime())
+        {
+            g_pSndManager->Play("title-roar");
+            m_nSoundIndex++;
+        }
+    }
     if (m_nCurrIndex == 0)
     {
+      
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
             m_nCurrIndex++;
             m_pSindragosa->SetAnimationByName("Roar");
-            //g_pSndManager->Play("sindragosa-roar");
             m_fWorldTime = g_pTimerManager->GetWorldTime() + 5.8f;
+
         }
     }
     else if (m_nCurrIndex == 1)
@@ -154,6 +171,11 @@ HRESULT cTitleScene::Update()
             m_nCurrIndex++;
             m_pSindragosa->SetAnimationByName("FlySitGroundUp");
             m_fWorldTime = g_pTimerManager->GetWorldTime() + 3.0f;
+            if (m_nSoundIndex == 1)
+            {
+                g_pSndManager->Play("title-fly");
+                m_nSoundIndex++;
+            }
         }
     }
     else if (m_nCurrIndex == 2)
@@ -175,6 +197,7 @@ HRESULT cTitleScene::Update()
             m_fSpeed = 100.0f;
             m_pSindragosa->SetAnimationByName("FlyWalk");
             m_fWorldTime = g_pTimerManager->GetWorldTime() + 15.0f;
+            g_pSndManager->Pause("title-fly");
         }
     }
     else if (m_nCurrIndex == 3)
@@ -185,6 +208,7 @@ HRESULT cTitleScene::Update()
         m_pSindragosa->SetPosition(pos);
         if (m_fWorldTime < g_pTimerManager->GetWorldTime())
         {
+          
             m_nCurrIndex++;
         }
         if (g_pTimerManager->GetWorldTime() > 17.0f)
@@ -194,10 +218,11 @@ HRESULT cTitleScene::Update()
     }
     else if (m_nCurrIndex == 4)
     {
-                    
+        m_fWalkTime = g_pTimerManager->GetWorldTime() + 1.0f;
     }
     else if (m_nCurrIndex == 5)
     {
+
         Vector3 pos = m_pArthas->GetPosition();
         pos.x += 10.0f * g_pTimerManager->GetDeltaTime();
         pos.z += 30.0f * g_pTimerManager->GetDeltaTime();
@@ -207,6 +232,11 @@ HRESULT cTitleScene::Update()
         {
             //  SET BLACK SCREEN
             m_nCurrIndex = 6;
+        }
+        if (m_fWalkTime < g_pTimerManager->GetWorldTime())
+        {
+            g_pSndManager->Play("title-walk", 0.7f);
+            m_fWalkTime = g_pTimerManager->GetWorldTime() + 1.5f;
         }
     }
     else if (m_nCurrIndex == 6)
@@ -218,17 +248,26 @@ HRESULT cTitleScene::Update()
             m_pSCLayer->SetBackGroundColor(D3DCOLOR_RGBA(255, 255, 255, 255));
             m_nCurrIndex = 10;
         }
-
+        if (m_fWalkTime < g_pTimerManager->GetWorldTime())
+        {
+            g_pSndManager->Play("title-walk", 0.7f);
+            m_fWalkTime = g_pTimerManager->GetWorldTime() + 1.5f;
+        }
 
     }
     else if (m_nCurrIndex == 10)
     {
+        g_pSndManager->Pause("title-bgm");
         //g_pScnManager->SetNextSceneName("play");
         g_pScnManager->ChangeScene("play");
     }
 
     if (m_isPopup && g_pKeyManager->isOnceKeyDown(VK_SPACE))
     {
+        if (m_nSoundIndex == 2)
+        {
+            g_pSndManager->Play("title-start");
+        }
         m_pArthas->SetAnimationByName("Walk");
         m_pArthas->SetAnimationSpeed(1.0f);
         m_pArthas->SetRotation(Vector3(0.0f, -80.0f, 0.0f));

@@ -42,11 +42,18 @@ HRESULT cEndingScene::Start()
 
     m_pBGLayer->Setup();
     
+    g_pSndManager->AddSound("ending-bgm", "ending", ENDING_SOUND_PATH + (string)"ending.mp3", true);
+    m_fWorldTime = -1.0f;
     return S_OK;
 }
 
 HRESULT cEndingScene::Update()
 {
+    if (!m_isStart)
+    {
+        g_pSndManager->Play("ending-bgm", 1.0f);
+    }
+
     if (g_pKeyManager->isOnceKeyDown(VK_RETURN))
     {
         m_isStart = true;
@@ -79,6 +86,7 @@ HRESULT cEndingScene::Update()
 
     m_pUIBG2->SetLocalPos(Vector3(0, m_fTexPos2, 0));
     m_pUIBG->SetLocalPos(Vector3(0, m_fTexPos, 0));
+    m_isStart = true;
 
     m_pBGLayer->Update();
     return S_OK;

@@ -3,7 +3,8 @@
 #include "cUiLayer.h"
 #include "cUIImageView.h"
 
-#define     SCROLL_SPD      0.354f
+#define     SCROLL_SPD      0.455f
+#define     ENDING_SOUND_PATH    "Assets\\Sound\\BGM\\ending\\"
 class cEndingScene : public iSceneObject
 {
 private:
@@ -14,6 +15,7 @@ private:
     cUIImageView*       m_pUIBG;
     cUIImageView*       m_pUIBG2;
 
+    float               m_fWorldTime;
     bool                m_isStart;
 public:
     cEndingScene();

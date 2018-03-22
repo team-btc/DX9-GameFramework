@@ -22,17 +22,36 @@ cSoundManager::~cSoundManager()
 
 void cSoundManager::Setup()
 {
-    AddSound("player-attack-01", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack01.ogg", false, false);
-    AddSound("player-attack-02", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack02.ogg", false, false);
-    AddSound("player-attack-03", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack03.ogg", false, false);
-    AddSound("store-open", "play", "Assets\\Sound\\Effect\\Store\\auctionwindowclose.ogg", false, false);
-    AddSound("store-close", "play", "Assets\\Sound\\Effect\\Store\\auctionwindowopen.ogg", false, false);
-    AddSound("shop-01", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping01.ogg", false, false);
-    AddSound("shop-02", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping04.ogg", false, false);
-    AddSound("shop-03", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping09.ogg", false, false);
-    AddSound("shop-04", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping13.ogg", false, false);
-    AddSound("shop-05", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping18.ogg", false, false);
-    AddSound("shop-06", "play", "Assets\\Sound\\Effect\\Store\\humanmalemerchantcstartshopping19.ogg", false, false);
+    g_pSndManager->AddSound("start-bgm", "play", "Assets\\Sound\\BGM\\start\\na_generalwalknight03.mp3", true, true);
+    g_pSndManager->AddSound("badland-bgm", "play", "Assets\\Sound\\BGM\\badland\\daybarrendry01.mp3", true, true);
+    g_pSndManager->AddSound("tempdun-bgm", "play", "Assets\\Sound\\BGM\\magam\\mus_43_deathwingsfall_hero_uu01.mp3", true, true);
+
+    g_pSndManager->AddSound("bear-attack", "play", "Assets\\Sound\\Effect\\bear\\mbearattacka.ogg");
+    g_pSndManager->AddSound("bear-death", "play", "Assets\\Sound\\Effect\\bear\\mbeardeatha.ogg");
+
+    g_pSndManager->AddSound("boar-attack", "play", "Assets\\Sound\\Effect\\boar\\mwildboarattack1.ogg");
+    g_pSndManager->AddSound("boar-death", "play", "Assets\\Sound\\Effect\\boar\\mwildboardeath1.ogg");
+
+    g_pSndManager->AddSound("start-walk", "play", "Assets\\Sound\\Effect\\Footstep\\grass\\mon_footstep_bipedal_foot_medium_grass_01.ogg", false);
+    g_pSndManager->AddSound("badland-walk", "play", "Assets\\Sound\\Effect\\Footstep\\dirt\\mon_footstep_bipedal_foot_medium_dirt_01.ogg", false);
+    g_pSndManager->AddSound("tempdun-walk", "play", "Assets\\Sound\\Effect\\Footstep\\stone\\mon_footstep_bipedal_foot_medium_stone_02.ogg", false);
+
+    g_pSndManager->AddSound("deathwing-attack1", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_01.ogg");
+    g_pSndManager->AddSound("deathwing-attack2", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_02.ogg");
+    g_pSndManager->AddSound("deathwing-attack3", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_attack_03.ogg");
+    g_pSndManager->AddSound("deathwing-death", "play", "Assets\\Sound\\Effect\\Deathwing\\mon_deathwing_death_04.ogg");
+
+    g_pSndManager->AddSound("attack1", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack01.ogg");
+    g_pSndManager->AddSound("attack2", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack02.ogg");
+    g_pSndManager->AddSound("attack3", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack03.ogg");
+    g_pSndManager->AddSound("attack4", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack04.ogg");
+    g_pSndManager->AddSound("attack5", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack05.ogg");
+    g_pSndManager->AddSound("attack6", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack06.ogg");
+    g_pSndManager->AddSound("attack7", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack07.ogg");
+    g_pSndManager->AddSound("attack8", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack08.ogg");
+    g_pSndManager->AddSound("attack9", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack09.ogg");
+    g_pSndManager->AddSound("attack10", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_attack10.ogg");
+    g_pSndManager->AddSound("death", "play", "Assets\\Sound\\Effect\\Arthaslichking\\hr_lich king_death01.ogg");
 }
 
 void cSoundManager::Update()

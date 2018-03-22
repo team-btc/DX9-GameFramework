@@ -14,13 +14,20 @@ cPlayScene::cPlayScene()
     , m_pTextureShader(NULL)
     , m_pSkyBoxShader(NULL)
     , m_pWaveShader(NULL)
-    , m_szMapKey("start")
+    , m_szMapKey("tempdun")
     , m_pShop(NULL)
     , m_pInventory(NULL)
     , m_pParticleFrost(NULL)
     , m_pPlayer(NULL)
     , m_isRoar(false)
+    , m_isWalk(false)
+    , m_fWalkTime(0.0f)
+    , m_fBoarAtkTime(0.5f)
+    , m_fBearAtkTime(0.2f)
+    , m_fPlayerAtktime(0.7f)
 {
+    SetupSound();
+    srand(time(NULL));
 }
 
 
@@ -233,6 +240,18 @@ HRESULT cPlayScene::Start()
         m_pParticleFrost->Reset(attr);
     }
 
+    if (m_szMapKey == "start")
+    {
+        g_pSndManager->Play("start-bgm", 0.8f);
+    }
+    else if (m_szMapKey == "badland")
+    {
+        g_pSndManager->Play("badland-bgm", 0.8f);
+    }
+    else if (m_szMapKey == "tempdun")
+    {
+        g_pSndManager->Play("tempdun-bgm", 0.6f);
+    }
     return S_OK;
 }
 
@@ -387,7 +406,32 @@ HRESULT cPlayScene::Update()
                 (*iter)->SetMoveSpeed(0.08f);
             }
         }
-
+        // ========================= 사운드 추가 
+        if ((*iter)->GetName() == "Boar" )
+        {
+            if ((*iter)->GetAttak())
+            {
+                m_fBoarAtkTime += g_pTimerManager->GetDeltaTime();
+                if (m_fBoarAtkTime >= 1.0f)
+                {
+                    g_pSndManager->Play("boar-attack");
+                    m_fBoarAtkTime = 0.0f;
+                }
+            }
+        }
+        else if ((*iter)->GetName() == "Bear")
+        {
+            if ((*iter)->GetAttak())
+            {
+                m_fBearAtkTime += g_pTimerManager->GetDeltaTime();
+                if (m_fBearAtkTime >= 1.4f)
+                {
+                    g_pSndManager->Play("bear-attack");
+                    m_fBearAtkTime = 0.0f;
+                }
+            }
+        }
+        // ===================================
         if ((*iter)->GetRoar())
         {
             m_isRoar = true;
@@ -402,6 +446,14 @@ HRESULT cPlayScene::Update()
         }
         else
         {
+            if ((*iter)->GetName() == "Boar")
+            {
+                g_pSndManager->Play("boar-death");
+            }
+            else if ((*iter)->GetName() == "Bear")
+            {
+                g_pSndManager->Play("bear-death");
+            }
             iter = (*m_vecMonster).erase(iter);
         }
     }
@@ -423,8 +475,43 @@ HRESULT cPlayScene::Update()
         {
             m_pPlayer->SetMoveSpeed(0.3f);
         }
+        if (m_szMapKey == "start" && !m_isWalk)
+        {
+            m_fWalkTime += g_pTimerManager->GetDeltaTime();
+            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
+            {
+                g_pSndManager->Play("start-walk");
+                m_fWalkTime = 0.0f;
+            }
+        }
+        else if (m_szMapKey == "badland" && !m_isWalk)
+        {
+            m_fWalkTime += g_pTimerManager->GetDeltaTime();
+            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
+            {
+                g_pSndManager->Play("badland-walk");
+                m_fWalkTime = 0.0f;
+            }
+        }
+        else if (m_szMapKey == "tempdun")
+        {
+            m_fWalkTime += g_pTimerManager->GetDeltaTime();
+            if (m_fWalkTime >= 0.45f && !m_pPlayer->GetIdle() && !m_pPlayer->GetAttak() && !m_pPlayer->GetHeal())
+            {
+                g_pSndManager->Play("tempdun-walk");
+                m_fWalkTime = 0.0f;
+            }
+        }
+        if (m_pPlayer->GetAttak())
+        {
+            m_fPlayerAtktime += g_pTimerManager->GetDeltaTime();
+            if (m_fPlayerAtktime >= 1.8f)
+            {
+                g_pSndManager->Play(m_VecSzPlayerAttack.at(m_nRandPlayerAtkIndex), 0.5f);
+            }
+        }
     }
-
+    m_nRandPlayerAtkIndex =  rand() % 10;
     // UI 업데이트 (플레이어 스탯)
     if (m_pPlayerStatUILayer)
     {
@@ -690,6 +777,24 @@ void cPlayScene::UpdateUI()
         pProgress->SetCurrentGuage(m_pPlayer->GetStatus().fCurMP);
         pProgress->SetMaxGuage(m_pPlayer->GetStatus().fMaxMP);
     }
+}
+
+void cPlayScene::SetupSound()
+{
+    m_VecSzDeathwingAttack.push_back("deathwing-attack1");
+    m_VecSzDeathwingAttack.push_back("deathwing-attack2");
+    m_VecSzDeathwingAttack.push_back("deathwing-attack3");
+
+    m_VecSzPlayerAttack.push_back("attack1");
+    m_VecSzPlayerAttack.push_back("attack2");
+    m_VecSzPlayerAttack.push_back("attack3");
+    m_VecSzPlayerAttack.push_back("attack4");
+    m_VecSzPlayerAttack.push_back("attack5");
+    m_VecSzPlayerAttack.push_back("attack6");
+    m_VecSzPlayerAttack.push_back("attack7");
+    m_VecSzPlayerAttack.push_back("attack8");
+    m_VecSzPlayerAttack.push_back("attack9");
+    m_VecSzPlayerAttack.push_back("attack10");
 }
 
 void cPlayScene::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
