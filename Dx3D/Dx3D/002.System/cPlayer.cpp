@@ -52,7 +52,7 @@ cPlayer::cPlayer(string szKey)
     m_eTag = PLAYER;
 
     m_stStat.szName = szKey;
-    m_stStat.Level = 1;
+    m_stStat.Level = g_pMeshManager->GetJson("Status")[m_stStat.szName]["LEVEL"];
 
     SetLevelToStatus(m_stStat.szName, m_stStat.Level);
 
@@ -77,6 +77,8 @@ void cPlayer::Setup()
     UISetup();
     m_fMoveSpeed = 0.0f;
     SetPlayerAtkSound();
+    m_isMoveToPoint = false;
+    IdleAnim();
 }
 
 void cPlayer::Update()
@@ -93,9 +95,21 @@ void cPlayer::Update()
         m_pTarget = NULL;
     }
 
-    if (g_pKeyManager->isOnceKeyDown('C'))
+    if (g_pKeyManager->isOnceKeyDown('G'))
+    {
+        m_stStat.Level--;
+        SetLevelToStatus(m_stStat.szName, m_stStat.Level);
+    }
+
+    if (g_pKeyManager->isOnceKeyDown('H'))
     {
         m_stStat.Level++;
+        SetLevelToStatus(m_stStat.szName, m_stStat.Level);
+    }
+
+    if (g_pKeyManager->isOnceKeyDown('J'))
+    {
+        g_pGameManager->Pay(1000);
     }
 
     // 쉬프트 누를시
@@ -114,8 +128,15 @@ void cPlayer::Update()
         m_stStat.nCurEXP -= m_stStat.nMaxEXP;
         m_stStat.Level++;
         SetLevelToStatus(m_stStat.szName,m_stStat.Level);
-        //cout << "레벨업 " << endl;
-        //cout << "현재 레벨:" << m_stStat.Level << endl;
+
+        if (m_isUsingRoar)
+        {
+            m_stStat.fCurHP += 500.0f;
+            m_stStat.fMaxHP += 500.0f;
+            m_stStat.fATK += 100.0f;
+            m_stStat.fDEF += 50.0f;
+            m_fScale = 12.0f;
+        }
     }
 
     if (m_isUsingRoar)
@@ -159,10 +180,18 @@ void cPlayer::Update()
         //원거리 스킬
         if (g_pKeyManager->isOnceKeyDown('2'))
         {
-            isRecovery = false;
-            m_fRecoveryCount = 0.0f;
-            m_isPoint = true;
-            AttackAnim();
+            if (m_stStat.fCurMP >= 200.0f)
+            {
+                isRecovery = false;
+                m_fRecoveryCount = 0.0f;
+                m_isPoint = true;
+                CastingAnim();
+                g_pSndManager->Play("skill");
+                isCasting = true;
+                isAction = true;
+                m_isMoveToPoint = false;
+                m_fMoveSpeed = 0.0f;
+            }
         }
 
         //위협
@@ -197,8 +226,8 @@ void cPlayer::Update()
             if (m_stStat.fCurMP >= 50.0f && m_stStat.fCurHP < m_stStat.fMaxHP)
             {
                 g_pSndManager->Play("heal");
-                Action("Heal", 50.0f + m_stStat.fINT * 4);
-                m_stStat.fCurMP -= 50.0f;
+                HealAnim();
+                isAction = true;
             }
         }
 
@@ -336,6 +365,51 @@ void cPlayer::Update()
             {
                 isAction = false;
                 isRoar = false;
+                IdleAnim();
+            }
+        }
+        else if (isHeal)
+        {
+            if (m_pMesh->GetCurPos() >= 1.0f)
+            {
+                Action("Heal", 50.0f + m_stStat.fINT * 4);
+                m_stStat.fCurMP -= 50.0f;
+                isAction = false;
+                isHeal = false;
+                IdleAnim();
+            }
+        }
+        else if (isCasting)
+        {
+            if (m_pMesh->GetCurPos() >= 3.0f)
+            {
+                isCasting = false;
+                FireAnim();
+            }
+        }
+        else if (isFire)
+        {
+            if (m_pMesh->GetCurPos() >= 1.0f)
+            {
+                isAction = false;
+                isFire = false;
+                if (m_pTarget)
+                {
+                    //데미지 계산식을 넣어야함 조금수정해야함
+                    float ATK = m_stStat.fATK + (m_stStat.fSTR * 2) <= m_pTarget->GetStatus().fDEF ? 1 : m_stStat.fATK + (m_stStat.fSTR * 5) + (m_stStat.fINT*8);
+                    Action("Attack", ATK);
+                    m_stStat.fCurMP -= 200.0f;
+
+                    // UI 셋팅
+                    AddAttUI((int)ATK);
+
+                    m_pTarget->RayCast(this); // 어그로 주고
+                    if (m_pTarget->GetTag() == MONSTER)
+                    {
+                        cMonster* Target = (cMonster*)m_pTarget;
+                        Target->SetAggroTime(AggroTime);
+                    }
+                }
                 IdleAnim();
             }
         }

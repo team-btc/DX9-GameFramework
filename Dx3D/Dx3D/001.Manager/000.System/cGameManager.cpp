@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "cGameManager.h"
+#include "cPlayer.h"
 
 
 cGameManager::cGameManager()

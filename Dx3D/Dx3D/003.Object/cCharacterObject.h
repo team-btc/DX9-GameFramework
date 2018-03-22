@@ -44,6 +44,8 @@ public:
     virtual void SetIdle(bool Idle) override { isIdle = Idle; }
     virtual void SetHeal(bool Heal) override { isHeal = Heal; }
     virtual void SetRoar(bool Roar) override { isRoar = Roar; }
+    virtual void SetCasting(bool Casting) override { isCasting = Casting; }
+    virtual void SetFire(bool Fire) override { isFire = Fire; }
 
     virtual void SetRecovery(bool Recovery) override { isRecovery = Recovery; }
     virtual void SetAction(bool Action) override { isAction = Action; }
@@ -77,6 +79,8 @@ public:
     virtual bool GetIdle() override { return isIdle; }
     virtual bool GetHeal() override { return isHeal; }
     virtual bool GetRoar() override { return isRoar; }
+    virtual bool GetCasting() override { return isCasting; }
+    virtual bool GetFire() override { return isFire; }
 
     virtual bool GetRecovery() override { return isRecovery; }
     virtual bool GetAction() override { return isAction; }
@@ -95,7 +99,10 @@ public:
     virtual void RunAnim() override;
     virtual void WalkAnim() override;
     virtual void IdleAnim() override;
+    virtual void HealAnim() override;
     virtual void RoarAnim() override;
+    virtual void CastingAnim() override;
+    virtual void FireAnim() override;
     virtual void LeftAnim() override;
     virtual void RightAnim() override;
     virtual void DeadAnim() override;
