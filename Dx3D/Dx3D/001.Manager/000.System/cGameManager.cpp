@@ -125,11 +125,78 @@ void cGameManager::PullItem(int id)
         {
             m_stInventory.items.erase(m_stInventory.items.begin() + nIndex);
         }
+
+        // 아이템 사용하기(장착아이템이면)
+        if (GetItemInfoById(id)->isWear)
+        {
+            PushGear(id);
+        }
     }
     // 새로운 아이템이면
     else
     {
         return;
+    }
+}
+
+void cGameManager::PushGear(int id)
+{
+    switch (GetItemInfoById(id)->eItemType)
+    {
+    case ST_ITEM_INFO::E_HELM:
+    {
+        // 장착한 아이템이 있으면 인벤토리로 돌리기
+        if (m_stGear.helmId != -1)
+        {
+            PushItem(m_stGear.helmId);
+        }
+        m_stGear.helmId = id;
+    }
+    break;
+    case ST_ITEM_INFO::E_CHEST_PLATE:
+    {
+        if (m_stGear.chestPlateId != -1)
+        {
+            PushItem(m_stGear.chestPlateId);
+        }
+        m_stGear.chestPlateId = id;
+    }
+    break;
+    case ST_ITEM_INFO::E_SWORD:
+    {
+        if (m_stGear.swordId != -1)
+        {
+            PushItem(m_stGear.swordId);
+        }
+        m_stGear.swordId = id;
+    }
+    break;
+    }
+}
+
+void cGameManager::PullGear(int id)
+{
+    switch (GetItemInfoById(id)->eItemType)
+    {
+    case ST_ITEM_INFO::E_HELM:
+    {
+        // 인벤토리로 돌리기
+        PushItem(m_stGear.helmId);
+        m_stGear.helmId = -1;
+    }
+    break;
+    case ST_ITEM_INFO::E_CHEST_PLATE:
+    {
+        PushItem(m_stGear.chestPlateId);
+        m_stGear.chestPlateId = -1;
+    }
+    break;
+    case ST_ITEM_INFO::E_SWORD:
+    {
+        PushItem(m_stGear.swordId);
+        m_stGear.swordId = -1;
+    }
+    break;
     }
 }
 
@@ -160,6 +227,8 @@ void cGameManager::LoadItemInfo()
         sprintf_s(szBuf, sizeof(szBuf), "%d", nStatNum);
         stItem->stStat.szName = szBuf;
         stItem->fPlusValue = jItem[i]["item-plus-value"];
+        stItem->isWear = jItem[i]["item-wear"];
+        stItem->eItemType = jItem[i]["item-type"];
 
         m_vecItemInfo.push_back(stItem);
     }

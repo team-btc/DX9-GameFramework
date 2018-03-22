@@ -16,12 +16,14 @@
 class cUILayer;
 class cShop;
 class cInventory;
+class cGear;
 
 class cPlayScene : public iSceneObject
 {
 private:
     cUILayer*                       m_pPlayerStatUILayer;
-    cUILayer*                       m_pHPUILayer;
+    cUILayer*                       m_pTargetStatUILayer;
+    cUILayer*                       m_pMonsterHPUILayer;
 
     cCamera*                        m_pCamera;
     string                          m_szMapKey;
@@ -39,6 +41,7 @@ private:
     
     cShop*                          m_pShop;
     cInventory*                     m_pInventory;
+    cGear*                          m_pGear;
 
     cParticle*                      m_pParticleFrost;
 

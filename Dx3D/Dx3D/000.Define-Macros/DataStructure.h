@@ -258,9 +258,20 @@ public:
 
 struct ST_ITEM_INFO
 {
+    enum E_ITEM_TYPE
+    {
+        E_HELM,
+        E_CHEST_PLATE,
+        E_SWORD,
+        E_HEAL,
+        E_MANA
+    };
+
     string          szName;
     string          szPath;
     int             nPrice;
     ST_STATUS       stStat;
     float           fPlusValue;
+    bool            isWear;
+    E_ITEM_TYPE     eItemType;
 };

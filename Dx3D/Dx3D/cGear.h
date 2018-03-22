@@ -11,15 +11,19 @@ private:
     vector<cUIImageView*>       m_vecGearUI;
 
     RECT                        m_rtGearSize;
-    ST_SIZE                     m_stGearSize;
+    ST_SIZE                     m_stGearSlotSize;
 
-    //vector<ST_ITEM>             m_vecInvenItem;
+    ST_GEAR                     m_stCurrGear;
+
+    int                         m_nCurrSelectGear;
 
     SYNTHESIZE(bool, m_isClickGear, IsClickGear);
     SYNTHESIZE(bool, m_isOpen, IsOpen);
 
 private:
     void SetGearUI();
+    void SetStatUI(Vector3 vGearPos);
+    void UpdateGearUI();
 
 public:
     cGear();

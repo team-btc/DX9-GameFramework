@@ -20,7 +20,6 @@ private:
 
     SYNTHESIZE(bool, m_isOpen, IsOpen);
     SYNTHESIZE(bool, m_isClickShop, ClickShop);
-    SYNTHESIZE(bool, m_isBuyItem, IsBuyItem);
 
 private:
     void SetShopUI();

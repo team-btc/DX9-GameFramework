@@ -14,7 +14,7 @@ cInventory::cInventory()
     , m_isOpen(false)
 {
     m_rtInvenSize.left = W_WIDTH - (LONG)(W_WIDTH * 0.18f) - 300;
-    m_rtInvenSize.top = W_HEIGHT - (LONG)(W_HEIGHT * 0.35f) - 250;
+    m_rtInvenSize.top = W_HEIGHT - (LONG)(W_HEIGHT * 0.35f) - 150;
     m_rtInvenSize.right = m_rtInvenSize.left + (LONG)(W_WIDTH * 0.18f);
     m_rtInvenSize.bottom = m_rtInvenSize.top + (LONG)(W_HEIGHT * 0.35f);
 
@@ -55,7 +55,7 @@ void cInventory::Update()
     m_vecInvenItem = g_pGameManager->GetInvetoryInfo();
     m_nPlayerMoney = g_pGameManager->GetCurrGold();
 
-    // 상점 렉트 안에서 마우스가 있다면
+    // 인벤 렉트 안에 마우스가 있다면
     if (PtInRect(&m_rtInvenSize, g_ptMouse))
     {
         // 버튼 클릭 무효화를 위해 
