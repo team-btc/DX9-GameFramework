@@ -463,8 +463,8 @@ void cGameManager::SetInvenData(json data)
 void cGameManager::SetGearData(json data)
 {
     m_stGear.helmId = data[JSON_GEAR_HELM].is_null() ? -1 : data[JSON_GEAR_HELM];
-    m_stGear.helmId = data[JSON_GEAR_CHEST].is_null() ? -1 : data[JSON_GEAR_CHEST];
-    m_stGear.helmId = data[JSON_GEAR_WEAPON].is_null() ? -1 : data[JSON_GEAR_WEAPON];
+    m_stGear.chestPlateId = data[JSON_GEAR_CHEST].is_null() ? -1 : data[JSON_GEAR_CHEST];
+    m_stGear.swordId = data[JSON_GEAR_WEAPON].is_null() ? -1 : data[JSON_GEAR_WEAPON];
 }
 
 string cGameManager::GetMapKey()
