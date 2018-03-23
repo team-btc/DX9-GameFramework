@@ -15,18 +15,23 @@ cMapLoader::~cMapLoader()
 void cMapLoader::LoadMap()
 {
     g_pMapManager->SetCurrMap(m_szKey);
-    if (g_pMapManager->IsLoadMapInfo(m_szKey))
-    {
-        return;
-    }
-
-    m_stMapInfo = new ST_MAP_INFO;
 
     json jLoad;
     ifstream iFile;
     iFile.open(MAP_PATH + m_szKey + "/" + m_szKey + ".json");
     iFile >> jLoad;
     iFile.close();
+    // 오브젝트
+    m_jObject = jLoad["object"];
+    m_nObjectMaxCnt = (int)m_jObject.size();
+    if (g_pMapManager->IsLoadMapInfo(m_szKey))
+    {
+        m_stMapInfo = g_pMapManager->GetCurrMapInfo();
+        return;
+    }
+
+    m_stMapInfo = new ST_MAP_INFO;
+
 
     int size = jLoad["map"]["size"];
     m_stMapInfo->fMapSize = (float)(size + 1) * 64.0f;
@@ -66,10 +71,6 @@ void cMapLoader::LoadMap()
     {
         LoadEvent(jLoad["event"]);
     }
-
-    // 오브젝트
-    m_jObject = jLoad["object"];
-    m_nObjectMaxCnt = (int)m_jObject.size();
 
     // 맵 매니저에 셋팅 (현재 맵으로 설정됨)
     g_pMapManager->SetMapInfo(m_szKey, m_stMapInfo);
