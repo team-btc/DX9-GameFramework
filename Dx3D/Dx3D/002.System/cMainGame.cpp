@@ -50,12 +50,13 @@ void cMainGame::Setup()
     HRESULT hr;
     srand((int)time(NULL));
 
+    hr = g_pScnManager->AddScene("splash", new cSplashScene);
     hr = g_pScnManager->AddScene("loading", new cLoadingScene);
     hr = g_pScnManager->AddScene("title", new cTitleScene);
     hr = g_pScnManager->AddScene("play", new cPlayScene);
     hr = g_pScnManager->AddScene("ending", new cEndingScene);
 
-    hr = g_pScnManager->ChangeScene("loading");
+    hr = g_pScnManager->ChangeScene("splash");
 }
 
 void cMainGame::Update()

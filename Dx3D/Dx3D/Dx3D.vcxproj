@@ -226,7 +226,7 @@
     <ClInclude Include="003.Scene\cTitleScene.h" />
     <ClInclude Include="003.Scene\cPlayScene.h" />
     <ClInclude Include="002.System\cQuest.h" />
-    <ClInclude Include="cSplashScene.h" />
+    <ClInclude Include="003.Scene\cSplashScene.h" />
     <ClInclude Include="Dx3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -293,7 +293,7 @@
     <ClCompile Include="003.Scene\cTitleScene.cpp" />
     <ClCompile Include="003.Scene\cPlayScene.cpp" />
     <ClCompile Include="002.System\cQuest.cpp" />
-    <ClCompile Include="cSplashScene.cpp" />
+    <ClCompile Include="003.Scene\cSplashScene.cpp" />
     <ClCompile Include="Dx3D.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

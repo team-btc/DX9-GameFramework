@@ -4,6 +4,7 @@
 #include "cLoadingScene.h"
 #include "cPlayScene.h"
 #include "cEndingScene.h"
+#include "cSplashScene.h"
 
 class cMainGame
 {
