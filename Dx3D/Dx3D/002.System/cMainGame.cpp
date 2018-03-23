@@ -77,7 +77,7 @@ void cMainGame::Render()
     //if (SUCCEEDED(hr))
     {
         hr = g_pDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-            D3DCOLOR_XRGB(47, 121, 112), 1.0f, 0);
+            D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
         hr = g_pDevice->BeginScene();
 #ifdef _DEBUG

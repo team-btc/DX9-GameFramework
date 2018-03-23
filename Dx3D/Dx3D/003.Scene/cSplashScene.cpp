@@ -16,7 +16,7 @@ cSplashScene::~cSplashScene()
 HRESULT cSplashScene::Start()
 {
     m_pImg = m_pImg == NULL ? new cUILayer : m_pImg;
-    g_pTextureManager->AddTexture("splash-img", "Assets\\Image\\BTC-PRESENTS.png");
+    g_pTextureManager->AddTexture("splash-img", "Assets\\Image\\BTC-PRESENTS.png", true);
     m_pImg->SetLayer("splash", Vector3(0.0f, 0.0f, 0.0f), ST_SIZE(W_WIDTH, W_HEIGHT),
         true, D3DCOLOR_RGBA(0, 0, 0, 255), "splash-img");
     m_pImg->SetTransparent(true);

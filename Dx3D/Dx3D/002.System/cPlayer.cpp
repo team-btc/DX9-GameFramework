@@ -228,6 +228,8 @@ void cPlayer::Update()
                 g_pSndManager->Play("heal");
                 HealAnim();
                 isAction = true;
+                m_isMoveToPoint = false;
+                m_fMoveSpeed = 0.0f;
             }
         }
 

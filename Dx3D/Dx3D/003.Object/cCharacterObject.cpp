@@ -235,7 +235,7 @@ void cCharacterObject::FalseAnim()
    isRoar = false;
    isFire = false;
    isCasting = false;
-   //isRecovery = false;
+   isAction = false;
 }
 
 void cCharacterObject::MoveForword()

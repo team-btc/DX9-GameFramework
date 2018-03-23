@@ -76,6 +76,7 @@ void cUIObject::UpdateChildren()
 
 void cUIObject::Render(LPSPRITE pSprite)
 {
+#ifdef _DEBUG
     if (m_isDebugRender && m_isAxtive)
     {
         if (m_matWorld._11 > 0.0f)
@@ -84,6 +85,7 @@ void cUIObject::Render(LPSPRITE pSprite)
             g_pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 4, &m_vecVertex[0], sizeof(VertexRHWC));
         }
     }
+#endif // _DEBUG
 
     for each (auto vPos in m_vecChild)
         vPos->Render(pSprite);
