@@ -190,6 +190,7 @@ void cPlayer::Update()
                 isCasting = true;
                 isAction = true;
                 m_isMoveToPoint = false;
+                isMoveToTarget = false;
                 m_fMoveSpeed = 0.0f;
             }
         }
@@ -199,6 +200,7 @@ void cPlayer::Update()
         {
             if (m_stStat.fCurMP >= 50.0f)
             {
+                isMoveToTarget = false;
                 isRecovery = false;
                 m_fRecoveryCount = 0.0f;
                 RoarAnim();
@@ -229,6 +231,7 @@ void cPlayer::Update()
                 HealAnim();
                 isAction = true;
                 m_isMoveToPoint = false;
+                isMoveToTarget = false;
                 m_fMoveSpeed = 0.0f;
             }
         }
