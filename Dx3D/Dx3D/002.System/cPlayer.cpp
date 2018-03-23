@@ -228,6 +228,8 @@ void cPlayer::Update()
                 g_pSndManager->Play("heal");
                 HealAnim();
                 isAction = true;
+                m_isMoveToPoint = false;
+                m_fMoveSpeed = 0.0f;
             }
         }
 
@@ -374,9 +376,9 @@ void cPlayer::Update()
             {
                 Action("Heal", 50.0f + m_stStat.fINT * 4);
                 m_stStat.fCurMP -= 50.0f;
+                IdleAnim();
                 isAction = false;
                 isHeal = false;
-                IdleAnim();
             }
         }
         else if (isCasting)
